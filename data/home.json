@@ -25,7 +25,7 @@
           },
           {
             "label": "PROFESSIONNEL",
-            "href": "/buraliste"
+            "href": "/professionnel"
           }
         ]
       }
@@ -286,7 +286,7 @@
           },
           {
             "label": "Professionnel",
-            "href": "/buraliste"
+            "href": "/professionnel"
           }
         ],
         "contactInfo": {

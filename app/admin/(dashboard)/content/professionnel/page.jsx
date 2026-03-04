@@ -6,13 +6,13 @@ import styles from '../[id]/Editor.module.css';
 
 const DEFAULTS = {
     hero: {
-        title: "CBD accessible et pas cher pour buralistes : devenez partenaire des Amis du CBD.",
-        text: "Les Amis du CBD est une marque française pensée pour les bureaux de tabac : du CBD naturel, légal, accessible en prix et simple à commercialiser.\n\nNotre ambition est claire : démocratiser le CBD de qualité, sans promesses floues ni prix excessifs.\n\nVotre bureau de tabac est le lieu idéal pour proposer un CBD pas cher, fiable et conforme à la réglementation, à une clientèle de plus en plus demandeuse."
+        title: "CBD accessible et pas cher pour professionnels : devenez partenaire des Amis du CBD.",
+        text: "Les Amis du CBD est une marque française pensée pour les professionnels et revendeurs : du CBD naturel, légal, accessible en prix et simple à commercialiser.\n\nNotre ambition est claire : démocratiser le CBD de qualité, sans promesses floues ni prix excessifs.\n\nVotre boutique est le lieu idéal pour proposer un CBD pas cher, fiable et conforme à la réglementation, à une clientèle de plus en plus demandeuse."
     },
     features1: [
         { title: "Sécurité & légalité avant tout", description: "Produits conformes à la législation française, avec moins de 0,3 % de THC." },
         { title: "Produits testés et traçables", description: "Analyses par des laboratoires indépendants et vente sous scellé de protection." },
-        { title: "Zéro risque en bureau de tabac", description: "Une gamme pensée pour une vente simple, claire et sans mauvaise surprise." },
+        { title: "Zéro risque en boutique", description: "Une gamme pensée pour une vente simple, claire et sans mauvaise surprise." },
         { title: "CBD 100 % naturel, sans lavage chimique", description: "Fleurs cultivées naturellement, sans traitements artificiels, pour une qualité constante." },
         { title: "Prix public ultra accessible", description: "Des fleurs entre 1,50 € et 2 € le gramme, adaptées à une forte demande." }
     ],
@@ -20,13 +20,13 @@ const DEFAULTS = {
         { title: "Gain de temps au quotidien", description: "Commandes rapides et gestion simplifiée pour se concentrer sur les ventes." },
         { title: "Accompagnement clé en main", description: "Présentoirs adaptés, supports pédagogiques et outils d'aide à la vente inclus." },
         { title: "Différenciation en point de vente", description: "Une offre CBD claire qui vous démarque de la concurrence." },
-        { title: "Marge attractive pour le buraliste", description: "Un produit accessible qui reste rentable et compétitif." },
+        { title: "Marge attractive pour le professionnel", description: "Un produit accessible qui reste rentable et compétitif." },
         { title: "Excellent rapport qualité / prix", description: "Un positionnement rare sur le marché, apprécié par les clients exigeants." }
     ],
     steps: [
         { title: "CONTACTEZ NOTRE ÉQUIPE COMMERCIALE", text: "Notre équipe est disponible pour répondre à vos questions et vous accompagner dans la mise en place.\n06 71 82 42 87" },
         { title: "DEMANDEZ VOTRE KIT DE DÉMARRAGE", text: "Vous souhaitez tester le potentiel du CBD dans votre boutique ?\n\nDemandez votre kit de démarrage gratuit, incluant une sélection de nos produits phares, pour évaluer rapidement les ventes." },
-        { title: "Prenez une longueur d'avance sur vos concurrents", text: "Transformez votre bureau de tabac en un point de référence du CBD accessible et pas cher, tout en rassurant votre clientèle sur la qualité et la légalité des produits.\n\nLes Amis du CBD, c'est le CBD bien fait, bien expliqué, et bien vendu.\n\nAmicalement,\nLes Amis du CBD" }
+        { title: "Prenez une longueur d'avance sur vos concurrents", text: "Transformez votre commerce en un point de référence du CBD accessible et pas cher, tout en rassurant votre clientèle sur la qualité et la légalité des produits.\n\nLes Amis du CBD, c'est le CBD bien fait, bien expliqué, et bien vendu.\n\nAmicalement,\nLes Amis du CBD" }
     ]
 };
 
@@ -108,7 +108,7 @@ export default function BuralisteContentPage() {
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
                 <Link href="/admin/content" style={{ textDecoration: 'none', color: '#666' }}>← Retour</Link>
-                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1F4B40', margin: 0 }}>🏪 Buraliste</h1>
+                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1F4B40', margin: 0 }}>🏪 Professionnel</h1>
             </div>
 
             {/* Tabs */}

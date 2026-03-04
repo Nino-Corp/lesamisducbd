@@ -138,16 +138,28 @@
     margin-bottom: 5px;
 }
 
-.perGram {
-    color: #6a7c76;
-    font-size: 1rem;
-    margin-right: 10px;
+.priceMainRow {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 5px;
 }
 
-.taxInfo {
+.taxLabel {
+    background: #E3FFF8;
+    color: #1F4B40;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.perGramInfo {
     color: #6a7c76;
-    font-size: 0.9rem;
-    font-style: italic;
+    font-size: 1rem;
+    margin-top: 5px;
+    font-weight: 500;
 }
 
 .actions {
@@ -312,15 +324,31 @@
     margin-top: 10px;
 }
 
-.relatedInfo span {
+.relatedPriceRow {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.relatedPrice {
     color: #1f4b40;
     font-size: 1.1rem;
     font-weight: 700;
-    display: block;
+}
+
+.relatedTaxLabel {
+    background: #E3FFF8;
+    color: #1F4B40;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .relatedPerGram {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: #6a7c76;
     margin-top: 4px;
     font-weight: 500;

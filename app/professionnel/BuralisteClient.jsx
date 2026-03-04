@@ -69,7 +69,7 @@ export default function BuralisteClient({ content, globalContent }) {
                     <>
                         <ContentHero
                             imageSrc="/images/buraliste/header-illustration.webp"
-                            imageAlt="Partenariat Buraliste"
+                            imageAlt="Partenariat Professionnel"
                             imagePosition="center 40%"
                         >
                             <h2 className={styles.newBadge}>Nous rejoindre ?</h2>
@@ -104,7 +104,7 @@ export default function BuralisteClient({ content, globalContent }) {
                             features={whyChooseUsFeatures1}
                             ctaLabel=""
                             imageSrc="/images/whychooseus/Scientist.webp"
-                            imageAlt="Expert Buraliste"
+                            imageAlt="Expert Professionnel"
                         />
                     </ScrollReveal>
                 )}

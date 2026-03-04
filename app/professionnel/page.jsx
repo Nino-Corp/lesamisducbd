@@ -13,7 +13,7 @@ export const metadata = {
 const DEFAULTS = {
     hero: {
         title: "CBD accessible et pas cher pour professionnels : devenez partenaire des Amis du CBD.",
-        text: "Les Amis du CBD est une marque française pensée pour les revendeurs et boutiques : du CBD naturel, légal, accessible en prix et simple à commercialiser.\n\nNotre ambition est claire : démocratiser le CBD de qualité, sans promesses floues ni prix excessifs.\n\nVotre boutique est le lieu idéal pour proposer un CBD pas cher, fiable et conforme à la réglementation, à une clientèle de plus en plus demandeuse."
+        text: "Les Amis du CBD est une marque française pensée pour les professionnels et revendeurs : du CBD naturel, légal, accessible en prix et simple à commercialiser.\n\nNotre ambition est claire : démocratiser le CBD de qualité, sans promesses floues ni prix excessifs.\n\nVotre boutique est le lieu idéal pour proposer un CBD pas cher, fiable et conforme à la réglementation, à une clientèle de plus en plus demandeuse."
     },
     features1: [
         { title: "Sécurité & légalité avant tout", description: "Produits conformes à la législation française, avec moins de 0,3 % de THC." },
@@ -32,7 +32,7 @@ const DEFAULTS = {
     steps: [
         { title: "CONTACTEZ NOTRE ÉQUIPE COMMERCIALE", text: "Notre équipe est disponible pour répondre à vos questions et vous accompagner dans la mise en place.\n06 71 82 42 87" },
         { title: "DEMANDEZ VOTRE KIT DE DÉMARRAGE", text: "Vous souhaitez tester le potentiel du CBD dans votre boutique ?\n\nDemandez votre kit de démarrage gratuit, incluant une sélection de nos produits phares, pour évaluer rapidement les ventes." },
-        { title: "Prenez une longueur d'avance sur vos concurrents", text: "Transformez votre bureau de tabac en un point de référence du CBD accessible et pas cher, tout en rassurant votre clientèle sur la qualité et la légalité des produits.\n\nLes Amis du CBD, c'est le CBD bien fait, bien expliqué, et bien vendu." }
+        { title: "Prenez une longueur d'avance sur vos concurrents", text: "Transformez votre commerce en un point de référence du CBD accessible et pas cher, tout en rassurant votre clientèle sur la qualité et la légalité des produits.\n\nLes Amis du CBD, c'est le CBD bien fait, bien expliqué, et bien vendu." }
     ]
 };
 

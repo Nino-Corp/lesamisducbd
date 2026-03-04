@@ -168,11 +168,12 @@
 
 .perGramList {
     text-align: center;
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    color: white;
     font-weight: 500;
-    margin-top: 8px;
+    margin-top: 10px;
     margin-bottom: 0px;
+    opacity: 0.9;
 }
 
 .pillLeft {
@@ -189,32 +190,35 @@
     display: flex;
     justify-content: center;
     gap: 8px;
-    width: clamp(200px, 90%, 280px);
+    width: clamp(200px, 90%, 260px);
     margin: 0 auto 15px auto;
 }
 
 .variationBtn {
-    background: rgba(0, 0, 0, 0.2);
-    color: white;
+    background: #1F4B40;
+    color: #7EE3CB;
     padding: 6px 10px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    font-size: 0.75rem;
-    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
     cursor: pointer;
     flex: 1;
     transition: all 0.2s ease;
     white-space: nowrap;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .variationBtn:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(31, 75, 64, 0.9);
 }
 
 .variationBtn.active {
-    background: #00FFC2;
+    background: #7EE3CB;
     color: #1F4B40;
-    border-color: #00FFC2;
     font-weight: 700;
 }
 

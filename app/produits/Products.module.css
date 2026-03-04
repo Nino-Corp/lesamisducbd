@@ -279,8 +279,8 @@
 
 .grid {
     display: grid;
-    /* Reduce min-width so more cards fit per row */
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    /* clamp: min 180px on tiny screens, scales with viewport, max 260px */
+    grid-template-columns: repeat(auto-fill, minmax(clamp(180px, 18vw, 260px), 1fr));
     gap: 30px 20px;
 }
 
@@ -380,6 +380,9 @@
     justify-content: space-between;
     align-items: flex-end;
     margin-top: auto;
+    position: relative;
+    overflow: visible;
+    /* Let drawer pop out above without clipping */
 }
 
 .priceInfo {
@@ -407,6 +410,7 @@
     margin-top: 4px;
     font-weight: 500;
     display: block;
+    max-width: 60%;
 }
 
 .actionWrapper {
@@ -417,10 +421,9 @@
     padding: 2px;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 10px rgba(31, 75, 64, 0.08);
-    /* slight idle shadow */
     cursor: pointer;
     position: relative;
-    /* For absolute positioning of drawer on mobile */
+    /* Required for absolute drawer */
 }
 
 .actionWrapper:hover {
@@ -429,47 +432,89 @@
 }
 
 .qtyDrawer {
-    display: flex;
-    align-items: center;
-    width: 0;
-    overflow: hidden;
+    position: absolute;
+    bottom: calc(100% + 12px);
+    right: 0;
+    display: flex; /* <-- LA LIGNE MAGIQUE EST ICI */
+    flex-direction: column;
+    align-items: center; /* Perfect horizontal centering */
+    background: #1F4B40;
+    border-radius: 14px;
+    width: 50px;
+    height: 0;
     opacity: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+    gap: 8px;
+    z-index: 100;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     pointer-events: none;
-    /* prevent clicks from blocking expansion */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: visible;
+}
+
+/* Hover Bridge: Persistent area between button and drawer */
+.qtyDrawer::before {
+    content: '';
+    position: absolute;
+    bottom: -25px;
+    /* Large coverage for diagonal mouse movement */
+    left: -20px;
+    right: -20px;
+    height: 40px;
+    background: transparent;
+    pointer-events: auto;
+    z-index: -1;
+}
+
+/* Tooltip arrow */
+.qtyDrawer::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    right: 15px;
+    /* Points precisely to the center of the cart icon */
+    width: 12px;
+    height: 12px;
+    background: #1F4B40;
+    transform: rotate(45deg);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: -2;
 }
 
 .actionWrapper:hover .qtyDrawer {
-    width: 104px;
-    /* 3 labels of 28px + 3 gaps of 4px + 8px right padding */
+    height: auto;
     opacity: 1;
-    padding-left: 6px;
-    padding-right: 2px;
-    gap: 4px;
+    visibility: visible;
+    padding: 12px 0;
     pointer-events: auto;
 }
 
 .qtyBtn {
-    width: 28px;
-    height: 30px;
-    border-radius: 8px;
-    background: rgba(0, 255, 148, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
     color: #00FF94;
-    border: none;
-    font-size: 0.75rem;
+    border: 1px solid rgba(0, 255, 148, 0.2);
+    font-size: 0.8rem;
     font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     flex-shrink: 0;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.2s ease;
+    margin: 0;
 }
 
 .qtyBtn:hover {
     background: #00FF94;
     color: #1F4B40;
     transform: scale(1.1);
+    border-color: #00FF94;
 }
 
 .addBtn {
@@ -503,6 +548,8 @@
 .addBtn:active {
     transform: translateY(1px) scale(0.95);
 }
+
+/* Medium screens: handled by universal absolute drawer above */
 
 /* Mobile */
 @media (max-width: 768px) {
@@ -574,6 +621,19 @@
     .cardFooter {
         position: relative;
         overflow: visible;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 8px; /* Laisse un peu d'air entre le texte et le bouton */
+    }
+
+    .priceInfo {
+        flex: 1; /* Prend l'espace disponible... */
+        min-width: 0; /* ... MAIS s'écrase si besoin au lieu de pousser le bouton dehors ! (C'est la ligne magique) */
+    }
+
+    .perGramText {
+        max-width: 100%; /* Annule la limite de 60% du PC pour que le texte respire sur mobile */
     }
 
     /* Interactive Drawer Mobile */
@@ -586,6 +646,7 @@
         display: flex;
         align-items: center;
         border-radius: 12px;
+        flex-shrink: 0; /* Interdit formellement au navigateur de rétrécir ton bouton */
     }
 
     .qtyDrawer {
@@ -610,11 +671,11 @@
     }
 
     .actionWrapper.expanded .qtyDrawer {
-        height: 180px;
-        /* 4 buttons + gaps + padding */
+        height: 200px;
+        /* Fits 4 buttons + gaps + padding comfortably */
         opacity: 1;
         visibility: visible;
-        padding: 8px 0;
+        padding: 12px 0;
         transform: translateY(0);
         pointer-events: auto;
     }

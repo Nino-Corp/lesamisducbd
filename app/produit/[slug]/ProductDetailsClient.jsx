@@ -94,41 +94,45 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                         </div>
 
                         <div className={styles.priceSection}>
-                            <span className={styles.price}>
-                                {groupPrice?.hasDiscount ? (
-                                    <>
-                                        <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.8em', marginRight: '8px' }}>
-                                            {product.formattedPrice}
-                                        </span>
-                                        <span style={{ color: '#d9534f' }}>
-                                            {groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : groupPrice.formattedPrice}
-                                        </span>
-                                    </>
-                                ) : (
-                                    groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : (product.formattedPrice || `${product.priceHT || product.priceTTC || 5} €`)
-                                )}
-                            </span>
+                            <div className={styles.priceMainRow}>
+                                <span className={styles.price}>
+                                    {groupPrice?.hasDiscount ? (
+                                        <>
+                                            <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.6em', marginRight: '8px' }}>
+                                                {product.formattedPrice}
+                                            </span>
+                                            <span style={{ color: '#d9534f' }}>
+                                                {groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : groupPrice.formattedPrice}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : (product.formattedPrice || `${product.priceHT || product.priceTTC || 5} €`)
+                                    )}
+                                </span>
+                                <span className={styles.taxLabel}>
+                                    {groupPrice.suggestShowHT ? 'HT' : 'TTC'}
+                                </span>
+                            </div>
+
                             {(() => {
                                 let perGramText = null;
-                                const currentPriceTTC = groupPrice?.priceTTC || product.priceTTC || 0;
+                                const priceToUse = groupPrice.suggestShowHT ? groupPrice.priceHT : (groupPrice?.priceTTC || product.priceTTC || 0);
 
-                                if (currentPriceTTC > 0) {
-                                    // Recherche des grammes dans le nom ou la référence (ex: "10g", "10 g", "2.5G", "100 G")
+                                if (priceToUse > 0) {
                                     const searchString = `${product.name || ''} ${product.reference || ''}`.toLowerCase();
-                                    // Capture un nombre (avec virgule ou point optionnel) suivi de "g" ou " g"
                                     const weightMatch = searchString.match(/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*g\b/);
 
                                     if (weightMatch) {
                                         const exactGrams = parseFloat(weightMatch[1].replace(',', '.'));
                                         if (exactGrams > 0) {
-                                            const newPerGram = (currentPriceTTC / exactGrams).toFixed(2).replace('.', ',');
-                                            perGramText = `dès ${newPerGram}€/g`;
+                                            const newPerGram = (priceToUse / exactGrams).toFixed(2).replace('.', ',');
+                                            perGramText = `${newPerGram}€/g`;
                                         }
                                     }
                                 }
 
                                 if (!perGramText) return null;
-                                return <span className={styles.taxInfo}>{perGramText}</span>;
+                                return <div className={styles.perGramInfo}>Le gramme à partir de {perGramText}</div>;
                             })()}
                         </div>
 
@@ -187,13 +191,13 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                             let exactGrams = null;
                             let perGramText = null;
 
-                            const currentPriceTTC = relatedGroupPrice?.priceTTC || p.priceTTC || 0;
+                            const currentPrice = relatedGroupPrice.suggestShowHT ? relatedGroupPrice.priceHT : (relatedGroupPrice?.priceTTC || p.priceTTC || 0);
 
                             if (weightMatch) {
                                 exactGrams = parseFloat(weightMatch[1].replace(',', '.'));
-                                if (exactGrams > 0 && currentPriceTTC > 0) {
-                                    const newPerGram = (currentPriceTTC / exactGrams).toFixed(2).replace('.', ',');
-                                    perGramText = `${newPerGram}€/g TTC`;
+                                if (exactGrams > 0 && currentPrice > 0) {
+                                    const newPerGram = (currentPrice / exactGrams).toFixed(2).replace('.', ',');
+                                    perGramText = `${newPerGram}€/g`;
                                 }
                             }
 
@@ -204,22 +208,27 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                     </div>
                                     <div className={styles.relatedInfo}>
                                         <h3>{p.name}</h3>
-                                        <span>
-                                            {relatedGroupPrice?.hasDiscount ? (
-                                                <>
-                                                    <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.8em', marginRight: '6px' }}>
-                                                        {p.formattedPrice}
-                                                    </span>
-                                                    <span style={{ color: '#d9534f' }}>
-                                                        {relatedGroupPrice.formattedPrice}
-                                                    </span>
-                                                </>
-                                            ) : (
-                                                p.formattedPrice || `${p.priceHT || p.priceTTC || 5} €`
-                                            )}
-                                        </span>
+                                        <div className={styles.relatedPriceRow}>
+                                            <span className={styles.relatedPrice}>
+                                                {relatedGroupPrice?.hasDiscount ? (
+                                                    <>
+                                                        <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.8em', marginRight: '6px' }}>
+                                                            {p.formattedPrice}
+                                                        </span>
+                                                        <span style={{ color: '#d9534f' }}>
+                                                            {relatedGroupPrice.suggestShowHT ? relatedGroupPrice.formattedPriceHT : relatedGroupPrice.formattedPrice}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    relatedGroupPrice.suggestShowHT ? relatedGroupPrice.formattedPriceHT : (p.formattedPrice || `${p.priceHT || p.priceTTC || 5} €`)
+                                                )}
+                                            </span>
+                                            <span className={styles.relatedTaxLabel}>
+                                                {relatedGroupPrice.suggestShowHT ? 'HT' : 'TTC'}
+                                            </span>
+                                        </div>
                                         {perGramText && (
-                                            <div className={styles.relatedPerGram}>{perGramText}</div>
+                                            <div className={styles.relatedPerGram}>Le gramme à partir de {perGramText}</div>
                                         )}
                                     </div>
                                 </Link>

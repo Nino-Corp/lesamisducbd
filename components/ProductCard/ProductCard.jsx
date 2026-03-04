@@ -60,7 +60,7 @@ export default function ProductCard({ product }) {
                 <div className={styles.footer}>
                     <div className={styles.priceBlock}>
                         <span className={styles.price}>
-                            {product.suggestShowHT ? product.formattedPriceHT : product.formattedPrice}
+                            {product.suggestShowHT ? `${product.formattedPriceHT} HT` : product.formattedPrice}
                         </span>
                         {perGramText && (
                             <span className={styles.perGram}>

@@ -18,7 +18,7 @@ const HEADER_PROPS = {
         { label: "PRODUITS", href: "/produits" },
         { label: "L'ESSENTIEL", href: "/essentiel" },
         { label: "CBD & USAGES", href: "/usages" },
-        { label: "BURALISTE", href: "/buraliste" }
+        { label: "PROFESSIONNEL", href: "/buraliste" }
     ]
 };
 
@@ -28,7 +28,7 @@ const FOOTER_PROPS = {
         { label: "CGV", href: "/cgv" },
         { label: "Politique de confidentialité", href: "/privacy" },
         { label: "Transparence", href: "/transparence" },
-        { label: "Buraliste", href: "/buraliste" }
+        { label: "Professionnel", href: "/buraliste" }
     ],
     contactInfo: {
         title: "Les Amis du CBD France",
@@ -230,13 +230,13 @@ export default function ProductsClient({ initialProducts, globalContent }) {
                         let exactGrams = null;
                         let perGramText = null;
 
-                        const currentPriceTTC = groupPrice?.priceTTC || product.priceTTC || 0;
+                        const priceToUse = groupPrice.suggestShowHT ? groupPrice.priceHT : (groupPrice?.priceTTC || product.priceTTC || 0);
 
                         if (weightMatch) {
                             exactGrams = parseFloat(weightMatch[1].replace(',', '.'));
-                            if (exactGrams > 0 && currentPriceTTC > 0) {
-                                const newPerGram = (currentPriceTTC / exactGrams).toFixed(2).replace('.', ',');
-                                perGramText = `${newPerGram}€/g TTC`;
+                            if (exactGrams > 0 && priceToUse > 0) {
+                                const newPerGram = (priceToUse / exactGrams).toFixed(2).replace('.', ',');
+                                perGramText = `${newPerGram}€/g`;
                             }
                         }
 
@@ -287,7 +287,7 @@ export default function ProductsClient({ initialProducts, globalContent }) {
                                                 )}
                                             </span>
                                             {perGramText && (
-                                                <span className={styles.perGramText}>{perGramText.replace(' TTC', '')}</span>
+                                                <span className={styles.perGramText}>Le gramme à partir de {perGramText}</span>
                                             )}
                                         </div>
                                         <div className={`${styles.actionWrapper} ${expandedId === product.id ? styles.expanded : ''}`}>

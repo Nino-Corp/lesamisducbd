@@ -39,6 +39,48 @@ const toCard = (vitrineEntry, product) => ({
   rawProduct: product // Passed down so ProductList client component can calculate group discounts
 });
 
+/** Returns the display quote from a slug (e.g. "super-skunk-4g" → "La Classique") */
+const quoteForSlug = (slug) => {
+  const s = slug.toLowerCase();
+  if (s.includes('gorilla')) return '\u201cLa Puissante\u201d';
+  if (s.includes('amnes') || s.includes('amnesia')) return '\u201cLa R\u00eaveuse\u201d';
+  if (s.includes('skunk')) return '\u201cLa Classique\u201d';
+  return '\u201cLa Relaxante\u201d';
+};
+
+/** Returns the display name from a slug (e.g. "super-skunk-4g" → "Super Skunk") */
+const baseNameFromSlug = (slug) => {
+  const s = slug.toLowerCase();
+  if (s.includes('gorilla')) return 'Gorilla Glue';
+  if (s.includes('amnes') || s.includes('amnesia')) return 'Amn\u00e9sia';
+  if (s.includes('skunk')) return 'Super Skunk';
+  if (s.includes('remedy')) return 'Remedy';
+  // Generic fallback: strip trailing weight pattern like "-4g" or "-10g"
+  return slug.replace(/-\d+g$/, '').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+};
+
+/** Finds all weight variations of a flower given any of its slugs */
+const resolveFlowerVariations = (baseSlug, allProducts) => {
+  // Extract the base part of the slug (without trailing weight e.g. "-4g")
+  const base = baseSlug.replace(/-\d+g$/, '');
+  return allProducts
+    .filter(p => p.slug.startsWith(base))
+    .map(p => {
+      const m = p.name.match(/(\d+)\s*g/i);
+      return { ...p, weight: m ? parseInt(m[1]) : 0 };
+    })
+    .sort((a, b) => a.weight - b.weight);
+};
+
+const buildFlower = (entry, product) => {
+  const variations = resolveFlowerVariations(product.slug, [product]); // will be overridden below
+  return {
+    ...toCard(entry, product),
+    name: baseNameFromSlug(product.slug),
+    quoteTitle: quoteForSlug(product.slug),
+  };
+};
+
 export default async function Home() {
   // Fetch CMS content, PrestaShop products and vitrine config in parallel
   const [data, allProducts, vitrineConfig, globalConfig] = await Promise.all([
@@ -51,41 +93,75 @@ export default async function Home() {
   const bySlug = Object.fromEntries(allProducts.map(p => [p.slug, p]));
 
   // ── Resolve flowers ──────────────────────────────────────────────
+  // If admin has configured vitrine flowers (even empty = remove all), use that.
+  // Only fall back to hardcoded list when vitrine has never been configured (null/undefined).
   let flowers = [];
 
-  const FEATURED_NAMES = ['Super Skunk', 'Amnésia', 'Gorilla Glue', 'Remedy'];
+  if (vitrineConfig && Array.isArray(vitrineConfig.flowers)) {
+    // Admin-controlled: respects removals, badges, ordering
+    flowers = vitrineConfig.flowers
+      .map(entry => {
+        const product = bySlug[entry.slug];
+        if (!product) return null;
 
-  flowers = FEATURED_NAMES.map(baseName => {
-    // Find all variations for this flower
-    const variations = allProducts.filter(p =>
-      p.name.toLowerCase().includes(baseName.toLowerCase())
-    ).map(p => {
-      const weightMatch = p.name.match(/(\d+)\s*g/i);
+        // Use the display name to find all weight variations of this flower.
+        // Slugs are "{id}-{link_rewrite}" so we can't match by slug prefix.
+        // Instead, strip the weight part from the product name (e.g. "Super Skunk 4 G" → "Super Skunk")
+        // and use that to find sibling products.
+        const nameWithoutWeight = product.name.replace(/\s*\d+\s*g\s*$/i, '').trim();
+        const variations = allProducts
+          .filter(p => p.name.toLowerCase().startsWith(nameWithoutWeight.toLowerCase()))
+          .map(p => { const m = p.name.match(/(\d+)\s*g/i); return { ...p, weight: m ? parseInt(m[1]) : 0 }; })
+          .sort((a, b) => a.weight - b.weight);
+
+        const main = variations.find(v => v.weight === 4) || product;
+
+        return {
+          ...toCard(entry, main),
+          name: baseNameFromSlug(product.slug),
+          quoteTitle: quoteForSlug(product.slug),
+          variations: variations.map(v => ({
+            slug: v.slug,
+            weight: v.weight,
+            priceTTC: v.priceTTC,
+            formattedPrice: v.formattedPrice,
+            rawProduct: v
+          }))
+        };
+      })
+      .filter(Boolean);
+  } else {
+    // Fallback: hardcoded default when vitrine has never been saved by admin
+    const FEATURED_SLUGS = [
+      { baseName: 'Super Skunk', baseSlug: 'super-skunk' },
+      { baseName: 'Amn\u00e9sia', baseSlug: 'amnesia' },
+      { baseName: 'Gorilla Glue', baseSlug: 'gorilla-glue' },
+      { baseName: 'Remedy', baseSlug: 'remedy' },
+    ];
+
+    flowers = FEATURED_SLUGS.map(({ baseName, baseSlug }) => {
+      const variations = allProducts
+        .filter(p => p.slug.startsWith(baseSlug))
+        .map(p => { const m = p.name.match(/(\d+)\s*g/i); return { ...p, weight: m ? parseInt(m[1]) : 0 }; })
+        .sort((a, b) => a.weight - b.weight);
+
+      if (variations.length === 0) return null;
+      const main = variations.find(v => v.weight === 4) || variations[0];
+
       return {
-        ...p,
-        weight: weightMatch ? parseInt(weightMatch[1]) : 0
+        ...toCard({}, main),
+        name: baseName,
+        quoteTitle: quoteForSlug(baseSlug),
+        variations: variations.map(v => ({
+          slug: v.slug,
+          weight: v.weight,
+          priceTTC: v.priceTTC,
+          formattedPrice: v.formattedPrice,
+          rawProduct: v
+        }))
       };
-    }).sort((a, b) => a.weight - b.weight);
-
-    if (variations.length === 0) return null;
-
-    const mainProduct = variations.find(v => v.weight === 4) || variations[0];
-
-    return {
-      ...toCard({}, mainProduct),
-      name: baseName,
-      quoteTitle: baseName === 'Gorilla Glue' ? '“La Puissante”' :
-        baseName === 'Amnésia' ? '“La Rêveuse”' :
-          baseName === 'Super Skunk' ? '“La Classique”' : '“La Relaxante”',
-      variations: variations.map(v => ({
-        slug: v.slug,
-        weight: v.weight,
-        priceTTC: v.priceTTC,
-        formattedPrice: v.formattedPrice,
-        rawProduct: v
-      }))
-    };
-  }).filter(Boolean);
+    }).filter(Boolean);
+  }
 
   // ── Resolve resins ───────────────────────────────────────────────
   let resins = [];
@@ -98,7 +174,7 @@ export default async function Home() {
       .slice(0, 4);
   } else {
     // Fallback: first resins found in catalogue
-    const RESIN_KEYWORDS = ['hash', 'pollen', 'resin', 'résine', 'harsh', 'golden'];
+    const RESIN_KEYWORDS = ['hash', 'pollen', 'resin', 'r\u00e9sine', 'harsh', 'golden'];
     resins = allProducts
       .filter(p => RESIN_KEYWORDS.some(k => p.name.toLowerCase().includes(k)))
       .slice(0, 4)
@@ -106,9 +182,20 @@ export default async function Home() {
   }
 
   // ── Inject into sections ─────────────────────────────────────────
+  const vitrineFlowersConfigured = vitrineConfig && Array.isArray(vitrineConfig.flowers);
+
   const sections = data.sections.map(section => {
-    if (section.id === 'featured-products' && flowers.length > 0) {
-      return { ...section, props: { ...section.props, products: flowers } };
+    if (section.id === 'featured-products') {
+      if (vitrineFlowersConfigured) {
+        // Admin configured vitrine: use their list (empty = return null = hide section)
+        if (flowers.length === 0) return null;
+        return { ...section, props: { ...section.props, products: flowers } };
+      }
+      // No vitrine config yet: inject dynamic fallback flowers over JSON defaults
+      if (flowers.length > 0) {
+        return { ...section, props: { ...section.props, products: flowers } };
+      }
+      return section;
     }
 
     // Inject global content into Header and Footer
@@ -129,7 +216,7 @@ export default async function Home() {
     }
 
     return section;
-  });
+  }).filter(Boolean); // filter out null = hidden sections
 
   // Insert resins section between WhyChooseUs and FAQ
   if (resins.length > 0) {
@@ -139,9 +226,9 @@ export default async function Home() {
         id: 'resins-section',
         type: 'ProductList',
         props: {
-          title: 'Nos résines phares, pour chaque moment.',
-          description: 'Des résines de CBD soigneusement sélectionnées pour leur qualité et leur authenticité.<br />Black Harsh, Golden Pollen… chaque résine est un voyage pour les amateurs d\'expériences naturelles et pures.',
-          linkLabel: 'Voir toutes les résines',
+          title: 'Nos r\u00e9sines phares, pour chaque moment.',
+          description: 'Des r\u00e9sines de CBD soigneusement s\u00e9lectionn\u00e9es pour leur qualit\u00e9 et leur authenticit\u00e9.<br />Black Harsh, Golden Pollen\u2026 chaque r\u00e9sine est un voyage pour les amateurs d\'exp\u00e9riences naturelles et pures.',
+          linkLabel: 'Voir toutes les r\u00e9sines',
           linkHref: '/produits',
           products: resins,
         }

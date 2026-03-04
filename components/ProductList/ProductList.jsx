@@ -14,25 +14,26 @@ function ProductCardItem({ product, index, groupId }) {
     const currentRaw = selectedVariant.rawProduct || product.rawProduct;
     const groupPrice = currentRaw ? calculateGroupPrice(currentRaw, groupId) : null;
 
-    const displayPrice = groupPrice?.suggestShowHT ? groupPrice.formattedPriceHT :
+    const displayPrice = groupPrice?.suggestShowHT ? `${groupPrice.formattedPriceHT} HT` :
         (groupPrice?.hasDiscount ? groupPrice.formattedPrice : selectedVariant.formattedPrice || product.formattedPrice);
 
     // Show original strike-through if discounted
-    const originalPriceHTML = (groupPrice?.hasDiscount && !groupPrice?.suggestShowHT)
+    const originalPriceHTML = (groupPrice?.hasDiscount)
         ? `<span style="text-decoration: line-through; color: #999; font-size: 0.8em; margin-right: 6px;">${selectedVariant.formattedPrice || product.formattedPrice}</span><span style="color: #d9534f; font-weight: bold;">${displayPrice}</span>`
         : displayPrice;
 
     // Calculate weight and per-gram price
     const searchString = `${selectedVariant.name || product.name || ''} ${currentRaw?.reference || ''}`.toLowerCase();
     const weightMatch = searchString.match(/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*g\b/);
-    let exactGrams = null;
+
+    // Fallback to weight property from app/page.js grouping
+    const exactGrams = selectedVariant.weight || (weightMatch ? parseFloat(weightMatch[1].replace(',', '.')) : null);
     let perGramText = null;
 
-    if (weightMatch) {
-        exactGrams = parseFloat(weightMatch[1].replace(',', '.'));
-        const currentPriceTTC = groupPrice?.priceTTC || currentRaw?.priceTTC || 0;
-        if (exactGrams > 0 && currentPriceTTC > 0) {
-            const newPerGram = (currentPriceTTC / exactGrams).toFixed(2).replace('.', ',');
+    if (exactGrams) {
+        const priceToUse = groupPrice?.suggestShowHT ? groupPrice.priceHT : (groupPrice?.priceTTC || 0);
+        if (priceToUse > 0) {
+            const newPerGram = (priceToUse / exactGrams).toFixed(2).replace('.', ',');
             perGramText = `${newPerGram}€/g`;
         }
     }
@@ -66,28 +67,34 @@ function ProductCardItem({ product, index, groupId }) {
                 />
             </div>
 
-            {/* 4g & 10g Selection Buttons */}
-            {product.variations && product.variations.length > 0 ? (
-                <div className={styles.variationSelector}>
-                    {product.variations.map(v => (
-                        <button
-                            key={v.slug}
-                            className={`${styles.variationBtn} ${selectedVariant.slug === v.slug ? styles.active : ''}`}
-                            onClick={() => setSelectedVariant(v)}
-                        >
-                            {v.weight}g = {(() => {
-                                const vPrice = calculateGroupPrice(v.rawProduct, groupId);
-                                return vPrice.suggestShowHT ? vPrice.formattedPriceHT : vPrice.formattedPrice;
-                            })()}
-                        </button>
-                    ))}
-                </div>
-            ) : (
+            {/* Price / Selection Display */}
+            {!product.variations || product.variations.length === 0 ? (
                 <div className={styles.pillsContainer}>
                     <span className={styles.pillLeft} dangerouslySetInnerHTML={{ __html: originalPriceHTML }}></span>
                     {exactGrams && (
                         <span className={styles.pillRight}>{exactGrams}G</span>
                     )}
+                </div>
+            ) : (
+                <div className={styles.variationSelector}>
+                    {product.variations.map(v => {
+                        const vPriceInfos = calculateGroupPrice(v.rawProduct, groupId);
+                        const vDisplayPrice = vPriceInfos.suggestShowHT ? `${vPriceInfos.formattedPriceHT} HT` : vPriceInfos.formattedPrice;
+
+                        return (
+                            <button
+                                key={v.slug}
+                                className={`${styles.variationBtn} ${selectedVariant.slug === v.slug ? styles.active : ''}`}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setSelectedVariant(v);
+                                }}
+                            >
+                                {v.weight}G = {vDisplayPrice}
+                            </button>
+                        );
+                    })}
                 </div>
             )}
 
@@ -96,7 +103,7 @@ function ProductCardItem({ product, index, groupId }) {
             </Link>
 
             {perGramText && (
-                <div className={styles.perGramList}>dès {perGramText}</div>
+                <div className={styles.perGramList}>Le gramme à partir de {perGramText}</div>
             )}
         </div>
     );
