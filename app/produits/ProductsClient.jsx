@@ -95,6 +95,26 @@ export default function ProductsClient({ initialProducts, globalContent }) {
         return () => clearInterval(timer);
     }, []);
 
+    // Fermer le tiroir de quantité si on clique ailleurs (Mobile)
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // On vérifie si le clic s'est fait en dehors de la zone du bouton
+            if (!event.target.closest(`.${styles.actionWrapper}`)) {
+                setExpandedId(null);
+            }
+        };
+
+        // On écoute les clics souris et les tapotements tactiles
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('touchstart', handleClickOutside);
+
+        // Nettoyage de l'écouteur quand on quitte la page
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('touchstart', handleClickOutside);
+        };
+    }, []);
+
     const nextSlide = () => setCurrentSlide((currentSlide + 1) % CAROUSEL_SLIDES.length);
     const prevSlide = () => setCurrentSlide((currentSlide - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length);
 

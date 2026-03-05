@@ -640,6 +640,20 @@
         border-radius: 16px;
     }
 
+    /* Annuler l'effet de vol (hover/active) sur mobile */
+    .card:hover,
+    .card:active {
+        transform: none;
+        box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.05); /* Remet l'ombre discrète par défaut */
+        border-color: rgba(31, 75, 64, 0.08); /* Remet la bordure par défaut */
+    }
+
+    /* Annuler le zoom de l'image sur mobile */
+    .card:hover .imageWrapper,
+    .card:active .imageWrapper {
+        transform: none;
+    }
+
     .imageWrapper {
         height: 150px;
     }
@@ -725,6 +739,14 @@
         padding: 12px 0;
         transform: translateY(0);
         pointer-events: auto;
+    }
+
+    .actionWrapper:hover:not(.expanded) .qtyDrawer {
+        height: 0;
+        opacity: 0;
+        visibility: hidden;
+        padding: 0;
+        pointer-events: none;
     }
 
     .qtyBtn {

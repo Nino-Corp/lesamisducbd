@@ -1,7 +1,7 @@
 
 'use client';
 
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useToast } from '@/context/ToastContext';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
@@ -14,7 +14,8 @@ export function CartProvider({ children }) {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
     const { showToast } = useToast();
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
+    const hasInitializedSession = useRef(false);
     // Use loose equality or cast to String to be robust against PrestaShop's string IDs
     const isPro = String(session?.user?.id_default_group) === "4";
 
@@ -109,9 +110,17 @@ export function CartProvider({ children }) {
 
         if (hasChanges && !isEqual(cart, updatedCart)) {
             setCart(updatedCart);
-            showToast("Panier mis à jour avec vos tarifs", "success");
+            // Only show toast if the session was already initialized (i.e. real mid-session change)
+            if (hasInitializedSession.current) {
+                showToast("Panier mis à jour avec vos tarifs", "success");
+            }
         }
-    }, [session?.user?.id_default_group, isLoaded]);
+
+        // Mark session as initialized once it's no longer "loading"
+        if (status !== "loading") {
+            hasInitializedSession.current = true;
+        }
+    }, [session?.user?.id_default_group, isLoaded, status]);
 
     // Add Item to Cart
     const addItem = (product, quantity = 1, variant = null) => {
