@@ -191,7 +191,7 @@ export async function POST(req) {
                         attachments: [
                             {
                                 filename: 'logo-email.png',
-                                path: './public/images/logo-email.png',
+                                path: `${baseUrl}/images/logo-email.png`,
                                 cid: 'logo' // same cid value as in the html img src
                             }
                         ]
