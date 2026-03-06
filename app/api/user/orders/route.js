@@ -73,6 +73,7 @@ export async function GET(request) {
         const enrichedOrders = await Promise.all(rawOrders.map(async (order) => {
             let trackingNumber = null;
             let trackingUrl = null;
+            let carrierName = 'Non défini';
 
             try {
                 // Fetch carrier data for tracking
@@ -87,16 +88,46 @@ export async function GET(request) {
                         try {
                             const carrierRes = await fetch(`${prestaUrl}/carriers/${oc.id_carrier}?ws_key=${prestaKey}&output_format=JSON&display=[name,url]`);
                             const carrierData = await carrierRes.json();
-                            const carrierUrl = carrierData?.carrier?.url;
-                            if (carrierUrl && carrierUrl !== 'null' && carrierUrl.length > 0) {
-                                // PrestaShop uses @ as placeholder for the tracking number
-                                trackingUrl = carrierUrl.replace('@', trackingNumber);
+
+                            if (carrierData?.carrier) {
+                                carrierName = carrierData.carrier.name;
+                                const carrierUrl = carrierData.carrier.url;
+                                if (carrierUrl && carrierUrl !== 'null' && carrierUrl.length > 0) {
+                                    // PrestaShop uses @ as placeholder for the tracking number
+                                    trackingUrl = carrierUrl.replace('@', trackingNumber);
+                                }
                             }
                         } catch (cErr) { /* Silently fail, we just won't have a URL */ }
                     }
                 }
             } catch (err) {
                 // Silently fail, tracking is optional
+            }
+
+            // Fetch Delivery Address
+            let deliveryAddress = null;
+            if (order.id_address_delivery && order.id_address_delivery !== '0') {
+                try {
+                    const addrRes = await fetch(`${prestaUrl}/addresses/${order.id_address_delivery}?ws_key=${prestaKey}&output_format=JSON`);
+                    const addrData = await addrRes.json();
+                    if (addrData?.address) {
+                        const a = addrData.address;
+                        deliveryAddress = `${a.firstname} ${a.lastname}\n${a.address1}${a.address2 ? '\n' + a.address2 : ''}\n${a.postcode} ${a.city}`;
+                    }
+                } catch (e) { }
+            }
+
+            // Fetch Invoice Address
+            let invoiceAddress = null;
+            if (order.id_address_invoice && order.id_address_invoice !== '0') {
+                try {
+                    const addrRes = await fetch(`${prestaUrl}/addresses/${order.id_address_invoice}?ws_key=${prestaKey}&output_format=JSON`);
+                    const addrData = await addrRes.json();
+                    if (addrData?.address) {
+                        const a = addrData.address;
+                        invoiceAddress = `${a.firstname} ${a.lastname}\n${a.address1}${a.address2 ? '\n' + a.address2 : ''}\n${a.postcode} ${a.city}`;
+                    }
+                } catch (e) { }
             }
 
             const stateInfo = stateMap[order.current_state] || { name: 'En cours', color: '#4169E1' };
@@ -106,10 +137,15 @@ export async function GET(request) {
                 reference: order.reference,
                 date: order.date_add,
                 total: parseFloat(order.total_paid).toFixed(2),
+                payment: order.payment,
+                shippingCost: parseFloat(order.total_shipping_tax_incl).toFixed(2),
                 status: stateInfo.name,
                 statusColor: stateInfo.color,
                 trackingNumber: trackingNumber,
                 trackingUrl: trackingUrl,
+                carrierName: carrierName,
+                deliveryAddress: deliveryAddress,
+                invoiceAddress: invoiceAddress,
                 products: order.associations?.order_rows?.map(row => ({
                     name: row.product_name,
                     quantity: row.product_quantity,

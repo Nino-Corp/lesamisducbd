@@ -295,7 +295,7 @@ export default function LoginModal({ isOpen, onClose, fromCheckout = false, init
                                     </div>
                                     <div className={styles.inputGroup}>
                                         <label className={styles.label} htmlFor="siret">
-                                            N° fiscal <span style={{ color: '#999', fontWeight: 400 }}>(optionnel)</span>
+                                            Numéro d'identification fiscale <span style={{ color: '#999', fontWeight: 400 }}>(optionnel)</span>
                                         </label>
                                         <input
                                             type="text"

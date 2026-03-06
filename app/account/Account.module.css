@@ -1,7 +1,7 @@
 .container {
     width: 100%;
     max-width: var(--container-width);
-    margin: 120px auto 80px;
+    margin: 40px auto 80px;
     padding: 0 20px;
     min-height: 60vh;
 }
@@ -93,7 +93,7 @@
 
 @media (max-width: 768px) {
     .container {
-        margin-top: 90px;
+        margin-top: 40px;
     }
 
     .title {

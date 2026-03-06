@@ -69,7 +69,6 @@ export default function AccountTabs({ userSession }) {
                     <Package size={20} />
                     <span>Mes Commandes</span>
                 </button>
-                <div style={{ flex: 1 }}></div>
                 <button
                     className={`${styles.tabButton} ${styles.logoutBtn}`}
                     onClick={() => signOut({ callbackUrl: '/' })}

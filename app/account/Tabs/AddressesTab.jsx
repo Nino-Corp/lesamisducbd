@@ -3,16 +3,42 @@ import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Save, Loader2, MapPin, ArrowLeft } from 'lucide-react';
 
 const COUNTRIES = [
-    { code: 'FR', name: 'France' },
-    { code: 'BE', name: 'Belgique' },
-    { code: 'CH', name: 'Suisse' },
-    { code: 'LU', name: 'Luxembourg' },
     { code: 'DE', name: 'Allemagne' },
+    { code: 'AD', name: 'Andorre' },
+    { code: 'AT', name: 'Autriche' },
+    { code: 'BE', name: 'Belgique' },
+    { code: 'BG', name: 'Bulgarie' },
+    { code: 'CY', name: 'Chypre' },
+    { code: 'HR', name: 'Croatie' },
+    { code: 'DK', name: 'Danemark' },
     { code: 'ES', name: 'Espagne' },
+    { code: 'EE', name: 'Estonie' },
+    { code: 'FI', name: 'Finlande' },
+    { code: 'FR', name: 'France' },
+    { code: 'GR', name: 'Grèce' },
+    { code: 'HU', name: 'Hongrie' },
+    { code: 'IE', name: 'Irlande' },
+    { code: 'IS', name: 'Islande' },
     { code: 'IT', name: 'Italie' },
+    { code: 'LV', name: 'Lettonie' },
+    { code: 'LI', name: 'Liechtenstein' },
+    { code: 'LT', name: 'Lituanie' },
+    { code: 'LU', name: 'Luxembourg' },
+    { code: 'MT', name: 'Malte' },
+    { code: 'MC', name: 'Monaco' },
+    { code: 'NO', name: 'Norvège' },
     { code: 'NL', name: 'Pays-Bas' },
+    { code: 'PL', name: 'Pologne' },
     { code: 'PT', name: 'Portugal' },
+    { code: 'RO', name: 'Roumanie' },
     { code: 'GB', name: 'Royaume-Uni' },
+    { code: 'SM', name: 'Saint-Marin' },
+    { code: 'VA', name: 'Saint-Siège' },
+    { code: 'SK', name: 'Slovaquie' },
+    { code: 'SI', name: 'Slovénie' },
+    { code: 'SE', name: 'Suède' },
+    { code: 'CH', name: 'Suisse' },
+    { code: 'CZ', name: 'Tchéquie' },
 ];
 
 const defaultForm = {
@@ -164,12 +190,8 @@ export default function AddressesTab({ user }) {
                 <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
 
                     <Field label="Alias" optional>
-                        <select value={formData.alias} onChange={e => setFormData({ ...formData, alias: e.target.value })}
-                            style={{ ...inputStyle, appearance: 'none', backgroundImage: 'url("data:image/svg+xml;utf8,<svg fill=%236B7280 height=20 viewBox=0 0 24 24 width=20 xmlns=http://www.w3.org/2000/svg><path d=M7 10l5 5 5-5z/></svg>")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}>
-                            <option value="Domicile">Domicile</option>
-                            <option value="Boutique">Boutique</option>
-                            <option value="Bureau">Bureau</option>
-                        </select>
+                        <input type="text" value={formData.alias} onChange={e => setFormData({ ...formData, alias: e.target.value })} style={inputStyle}
+                            onFocus={e => e.target.style.borderColor = 'var(--accent-neon)'} onBlur={e => e.target.style.borderColor = '#E5E7EB'} placeholder="Maison, Travail, etc." />
                     </Field>
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>

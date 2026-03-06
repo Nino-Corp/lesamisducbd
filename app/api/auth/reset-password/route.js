@@ -57,7 +57,7 @@ export async function POST(req) {
                     const resetUrl = `${baseUrl}/connexion?reset=${token}`;
 
                     const mailOptions = {
-                        from: process.env.EMAIL_USER || '"Les Amis du CBD" <no-reply@lesamisducbd.fr>',
+                        from: '"Les Amis du CBD" <contact@lesamisducbd.fr>',
                         to: lowerEmail,
                         subject: `Réinitialisation de votre mot de passe - Les Amis du CBD`,
                         html: `
