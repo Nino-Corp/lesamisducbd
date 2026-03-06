@@ -55,6 +55,17 @@ const defaultForm = {
     phone: '',
 };
 
+// Helper component moved outside the main render loop to prevent re-mounting inputs,
+// which causes them to lose focus on every keystroke.
+const Field = ({ label, children, optional }) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        <label style={{ fontSize: '0.875rem', fontWeight: '600', color: '#374151' }}>
+            {label} {optional && <span style={{ color: '#9CA3AF', fontWeight: '400' }}>(optionnel)</span>}
+        </label>
+        {children}
+    </div>
+);
+
 export default function AddressesTab({ user }) {
     const [addresses, setAddresses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -153,15 +164,6 @@ export default function AddressesTab({ user }) {
             setIsSaving(false);
         }
     };
-
-    const Field = ({ label, children, optional }) => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <label style={{ fontSize: '0.875rem', fontWeight: '600', color: '#374151' }}>
-                {label} {optional && <span style={{ color: '#9CA3AF', fontWeight: '400' }}>(optionnel)</span>}
-            </label>
-            {children}
-        </div>
-    );
 
     const inputStyle = {
         padding: '11px 14px',

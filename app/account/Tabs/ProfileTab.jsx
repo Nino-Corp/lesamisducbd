@@ -85,7 +85,6 @@ export default function ProfileTab({ user, onUpdate }) {
             setMessage({ text: 'Le numéro d\'identification fiscale (SIRET/TVA) ne semble pas valide.', type: 'error' });
             return;
         }
-
         setIsSaving(true);
         setMessage({ text: '', type: '' });
 
@@ -206,7 +205,6 @@ export default function ProfileTab({ user, onUpdate }) {
                             style={inputStyle} onFocus={(e) => e.target.style.borderColor = 'var(--accent-neon)'} onBlur={(e) => e.target.style.borderColor = '#D1D5DB'} />
                     </Field>
                 </div>
-
                 {/* Email Read-only */}
                 <Field label="E-mail">
                     <input type="email" value={user?.email || ''} disabled

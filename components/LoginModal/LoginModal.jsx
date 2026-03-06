@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Loader2, Eye, EyeOff } from 'lucide-react';
+import { X, Loader2, Eye, EyeOff, Check } from 'lucide-react';
 import { signIn } from 'next-auth/react';
 
 import useLockBodyScroll from '../../hooks/useLockBodyScroll';
@@ -16,6 +16,7 @@ export default function LoginModal({ isOpen, onClose, fromCheckout = false, init
     const [isLoading, setIsLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordStrength, setPasswordStrength] = useState(0);
     const [confirmPassword, setConfirmPassword] = useState('');
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
@@ -41,6 +42,28 @@ export default function LoginModal({ isOpen, onClose, fromCheckout = false, init
             setMessage('');
         }
     }, [isOpen, initialView]);
+    // Calculate password strength (0-3)
+    const calculateStrength = (pwd) => {
+        let score = 0;
+        if (!pwd) return 0;
+
+        // Critère 1 : Longueur brute (au moins 8)
+        if (pwd.length >= 8) score += 1;
+
+        // Critère 2 : Diversité (majuscules, minuscules)
+        if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) score += 1;
+
+        // Critère 3 : Complexité (chiffres ET spéciaux)
+        if (/[0-9]/.test(pwd) && /[^A-Za-z0-9]/.test(pwd)) score += 1;
+
+        return score; // Max 3 (Fort)
+    };
+
+    const handlePasswordChange = (e) => {
+        const val = e.target.value;
+        setPassword(val);
+        if (view === 'register') setPasswordStrength(calculateStrength(val));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -66,6 +89,12 @@ export default function LoginModal({ isOpen, onClose, fromCheckout = false, init
         else if (view === 'register') {
             if (!rgpdAccepted) {
                 setError("Vous devez accepter la politique de confidentialité pour créer un compte.");
+                setIsLoading(false);
+                return;
+            }
+
+            if (passwordStrength < 3) {
+                setError("Veuillez choisir un mot de passe plus fort.");
                 setIsLoading(false);
                 return;
             }
@@ -350,7 +379,7 @@ export default function LoginModal({ isOpen, onClose, fromCheckout = false, init
                                     className={styles.input}
                                     placeholder="••••••••"
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={handlePasswordChange}
                                     required
                                     minLength={view === 'reset_password' ? 6 : undefined}
                                 />
@@ -363,6 +392,30 @@ export default function LoginModal({ isOpen, onClose, fromCheckout = false, init
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
+
+                            {view === 'register' && (
+                                <div style={{ marginTop: '10px', fontSize: '0.85rem', color: '#666' }}>
+                                    <div style={{ display: 'flex', gap: '4px', marginBottom: '8px', height: '4px', borderRadius: '2px', overflow: 'hidden', background: '#e5e7eb' }}>
+                                        <div style={{ flex: 1, background: passwordStrength >= 1 ? (passwordStrength === 1 ? '#EF4444' : passwordStrength === 2 ? '#F59E0B' : '#10B981') : 'transparent', transition: 'background 0.3s' }}></div>
+                                        <div style={{ flex: 1, background: passwordStrength >= 2 ? (passwordStrength === 2 ? '#F59E0B' : '#10B981') : 'transparent', transition: 'background 0.3s' }}></div>
+                                        <div style={{ flex: 1, background: passwordStrength >= 3 ? '#10B981' : 'transparent', transition: 'background 0.3s' }}></div>
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: password.length >= 8 ? '#10B981' : '#6B7280' }}>
+                                            {password.length >= 8 ? <Check size={14} /> : <X size={14} />}
+                                            Entrez un mot de passe entre 8 et 72 caractères.
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: (/[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) ? '#10B981' : '#6B7280' }}>
+                                            {(/[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) ? <Check size={14} /> : <X size={14} />}
+                                            Inclure au moins 1 chiffre et 1 symbole.
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: passwordStrength >= 3 ? '#10B981' : '#6B7280' }}>
+                                            {passwordStrength >= 3 ? <Check size={14} /> : <X size={14} />}
+                                            Le score minimum doit être: Fort.
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
 
