@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/context/ToastContext';
 import { Save, Loader2, Plus, Trash2 } from 'lucide-react';
+import ImageUpload from '@/components/Admin/ImageUpload';
 import styles from './RecrutementEditor.module.css';
 
 export default function RecrutementEditor({ initialData }) {
@@ -86,6 +87,14 @@ export default function RecrutementEditor({ initialData }) {
                             <input type="checkbox" checked={data.hero.isVisible !== false} onChange={e => updateNested('hero', 'isVisible', e.target.checked)} />
                             Afficher le panneau Héro
                         </label>
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                        <label>Image de fond (Héro)</label>
+                        <ImageUpload
+                            currentImage={data.hero.imageSrc || ''}
+                            onImageChange={(url) => updateNested('hero', 'imageSrc', url)}
+                        />
                     </div>
 
                     <div className={styles.inputGroup}>

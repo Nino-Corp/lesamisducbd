@@ -309,7 +309,7 @@ export default function ProductsClient({ initialProducts, globalContent }) {
                                                 )}
                                             </span>
                                             {perGramText && (
-                                                <span className={styles.perGramText}>Le gramme à partir de {perGramText}</span>
+                                                <span className={styles.perGramText}>{perGramText}</span>
                                             )}
                                         </div>
                                         <div className={`${styles.actionWrapper} ${expandedId === product.id ? styles.expanded : ''}`}>

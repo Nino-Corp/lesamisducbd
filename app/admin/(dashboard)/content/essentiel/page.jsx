@@ -3,8 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../[id]/Editor.module.css';
+import ImageUpload from '@/components/Admin/ImageUpload';
 
 const DEFAULTS = {
+    hero: {
+        title: "L'Essentiel"
+    },
     intro: [
         "Nous sommes une bande d'amis d'enfance, passionnés par le CBD et convaincus qu'il doit être simple, accessible et de qualité.",
         "Chez Les Amis du CBD, aucune étiquette compliquée, ni de noms artificiels, nous on utilise un vocabulaire du quotidien.",
@@ -36,7 +40,7 @@ export default function EssentielContentPage() {
     const [loaded, setLoaded] = useState(false);
     const [saving, setSaving] = useState(false);
     const [tab, setTab] = useState('intro');
-
+    const [hero, setHero] = useState(DEFAULTS.hero);
     const [intro, setIntro] = useState(DEFAULTS.intro);
     const [legalItems, setLegalItems] = useState(DEFAULTS.legalItems);
     const [cultureItems, setCultureItems] = useState(DEFAULTS.cultureItems);
@@ -44,6 +48,7 @@ export default function EssentielContentPage() {
     const [quote, setQuote] = useState(DEFAULTS.quote);
 
     const [visibility, setVisibility] = useState({
+        hero: true,
         intro: true,
         legalItems: true,
         cultureItems: true,
@@ -56,6 +61,7 @@ export default function EssentielContentPage() {
         fetch('/api/admin/content/essentiel', { signal: controller.signal })
             .then(r => r.json())
             .then(data => {
+                if (data.hero) setHero(data.hero);
                 if (data.intro) setIntro(data.intro);
                 if (data.legalItems) setLegalItems(data.legalItems);
                 if (data.cultureItems) setCultureItems(data.cultureItems);
@@ -76,7 +82,7 @@ export default function EssentielContentPage() {
             await fetch('/api/admin/content/essentiel', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ intro, legalItems, cultureItems, essentialPoints, quote, visibility })
+                body: JSON.stringify({ hero, intro, legalItems, cultureItems, essentialPoints, quote, visibility })
             });
             alert('Modifications enregistrées !');
         } catch { alert('Erreur lors de la sauvegarde'); }
@@ -95,8 +101,8 @@ export default function EssentielContentPage() {
         });
     };
 
-    const TABS = ['intro', 'legalItems', 'cultureItems', 'essentialPoints', 'quote'];
-    const TAB_LABELS = { intro: '📝 Intro', legalItems: '⚖️ Légalité', cultureItems: '🌱 Culture', essentialPoints: '✅ Points clés', quote: '🖊 Citation' };
+    const TABS = ['hero', 'intro', 'legalItems', 'cultureItems', 'essentialPoints', 'quote'];
+    const TAB_LABELS = { hero: '🏷 Hero', intro: '📝 Intro', legalItems: '⚖️ Légalité', cultureItems: '🌱 Culture', essentialPoints: '✅ Points clés', quote: '🖊 Citation' };
 
     if (!loaded) return <div style={{ padding: 20 }}>Chargement...</div>;
 
@@ -104,7 +110,7 @@ export default function EssentielContentPage() {
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
                 <Link href="/admin/content" style={{ textDecoration: 'none', color: '#666' }}>← Retour</Link>
-                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1F4B40', margin: 0 }}>🌿 L'Essentiel</h1>
+                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1F4B40', margin: 0 }}>🌿 Qui sommes-nous ?</h1>
             </div>
 
             {/* Tabs */}
@@ -132,6 +138,23 @@ export default function EssentielContentPage() {
                     </label>
                     <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>Décochez cette case pour masquer cette partie au public.</small>
                 </div>
+
+                {/* Hero */}
+                {tab === 'hero' && (
+                    <>
+                        <div className={styles.fieldGroup}>
+                            <label>Image de fond</label>
+                            <ImageUpload
+                                currentImage={hero?.imageSrc || ''}
+                                onImageChange={(url) => setHero(h => ({ ...h, imageSrc: url }))}
+                            />
+                        </div>
+                        <div className={styles.fieldGroup}>
+                            <label>Titre H1 (affiché sur l'image en haut de page)</label>
+                            <input className={styles.input} value={hero?.title || ''} onChange={e => setHero(h => ({ ...h, title: e.target.value }))} />
+                        </div>
+                    </>
+                )}
 
                 {/* Intro */}
                 {tab === 'intro' && intro.map((para, i) => (

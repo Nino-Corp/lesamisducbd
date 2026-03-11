@@ -21,8 +21,8 @@ const PAGES = [
         href: '/admin/content/essentiel'
     },
     {
-        id: 'buraliste',
-        label: 'Buraliste',
+        id: 'professionnel',
+        label: 'Professionnel',
         icon: '🏪',
         description: 'Hero, Arguments partenariat, Étapes pour devenir partenaire',
         count: 4,

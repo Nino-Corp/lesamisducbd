@@ -145,7 +145,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                 }
 
                                 if (!perGramText) return null;
-                                return <div className={styles.perGramInfo}>Le gramme à partir de {perGramText}</div>;
+                                return <div className={styles.perGramInfo}>{perGramText}</div>;
                             })()}
                         </div>
 
@@ -241,7 +241,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                             </span>
                                         </div>
                                         {perGramText && (
-                                            <div className={styles.relatedPerGram}>Le gramme à partir de {perGramText}</div>
+                                            <div className={styles.relatedPerGram}>{perGramText}</div>
                                         )}
                                     </div>
                                 </Link>

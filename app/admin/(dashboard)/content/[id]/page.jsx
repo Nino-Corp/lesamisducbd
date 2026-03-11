@@ -10,6 +10,7 @@ import FAQEditor from './FAQEditor';
 import QuoteEditor from './QuoteEditor';
 import PartnersNetworkEditor from './PartnersNetworkEditor';
 import PartnersEditor from './PartnersEditor';
+import WhyChooseUsEditor from './WhyChooseUsEditor';
 
 export default function EditContentPage() {
     const params = useParams();
@@ -80,6 +81,8 @@ export default function EditContentPage() {
                 return <PartnersNetworkEditor section={section} onSave={handleSave} />;
             case 'Partners':
                 return <PartnersEditor section={section} onSave={handleSave} />;
+            case 'WhyChooseUs':
+                return <WhyChooseUsEditor section={section} onSave={handleSave} />;
             default:
                 return <div>Éditeur non implémenté pour {section.type}</div>;
         }

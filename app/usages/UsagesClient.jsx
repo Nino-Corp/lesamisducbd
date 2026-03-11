@@ -93,13 +93,15 @@ export default function UsagesClient({ globalContent, content }) {
 
             <main>
                 {/* HERO */}
-                <ContentHero
-                    imageSrc="/images/usages/hero.webp"
-                    imageAlt="Illustration CBD Questionnement"
-                    imagePosition="center 35%"
-                >
-                    <h1 className={styles.heroTitle}>{heroData.title}</h1>
-                </ContentHero>
+                {visibility.intro !== false && (
+                    <ContentHero
+                        imageSrc={heroData.imageSrc || "/images/usages/hero.webp"}
+                        imageAlt="Illustration CBD Questionnement"
+                        imagePosition="center 35%"
+                    >
+                        <h1 className={styles.heroTitle}>{heroData.title}</h1>
+                    </ContentHero>
+                )}
 
                 {/* INTRO */}
                 {visibility.intro !== false && (

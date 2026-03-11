@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../[id]/Editor.module.css';
+import ImageUpload from '@/components/Admin/ImageUpload';
 
 const DEFAULTS = {
     hero: {
@@ -209,6 +210,13 @@ export default function UsagesContentPage() {
                 {tab === 'intro' && (
                     <>
                         <h2 style={{ fontSize: '1rem', color: '#1F4B40', borderBottom: '1px solid #ddd', paddingBottom: 5 }}>Bloc Hero</h2>
+                        <div className={styles.fieldGroup}>
+                            <label>Image de fond</label>
+                            <ImageUpload
+                                currentImage={hero?.imageSrc || ''}
+                                onImageChange={(url) => setHero(h => ({ ...h, imageSrc: url }))}
+                            />
+                        </div>
                         <div className={styles.fieldGroup}>
                             <label>Titre H1 principal</label>
                             <input className={styles.input} value={hero.title} onChange={e => setHero(h => ({ ...h, title: e.target.value }))} />

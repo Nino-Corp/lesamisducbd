@@ -57,13 +57,15 @@ export default function EssentielClient({ content, globalContent }) {
             <Header {...headerProps} />
             <main>
                 {/* HERO */}
-                <ContentHero
-                    imageSrc="/images/about/team.webp"
-                    imagePosition="center 35%"
-                    imageAlt="L'équipe Les Amis du CBD"
-                >
-                    <h1 className={styles.pageTitle}>L'Essentiel</h1>
-                </ContentHero>
+                {visibility.hero !== false && (
+                    <ContentHero
+                        imageSrc={content?.hero?.imageSrc || "/images/about/team.webp"}
+                        imagePosition="center 35%"
+                        imageAlt="L'équipe Les Amis du CBD"
+                    >
+                        <h1 className={styles.pageTitle}>{content?.hero?.title || "L'Essentiel"}</h1>
+                    </ContentHero>
+                )}
 
                 {/* INTRO TEXT */}
                 {visibility.intro !== false && (

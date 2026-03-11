@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }) {
                     <Link href="/admin/content" className={styles.link}>Contenu Site</Link>
                     <Link href="/admin/builder" className={styles.link}>Page Builder</Link>
                     <Link href="/admin/products" className={styles.link}>Produits</Link>
-                    <Link href="/admin/partners" className={styles.link}>Buralistes</Link>
+                    <Link href="/admin/partners" className={styles.link}>Professionnels</Link>
                     <Link href="/" className={styles.link}>Voir le site</Link>
                     <LogoutButton />
                 </nav>

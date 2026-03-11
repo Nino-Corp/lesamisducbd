@@ -68,11 +68,11 @@ export default function ProfessionnelClient({ content, globalContent }) {
                 {visibility.hero !== false && (
                     <>
                         <ContentHero
-                            imageSrc="/images/professionnel/header-illustration.webp"
+                            imageSrc={content?.hero?.imageSrc || "/images/professionnel/header-illustration.webp"}
                             imageAlt="Partenariat Professionnel"
                             imagePosition="center 40%"
                         >
-                            <h2 className={styles.newBadge}>Nous rejoindre ?</h2>
+                            <h2 className={styles.newBadge}>{content?.hero?.badgeText || "Nous rejoindre ?"}</h2>
                         </ContentHero>
 
                         {/* Text below the hero image banner */}

@@ -35,7 +35,7 @@
       "type": "Marquee",
       "props": {
         "text": "LA LIVRAISON OFFERTE SANS MINIMUM DE COMMANDE • PLUS SIMPLE, MOINS CHER",
-        "speed": "15"
+        "speed": "70"
       }
     },
     {
@@ -127,7 +127,7 @@
       "props": {
         "title": "Pourquoi nous choisir :",
         "ctaLabel": "Qui sommes-nous ?",
-        "ctaLink": "/qui-sommes-nous",
+        "ctaLink": "/essentiel",
         "features": [
           {
             "title": "LE NATUREL C'EST GRATUIT.",

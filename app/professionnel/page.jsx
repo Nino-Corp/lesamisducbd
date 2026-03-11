@@ -35,19 +35,18 @@ const DEFAULTS = {
         { title: "Prenez une longueur d'avance sur vos concurrents", text: "Transformez votre commerce en un point de référence du CBD accessible et pas cher, tout en rassurant votre clientèle sur la qualité et la légalité des produits.\n\nLes Amis du CBD, c'est le CBD bien fait, bien expliqué, et bien vendu." }
     ]
 };
-
-export default async function BuralistePage() {
+export default async function ProfessionnelPage() {
     let content = DEFAULTS;
     let globalContent = null;
     try {
         const [kvData, globalData] = await Promise.all([
-            kv.get('buraliste_content'),
+            kv.get('professionnel_content'),
             kv.get('global_content')
         ]);
         if (kvData) content = { ...DEFAULTS, ...kvData };
         if (globalData) globalContent = globalData;
     } catch (e) {
-        console.error('KV error (buraliste/global):', e);
+        console.error('KV error (professionnel/global):', e);
     }
     return <ProfessionnelClient content={content} globalContent={globalContent} />;
 }

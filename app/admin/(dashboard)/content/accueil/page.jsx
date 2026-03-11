@@ -9,7 +9,7 @@ const HOME_SECTIONS = [
     { id: 'hero-home', label: 'Héro Principal', icon: '🖼', description: 'Titre, description, image de fond et bouton CTA', type: 'Hero' },
     { id: 'why-choose-us', label: 'Pourquoi Nous Choisir', icon: '✅', description: '6 arguments différenciants', type: 'WhyChooseUs' },
     { id: 'faq-section', label: 'FAQ', icon: '❓', description: 'Questions/réponses fréquentes', type: 'FAQ' },
-    { id: 'partners-section', label: 'Témoignages Buralistes', icon: '💬', description: 'Citations de buralistes partenaires', type: 'Partners' },
+    { id: 'partners-section', label: 'Témoignages Professionnels', icon: '💬', description: 'Citations des professionnels partenaires', type: 'Partners' },
     { id: 'partners-network', label: 'Réseau Partenaires', icon: '🤝', description: 'Logos des partenaires institutionnels', type: 'PartnersNetwork' },
     { id: 'quote-section', label: 'Citation Manifesto', icon: '🖊', description: 'Citation phare de l\'équipe fondatrice', type: 'Quote' },
 ];

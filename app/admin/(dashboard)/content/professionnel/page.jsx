@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from '../[id]/Editor.module.css';
+import ImageUpload from '@/components/Admin/ImageUpload';
 
 const DEFAULTS = {
     hero: {
+        badgeText: "Nous rejoindre ?",
         title: "CBD accessible et pas cher pour professionnels : devenez partenaire des Amis du CBD.",
         text: "Les Amis du CBD est une marque française pensée pour les professionnels et revendeurs : du CBD naturel, légal, accessible en prix et simple à commercialiser.\n\nNotre ambition est claire : démocratiser le CBD de qualité, sans promesses floues ni prix excessifs.\n\nVotre boutique est le lieu idéal pour proposer un CBD pas cher, fiable et conforme à la réglementation, à une clientèle de plus en plus demandeuse."
     },
@@ -148,16 +150,26 @@ export default function BuralisteContentPage() {
                     <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>Décochez cette case pour masquer cette partie au public.</small>
                 </div>
 
-                {/* Hero */}
                 {tab === 'hero' && (
                     <>
                         <div className={styles.fieldGroup}>
-                            <label>Titre H1</label>
-                            <textarea className={styles.textarea} value={hero.title} rows={2} onChange={e => setHero(h => ({ ...h, title: e.target.value }))} />
+                            <label>Image de fond</label>
+                            <ImageUpload
+                                currentImage={hero?.imageSrc || ''}
+                                onImageChange={(url) => setHero(h => ({ ...h, imageSrc: url }))}
+                            />
+                        </div>
+                        <div className={styles.fieldGroup}>
+                            <label>Titre sur l'image (Badge H2)</label>
+                            <input className={styles.input} value={hero?.badgeText || ''} onChange={e => setHero(h => ({ ...h, badgeText: e.target.value }))} />
+                        </div>
+                        <div className={styles.fieldGroup}>
+                            <label>Titre principal détaillé H1</label>
+                            <textarea className={styles.textarea} value={hero?.title || ''} rows={2} onChange={e => setHero(h => ({ ...h, title: e.target.value }))} />
                         </div>
                         <div className={styles.fieldGroup}>
                             <label>Corps du texte (les retours à la ligne seront respectés)</label>
-                            <textarea className={styles.textarea} value={hero.text} rows={6} onChange={e => setHero(h => ({ ...h, text: e.target.value }))} />
+                            <textarea className={styles.textarea} value={hero?.text || ''} rows={6} onChange={e => setHero(h => ({ ...h, text: e.target.value }))} />
                         </div>
                     </>
                 )}

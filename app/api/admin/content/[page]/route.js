@@ -4,6 +4,10 @@ import { kv } from '@vercel/kv';
 // Default content for each page (used as fallback)
 const DEFAULTS = {
     essentiel: {
+        hero: {
+            title: "L'Essentiel",
+            imageSrc: "/images/about/team.webp"
+        },
         intro: [
             "Nous sommes une bande d'amis d'enfance, passionnés par le CBD et convaincus qu'il doit être simple, accessible et de qualité.",
             "Chez Les Amis du CBD, aucune étiquette compliquée, ni de noms artificiels, nous on utilise un vocabulaire du quotidien.",
@@ -27,10 +31,12 @@ const DEFAULTS = {
         ],
         quote: { text: '"Comprendre avant d\'acheter.<br/>Explorer nos articles pédagogiques.<br/>Découvrir nos produits en toute confiance."', author: "Nelson — Les Amis du CBD" }
     },
-    buraliste: {
+    professionnel: {
         hero: {
-            title: "CBD accessible et pas cher pour buralistes : devenez partenaire des Amis du CBD.",
-            text: "Les Amis du CBD est une marque française pensée pour les bureaux de tabac : du CBD naturel, légal, accessible en prix et simple à commercialiser."
+            badgeText: "Nous rejoindre ?",
+            title: "CBD accessible et pas cher pour professionnels : devenez partenaire des Amis du CBD.",
+            text: "Les Amis du CBD est une marque française pensée pour les bureaux de tabac : du CBD naturel, légal, accessible en prix et simple à commercialiser.",
+            imageSrc: "/images/professionnel/header-illustration.webp"
         },
         features1: [
             { title: "Sécurité & légalité avant tout", description: "Produits conformes à la législation française, avec moins de 0,3 % de THC." },

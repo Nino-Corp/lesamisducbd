@@ -151,12 +151,12 @@ export default function PartnersAdmin() {
     const handleDownloadTemplate = () => {
         const template = [
             { name: 'Tabac de la Place', address: '12 rue de la Paix', zip: '75001', city: 'Paris' },
-            { name: 'Buraliste Dupont', address: '3 avenue Victor Hugo', zip: '13001', city: 'Marseille' },
+            { name: 'Partenaire Dupont', address: '3 avenue Victor Hugo', zip: '13001', city: 'Marseille' },
         ];
         const ws = XLSX.utils.json_to_sheet(template);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Template');
-        XLSX.writeFile(wb, 'template-import-buralistes.xlsx');
+        XLSX.writeFile(wb, 'template-import-professionnels.xlsx');
     };
 
     const runBulkImport = async (rows) => {
@@ -191,7 +191,7 @@ export default function PartnersAdmin() {
                 <div className={styles.titleGroup}>
                     <MapPin className={styles.titleIcon} />
                     <div>
-                        <h1>Gestion des Buralistes Partenaires</h1>
+                        <h1>Gestion des Professionnels Partenaires</h1>
                         <p>Ajoutez et gérez les points de vente sur la carte</p>
                     </div>
                 </div>
@@ -265,7 +265,7 @@ export default function PartnersAdmin() {
             <div className={styles.grid}>
                 {/* Formulaire */}
                 <div className={styles.card}>
-                    <h2 className={styles.cardTitle}>{editingPartner ? 'Modifier le partenaire' : 'Ajouter un buraliste'}</h2>
+                    <h2 className={styles.cardTitle}>{editingPartner ? 'Modifier le partenaire' : 'Ajouter un professionnel'}</h2>
                     <form onSubmit={handleSubmit} className={styles.form}>
                         <div className={styles.field}>
                             <label>Nom du commerce</label>

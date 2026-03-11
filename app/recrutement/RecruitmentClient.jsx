@@ -31,7 +31,7 @@ export default function RecruitmentClient({ globalContent, content }) {
 
     const headerProps = {
         bannerVisible: globalContent?.visibility?.headerBanner !== false,
-        
+
         logoText: "LES AMIS DU CBD",
         logoImage: "/images/logo.webp",
         menuItems: [
@@ -102,7 +102,7 @@ export default function RecruitmentClient({ globalContent, content }) {
                 {/* HERO */}
                 {data.hero.isVisible !== false && (
                     <ContentHero
-                        imageSrc="/images/recrutement/handshake.webp"
+                        imageSrc={data.hero.imageSrc || "/images/recrutement/handshake.webp"}
                         imageAlt="Rejoindre l'équipe"
                     >
                         <h1 className={styles.pageTitle}>{data.hero.title}</h1>
