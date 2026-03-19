@@ -13,7 +13,7 @@
     background: linear-gradient(180deg, #49B197 0%, #173830 100%);
 
     /* Fluid padding */
-    padding: clamp(40px, 6vw, 80px) clamp(20px, 3vw, 40px);
+    padding: clamp(40px, 6vw, 40px) clamp(20px, 3vw, 40px);
 
     display: flex;
     flex-direction: column;
