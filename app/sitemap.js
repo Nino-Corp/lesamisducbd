@@ -1,18 +1,23 @@
 import { SITE_URL } from './shared-metadata';
+import { productService } from '@/lib/services/productService';
 
-export default function sitemap() {
-    const routes = [
+export default async function sitemap() {
+    // Fetch all products from PrestaShop
+    const products = await productService.getProducts();
+
+    const staticRoutes = [
         '',
-        '/professionnel',
+        '/professionnels',
         '/essentiel',
         '/usages',
         '/recrutement',
         '/qui-sommes-nous',
-        '/produits', // Assuming this exists or will exist
+        '/produits',
+        '/transparence'
     ].map((route) => {
-        if (route === '/professionnel') {
+        if (route === '/professionnels') {
             return {
-                url: `${SITE_URL}/professionnel`,
+                url: `${SITE_URL}/professionnels`,
                 lastModified: new Date(),
                 changeFrequency: 'monthly',
                 priority: 0.5,
@@ -26,5 +31,12 @@ export default function sitemap() {
         };
     });
 
-    return routes;
+    const productRoutes = products.map((product) => ({
+        url: `${SITE_URL}/produit/${product.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.8,
+    }));
+
+    return [...staticRoutes, ...productRoutes];
 }

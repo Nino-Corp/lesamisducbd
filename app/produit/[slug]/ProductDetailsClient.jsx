@@ -11,6 +11,8 @@ import styles from './ProductDetails.module.css';
 import { ArrowLeft, Star, Truck, ShieldCheck, Heart } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
+import { SITE_URL } from '@/app/shared-metadata';
+import ProductSchema from '@/components/JsonLd/ProductSchema';
 
 const HEADER_PROPS = {
     logoText: "LES AMIS DU CBD",
@@ -76,8 +78,11 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
         }, quantity);
     };
 
+    const productUrl = `${SITE_URL}/produit/${product.slug}`;
+
     return (
         <main className={styles.main}>
+            <ProductSchema product={product} productUrl={productUrl} />
             <Header {...HEADER_PROPS} bannerVisible={globalContent?.visibility?.headerBanner !== false} />
 
             <div className={styles.container}>
@@ -95,6 +100,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                 fill
                                 className={styles.mainImage}
                                 priority
+                                sizes="(max-width: 768px) 100vw, 50vw"
                             />
                         </div>
                     </div>
@@ -217,7 +223,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                             return (
                                 <Link key={p.name} href={`/produit/${p.slug}`} className={styles.relatedCard}>
                                     <div className={styles.relatedImageWrapper}>
-                                        <Image src={p.image || '/images/placeholder.webp'} alt={p.name} fill className={styles.relatedImage} />
+                                        <Image src={p.image || '/images/placeholder.webp'} alt={p.name} fill className={styles.relatedImage} sizes="(max-width: 768px) 50vw, 25vw" />
                                     </div>
                                     <div className={styles.relatedInfo}>
                                         <h3>{p.name}</h3>

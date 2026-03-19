@@ -3,9 +3,14 @@ import { productService } from '@/lib/services/productService';
 import { kv } from '@vercel/kv';
 import ProductsClient from './ProductsClient';
 
+import { SITE_URL } from '@/app/shared-metadata';
+
 export const metadata = {
     title: 'Nos Fleurs CBD Premium | Les Amis du CBD',
     description: 'Découvrez notre sélection de fleurs de CBD françaises. Cultivées naturellement, sans ajout de terpènes chimiques. Livraison offerte.',
+    alternates: {
+        canonical: `${SITE_URL}/produits`,
+    },
 };
 
 export const revalidate = 60; // ISR cache every minute
