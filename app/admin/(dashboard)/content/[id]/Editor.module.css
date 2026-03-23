@@ -106,3 +106,59 @@
         padding: 10px;
     }
 }
+
+/* ─── Admin Tabs ────────── */
+.adminTabsContainer {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 12px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(31, 75, 64, 0.3) transparent;
+}
+
+.adminTabsContainer::-webkit-scrollbar {
+    height: 6px;
+    background-color: transparent;
+}
+
+.adminTabsContainer::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.adminTabsContainer::-webkit-scrollbar-thumb {
+    background-color: rgba(31, 75, 64, 0.3);
+    border-radius: 10px;
+}
+
+.adminTabsContainer::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(31, 75, 64, 0.6);
+}
+
+.adminTab {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    border-radius: 6px;
+    color: #888;
+    transition: all 0.2s ease;
+}
+
+.adminTabActive {
+    background-color: #1F4B40;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(31, 75, 64, 0.2);
+}
+
+.adminTab:hover:not(.adminTabActive) {
+    background-color: #00FF94;
+    color: #333;
+}

@@ -88,13 +88,16 @@ export default function GlobalContentPage() {
             </div>
 
             {/* Tabs */}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 20, borderBottom: '2px solid #eee', paddingBottom: 0, overflowX: 'auto', flexWrap: 'nowrap', WebkitOverflowScrolling: 'touch' }}>
+            <div className={styles.adminTabsContainer}>
                 {TABS.map(t => (
-                    <button key={t.id} type="button" onClick={() => setTab(t.id)} style={{
-                        background: 'none', border: 'none', borderBottom: tab === t.id ? '3px solid #1F4B40' : '3px solid transparent',
-                        padding: '6px 14px', fontWeight: 700, color: tab === t.id ? '#1F4B40' : '#888',
-                        cursor: 'pointer', fontSize: '0.85rem', marginBottom: -2
-                    }}>{t.label}</button>
+                    <button 
+                        key={t.id} 
+                        type="button" 
+                        onClick={() => setTab(t.id)} 
+                        className={`${styles.adminTab} ${tab === t.id ? styles.adminTabActive : ''}`}
+                    >
+                        {t.label}
+                    </button>
                 ))}
             </div>
 

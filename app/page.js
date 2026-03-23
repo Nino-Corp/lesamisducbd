@@ -185,6 +185,11 @@ export default async function Home() {
   const vitrineFlowersConfigured = vitrineConfig && Array.isArray(vitrineConfig.flowers);
 
   const sections = data.sections.map(section => {
+    // Do not render sections that the admin has hidden
+    if (section.props && section.props.isVisible === false) {
+      return null;
+    }
+    
     if (section.id === 'featured-products') {
       if (vitrineFlowersConfigured) {
         // Admin configured vitrine: use their list (empty = return null = hide section)

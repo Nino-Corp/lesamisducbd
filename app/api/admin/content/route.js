@@ -48,47 +48,32 @@ export async function GET() {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { sectionId, newProps } = body;
-
-        if (!sectionId || !newProps) {
-            return NextResponse.json(
-                { error: 'Missing sectionId or newProps' },
-                { status: 400 }
-            );
-        }
-
-        // 1. Read current data from KV
         let data = await kv.get(KV_KEY);
+        if (!data) data = await getInitialData();
 
-        // Fallback if KV was somehow cleared but we are trying to update
-        if (!data) {
-            data = await getInitialData();
+        // Check if we are doing a bulk update (from the new unified Accueil layout)
+        if (body.sections && Array.isArray(body.sections)) {
+            data.sections = body.sections;
+            await kv.set(KV_KEY, data);
+            return NextResponse.json({ success: true, updatedSections: data.sections.length });
         }
 
-        // 2. Find and update the section
-        if (!data || !data.sections) {
-            return NextResponse.json({ error: 'Data structure invalid' }, { status: 500 });
+        // Legacy individual update
+        const { sectionId, newProps } = body;
+        if (!sectionId || !newProps) {
+            return NextResponse.json({ error: 'Missing sectionId or newProps' }, { status: 400 });
         }
 
         const sectionIndex = data.sections.findIndex(s => s.id === sectionId);
-
         if (sectionIndex === -1) {
-            return NextResponse.json(
-                { error: `Section not found: ${sectionId}` },
-                { status: 404 }
-            );
+            return NextResponse.json({ error: `Section not found: ${sectionId}` }, { status: 404 });
         }
 
-        // Merge new props deeply or shallowly?
-        // For safety and simplicity, let's do a shallow merge of the props object,
-        // so we don't accidentally delete unmentioned props if the UI sends partial data.
-        // However, for lists (like FAQ items), the UI should send the *entire* new list.
         data.sections[sectionIndex].props = {
             ...data.sections[sectionIndex].props,
             ...newProps
         };
 
-        // 3. Write back to KV
         await kv.set(KV_KEY, data);
 
         return NextResponse.json({

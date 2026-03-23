@@ -11,6 +11,9 @@ import QuoteEditor from './QuoteEditor';
 import PartnersNetworkEditor from './PartnersNetworkEditor';
 import PartnersEditor from './PartnersEditor';
 import WhyChooseUsEditor from './WhyChooseUsEditor';
+import QualityBannerEditor from './QualityBannerEditor';
+import InteractiveMapEditor from './InteractiveMapEditor';
+import JoinUsEditor from './JoinUsEditor';
 
 export default function EditContentPage() {
     const params = useParams();
@@ -83,6 +86,12 @@ export default function EditContentPage() {
                 return <PartnersEditor section={section} onSave={handleSave} />;
             case 'WhyChooseUs':
                 return <WhyChooseUsEditor section={section} onSave={handleSave} />;
+            case 'QualityBanner':
+                return <QualityBannerEditor section={section} onSave={handleSave} />;
+            case 'InteractiveMap':
+                return <InteractiveMapEditor section={section} onSave={handleSave} />;
+            case 'JoinUs':
+                return <JoinUsEditor section={section} onSave={handleSave} />;
             default:
                 return <div>Éditeur non implémenté pour {section.type}</div>;
         }

@@ -39,7 +39,7 @@ const DEFAULTS = {
 export default function EssentielContentPage() {
     const [loaded, setLoaded] = useState(false);
     const [saving, setSaving] = useState(false);
-    const [tab, setTab] = useState('intro');
+    const [tab, setTab] = useState('hero');
     const [hero, setHero] = useState(DEFAULTS.hero);
     const [intro, setIntro] = useState(DEFAULTS.intro);
     const [legalItems, setLegalItems] = useState(DEFAULTS.legalItems);
@@ -114,13 +114,16 @@ export default function EssentielContentPage() {
             </div>
 
             {/* Tabs */}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 20, borderBottom: '2px solid #eee', paddingBottom: 0, overflowX: 'auto', flexWrap: 'nowrap', WebkitOverflowScrolling: 'touch' }}>
+            <div className={styles.adminTabsContainer}>
                 {TABS.map(t => (
-                    <button key={t} type="button" onClick={() => setTab(t)} style={{
-                        background: 'none', border: 'none', borderBottom: tab === t ? '3px solid #1F4B40' : '3px solid transparent',
-                        padding: '6px 14px', fontWeight: 700, color: tab === t ? '#1F4B40' : '#888',
-                        cursor: 'pointer', fontSize: '0.85rem', marginBottom: -2
-                    }}>{TAB_LABELS[t]}</button>
+                    <button 
+                        key={t} 
+                        type="button" 
+                        onClick={() => setTab(t)} 
+                        className={`${styles.adminTab} ${tab === t ? styles.adminTabActive : ''}`}
+                    >
+                        {TAB_LABELS[t]}
+                    </button>
                 ))}
             </div>
 
