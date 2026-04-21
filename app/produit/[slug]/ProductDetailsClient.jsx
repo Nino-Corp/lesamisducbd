@@ -95,7 +95,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                     <div className={styles.gallery}>
                         <div className={styles.mainImageWrapper}>
                             <Image
-                                src={product.image || '/images/placeholder.webp'}
+                                src={product.imageLarge || product.image || '/images/placeholder.webp'}
                                 alt={product.name}
                                 fill
                                 className={styles.mainImage}
