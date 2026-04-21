@@ -168,7 +168,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
 
                         <div
                             className={styles.description}
-                            dangerouslySetInnerHTML={{ __html: product.description || product.descriptionShort || "<p>Une variété d'exception sélectionnée pour ses arômes intenses et ses effets relaxants. Cultivée en France dans le respect de l'environnement.</p>" }}
+                            dangerouslySetInnerHTML={{ __html: product.description || product.descriptionShort || "<p>Une variété d'exception sélectionnée pour ses arômes intenses et ses effets relaxants. Cultivée dans le respect de l'environnement. Qualité premium.</p>" }}
                         />
 
                         <div className={styles.features}>

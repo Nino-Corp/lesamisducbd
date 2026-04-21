@@ -118,17 +118,23 @@ export default function ProductsClient({ initialProducts, globalContent }) {
     const nextSlide = () => setCurrentSlide((currentSlide + 1) % CAROUSEL_SLIDES.length);
     const prevSlide = () => setCurrentSlide((currentSlide - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length);
 
-    // Helper to determine product type robustly (handles accents and forces PLV away from Fleurs)
+    // Helper to determine product type robustly 
     const getProductType = (product) => {
         const nameNorm = (product.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const tagNorm = (product.tag || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
         // Exclude PLV/Flyers/Accessories first
-        if (['plv', 'flyer', 'tourniquet', 'presentoir', 'accessoire'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return 'autre';
+        if (['plv', 'flyer', 'tourniquet', 'presentoir', 'accessoire', 'goodies', 'feuille', 'briquet', 'grinder'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return 'autre';
 
+        // Pack & Résines
         if (['resine', 'hash', 'filtre', 'pollen'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return 'resine';
         if (['pack', 'mystere', 'decouverte'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return 'pack';
-        if (['fleur', 'trim', 'mix', 'skunk', 'amnesia', 'gorilla', 'remedy', 'cbd'].some(k => nameNorm.includes(k) || tagNorm.includes(k)) || product.category === 3) return 'fleur';
+        
+        // Fleurs (Par mot-clé direct ou catégorie PrestaShop)
+        if (['fleur', 'trim', 'mix', 'skunk', 'amnesia', 'gorilla', 'remedy', 'cbd', 'kush', 'haze', 'gelato'].some(k => nameNorm.includes(k) || tagNorm.includes(k)) || product.category === 3) return 'fleur';
+
+        // Fallback ultime intelligent pour les Fleurs : Si le nom contient un grammage (ex: "5g", "10 G")
+        if (/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*g\b/.test(nameNorm)) return 'fleur';
 
         return 'autre';
     };
