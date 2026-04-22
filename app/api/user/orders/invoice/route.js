@@ -17,9 +17,21 @@ export async function POST(request) {
             return NextResponse.json({ success: false, error: 'ID de commande manquant' }, { status: 400 });
         }
 
-        const id_customer = session.user.legacy_ps_id;
+        let id_customer = session.user.legacy_ps_id;
+
         if (!id_customer) {
-            return NextResponse.json({ success: false, error: 'Compte client PrestaShop non lié' }, { status: 400 });
+            // Dynamic fallback: Fetch PrestaShop ID using email
+            const prestaKey = process.env.PRESTASHOP_API_KEY;
+            const prestaApiUrl = process.env.PRESTASHOP_API_URL;
+            const res = await fetch(`${prestaApiUrl}/customers/?ws_key=${prestaKey}&filter[email]=${session.user.email}&display=full&output_format=JSON`);
+            const data = await res.json();
+            if (data && data.customers && data.customers.length > 0) {
+                id_customer = data.customers[0].id;
+            }
+        }
+
+        if (!id_customer) {
+            return NextResponse.json({ success: false, error: 'Compte client PrestaShop introuvable' }, { status: 400 });
         }
 
         const secretKey = process.env.PRESTASHOP_SAS_SECRET_KEY;

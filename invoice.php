@@ -1,9 +1,12 @@
 <?php
 /**
- * Passerelle Headless - Téléchargement de Facture PDF v1.0
+ * Passerelle Headless - Téléchargement de Facture PDF v1.1
  */
 ini_set('display_errors', 0);
+error_reporting(0);
+
 require(dirname(__FILE__) . '/config/config.inc.php');
+require(dirname(__FILE__) . '/init.php'); // Requis pour initialiser Smarty et Context
 
 $secret_key = Configuration::get('PS_SAS_SECRET_KEY') ?: 'LacBc67_9sP@!CBD2026_SecureKey';
 
@@ -37,5 +40,10 @@ if (!count($invoices)) {
     die('Erreur : Aucune facture disponible pour cette commande. Vérifiez son statut sur PrestaShop.');
 }
 
+if (ob_get_length() > 0) {
+    ob_clean();
+}
+
 $pdf = new PDF($invoices, PDF::TEMPLATE_INVOICE, Context::getContext()->smarty);
 $pdf->render();
+exit;
