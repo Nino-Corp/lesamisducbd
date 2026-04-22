@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { Package, Truck, ExternalLink, Calendar, Loader2, Search, Filter, ChevronDown, ChevronUp, Download } from 'lucide-react';
+import { Package, Truck, ExternalLink, Calendar, Loader2, Search, Filter, ChevronDown, ChevronUp, Download, ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './OrdersList.module.css';
 
 export default function OrdersList() {
@@ -13,8 +13,17 @@ export default function OrdersList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [dateFilter, setDateFilter] = useState('all'); // 'all', 'last_30', 'last_6_months', 'this_year'
 
+    // Pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 3;
+
     // UI State
     const [expandedOrderId, setExpandedOrderId] = useState(null);
+
+    // Reset pagination when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, dateFilter]);
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -168,8 +177,9 @@ export default function OrdersList() {
                     </button>
                 </div>
             ) : (
+                <>
                 <div className={styles.grid}>
-                    {filteredOrders.map((order) => (
+                    {filteredOrders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((order) => (
                         <div key={order.id} className={styles.orderCard}>
                             {/* Header: Ref & Date */}
                             <div className={styles.cardHeader}>
@@ -302,6 +312,29 @@ export default function OrdersList() {
                         </div>
                     ))}
                 </div>
+                
+                {filteredOrders.length > itemsPerPage && (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginTop: '32px' }}>
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #D1D5DB', background: currentPage === 1 ? '#F3F4F6' : 'white', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '600', color: currentPage === 1 ? '#9CA3AF' : '#374151', transition: 'all 0.2s' }}
+                        >
+                            <ChevronLeft size={18} /> Précédent
+                        </button>
+                        <span style={{ fontWeight: '600', color: '#4B5563', fontSize: '0.95rem' }}>
+                            Page {currentPage} sur {Math.ceil(filteredOrders.length / itemsPerPage)}
+                        </span>
+                        <button 
+                            onClick={() => setCurrentPage(p => Math.min(Math.ceil(filteredOrders.length / itemsPerPage), p + 1))}
+                            disabled={currentPage === Math.ceil(filteredOrders.length / itemsPerPage)}
+                            style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #D1D5DB', background: currentPage === Math.ceil(filteredOrders.length / itemsPerPage) ? '#F3F4F6' : 'white', cursor: currentPage === Math.ceil(filteredOrders.length / itemsPerPage) ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '600', color: currentPage === Math.ceil(filteredOrders.length / itemsPerPage) ? '#9CA3AF' : '#374151', transition: 'all 0.2s' }}
+                        >
+                            Suivant <ChevronRight size={18} />
+                        </button>
+                    </div>
+                )}
+                </>
             )}
         </div>
     );
