@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { Package, Truck, ExternalLink, Calendar, Loader2, Search, Filter, ChevronDown, ChevronUp } from 'lucide-react';
+import { Package, Truck, ExternalLink, Calendar, Loader2, Search, Filter, ChevronDown, ChevronUp, Download } from 'lucide-react';
 import styles from './OrdersList.module.css';
 
 export default function OrdersList() {
@@ -47,6 +47,24 @@ export default function OrdersList() {
             setExpandedOrderId(null);
         } else {
             setExpandedOrderId(orderId);
+        }
+    };
+
+    const handleDownloadInvoice = async (orderId) => {
+        try {
+            const res = await fetch('/api/user/orders/invoice', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId })
+            });
+            const data = await res.json();
+            if (data.success && data.url) {
+                window.open(data.url, '_blank');
+            } else {
+                alert(data.error || 'Erreur lors de la génération de la facture.');
+            }
+        } catch (err) {
+            alert('Erreur réseau. Veuillez réessayer.');
         }
     };
 
@@ -248,6 +266,18 @@ export default function OrdersList() {
                                                 </span>
                                             </div>
                                         )}
+                                    </div>
+
+                                    <div style={{ marginTop: '16px', borderTop: '1px solid #F3F4F6', paddingTop: '16px', paddingBottom: '16px' }}>
+                                        <button 
+                                            onClick={() => handleDownloadInvoice(order.id)}
+                                            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--primary-dark)', color: 'white', padding: '10px 18px', borderRadius: '8px', border: 'none', fontWeight: '600', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s', fontSize: '0.9rem', boxShadow: '0 4px 10px rgba(31, 75, 64, 0.15)' }}
+                                            onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 15px rgba(31, 75, 64, 0.25)'; }}
+                                            onMouseOut={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 10px rgba(31, 75, 64, 0.15)'; }}
+                                        >
+                                            <Download size={18} />
+                                            Télécharger la facture PDF
+                                        </button>
                                     </div>
 
                                     <div className={styles.products}>
