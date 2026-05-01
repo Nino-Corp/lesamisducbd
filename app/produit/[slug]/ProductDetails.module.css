@@ -235,6 +235,7 @@
 .features {
     display: grid;
     gap: 20px;
+    padding-bottom: 40px;
 }
 
 .feature {

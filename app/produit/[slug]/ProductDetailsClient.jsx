@@ -166,11 +166,6 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                             </button>
                         </div>
 
-                        <div
-                            className={styles.description}
-                            dangerouslySetInnerHTML={{ __html: product.description || product.descriptionShort || "<p>Une variété d'exception sélectionnée pour ses arômes intenses et ses effets relaxants. Cultivée dans le respect de l'environnement. Qualité premium.</p>" }}
-                        />
-
                         <div className={styles.features}>
                             <div className={styles.feature}>
                                 <div className={styles.iconBox}><Truck size={20} /></div>
@@ -194,6 +189,11 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                 </div>
                             </div>
                         </div>
+
+                        <div
+                            className={styles.description}
+                            dangerouslySetInnerHTML={{ __html: product.description || product.descriptionShort || "<p>Une variété d'exception sélectionnée pour ses arômes intenses et ses effets relaxants. Cultivée dans le respect de l'environnement. Qualité premium.</p>" }}
+                        />
                     </div>
                 </div>
 
