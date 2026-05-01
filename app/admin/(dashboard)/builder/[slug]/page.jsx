@@ -411,12 +411,13 @@ export default function PageEditor() {
                 </div>
                 <div className={styles.headerActions}>
                     <a
-                        href={`/p/${page.slug}`}
+                        href={`https://www.lesamisducbd.fr/p/${page.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={styles.previewBtn}
+                        style={{ background: '#F3F4F6', color: '#1F2937', padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', fontWeight: '600' }}
                     >
-                        👁 Prévisualiser
+                        👁 Ouvrir la Landing Page officielle
                     </a>
                     <button
                         className={`${styles.saveButton} ${saved ? styles.saveSuccess : ''}`}

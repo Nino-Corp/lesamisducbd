@@ -64,10 +64,12 @@ export default async function DynamicPage({ params }) {
             type: 'Header',
             props: {
                 logoText: "LES AMIS DU CBD",
+                logoImage: "/images/logo.webp",
                 menuItems: [
                     { label: "PRODUITS", href: "/produits" },
                     { label: "L'ESSENTIEL", href: "/essentiel" },
-                    { label: "BURALISTE", href: "/professionnel" }
+                    { label: "CBD & USAGES", href: "/usages" },
+                    { label: "PROFESSIONNEL", href: "/professionnel" }
                 ]
             }
         });
@@ -80,7 +82,9 @@ export default async function DynamicPage({ params }) {
                 columnLinks: globalConfig?.footerLinks || [
                     { label: "Livraison", href: "/livraison" },
                     { label: "CGV", href: "/cgv" },
-                    { label: "Politique de confidentialité", href: "/privacy" }
+                    { label: "Politique de confidentialité", href: "/privacy" },
+                    { label: "Transparence", href: "/transparence" },
+                    { label: "Professionnel", href: "/professionnel" }
                 ],
                 contactInfo: globalConfig?.contact || {
                     title: "Les Amis du CBD France",
