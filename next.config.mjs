@@ -31,6 +31,21 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/1-accueil',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/content/category/:slug*',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/content/:slug*',
+        destination: '/',
+        permanent: true,
+      },
+      {
         source: '/:category/:slug.html',
         destination: '/produit/:slug',
         permanent: true,
