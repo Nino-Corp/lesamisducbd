@@ -266,6 +266,28 @@ export default function ProductsClient({ initialProducts, globalContent }) {
                             }
                         }
 
+                        // Vérifier si le produit mérite l'appellation "Qualité Premium" (Whitelist)
+                        const nameNorm = (product.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                        const tagNorm = (product.tag || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                        
+                        const isPremium = (() => {
+                            // S'il s'agit d'un accessoire évident, on coupe court
+                            if (['plv', 'flyer', 'tourniquet', 'presentoir', 'accessoire', 'goodies', 'feuille', 'briquet', 'grinder', 'plateau', 'cendrier'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return false;
+                            
+                            // Mots-clés de produits CBD/Premium
+                            const premiumKeywords = ['resine', 'hash', 'pollen', 'fleur', 'trim', 'mix', 'skunk', 'amnesia', 'gorilla', 'kush', 'haze', 'gelato', 'moonrock', 'asteroide', 'huile', 'cbd', 'cbg', 'cbn', 'pack', 'mystere', 'decouverte'];
+                            if (premiumKeywords.some(k => nameNorm.includes(k) || tagNorm.includes(k))) return true;
+
+                            // Présence d'un dosage/grammage/volume (ex: 5g, 10ml, 15%)
+                            if (/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*(g|ml|%)\b/.test(nameNorm)) return true;
+
+                            // Fallback avec la catégorie existante
+                            const type = getProductType(product);
+                            if (type !== 'autre') return true;
+
+                            return false;
+                        })();
+
                         return (
                             <div key={product.name} className={styles.card}>
                                 <Link href={`/produit/${product.slug}`} className={styles.imageLink}>
@@ -290,9 +312,11 @@ export default function ProductsClient({ initialProducts, globalContent }) {
                                 <div className={styles.cardContent}>
                                     <div className={styles.cardHeader}>
                                         <h3 className={styles.productName}>{product.name}</h3>
-                                        <p className={styles.productSubtitle}>
-                                            {getProductType(product) === 'fleur' ? '' : 'Qualité Premium'}
-                                        </p>
+                                        {isPremium && (
+                                            <p className={styles.productSubtitle}>
+                                                Qualité Premium
+                                            </p>
+                                        )}
                                     </div>
 
                                     <div className={styles.cardFooter}>

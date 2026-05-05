@@ -61,6 +61,22 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
         contactInfo: globalContent?.contact || FOOTER_PROPS.contactInfo
     };
 
+    const nameNorm = (product.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const tagNorm = (product.tag || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    const isPremium = (() => {
+        if (['plv', 'flyer', 'tourniquet', 'presentoir', 'accessoire', 'goodies', 'feuille', 'briquet', 'grinder', 'plateau', 'cendrier'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return false;
+        const premiumKeywords = ['resine', 'hash', 'pollen', 'fleur', 'trim', 'mix', 'skunk', 'amnesia', 'gorilla', 'kush', 'haze', 'gelato', 'moonrock', 'asteroide', 'huile', 'cbd', 'cbg', 'cbn', 'pack', 'mystere', 'decouverte'];
+        if (premiumKeywords.some(k => nameNorm.includes(k) || tagNorm.includes(k))) return true;
+        if (/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*(g|ml|%)\b/.test(nameNorm)) return true;
+        if (product.category === 3) return true;
+        return false;
+    })();
+
+    const defaultDescription = isPremium 
+        ? "<p>Une variété d'exception sélectionnée pour ses arômes intenses et ses effets relaxants. Cultivée dans le respect de l'environnement. Qualité premium.</p>"
+        : "<p>Découvrez cet article sélectionné par nos soins pour accompagner votre expérience.</p>";
+
     const handleAddToCart = () => {
         const pHT = groupPrice?.priceHT || product.priceHT || product.price || 0;
         const pTTC = groupPrice?.priceTTC || product.priceTTC || 0;
@@ -181,18 +197,20 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                     <p>CB, Visa, Mastercard</p>
                                 </div>
                             </div>
-                            <div className={styles.feature}>
-                                <div className={styles.iconBox}><Heart size={20} /></div>
-                                <div>
-                                    <strong>Qualité Premium</strong>
-                                    <p>100% Naturel, &lt;0.3% THC</p>
+                            {isPremium && (
+                                <div className={styles.feature}>
+                                    <div className={styles.iconBox}><Heart size={20} /></div>
+                                    <div>
+                                        <strong>Qualité Premium</strong>
+                                        <p>100% Naturel, &lt;0.3% THC</p>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         <div
                             className={styles.description}
-                            dangerouslySetInnerHTML={{ __html: product.description || product.descriptionShort || "<p>Une variété d'exception sélectionnée pour ses arômes intenses et ses effets relaxants. Cultivée dans le respect de l'environnement. Qualité premium.</p>" }}
+                            dangerouslySetInnerHTML={{ __html: product.description || product.descriptionShort || defaultDescription }}
                         />
                     </div>
                 </div>
