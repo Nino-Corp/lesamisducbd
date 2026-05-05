@@ -291,7 +291,7 @@ export default function ProductsClient({ initialProducts, globalContent }) {
                                     <div className={styles.cardHeader}>
                                         <h3 className={styles.productName}>{product.name}</h3>
                                         <p className={styles.productSubtitle}>
-                                            {getProductType(product) === 'fleur' ? 'Cultivé en France' : 'Qualité Premium'}
+                                            {getProductType(product) === 'fleur' ? '' : 'Qualité Premium'}
                                         </p>
                                     </div>
 
