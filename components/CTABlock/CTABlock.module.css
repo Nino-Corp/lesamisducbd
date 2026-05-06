@@ -1,0 +1,80 @@
+/* Wrapper bulle — pattern identique à ContentHero */
+.section {
+    width: 100%;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.bubble {
+    width: 100%;
+    max-width: var(--container-width, 1400px);
+    border-radius: clamp(20px, 4vw, 40px);
+    overflow: hidden;
+    padding: 60px 48px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    font-weight: 400;
+    max-width: 600px;
+    margin: 0;
+    line-height: 1.6;
+    opacity: 0.85;
+}
+
+.buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.primaryBtn {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 99px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.primaryBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.secondaryBtn {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 99px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    border: 1.5px solid;
+    background: transparent;
+    transition: all 0.2s;
+}
+
+.secondaryBtn:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+@media (max-width: 768px) {
+    .bubble { padding: 48px 28px; }
+    .buttons { flex-direction: column; align-items: center; }
+}

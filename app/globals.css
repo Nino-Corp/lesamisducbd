@@ -91,9 +91,21 @@ ul {
     padding: 0 4px;
   }
 
-  /* Prevent inline tab buttons from being too small */
+    /* Prevent inline tab buttons from being too small */
   [style*="borderBottom"][style*="cursor: 'pointer'"] {
     white-space: nowrap;
     flex-shrink: 0;
+  }
+}
+
+/* Page Builder Utilities */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+@media (min-width: 769px) {
+  .hide-desktop {
+    display: none !important;
   }
 }

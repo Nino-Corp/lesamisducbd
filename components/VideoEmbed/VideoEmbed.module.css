@@ -1,0 +1,20 @@
+/* Wrapper bulle */
+.section { width: 100%; padding: 16px 20px; display: flex; justify-content: center; }
+
+.bubble {
+    width: 100%;
+    max-width: var(--container-width, 1400px);
+    border-radius: clamp(20px, 4vw, 40px);
+    overflow: hidden;
+    padding: 56px 48px;
+}
+
+.title { text-align: center; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; margin: 0 0 24px; }
+.videoWrapper { position: relative; width: 100%; border-radius: clamp(16px, 2vw, 24px); overflow: hidden; }
+.iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+.placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.4); }
+.placeholder span { font-size: 3rem; }
+.placeholder p { font-size: 0.95rem; margin: 0; }
+.caption { text-align: center; font-size: 0.9rem; margin-top: 16px; opacity: 0.6; }
+
+@media (max-width: 768px) { .bubble { padding: 36px 24px; } }

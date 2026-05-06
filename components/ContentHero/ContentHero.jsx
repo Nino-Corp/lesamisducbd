@@ -2,11 +2,11 @@ import React from 'react';
 import Image from 'next/image';
 import styles from './ContentHero.module.css';
 
-export default function ContentHero({ title, children, imageSrc, imageAlt, imagePosition = "center" }) {
+export default function ContentHero({ title, children, imageSrc, imageAlt, imagePosition = "center", textAlign = "center", overlayOpacity = 50 }) {
     return (
         <section className={styles.heroSection}>
             <div className={styles.heroContainer}>
-                <div className={styles.heroContent}>
+                <div className={styles.heroContent} style={{ textAlign }}>
                     {title && <h1 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />}
                     {children}
                 </div>
@@ -21,7 +21,7 @@ export default function ContentHero({ title, children, imageSrc, imageAlt, image
                             sizes="100vw"
                             style={{ objectPosition: imagePosition, objectFit: 'cover' }}
                         />
-                        <div className={styles.overlay} />
+                        <div className={styles.overlay} style={{ opacity: overlayOpacity / 100 }} />
                     </div>
                 )}
             </div>

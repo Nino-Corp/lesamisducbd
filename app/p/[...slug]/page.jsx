@@ -25,12 +25,24 @@ export async function generateMetadata({ params }) {
 
     if (!page) return {};
 
+    const seo = page.seo || {};
+    const title = seo.metaTitle || `${page.title} - Les Amis du CBD`;
+    const description = seo.metaDescription || `Découvrez notre page ${page.title} dédiée au CBD premium.`;
+    const canonical = seo.canonicalUrl || `/p/${pageSlug}`;
+
     return {
-        title: `${page.title} - Les Amis du CBD`,
-        description: `Découvrez notre page ${page.title} dédiée au CBD premium.`,
-        alternates: {
-            canonical: `/p/${pageSlug}`,
+        title,
+        description,
+        alternates: { canonical },
+        robots: {
+            index: !seo.noindex,
+            follow: !seo.noindex,
         },
+        openGraph: {
+            title,
+            description,
+            images: seo.ogImage ? [{ url: seo.ogImage }] : [],
+        }
     };
 }
 
