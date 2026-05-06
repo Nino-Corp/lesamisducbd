@@ -116,6 +116,37 @@
     line-height: 1.1;
 }
 
+.variantsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.variantPill {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(31, 75, 64, 0.15);
+    background: #f8f9fa;
+    color: #1F4B40;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.variantPill:hover {
+    background: rgba(31, 75, 64, 0.05);
+    border-color: rgba(31, 75, 64, 0.3);
+}
+
+.variantPillActive {
+    background: #1F4B40;
+    color: #00FF94;
+    border-color: #1F4B40;
+    box-shadow: 0 4px 10px rgba(31, 75, 64, 0.15);
+}
+
 .rating {
     display: flex;
     align-items: center;

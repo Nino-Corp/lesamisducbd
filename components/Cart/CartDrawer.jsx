@@ -138,7 +138,7 @@ export default function CartDrawer() {
                                 </div>
                                 <div className={styles.itemDetails}>
                                     <h3>{item.name}</h3>
-                                    {item.variant && <span className={styles.variant}>{item.variant.name}</span>}
+                                    {item.variant && <span className={styles.variant}>{item.variant.label || item.variant.name}</span>}
                                     <div className={styles.price}>
                                         {isPro ? (
                                             <>

@@ -52,7 +52,23 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
 
     const { data: session } = useSession();
     const groupId = session?.user?.id_default_group || 3;
-    const groupPrice = calculateGroupPrice(product, groupId);
+    const hasVariants = product.variants && product.variants.length > 0;
+    const [selectedVariantId, setSelectedVariantId] = useState(
+        hasVariants ? (product.variants.find(v => v.isDefault)?.id || product.variants[0].id) : null
+    );
+
+    const selectedVariant = hasVariants ? product.variants.find(v => v.id === selectedVariantId) : null;
+    
+    // Construct active product data (merging selected variant info if any)
+    const activeProduct = selectedVariant ? {
+        ...product,
+        priceHT: selectedVariant.priceImpactHT + product.priceHT,
+        priceTTC: selectedVariant.priceTTC,
+        formattedPrice: selectedVariant.formattedPrice,
+        variant: selectedVariant
+    } : product;
+
+    const groupPrice = calculateGroupPrice(activeProduct, groupId);
 
     const footerProps = {
         ...FOOTER_PROPS,
@@ -78,16 +94,16 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
         : "<p>Découvrez cet article sélectionné par nos soins pour accompagner votre expérience.</p>";
 
     const handleAddToCart = () => {
-        const pHT = groupPrice?.priceHT || product.priceHT || product.price || 0;
-        const pTTC = groupPrice?.priceTTC || product.priceTTC || 0;
+        const pHT = groupPrice?.priceHT || activeProduct.priceHT || activeProduct.price || 0;
+        const pTTC = groupPrice?.priceTTC || activeProduct.priceTTC || 0;
 
         // Pass the appropriate display price as 'price' for backwards compatibility,
         // but also include explicit priceHT and priceTTC for dual display.
         const displayPrice = groupPrice?.suggestShowHT ? pHT : pTTC;
 
         addItem({
-            ...product,
-            rawProduct: product, // Explicitly pass the raw product for future recalculations (e.g., login)
+            ...activeProduct,
+            rawProduct: activeProduct, // Explicitly pass the raw product for future recalculations (e.g., login)
             price: displayPrice,
             priceHT: pHT,
             priceTTC: pTTC
@@ -128,20 +144,34 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                             <h1 className={styles.title}>{product.name}</h1>
                         </div>
 
+                        {hasVariants && (
+                            <div className={styles.variantsWrapper}>
+                                {product.variants.map(v => (
+                                    <button
+                                        key={v.id}
+                                        className={`${styles.variantPill} ${v.id === selectedVariantId ? styles.variantPillActive : ''}`}
+                                        onClick={(e) => { e.preventDefault(); setSelectedVariantId(v.id); }}
+                                    >
+                                        {v.label}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
                         <div className={styles.priceSection}>
                             <div className={styles.priceMainRow}>
                                 <span className={styles.price}>
                                     {groupPrice?.hasDiscount ? (
                                         <>
                                             <span style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.6em', marginRight: '8px' }}>
-                                                {product.formattedPrice}
+                                                {activeProduct.formattedPrice}
                                             </span>
                                             <span style={{ color: '#d9534f' }}>
                                                 {groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : groupPrice.formattedPrice}
                                             </span>
                                         </>
                                     ) : (
-                                        groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : (product.formattedPrice || `${product.priceHT || product.priceTTC || 5} €`)
+                                        groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : (activeProduct.formattedPrice || `${activeProduct.priceHT || activeProduct.priceTTC || 5} €`)
                                     )}
                                 </span>
                                 <span className={styles.taxLabel}>
@@ -151,10 +181,10 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
 
                             {(() => {
                                 let perGramText = null;
-                                const priceToUse = groupPrice.suggestShowHT ? groupPrice.priceHT : (groupPrice?.priceTTC || product.priceTTC || 0);
+                                const priceToUse = groupPrice.suggestShowHT ? groupPrice.priceHT : (groupPrice?.priceTTC || activeProduct.priceTTC || 0);
 
                                 if (priceToUse > 0) {
-                                    const searchString = `${product.name || ''} ${product.reference || ''}`.toLowerCase();
+                                    const searchString = `${activeProduct.name || ''} ${activeProduct.reference || ''} ${selectedVariant?.label || ''}`.toLowerCase();
                                     const weightMatch = searchString.match(/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*g\b/);
 
                                     if (weightMatch) {

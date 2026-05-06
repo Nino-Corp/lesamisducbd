@@ -27,7 +27,7 @@ const OrderInput = ({ idx, total, onChange, className }) => {
 };
 
 export default function ProductsPage() {
-    const [tab, setTab] = useState('vitrine'); // 'vitrine' | 'visibility'
+    const [tab, setTab] = useState('vitrine'); // 'vitrine' | 'visibility' | 'descriptions'
     const [allProducts, setAllProducts] = useState([]);
     const [vitrine, setVitrine] = useState({ flowers: [], resins: [] });
     const [hiddenIds, setHiddenIds] = useState([]);
@@ -37,11 +37,20 @@ export default function ProductsPage() {
     const [search, setSearch] = useState('');
     const [visSearch, setVisSearch] = useState('');
 
+    // Descriptions overrides
+    const [overrides, setOverrides] = useState({});
+    const [descSearch, setDescSearch] = useState('');
+    const [editingId, setEditingId] = useState(null);
+    const [editDraft, setEditDraft] = useState({ description: '', descriptionShort: '' });
+    const [descSaving, setDescSaving] = useState(false);
+    const [descSaved, setDescSaved] = useState(false);
+
     useEffect(() => {
         Promise.all([
             fetch('/api/products').then(r => r.json()),
-            fetch('/api/admin/vitrine').then(r => r.json())
-        ]).then(([products, config]) => {
+            fetch('/api/admin/vitrine').then(r => r.json()),
+            fetch('/api/admin/product-overrides').then(r => r.json())
+        ]).then(([products, config, overridesData]) => {
             const fetchedProducts = Array.isArray(products) ? products : [];
             const pOrder = Array.isArray(config?.productOrder) ? config.productOrder : [];
 
@@ -57,6 +66,7 @@ export default function ProductsPage() {
             }
 
             setAllProducts(fetchedProducts);
+            setOverrides(overridesData || {});
 
             // Auto-heal vitrine items' images with fresh catalogue data
             // This fixes old broken API URLs in KV and keeps images in sync with PrestaShop
@@ -250,6 +260,13 @@ export default function ProductsPage() {
                     👁 Visibilité Catalogue
                     {hiddenCount > 0 && <span className={styles.hiddenBadge}>{hiddenCount} masqué{hiddenCount > 1 ? 's' : ''}</span>}
                 </button>
+                <button
+                    onClick={() => setTab('descriptions')}
+                    className={`${styles.tab} ${tab === 'descriptions' ? styles.activeTab : ''}`}
+                >
+                    ✏️ Descriptions
+                    {Object.keys(overrides).length > 0 && <span className={styles.hiddenBadge}>{Object.keys(overrides).length} modifié{Object.keys(overrides).length > 1 ? 's' : ''}</span>}
+                </button>
             </div>
 
             {/* ══════════════ TAB: VITRINE ══════════════ */}
@@ -426,6 +443,157 @@ export default function ProductsPage() {
                                 </div>
                             );
                         })}
+                    </div>
+                </div>
+            )}
+
+            {/* ══════════════ TAB: DESCRIPTIONS ══════════════ */}
+            {tab === 'descriptions' && (
+                <div className={styles.panel}>
+                    <div className={styles.visHeader}>
+                        <h2 className={styles.panelTitle}>
+                            Descriptions Produits
+                            <span className={styles.counter}>Override sans toucher à PrestaShop</span>
+                        </h2>
+                        <p className={styles.visHint}>
+                            Modifiez la description courte affichée sur les fiches produit. Laissez vide pour revenir à la description PrestaShop.
+                        </p>
+                    </div>
+                    <input
+                        className={styles.search}
+                        placeholder="Rechercher un produit..."
+                        value={descSearch}
+                        onChange={e => setDescSearch(e.target.value)}
+                    />
+                    <div className={styles.visList}>
+                        {allProducts
+                            .filter(p => !descSearch || normalize(`${p.name} ${p.reference || ''}`).includes(normalize(descSearch)))
+                            .map(product => {
+                                const hasOverride = !!overrides[product.id];
+                                const isEditing = editingId === product.id;
+
+                                return (
+                                    <div key={product.id} className={`${styles.visItem} ${hasOverride ? styles.pinned : ''}`}>
+                                        <img src={product.image} alt={product.name} className={styles.catalogImg} />
+                                        <div className={styles.catalogInfo} style={{ flex: 1 }}>
+                                            <strong>{product.name}</strong>
+                                            {hasOverride && !isEditing && (
+                                                <span className={styles.statusVisible} style={{ marginLeft: 8, fontSize: '0.75rem' }}>✓ Description personnalisée</span>
+                                            )}
+                                            {isEditing ? (
+                                                <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                                    <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Description courte (affichée sur la fiche)</label>
+                                                    <textarea
+                                                        rows={3}
+                                                        value={editDraft.descriptionShort}
+                                                        onChange={e => setEditDraft(d => ({ ...d, descriptionShort: e.target.value }))}
+                                                        className={styles.search}
+                                                        style={{ resize: 'vertical', fontFamily: 'inherit', fontSize: '0.85rem' }}
+                                                        placeholder="Ex: Résine noire premium, taux de CBD entre 30 et 35%..."
+                                                    />
+                                                    <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Description longue (HTML autorisé)</label>
+                                                    <textarea
+                                                        rows={6}
+                                                        value={editDraft.description}
+                                                        onChange={e => setEditDraft(d => ({ ...d, description: e.target.value }))}
+                                                        className={styles.search}
+                                                        style={{ resize: 'vertical', fontFamily: 'monospace', fontSize: '0.8rem' }}
+                                                        placeholder="<p>Description complète en HTML...</p>"
+                                                    />
+                                                    <div style={{ display: 'flex', gap: 8 }}>
+                                                        <button
+                                                            className={styles.saveButton}
+                                                            style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                                                            disabled={descSaving}
+                                                            onClick={async () => {
+                                                                setDescSaving(true);
+                                                                try {
+                                                                    const payload = { [product.id]: editDraft.description || editDraft.descriptionShort
+                                                                        ? { description: editDraft.description, descriptionShort: editDraft.descriptionShort }
+                                                                        : null
+                                                                    };
+                                                                    // If both are empty, delete the override
+                                                                    if (!editDraft.description && !editDraft.descriptionShort) {
+                                                                        const newOverrides = { ...overrides };
+                                                                        delete newOverrides[product.id];
+                                                                        await fetch('/api/admin/product-overrides', {
+                                                                            method: 'POST',
+                                                                            headers: { 'Content-Type': 'application/json' },
+                                                                            body: JSON.stringify(newOverrides)
+                                                                        });
+                                                                        setOverrides(newOverrides);
+                                                                    } else {
+                                                                        await fetch('/api/admin/product-overrides', {
+                                                                            method: 'POST',
+                                                                            headers: { 'Content-Type': 'application/json' },
+                                                                            body: JSON.stringify({ [product.id]: { description: editDraft.description, descriptionShort: editDraft.descriptionShort } })
+                                                                        });
+                                                                        setOverrides(prev => ({ ...prev, [product.id]: { description: editDraft.description, descriptionShort: editDraft.descriptionShort } }));
+                                                                    }
+                                                                    setDescSaved(true);
+                                                                    setEditingId(null);
+                                                                    setTimeout(() => setDescSaved(false), 3000);
+                                                                } catch { alert('Erreur réseau'); }
+                                                                finally { setDescSaving(false); }
+                                                            }}
+                                                        >
+                                                            {descSaving ? 'Enregistrement...' : descSaved ? '✓ Sauvegardé' : '💾 Sauvegarder'}
+                                                        </button>
+                                                        <button
+                                                            className={styles.hideBtn}
+                                                            style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                                                            onClick={() => setEditingId(null)}
+                                                        >
+                                                            Annuler
+                                                        </button>
+                                                        {hasOverride && (
+                                                            <button
+                                                                className={styles.unpinBtn}
+                                                                style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                                                                onClick={async () => {
+                                                                    const newOverrides = { ...overrides };
+                                                                    delete newOverrides[product.id];
+                                                                    await fetch('/api/admin/product-overrides', {
+                                                                        method: 'POST',
+                                                                        headers: { 'Content-Type': 'application/json' },
+                                                                        body: JSON.stringify(newOverrides)
+                                                                    });
+                                                                    setOverrides(newOverrides);
+                                                                    setEditingId(null);
+                                                                }}
+                                                            >
+                                                                🗑 Supprimer l'override
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#888', maxHeight: 40, overflow: 'hidden' }}>
+                                                    {overrides[product.id]?.descriptionShort
+                                                        ? overrides[product.id].descriptionShort.replace(/<[^>]+>/g, '').substring(0, 100) + '...'
+                                                        : <em>Description PrestaShop</em>
+                                                    }
+                                                </p>
+                                            )}
+                                        </div>
+                                        {!isEditing && (
+                                            <button
+                                                className={styles.pinBtn}
+                                                onClick={() => {
+                                                    setEditingId(product.id);
+                                                    setEditDraft({
+                                                        description: overrides[product.id]?.description || product.description || '',
+                                                        descriptionShort: overrides[product.id]?.descriptionShort || product.descriptionShort || ''
+                                                    });
+                                                }}
+                                            >
+                                                ✏️ Modifier
+                                            </button>
+                                        )}
+                                    </div>
+                                );
+                            })
+                        }
                     </div>
                 </div>
             )}

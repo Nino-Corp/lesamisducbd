@@ -247,190 +247,16 @@ export default function ProductsClient({ initialProducts, globalContent }) {
 
                 {/* Grid */}
                 <div className={styles.grid}>
-                    {filteredProducts.map((product, index) => {
-                        const groupPrice = calculateGroupPrice(product, groupId);
-
-                        // Calcul du grammage & Prix au gramme
-                        const searchString = `${product.name || ''} ${product.reference || ''}`.toLowerCase();
-                        const weightMatch = searchString.match(/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*g\b/);
-                        let exactGrams = null;
-                        let perGramText = null;
-
-                        const priceToUse = groupPrice.suggestShowHT ? groupPrice.priceHT : (groupPrice?.priceTTC || product.priceTTC || 0);
-
-                        if (weightMatch) {
-                            exactGrams = parseFloat(weightMatch[1].replace(',', '.'));
-                            if (exactGrams > 0 && priceToUse > 0) {
-                                const newPerGram = (priceToUse / exactGrams).toFixed(2).replace('.', ',');
-                                perGramText = `${newPerGram}€/g ${groupPrice.suggestShowHT ? 'HT' : ''}`;
-                            }
-                        }
-
-                        // Vérifier si le produit mérite l'appellation "Qualité Premium" (Whitelist)
-                        const nameNorm = (product.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                        const tagNorm = (product.tag || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                        
-                        const isPremium = (() => {
-                            // S'il s'agit d'un accessoire évident, on coupe court
-                            if (['plv', 'flyer', 'tourniquet', 'presentoir', 'accessoire', 'goodies', 'feuille', 'briquet', 'grinder', 'plateau', 'cendrier'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return false;
-                            
-                            // Mots-clés de produits CBD/Premium
-                            const premiumKeywords = ['resine', 'hash', 'pollen', 'fleur', 'trim', 'mix', 'skunk', 'amnesia', 'gorilla', 'kush', 'haze', 'gelato', 'moonrock', 'asteroide', 'huile', 'cbd', 'cbg', 'cbn', 'pack', 'mystere', 'decouverte'];
-                            if (premiumKeywords.some(k => nameNorm.includes(k) || tagNorm.includes(k))) return true;
-
-                            // Présence d'un dosage/grammage/volume (ex: 5g, 10ml, 15%)
-                            if (/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*(g|ml|%)\b/.test(nameNorm)) return true;
-
-                            // Fallback avec la catégorie existante
-                            const type = getProductType(product);
-                            if (type !== 'autre') return true;
-
-                            return false;
-                        })();
-
+                    {filteredProducts.map((product) => {
                         return (
-                            <div key={product.name} className={styles.card}>
-                                <Link href={`/produit/${product.slug}`} className={styles.imageLink}>
-                                    <div className={styles.imageWrapper}>
-                                        <Image
-                                            src={product.image || '/images/placeholder.webp'}
-                                            alt={product.name}
-                                            fill
-                                            priority={index < 6}
-                                            unoptimized
-                                            sizes="(max-width: 768px) 100vw, 33vw"
-                                            className={styles.image}
-                                        />
-                                        {product.tag && product.tag.toLowerCase() !== 'bestseller' && (
-                                            <span className={styles.tag}>
-                                                {product.tag}
-                                            </span>
-                                        )}
-                                    </div>
-                                </Link>
-
-                                <div className={styles.cardContent}>
-                                    <div className={styles.cardHeader}>
-                                        <h3 className={styles.productName}>{product.name}</h3>
-                                        {isPremium && (
-                                            <p className={styles.productSubtitle}>
-                                                Qualité Premium
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div className={styles.cardFooter}>
-                                        <div className={styles.priceInfo}>
-                                            <span className={styles.priceLabel}>{groupPrice.suggestShowHT ? 'Prix HT' : 'Prix TTC'}</span>
-                                            <span className={styles.priceValue}>
-                                                {groupPrice.hasDiscount ? (
-                                                    <span className={styles.pricesContainer}>
-                                                        <span className={styles.originalPrice}>
-                                                            {product.formattedPrice}
-                                                        </span>
-                                                        <span className={styles.discountedPrice}>
-                                                            {groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : groupPrice.formattedPrice}
-                                                        </span>
-                                                    </span>
-                                                ) : (
-                                                    <span className={styles.normalPrice}>
-                                                        {groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : (product.formattedPrice || `${product.priceTTC || product.price || 5} €`)}
-                                                    </span>
-                                                )}
-                                            </span>
-                                            {perGramText && (
-                                                <span className={styles.perGramText}>{perGramText}</span>
-                                            )}
-                                        </div>
-                                        <div className={`${styles.actionWrapper} ${expandedId === product.id ? styles.expanded : ''}`}>
-                                            <div className={styles.qtyDrawer}>
-                                                <button
-                                                    className={styles.qtyBtn}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        const pHT = groupPrice.priceHT || product.priceHT || product.price || 0;
-                                                        const pTTC = groupPrice.priceTTC || product.priceTTC || 0;
-                                                        const displayPrice = groupPrice.suggestShowHT ? pHT : pTTC;
-                                                        addItem({ ...product, rawProduct: product, price: displayPrice, priceHT: pHT, priceTTC: pTTC }, 1);
-                                                        setExpandedId(null);
-                                                    }}
-                                                    aria-label="Ajouter 1 au panier"
-                                                    title="x1"
-                                                >
-                                                    x1
-                                                </button>
-                                                <button
-                                                    className={styles.qtyBtn}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        const pHT = groupPrice.priceHT || product.priceHT || product.price || 0;
-                                                        const pTTC = groupPrice.priceTTC || product.priceTTC || 0;
-                                                        const displayPrice = groupPrice.suggestShowHT ? pHT : pTTC;
-                                                        addItem({ ...product, rawProduct: product, price: displayPrice, priceHT: pHT, priceTTC: pTTC }, 3);
-                                                        setExpandedId(null);
-                                                    }}
-                                                    aria-label="Ajouter 3 au panier"
-                                                    title="x3"
-                                                >
-                                                    x3
-                                                </button>
-                                                <button
-                                                    className={styles.qtyBtn}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        const pHT = groupPrice.priceHT || product.priceHT || product.price || 0;
-                                                        const pTTC = groupPrice.priceTTC || product.priceTTC || 0;
-                                                        const displayPrice = groupPrice.suggestShowHT ? pHT : pTTC;
-                                                        addItem({ ...product, rawProduct: product, price: displayPrice, priceHT: pHT, priceTTC: pTTC }, 5);
-                                                        setExpandedId(null);
-                                                    }}
-                                                    aria-label="Ajouter 5 au panier"
-                                                    title="x5"
-                                                >
-                                                    x5
-                                                </button>
-                                                <button
-                                                    className={styles.qtyBtn}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        const pHT = groupPrice.priceHT || product.priceHT || product.price || 0;
-                                                        const pTTC = groupPrice.priceTTC || product.priceTTC || 0;
-                                                        const displayPrice = groupPrice.suggestShowHT ? pHT : pTTC;
-                                                        addItem({ ...product, rawProduct: product, price: displayPrice, priceHT: pHT, priceTTC: pTTC }, 10);
-                                                        setExpandedId(null);
-                                                    }}
-                                                    aria-label="Ajouter 10 au panier"
-                                                    title="x10"
-                                                >
-                                                    x10
-                                                </button>
-                                            </div>
-                                            <button
-                                                className={styles.addBtn}
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    if (window.innerWidth <= 768) {
-                                                        setExpandedId(expandedId === product.id ? null : product.id);
-                                                    } else {
-                                                        const pHT = groupPrice.priceHT || product.priceHT || product.price || 0;
-                                                        const pTTC = groupPrice.priceTTC || product.priceTTC || 0;
-                                                        const displayPrice = groupPrice.suggestShowHT ? pHT : pTTC;
-                                                        addItem({ ...product, rawProduct: product, price: displayPrice, priceHT: pHT, priceTTC: pTTC }, 1);
-                                                    }
-                                                }}
-                                                aria-label="Ajouter au panier"
-                                                title="Ajouter au panier"
-                                            >
-                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <ProductCard 
+                                key={product.id || product.slug}
+                                product={product}
+                                groupId={groupId}
+                                addItem={addItem}
+                                expandedId={expandedId}
+                                setExpandedId={setExpandedId}
+                            />
                         );
                     })}
                 </div>
@@ -447,3 +273,194 @@ export default function ProductsClient({ initialProducts, globalContent }) {
     );
 }
 
+// Extract ProductType helper
+const getProductType = (product) => {
+    const name = product.name?.toLowerCase() || '';
+    if (name.includes('fleur')) return 'fleur';
+    if (name.includes('resine') || name.includes('hash') || name.includes('jaune')) return 'resine';
+    if (name.includes('huile')) return 'huile';
+    return 'autre';
+};
+
+function ProductCard({ product, groupId, addItem, expandedId, setExpandedId }) {
+    const hasVariants = product.variants && product.variants.length > 0;
+    const [selectedVariantId, setSelectedVariantId] = useState(
+        hasVariants ? (product.variants.find(v => v.isDefault)?.id || product.variants[0].id) : null
+    );
+
+    const selectedVariant = hasVariants ? product.variants.find(v => v.id === selectedVariantId) : null;
+    
+    // Construct active product data (merging selected variant info if any)
+    const activeProduct = selectedVariant ? {
+        ...product,
+        priceHT: selectedVariant.priceImpactHT + product.priceHT, // Might need to just use variant's total HT if available, but assuming base + impact
+        priceTTC: selectedVariant.priceTTC,
+        formattedPrice: selectedVariant.formattedPrice,
+        variant: selectedVariant
+    } : product;
+
+    const groupPrice = calculateGroupPrice(activeProduct, groupId);
+
+    // Calcul du grammage & Prix au gramme
+    const searchString = `${activeProduct.name || ''} ${activeProduct.reference || ''} ${selectedVariant?.label || ''}`.toLowerCase();
+    const weightMatch = searchString.match(/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*g\b/);
+    let exactGrams = null;
+    let perGramText = null;
+
+    const priceToUse = groupPrice.suggestShowHT ? groupPrice.priceHT : (groupPrice?.priceTTC || activeProduct.priceTTC || 0);
+
+    if (weightMatch) {
+        exactGrams = parseFloat(weightMatch[1].replace(',', '.'));
+        if (exactGrams > 0 && priceToUse > 0) {
+            const newPerGram = (priceToUse / exactGrams).toFixed(2).replace('.', ',');
+            perGramText = `${newPerGram}€/g ${groupPrice.suggestShowHT ? 'HT' : ''}`;
+        }
+    }
+
+    // Vérifier si le produit mérite l'appellation "Qualité Premium" (Whitelist)
+    const nameNorm = (product.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const tagNorm = (product.tag || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    
+    const isPremium = (() => {
+        // S'il s'agit d'un accessoire évident, on coupe court
+        if (['plv', 'flyer', 'tourniquet', 'presentoir', 'accessoire', 'goodies', 'feuille', 'briquet', 'grinder', 'plateau', 'cendrier'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return false;
+        
+        // Mots-clés de produits CBD/Premium
+        const premiumKeywords = ['resine', 'hash', 'pollen', 'fleur', 'trim', 'mix', 'skunk', 'amnesia', 'gorilla', 'kush', 'haze', 'gelato', 'moonrock', 'asteroide', 'huile', 'cbd', 'cbg', 'cbn', 'pack', 'mystere', 'decouverte'];
+        if (premiumKeywords.some(k => nameNorm.includes(k) || tagNorm.includes(k))) return true;
+
+        // Présence d'un dosage/grammage/volume (ex: 5g, 10ml, 15%)
+        if (/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*(g|ml|%)\b/.test(nameNorm)) return true;
+
+        // Fallback avec la catégorie existante
+        const type = getProductType(product);
+        if (type !== 'autre') return true;
+
+        return false;
+    })();
+
+    const handleAddToCart = (e, quantity) => {
+        e.preventDefault();
+        const pHT = groupPrice.priceHT || activeProduct.priceHT || activeProduct.price || 0;
+        const pTTC = groupPrice.priceTTC || activeProduct.priceTTC || 0;
+        const displayPrice = groupPrice.suggestShowHT ? pHT : pTTC;
+        
+        // Include variant in the item
+        const itemToAdd = { 
+            ...activeProduct, 
+            rawProduct: activeProduct, 
+            price: displayPrice, 
+            priceHT: pHT, 
+            priceTTC: pTTC 
+        };
+        
+        addItem(itemToAdd, quantity);
+        setExpandedId(null);
+    };
+
+    return (
+        <div className={styles.card}>
+            <Link href={`/produit/${product.slug}`} className={styles.imageLink}>
+                <div className={styles.imageWrapper}>
+                    <Image
+                        src={product.image || '/images/placeholder.webp'}
+                        alt={product.name}
+                        fill
+                        unoptimized
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className={styles.image}
+                    />
+                    {product.tag && product.tag.toLowerCase() !== 'bestseller' && (
+                        <span className={styles.tag}>
+                            {product.tag}
+                        </span>
+                    )}
+                </div>
+            </Link>
+
+            <div className={styles.cardContent}>
+                <div className={styles.cardHeader}>
+                    <h3 className={styles.productName}>{product.name}</h3>
+                    {isPremium && (
+                        <p className={styles.productSubtitle}>
+                            Qualité Premium
+                        </p>
+                    )}
+                </div>
+
+                {hasVariants && (
+                    <div className={styles.variantsWrapper}>
+                        {product.variants.map(v => (
+                            <button
+                                key={v.id}
+                                className={`${styles.variantPill} ${v.id === selectedVariantId ? styles.variantPillActive : ''}`}
+                                onClick={(e) => { e.preventDefault(); setSelectedVariantId(v.id); }}
+                            >
+                                {v.label}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                <div className={styles.cardFooter}>
+                    <div className={styles.priceInfo}>
+                        <span className={styles.priceLabel}>{groupPrice.suggestShowHT ? 'Prix HT' : 'Prix TTC'}</span>
+                        <span className={styles.priceValue}>
+                            {groupPrice.hasDiscount ? (
+                                <span className={styles.pricesContainer}>
+                                    <span className={styles.originalPrice}>
+                                        {activeProduct.formattedPrice}
+                                    </span>
+                                    <span className={styles.discountedPrice}>
+                                        {groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : groupPrice.formattedPrice}
+                                    </span>
+                                </span>
+                            ) : (
+                                <span className={styles.normalPrice}>
+                                    {groupPrice.suggestShowHT ? groupPrice.formattedPriceHT : (activeProduct.formattedPrice || `${activeProduct.priceTTC || activeProduct.price || 5} €`)}
+                                </span>
+                            )}
+                        </span>
+                        {perGramText && (
+                            <span className={styles.perGramText}>{perGramText}</span>
+                        )}
+                    </div>
+                    <div className={`${styles.actionWrapper} ${expandedId === product.id ? styles.expanded : ''}`}>
+                        <div className={styles.qtyDrawer}>
+                            {[1, 3, 5, 10].map(qty => (
+                                <button
+                                    key={qty}
+                                    className={styles.qtyBtn}
+                                    onClick={(e) => handleAddToCart(e, qty)}
+                                    aria-label={`Ajouter ${qty} au panier`}
+                                    title={`x${qty}`}
+                                >
+                                    x{qty}
+                                </button>
+                            ))}
+                        </div>
+                        <button
+                            className={styles.addBtn}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                if (window.innerWidth <= 768) {
+                                    setExpandedId(expandedId === product.id ? null : product.id);
+                                } else {
+                                    handleAddToCart(e, 1);
+                                }
+                            }}
+                            aria-label="Ajouter au panier"
+                            title="Ajouter au panier"
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

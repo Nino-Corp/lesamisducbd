@@ -376,6 +376,36 @@
     font-weight: 500;
 }
 
+.variantsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.variantPill {
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(31, 75, 64, 0.15);
+    background: #f8f9fa;
+    color: #1F4B40;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.variantPill:hover {
+    background: rgba(31, 75, 64, 0.05);
+    border-color: rgba(31, 75, 64, 0.3);
+}
+
+.variantPillActive {
+    background: #1F4B40;
+    color: #00FF94;
+    border-color: #1F4B40;
+}
+
 .cardFooter {
     display: flex;
     justify-content: space-between;

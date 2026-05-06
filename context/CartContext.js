@@ -126,7 +126,8 @@ export function CartProvider({ children }) {
     const addItem = (product, quantity = 1, variant = null) => {
         setCart((prevCart) => {
             const productId = product.id || product.slug || product.name;
-            const variantKey = getVariantKey(variant);
+            const finalVariant = variant || product.variant || null;
+            const variantKey = getVariantKey(finalVariant);
 
             const existingItemIndex = prevCart.findIndex((item) => {
                 const itemId = item.id || item.slug || item.name;
@@ -149,7 +150,7 @@ export function CartProvider({ children }) {
                     rawProduct: product.rawProduct || product, // Save the raw source for future recalculations
                     id: productId, // Ensure stable ID
                     quantity,
-                    variant: variant || null
+                    variant: finalVariant
                 }];
             }
         });

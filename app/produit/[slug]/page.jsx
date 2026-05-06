@@ -43,14 +43,16 @@ export async function generateMetadata({ params }) {
     };
 }
 
+
 export const revalidate = 60;
 
 export default async function ProductPage({ params }) {
     const { slug } = await params;
 
-    const [products, globalContent] = await Promise.all([
+    const [products, globalContent, overrides] = await Promise.all([
         productService.getProducts(),
-        kv.get('global_content').catch(() => null)
+        kv.get('global_content').catch(() => null),
+        kv.get('product_overrides').catch(() => null)
     ]);
 
     // Verify slug matching using explicit slug field
@@ -60,8 +62,13 @@ export default async function ProductPage({ params }) {
         notFound();
     }
 
+    // Apply admin overrides (description, descriptionShort) on top of PrestaShop data
+    const productWithOverrides = overrides?.[product.id]
+        ? { ...product, ...overrides[product.id] }
+        : product;
+
     // Pass related products (just first 3 others for now)
     const relatedProducts = products.filter(p => p.name !== product.name).slice(0, 3);
 
-    return <ProductDetailsClient product={product} relatedProducts={relatedProducts} globalContent={globalContent} />;
+    return <ProductDetailsClient product={productWithOverrides} relatedProducts={relatedProducts} globalContent={globalContent} />;
 }
