@@ -113,9 +113,10 @@
 /* ── Two-column editor layout ─────────────────── */
 .editorLayout {
     display: grid;
-    grid-template-columns: 340px 1fr;
+    grid-template-columns: 400px 1fr;
     gap: 24px;
     align-items: start;
+    height: calc(100vh - 120px);
 }
 
 /* ── Left column — section list ───────────────── */

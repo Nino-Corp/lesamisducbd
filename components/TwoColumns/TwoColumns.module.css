@@ -16,7 +16,7 @@
 
 .inner {
     display: grid;
-    grid-template-columns: var(--text-cols, 1fr) var(--img-cols, 1fr);
+    grid-template-columns: minmax(0, var(--text-cols, 1fr)) minmax(0, var(--img-cols, 1fr));
     gap: 60px;
     align-items: start;
 }

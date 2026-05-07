@@ -28,7 +28,16 @@ const PREVIEW_COMPONENTS = {
     Divider,
 };
 
-export default function LivePreview({ sections = [], activeIndex = null, onSelect }) {
+export default function LivePreview({ 
+    sections = [], 
+    activeIndex = null, 
+    onSelect,
+    onMove,
+    onDuplicate,
+    onDelete,
+    onUpdateProps,
+    onReorder
+}) {
     if (!sections.length) {
         return (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#aaa', gap: '12px' }}>
@@ -63,14 +72,45 @@ export default function LivePreview({ sections = [], activeIndex = null, onSelec
                     return (
                         <div
                             key={section.id || i}
+                            draggable
+                            onDragStart={(e) => {
+                                e.dataTransfer.setData('text/plain', i.toString());
+                                e.dataTransfer.effectAllowed = 'move';
+                            }}
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => {
+                                e.preventDefault();
+                                const fromIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
+                                if (!isNaN(fromIndex) && fromIndex !== i && onReorder) {
+                                    onReorder(fromIndex, i);
+                                }
+                            }}
                             onClick={() => onSelect(i)}
                             style={wrapperStyle}
                         >
                             {isActive && (
-                                <div style={{ position: 'absolute', top: 8, right: 8, background: '#00FF94', color: '#1F4B40', padding: '3px 10px', borderRadius: '99px', fontSize: '0.72rem', fontWeight: 800, zIndex: 10, pointerEvents: 'none' }}>
-                                    ACTIF
+                                <div style={{ position: 'absolute', top: -34, right: 16, background: '#1F4B40', borderRadius: '8px 8px 0 0', display: 'flex', zIndex: 100, overflow: 'hidden', boxShadow: '0 -4px 12px rgba(0,0,0,0.1)' }}>
+                                    <button onClick={(e) => { e.stopPropagation(); onMove(i, -1); }} disabled={i === 0} style={{ padding: '6px 10px', background: 'none', border: 'none', color: i === 0 ? '#555' : '#fff', cursor: i === 0 ? 'default' : 'pointer' }} title="Monter">▲</button>
+                                    <button onClick={(e) => { e.stopPropagation(); onMove(i, 1); }} disabled={i === sections.length - 1} style={{ padding: '6px 10px', background: 'none', border: 'none', color: i === sections.length - 1 ? '#555' : '#fff', cursor: i === sections.length - 1 ? 'default' : 'pointer' }} title="Descendre">▼</button>
+                                    <button onClick={(e) => { e.stopPropagation(); onDuplicate(i); }} style={{ padding: '6px 10px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }} title="Dupliquer">📋</button>
+                                    <button onClick={(e) => { e.stopPropagation(); onDelete(i); }} style={{ padding: '6px 10px', background: 'none', border: 'none', color: '#ff4d4f', cursor: 'pointer' }} title="Supprimer">🗑</button>
                                 </div>
                             )}
+
+                            {isActive && (section.type === 'TwoColumns' || section.type === 'ImageBlock') && (
+                                <div style={{ position: 'absolute', bottom: -20, left: '50%', transform: 'translateX(-50%)', background: '#1F4B40', padding: '8px 20px', borderRadius: '99px', zIndex: 100, display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }} onClick={e => e.stopPropagation()}>
+                                    <span style={{ color: '#00FF94', fontSize: '0.8rem', fontWeight: 600 }}>Taille Image</span>
+                                    <input 
+                                        type="range" 
+                                        min="20" max="80" 
+                                        value={section.props?.imageWidth || 50} 
+                                        onChange={(e) => onUpdateProps(i, { imageWidth: parseInt(e.target.value) })}
+                                        style={{ width: '150px', cursor: 'ew-resize' }}
+                                    />
+                                    <span style={{ color: '#fff', fontSize: '0.8rem', minWidth: '32px' }}>{section.props?.imageWidth || 50}%</span>
+                                </div>
+                            )}
+
                             {isHidden && (
                                 <div style={{ position: 'absolute', top: 8, left: 8, background: '#f59e0b', color: '#fff', padding: '3px 10px', borderRadius: '99px', fontSize: '0.72rem', fontWeight: 800, zIndex: 10, pointerEvents: 'none' }}>
                                     MASQUÉ

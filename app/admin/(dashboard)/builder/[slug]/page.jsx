@@ -19,6 +19,7 @@ export default function PageEditor() {
     const [activeSection, setActiveSection] = useState(null);
     const [activeCategory, setActiveCategory] = useState('all');
     const [showPreview, setShowPreview] = useState(true);
+    const [showSEOModal, setShowSEOModal] = useState(false);
     const [dragOver, setDragOver] = useState(null);
     const [dragging, setDragging] = useState(null);
 
@@ -105,6 +106,15 @@ export default function PageEditor() {
         setDragging(null);
     };
 
+    // Reorder from LivePreview canvas
+    const handleReorder = (fromIndex, toIndex) => {
+        const next = [...page.sections];
+        const [moved] = next.splice(fromIndex, 1);
+        next.splice(toIndex, 0, moved);
+        setPage({ ...page, sections: next });
+        setActiveSection(toIndex);
+    };
+
     if (loading) return <div className={styles.container}><div className={styles.loadingState}>Chargement…</div></div>;
 
     const currentSection = activeSection !== null ? page.sections[activeSection] : null;
@@ -124,10 +134,10 @@ export default function PageEditor() {
                 </div>
                 <div className={styles.headerActions}>
                     <button
-                        onClick={() => setShowPreview(v => !v)}
-                        style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #ddd', background: showPreview ? '#1F4B40' : '#f3f4f6', color: showPreview ? '#00FF94' : '#374151', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}
+                        onClick={() => setShowSEOModal(true)}
+                        style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #1F4B40', background: 'white', color: '#1F4B40', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}
                     >
-                        {showPreview ? '🙈 Masquer preview' : '👁 Afficher preview'}
+                        ⚙️ SEO
                     </button>
                     <a href={`https://www.lesamisducbd.fr/p/${page.slug}`} target="_blank" rel="noopener noreferrer"
                         style={{ padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>
@@ -143,187 +153,170 @@ export default function PageEditor() {
             </div>
 
             {/* Main layout */}
-            <div style={{ display: 'grid', gridTemplateColumns: showPreview ? '280px 360px 1fr' : '280px 1fr', gap: '0', height: 'calc(100vh - 80px)', overflow: 'hidden' }}>
+            <div className={styles.editorLayout}>
 
-                {/* Col 1 — Section list */}
-                <div style={{ borderRight: '1px solid #e5e7eb', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#fafafa' }}>
-                    <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1F4B40' }}>Sections <span style={{ background: '#e5e7eb', borderRadius: '99px', padding: '2px 8px', fontSize: '0.78rem' }}>{page.sections?.length || 0}</span></span>
-                    </div>
-
-                    <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
-                        {(!page.sections || page.sections.length === 0) && (
-                            <div style={{ textAlign: 'center', padding: '40px 16px', color: '#aaa', fontSize: '0.85rem' }}>
-                                <p>Aucune section.</p>
-                                <p>Cliquez sur "+ Ajouter" ci-dessous.</p>
+                {/* Col 1 — Left Sidebar (List OR Editor) */}
+                <div style={{ display: 'flex', flexDirection: 'column', height: '100%', border: '1px solid #e5e7eb', background: '#fff', borderRadius: '16px', overflow: 'hidden' }}>
+                    {activeSection === null ? (
+                        /* SECTION LIST */
+                        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                            <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fafafa' }}>
+                                <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1F4B40' }}>Sections de la page <span style={{ background: '#e5e7eb', borderRadius: '99px', padding: '2px 8px', fontSize: '0.78rem' }}>{page.sections?.length || 0}</span></span>
                             </div>
-                        )}
-                        {page.sections?.map((section, index) => {
-                            const tpl = TEMPLATES.find(t => t.type === section.type);
-                            const isActive = activeSection === index;
-                            const isHidden = section.props?.isVisible === false;
-                            const isDragTarget = dragOver === index;
 
-                            return (
-                                <div
-                                    key={section.id || index}
-                                    draggable
-                                    onDragStart={e => onDragStart(e, index)}
-                                    onDragOver={e => onDragOver(e, index)}
-                                    onDrop={e => onDrop(e, index)}
-                                    onDragLeave={() => setDragOver(null)}
-                                    onClick={() => setActiveSection(index)}
-                                    style={{
-                                        display: 'flex', alignItems: 'center', gap: '10px',
-                                        padding: '10px 12px', borderRadius: '10px', marginBottom: '4px',
-                                        cursor: 'pointer',
-                                        background: isActive ? '#1F4B40' : 'white',
-                                        color: isActive ? 'white' : '#333',
-                                        border: isDragTarget ? '2px dashed #00FF94' : '1px solid #e5e7eb',
-                                        opacity: isHidden ? 0.5 : 1,
-                                        transition: 'all 0.15s',
-                                    }}
-                                >
-                                    <span style={{ cursor: 'grab', opacity: 0.5, fontSize: '1rem', flexShrink: 0 }}>⠿</span>
-                                    <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{tpl?.icon || '🧩'}</span>
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                        <div style={{ fontWeight: 600, fontSize: '0.82rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tpl?.label || section.type}</div>
-                                        <div style={{ fontSize: '0.72rem', opacity: 0.6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                            {section.props?.title || section.props?.text || section.props?.src || '—'}
-                                        </div>
+                            <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
+                                {(!page.sections || page.sections.length === 0) && (
+                                    <div style={{ textAlign: 'center', padding: '40px 16px', color: '#aaa', fontSize: '0.85rem' }}>
+                                        <p>Aucune section.</p>
+                                        <p>Cliquez sur "+ Ajouter" ci-dessous.</p>
                                     </div>
-                                    <div style={{ display: 'flex', gap: '4px', flexShrink: 0 }} onClick={e => e.stopPropagation()}>
-                                        <button onClick={() => toggleVisibility(index)} title={isHidden ? 'Afficher' : 'Masquer'}
-                                            style={{ padding: '3px 5px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', opacity: 0.7 }}>
-                                            {isHidden ? '👁' : '🙈'}
-                                        </button>
-                                        <button onClick={() => duplicateSection(index)} title="Dupliquer"
-                                            style={{ padding: '3px 5px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', opacity: 0.7 }}>
-                                            📋
-                                        </button>
-                                        <button onClick={() => moveSection(index, -1)} disabled={index === 0} title="Monter"
-                                            style={{ padding: '3px 5px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', opacity: index === 0 ? 0.25 : 0.7 }}>
-                                            ▲
-                                        </button>
-                                        <button onClick={() => moveSection(index, 1)} disabled={index === page.sections.length - 1} title="Descendre"
-                                            style={{ padding: '3px 5px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', opacity: index === page.sections.length - 1 ? 0.25 : 0.7 }}>
-                                            ▼
-                                        </button>
-                                        <button onClick={() => removeSection(index)} title="Supprimer"
-                                            style={{ padding: '3px 5px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#dc2626', opacity: 0.8 }}>
-                                            🗑
-                                        </button>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                )}
+                                {page.sections?.map((section, index) => {
+                                    const tpl = TEMPLATES.find(t => t.type === section.type);
+                                    const isActive = activeSection === index;
+                                    const isHidden = section.props?.isVisible === false;
+                                    const isDragTarget = dragOver === index;
 
-                    <div style={{ padding: '12px', borderTop: '1px solid #e5e7eb' }}>
-                        <button onClick={() => setShowTemplateModal(true)}
-                            style={{ width: '100%', padding: '12px', background: '#1F4B40', color: '#00FF94', border: 'none', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem' }}>
-                            + Ajouter un bloc
-                        </button>
-                    </div>
-                </div>
-
-                {/* Col 2 — Editor panel */}
-                <div style={{ borderRight: showPreview ? '1px solid #e5e7eb' : 'none', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                    {currentSection && EditorComponent ? (
-                        <>
-                            <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '12px', background: '#fafafa' }}>
-                                <span style={{ fontSize: '1.5rem' }}>{TEMPLATES.find(t => t.type === currentSection.type)?.icon}</span>
-                                <div>
-                                    <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#1F4B40' }}>{TEMPLATES.find(t => t.type === currentSection.type)?.label}</div>
-                                    <div style={{ fontSize: '0.75rem', color: '#888' }}>{TEMPLATES.find(t => t.type === currentSection.type)?.description}</div>
-                                </div>
-                                <button onClick={() => setActiveSection(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1.2rem', color: '#999' }}>✕</button>
-                            </div>
-                            <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
-                                <EditorComponent
-                                    props={currentSection.props}
-                                    onChange={(newProps) => updateProps(activeSection, newProps)}
-                                />
-                                <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px dashed #ccc' }}>
-                                    <h3 style={{ fontSize: '0.9rem', color: '#1F4B40', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <span>⚙️</span> Options Avancées (SEO & Layout)
-                                    </h3>
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                                            <div>
-                                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '4px' }}>Marge Haut</label>
-                                                <select 
-                                                    style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.85rem' }}
-                                                    value={currentSection.props?.paddingTop || 'medium'}
-                                                    onChange={e => updateProps(activeSection, { paddingTop: e.target.value })}
-                                                >
-                                                    <option value="none">Aucune</option>
-                                                    <option value="small">Petite</option>
-                                                    <option value="medium">Moyenne</option>
-                                                    <option value="large">Grande</option>
-                                                    <option value="xl">Très grande</option>
-                                                </select>
+                                    return (
+                                        <div
+                                            key={section.id || index}
+                                            draggable
+                                            onDragStart={e => onDragStart(e, index)}
+                                            onDragOver={e => onDragOver(e, index)}
+                                            onDrop={e => onDrop(e, index)}
+                                            onDragLeave={() => setDragOver(null)}
+                                            onClick={() => setActiveSection(index)}
+                                            style={{
+                                                display: 'flex', alignItems: 'center', gap: '10px',
+                                                padding: '12px', borderRadius: '10px', marginBottom: '6px',
+                                                cursor: 'pointer',
+                                                background: isActive ? '#1F4B40' : '#f9fdf9',
+                                                color: isActive ? 'white' : '#333',
+                                                border: isDragTarget ? '2px dashed #00FF94' : isActive ? '1px solid #1F4B40' : '1px solid #e5e7eb',
+                                                opacity: isHidden ? 0.6 : 1,
+                                                transition: 'all 0.15s',
+                                            }}
+                                        >
+                                            <span style={{ cursor: 'grab', opacity: 0.5, fontSize: '1rem', flexShrink: 0 }}>⠿</span>
+                                            <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{tpl?.icon || '🧩'}</span>
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ fontWeight: 700, fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tpl?.label || section.type}</div>
+                                                <div style={{ fontSize: '0.72rem', opacity: 0.6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                    {section.props?.title || section.props?.text || section.props?.src || 'Cliquez pour éditer'}
+                                                </div>
                                             </div>
-                                            <div>
-                                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '4px' }}>Marge Bas</label>
-                                                <select 
-                                                    style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.85rem' }}
-                                                    value={currentSection.props?.paddingBottom || 'medium'}
-                                                    onChange={e => updateProps(activeSection, { paddingBottom: e.target.value })}
-                                                >
-                                                    <option value="none">Aucune</option>
-                                                    <option value="small">Petite</option>
-                                                    <option value="medium">Moyenne</option>
-                                                    <option value="large">Grande</option>
-                                                    <option value="xl">Très grande</option>
-                                                </select>
-                                            </div>
+                                            <button onClick={(e) => { e.stopPropagation(); toggleVisibility(index); }} title={isHidden ? 'Afficher' : 'Masquer'}
+                                                style={{ padding: '4px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', color: isActive ? '#fff' : '#666' }}>
+                                                {isHidden ? '👁' : '🙈'}
+                                            </button>
                                         </div>
-                                        <div style={{ display: 'flex', gap: '12px' }}>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', cursor: 'pointer' }}>
-                                                <input type="checkbox" checked={!!currentSection.props?.hideMobile} onChange={e => updateProps(activeSection, { hideMobile: e.target.checked })} />
-                                                Masquer sur Mobile
-                                            </label>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', cursor: 'pointer' }}>
-                                                <input type="checkbox" checked={!!currentSection.props?.hideDesktop} onChange={e => updateProps(activeSection, { hideDesktop: e.target.checked })} />
-                                                Masquer sur Desktop
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '4px' }}>ID d'ancre (Optionnel)</label>
-                                            <input 
-                                                type="text" 
-                                                placeholder="ex: contact" 
-                                                style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.85rem' }}
-                                                value={currentSection.props?.sectionId || ''}
-                                                onChange={e => updateProps(activeSection, { sectionId: e.target.value.replace(/[^a-zA-Z0-9_-]/g, '') })}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
+                                    );
+                                })}
                             </div>
-                        </>
-                    ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#bbb', gap: '12px', textAlign: 'center', padding: '20px' }}>
-                            <span style={{ fontSize: '2.5rem' }}>←</span>
-                            <p style={{ margin: 0, fontSize: '0.9rem' }}>Sélectionnez une section<br />dans la liste pour la modifier</p>
+
+                            <div style={{ padding: '16px', borderTop: '1px solid #e5e7eb', background: '#fafafa' }}>
+                                <button onClick={() => setShowTemplateModal(true)}
+                                    style={{ width: '100%', padding: '14px', background: '#00FF94', color: '#1F4B40', border: 'none', borderRadius: '10px', fontWeight: 800, cursor: 'pointer', fontSize: '0.95rem', boxShadow: '0 4px 12px rgba(0,255,148,0.2)' }}>
+                                    + Ajouter un bloc
+                                </button>
+                            </div>
                         </div>
+                    ) : (
+                        /* EDITOR PANEL */
+                        currentSection && EditorComponent ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                                <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '12px', background: '#fafafa' }}>
+                                    <button onClick={() => setActiveSection(null)} style={{ background: '#e5e7eb', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem', padding: '6px 12px', color: '#333', fontWeight: 600 }}>← Retour</button>
+                                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span style={{ fontSize: '1.2rem' }}>{TEMPLATES.find(t => t.type === currentSection.type)?.icon}</span>
+                                        <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#1F4B40' }}>{TEMPLATES.find(t => t.type === currentSection.type)?.label}</div>
+                                    </div>
+                                </div>
+                                <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+                                    <EditorComponent
+                                        props={currentSection.props}
+                                        onChange={(newProps) => updateProps(activeSection, newProps)}
+                                    />
+                                    {/* Advanced Options */}
+                                    <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px dashed #ccc' }}>
+                                        <h3 style={{ fontSize: '0.9rem', color: '#1F4B40', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <span>⚙️</span> Options Avancées
+                                        </h3>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                                                <div>
+                                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '4px' }}>Marge Haut</label>
+                                                    <select 
+                                                        style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.85rem' }}
+                                                        value={currentSection.props?.paddingTop || 'medium'}
+                                                        onChange={e => updateProps(activeSection, { paddingTop: e.target.value })}
+                                                    >
+                                                        <option value="none">Aucune</option>
+                                                        <option value="small">Petite</option>
+                                                        <option value="medium">Moyenne</option>
+                                                        <option value="large">Grande</option>
+                                                        <option value="xl">Très grande</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '4px' }}>Marge Bas</label>
+                                                    <select 
+                                                        style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.85rem' }}
+                                                        value={currentSection.props?.paddingBottom || 'medium'}
+                                                        onChange={e => updateProps(activeSection, { paddingBottom: e.target.value })}
+                                                    >
+                                                        <option value="none">Aucune</option>
+                                                        <option value="small">Petite</option>
+                                                        <option value="medium">Moyenne</option>
+                                                        <option value="large">Grande</option>
+                                                        <option value="xl">Très grande</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '12px' }}>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', cursor: 'pointer' }}>
+                                                    <input type="checkbox" checked={!!currentSection.props?.hideMobile} onChange={e => updateProps(activeSection, { hideMobile: e.target.checked })} />
+                                                    Masquer (Mobile)
+                                                </label>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', cursor: 'pointer' }}>
+                                                    <input type="checkbox" checked={!!currentSection.props?.hideDesktop} onChange={e => updateProps(activeSection, { hideDesktop: e.target.checked })} />
+                                                    Masquer (PC)
+                                                </label>
+                                            </div>
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '4px' }}>ID d'ancre (Optionnel)</label>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="ex: contact" 
+                                                    style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.85rem' }}
+                                                    value={currentSection.props?.sectionId || ''}
+                                                    onChange={e => updateProps(activeSection, { sectionId: e.target.value.replace(/[^a-zA-Z0-9_-]/g, '') })}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : null
                     )}
                 </div>
 
-                {/* Col 3 — Live preview */}
-                {showPreview && (
-                    <div style={{ overflow: 'hidden', background: '#e5e7eb', position: 'relative' }}>
-                        <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.6)', color: '#fff', padding: '4px 14px', borderRadius: '99px', fontSize: '0.72rem', fontWeight: 600, zIndex: 20, pointerEvents: 'none' }}>
-                            PREVIEW — 75%
-                        </div>
-                        <LivePreview
-                            sections={page.sections || []}
-                            activeIndex={activeSection}
-                            onSelect={setActiveSection}
-                        />
+                {/* Col 2 — Live preview Canvas */}
+                <div style={{ overflow: 'hidden', background: '#e5e7eb', position: 'relative', borderRadius: '16px', border: '1px solid #ddd', height: '100%' }}>
+                    <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.6)', color: '#fff', padding: '4px 14px', borderRadius: '99px', fontSize: '0.72rem', fontWeight: 600, zIndex: 20, pointerEvents: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>✨ CANVAS INTERACTIF</span>
                     </div>
-                )}
+                    <LivePreview
+                        sections={page.sections || []}
+                        activeIndex={activeSection}
+                        onSelect={setActiveSection}
+                        onMove={moveSection}
+                        onDuplicate={duplicateSection}
+                        onDelete={removeSection}
+                        onUpdateProps={(index, props) => updateProps(index, props)}
+                        onReorder={handleReorder}
+                    />
+                </div>
             </div>
 
             {/* Template picker modal */}
@@ -362,6 +355,75 @@ export default function PageEditor() {
                                     <span style={{ fontSize: '0.75rem', color: '#888', lineHeight: 1.4 }}>{t.description}</span>
                                 </button>
                             ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* SEO Modal */}
+            {showSEOModal && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
+                    onClick={() => setShowSEOModal(false)}>
+                    <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+                        onClick={e => e.stopPropagation()}>
+                        <div style={{ padding: '20px 24px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#1F4B40' }}>⚙️ Paramètres SEO</h2>
+                            <button onClick={() => setShowSEOModal(false)} style={{ background: 'none', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#999' }}>✕</button>
+                        </div>
+
+                        <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>Meta Title</label>
+                                <input 
+                                    type="text" 
+                                    value={page.seo?.metaTitle || ''} 
+                                    onChange={e => setPage({ ...page, seo: { ...page.seo, metaTitle: e.target.value } })}
+                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem' }}
+                                    placeholder={`${page.title} - Les Amis du CBD`}
+                                />
+                                <div style={{ fontSize: '0.75rem', color: (page.seo?.metaTitle?.length || 0) > 60 ? '#ef4444' : '#6b7280', marginTop: '4px' }}>
+                                    {page.seo?.metaTitle?.length || 0} / 60 caractères (recommandé)
+                                </div>
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>Meta Description</label>
+                                <textarea 
+                                    value={page.seo?.metaDescription || ''} 
+                                    onChange={e => setPage({ ...page, seo: { ...page.seo, metaDescription: e.target.value } })}
+                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem', minHeight: '80px', resize: 'vertical' }}
+                                    placeholder={`Découvrez notre page ${page.title} dédiée au CBD premium.`}
+                                />
+                                <div style={{ fontSize: '0.75rem', color: (page.seo?.metaDescription?.length || 0) > 160 ? '#ef4444' : '#6b7280', marginTop: '4px' }}>
+                                    {page.seo?.metaDescription?.length || 0} / 160 caractères (recommandé)
+                                </div>
+                            </div>
+
+                            <div>
+                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>URL Canonique (optionnel)</label>
+                                <input 
+                                    type="text" 
+                                    value={page.seo?.canonicalUrl || ''} 
+                                    onChange={e => setPage({ ...page, seo: { ...page.seo, canonicalUrl: e.target.value } })}
+                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem' }}
+                                    placeholder={`/p/${page.slug}`}
+                                />
+                            </div>
+
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer', marginTop: '8px' }}>
+                                <input 
+                                    type="checkbox" 
+                                    checked={!!page.seo?.noindex} 
+                                    onChange={e => setPage({ ...page, seo: { ...page.seo, noindex: e.target.checked } })}
+                                    style={{ width: '16px', height: '16px' }}
+                                />
+                                Ne pas indexer cette page (noindex)
+                            </label>
+
+                            <button onClick={() => setShowSEOModal(false)}
+                                style={{ width: '100%', padding: '12px', background: '#1F4B40', color: '#00FF94', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer', fontSize: '1rem', marginTop: '12px' }}>
+                                Valider
+                            </button>
                         </div>
                     </div>
                 </div>
