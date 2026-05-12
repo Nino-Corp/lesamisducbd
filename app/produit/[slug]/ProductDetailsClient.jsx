@@ -52,21 +52,35 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
 
     const { data: session } = useSession();
     const groupId = session?.user?.id_default_group || 3;
+    const hasVariations = product.variations && product.variations.length > 0;
     const hasVariants = product.variants && product.variants.length > 0;
+
+    const [selectedVariationSlug, setSelectedVariationSlug] = useState(
+        hasVariations ? (product.variations.find(v => v.slug === product.slug)?.slug || product.variations[0].slug) : null
+    );
     const [selectedVariantId, setSelectedVariantId] = useState(
         hasVariants ? (product.variants.find(v => v.isDefault)?.id || product.variants[0].id) : null
     );
 
+    const activeVariation = hasVariations ? product.variations.find(v => v.slug === selectedVariationSlug) : null;
     const selectedVariant = hasVariants ? product.variants.find(v => v.id === selectedVariantId) : null;
     
-    // Construct active product data (merging selected variant info if any)
-    const activeProduct = selectedVariant ? {
-        ...product,
-        priceHT: selectedVariant.priceImpactHT + product.priceHT,
-        priceTTC: selectedVariant.priceTTC,
-        formattedPrice: selectedVariant.formattedPrice,
-        variant: selectedVariant
-    } : product;
+    // Construct active product data (merging selected variation or variant info if any)
+    const activeProduct = (() => {
+        if (activeVariation) {
+            return activeVariation;
+        }
+        if (selectedVariant) {
+            return {
+                ...product,
+                priceHT: selectedVariant.priceImpactHT + product.priceHT,
+                priceTTC: selectedVariant.priceTTC,
+                formattedPrice: selectedVariant.formattedPrice,
+                variant: selectedVariant
+            };
+        }
+        return product;
+    })();
 
     const groupPrice = calculateGroupPrice(activeProduct, groupId);
 
@@ -127,8 +141,8 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                     <div className={styles.gallery}>
                         <div className={styles.mainImageWrapper}>
                             <Image
-                                src={product.imageLarge || product.image || '/images/placeholder.webp'}
-                                alt={product.name}
+                                src={activeProduct.imageLarge || activeProduct.image || '/images/placeholder.webp'}
+                                alt={activeProduct.name}
                                 fill
                                 className={styles.mainImage}
                                 priority
@@ -140,21 +154,33 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                     {/* Details Section */}
                     <div className={styles.details}>
                         <div className={styles.headerInfo}>
-                            {product.tag && <span className={styles.tag}>{product.tag}</span>}
-                            <h1 className={styles.title}>{product.name}</h1>
+                            {activeProduct.tag && <span className={styles.tag}>{activeProduct.tag}</span>}
+                            <h1 className={styles.title}>{activeProduct.name}</h1>
                         </div>
 
-                        {hasVariants && (
+                        {(hasVariations || hasVariants) && (
                             <div className={styles.variantsWrapper}>
-                                {product.variants.map(v => (
-                                    <button
-                                        key={v.id}
-                                        className={`${styles.variantPill} ${v.id === selectedVariantId ? styles.variantPillActive : ''}`}
-                                        onClick={(e) => { e.preventDefault(); setSelectedVariantId(v.id); }}
-                                    >
-                                        {v.label}
-                                    </button>
-                                ))}
+                                {hasVariations ? (
+                                    product.variations.map(v => (
+                                        <button
+                                            key={v.slug}
+                                            className={`${styles.variantPill} ${v.slug === selectedVariationSlug ? styles.variantPillActive : ''}`}
+                                            onClick={(e) => { e.preventDefault(); setSelectedVariationSlug(v.slug); }}
+                                        >
+                                            {v.label}
+                                        </button>
+                                    ))
+                                ) : (
+                                    product.variants.map(v => (
+                                        <button
+                                            key={v.id}
+                                            className={`${styles.variantPill} ${v.id === selectedVariantId ? styles.variantPillActive : ''}`}
+                                            onClick={(e) => { e.preventDefault(); setSelectedVariantId(v.id); }}
+                                        >
+                                            {v.label}
+                                        </button>
+                                    ))
+                                )}
                             </div>
                         )}
 

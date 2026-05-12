@@ -62,13 +62,47 @@ export default async function ProductPage({ params }) {
         notFound();
     }
 
+    // Extract base name by stripping trailing weight (e.g. "Super Skunk 4g" -> "Super Skunk")
+    const baseName = (product.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
+
     // Apply admin overrides (description, descriptionShort) on top of PrestaShop data
     const productWithOverrides = overrides?.[product.id]
         ? { ...product, ...overrides[product.id] }
-        : product;
+        : { ...product };
 
-    // Pass related products (just first 3 others for now)
-    const relatedProducts = products.filter(p => p.name !== product.name).slice(0, 3);
+    // Find all products that share this base name to form the list of weight variations
+    const variations = products
+        .filter(p => {
+            const pBase = (p.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
+            return pBase.toLowerCase() === baseName.toLowerCase();
+        })
+        .map(p => {
+            const m = (p.name || '').match(/(\d+(?:[.,]\d+)?)\s*g/i);
+            const weight = m ? parseFloat(m[1].replace(',', '.')) : 0;
+            const varOverrides = overrides?.[p.id] ? overrides[p.id] : {};
+            return {
+                ...p,
+                ...varOverrides,
+                weight,
+                label: weight > 0 ? `${weight}g` : p.name
+            };
+        })
+        .sort((a, b) => {
+            if (a.weight && b.weight) return a.weight - b.weight;
+            return (a.priceTTC || 0) - (b.priceTTC || 0);
+        });
+
+    if (variations.length > 1) {
+        productWithOverrides.variations = variations;
+    }
+
+    // Pass related products (exclude variations of the same strain)
+    const relatedProducts = products
+        .filter(p => {
+            const pBase = (p.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
+            return pBase.toLowerCase() !== baseName.toLowerCase();
+        })
+        .slice(0, 4);
 
     return <ProductDetailsClient product={productWithOverrides} relatedProducts={relatedProducts} globalContent={globalContent} />;
 }

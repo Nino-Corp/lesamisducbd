@@ -162,6 +162,44 @@ export default function ProductsClient({ initialProducts, globalContent }) {
         return getProductType(product) === activeCategory;
     });
 
+    // Group filtered products by base name to present a unified premium selector experience
+    const groupedProducts = (() => {
+        const groups = new Map();
+        filteredProducts.forEach(product => {
+            const baseName = (product.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
+            const key = baseName.toLowerCase();
+            
+            if (!groups.has(key)) {
+                // Find all variations for this base product from the full initialProducts list
+                const variations = initialProducts
+                    .filter(p => {
+                        const pBase = (p.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
+                        return pBase.toLowerCase() === key;
+                    })
+                    .map(p => {
+                        const m = (p.name || '').match(/(\d+(?:[.,]\d+)?)\s*g/i);
+                        const weight = m ? parseFloat(m[1].replace(',', '.')) : 0;
+                        return {
+                            ...p,
+                            weight,
+                            label: weight > 0 ? `${weight}g` : p.name
+                        };
+                    })
+                    .sort((a, b) => {
+                        if (a.weight && b.weight) return a.weight - b.weight;
+                        return (a.priceTTC || 0) - (b.priceTTC || 0);
+                    });
+
+                groups.set(key, {
+                    ...product,
+                    baseName,
+                    variations: variations.length > 1 ? variations : null
+                });
+            }
+        });
+        return Array.from(groups.values());
+    })();
+
     return (
         <main className={styles.main}>
             <Header {...HEADER_PROPS} />
@@ -247,7 +285,7 @@ export default function ProductsClient({ initialProducts, globalContent }) {
 
                 {/* Grid */}
                 <div className={styles.grid}>
-                    {filteredProducts.map((product) => {
+                    {groupedProducts.map((product) => {
                         return (
                             <ProductCard 
                                 key={product.id || product.slug}
@@ -283,21 +321,35 @@ const getProductType = (product) => {
 };
 
 function ProductCard({ product, groupId, addItem, expandedId, setExpandedId }) {
+    const hasVariations = product.variations && product.variations.length > 0;
     const hasVariants = product.variants && product.variants.length > 0;
+
+    const [selectedVariationSlug, setSelectedVariationSlug] = useState(
+        hasVariations ? (product.variations.find(v => v.slug === product.slug)?.slug || product.variations[0].slug) : null
+    );
     const [selectedVariantId, setSelectedVariantId] = useState(
         hasVariants ? (product.variants.find(v => v.isDefault)?.id || product.variants[0].id) : null
     );
 
+    const activeVariation = hasVariations ? product.variations.find(v => v.slug === selectedVariationSlug) : null;
     const selectedVariant = hasVariants ? product.variants.find(v => v.id === selectedVariantId) : null;
     
-    // Construct active product data (merging selected variant info if any)
-    const activeProduct = selectedVariant ? {
-        ...product,
-        priceHT: selectedVariant.priceImpactHT + product.priceHT, // Might need to just use variant's total HT if available, but assuming base + impact
-        priceTTC: selectedVariant.priceTTC,
-        formattedPrice: selectedVariant.formattedPrice,
-        variant: selectedVariant
-    } : product;
+    // Construct active product data (merging selected variation or variant info if any)
+    const activeProduct = (() => {
+        if (activeVariation) {
+            return activeVariation;
+        }
+        if (selectedVariant) {
+            return {
+                ...product,
+                priceHT: selectedVariant.priceImpactHT + product.priceHT,
+                priceTTC: selectedVariant.priceTTC,
+                formattedPrice: selectedVariant.formattedPrice,
+                variant: selectedVariant
+            };
+        }
+        return product;
+    })();
 
     const groupPrice = calculateGroupPrice(activeProduct, groupId);
 
@@ -318,22 +370,18 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId }) {
     }
 
     // Vérifier si le produit mérite l'appellation "Qualité Premium" (Whitelist)
-    const nameNorm = (product.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const tagNorm = (product.tag || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const nameNorm = (activeProduct.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const tagNorm = (activeProduct.tag || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     
     const isPremium = (() => {
-        // S'il s'agit d'un accessoire évident, on coupe court
         if (['plv', 'flyer', 'tourniquet', 'presentoir', 'accessoire', 'goodies', 'feuille', 'briquet', 'grinder', 'plateau', 'cendrier'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return false;
         
-        // Mots-clés de produits CBD/Premium
         const premiumKeywords = ['resine', 'hash', 'pollen', 'fleur', 'trim', 'mix', 'skunk', 'amnesia', 'gorilla', 'kush', 'haze', 'gelato', 'moonrock', 'asteroide', 'huile', 'cbd', 'cbg', 'cbn', 'pack', 'mystere', 'decouverte'];
         if (premiumKeywords.some(k => nameNorm.includes(k) || tagNorm.includes(k))) return true;
 
-        // Présence d'un dosage/grammage/volume (ex: 5g, 10ml, 15%)
         if (/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*(g|ml|%)\b/.test(nameNorm)) return true;
 
-        // Fallback avec la catégorie existante
-        const type = getProductType(product);
+        const type = getProductType(activeProduct);
         if (type !== 'autre') return true;
 
         return false;
@@ -345,7 +393,6 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId }) {
         const pTTC = groupPrice.priceTTC || activeProduct.priceTTC || 0;
         const displayPrice = groupPrice.suggestShowHT ? pHT : pTTC;
         
-        // Include variant in the item
         const itemToAdd = { 
             ...activeProduct, 
             rawProduct: activeProduct, 
@@ -360,19 +407,19 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId }) {
 
     return (
         <div className={styles.card}>
-            <Link href={`/produit/${product.slug}`} className={styles.imageLink}>
+            <Link href={`/produit/${activeProduct.slug}`} className={styles.imageLink}>
                 <div className={styles.imageWrapper}>
                     <Image
-                        src={product.image || '/images/placeholder.webp'}
-                        alt={product.name}
+                        src={activeProduct.image || '/images/placeholder.webp'}
+                        alt={activeProduct.name}
                         fill
                         unoptimized
                         sizes="(max-width: 768px) 100vw, 33vw"
                         className={styles.image}
                     />
-                    {product.tag && product.tag.toLowerCase() !== 'bestseller' && (
+                    {activeProduct.tag && activeProduct.tag.toLowerCase() !== 'bestseller' && (
                         <span className={styles.tag}>
-                            {product.tag}
+                            {activeProduct.tag}
                         </span>
                     )}
                 </div>
@@ -380,7 +427,7 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId }) {
 
             <div className={styles.cardContent}>
                 <div className={styles.cardHeader}>
-                    <h3 className={styles.productName}>{product.name}</h3>
+                    <h3 className={styles.productName}>{activeProduct.name}</h3>
                     {isPremium && (
                         <p className={styles.productSubtitle}>
                             Qualité Premium
@@ -388,17 +435,29 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId }) {
                     )}
                 </div>
 
-                {hasVariants && (
+                {(hasVariations || hasVariants) && (
                     <div className={styles.variantsWrapper}>
-                        {product.variants.map(v => (
-                            <button
-                                key={v.id}
-                                className={`${styles.variantPill} ${v.id === selectedVariantId ? styles.variantPillActive : ''}`}
-                                onClick={(e) => { e.preventDefault(); setSelectedVariantId(v.id); }}
-                            >
-                                {v.label}
-                            </button>
-                        ))}
+                        {hasVariations ? (
+                            product.variations.map(v => (
+                                <button
+                                    key={v.slug}
+                                    className={`${styles.variantPill} ${v.slug === selectedVariationSlug ? styles.variantPillActive : ''}`}
+                                    onClick={(e) => { e.preventDefault(); setSelectedVariationSlug(v.slug); }}
+                                >
+                                    {v.label}
+                                </button>
+                            ))
+                        ) : (
+                            product.variants.map(v => (
+                                <button
+                                    key={v.id}
+                                    className={`${styles.variantPill} ${v.id === selectedVariantId ? styles.variantPillActive : ''}`}
+                                    onClick={(e) => { e.preventDefault(); setSelectedVariantId(v.id); }}
+                                >
+                                    {v.label}
+                                </button>
+                            ))
+                        )}
                     </div>
                 )}
 
