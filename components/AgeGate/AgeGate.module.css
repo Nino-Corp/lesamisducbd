@@ -1,0 +1,479 @@
+/* =============================================
+   AGE GATE — Les Amis du CBD
+   Palette: #1F4B40 | #49b197 | #00FF94 | #E3FFF8
+   ============================================= */
+
+/* ── Overlay ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  /* Fond : dégradé profond cohérent avec --background-gradient */
+  background: linear-gradient(145deg, #0e2b24 0%, #1a4538 50%, #0d2e24 100%);
+
+  /* État initial (avant animation d'entrée) */
+  opacity: 0;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.overlay.entering {
+  opacity: 0;
+}
+
+.overlay.shown {
+  opacity: 1;
+}
+
+/* Sortie fluide vers le haut */
+.overlay.exiting {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.99);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Refus — fond vire au rouge sombre */
+.overlay.refused {
+  background: linear-gradient(145deg, #1a0a0a 0%, #2d1010 100%);
+  transition: background 1s ease, opacity 0.6s;
+  opacity: 1;
+}
+
+/* ── Blobs SVG animés ── */
+.bgWaves {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bgWaves svg {
+  width: 100%;
+  height: 100%;
+}
+
+.blob1 {
+  animation: blobFloat1 9s ease-in-out infinite;
+  transform-origin: 420px 380px;
+}
+
+.blob2 {
+  animation: blobFloat2 11s ease-in-out infinite;
+  transform-origin: 1050px 560px;
+}
+
+@keyframes blobFloat1 {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50%       { transform: scale(1.08) translate(-30px, 20px); }
+}
+
+@keyframes blobFloat2 {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50%       { transform: scale(1.05) translate(20px, -25px); }
+}
+
+/* ── Particules flottantes ── */
+.particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.particle {
+  --i: 0;
+  position: absolute;
+  width: calc(4px + (var(--i, 0) * 2px % 8px));
+  height: var(--particle-size, 6px);
+  border-radius: 50%;
+  background: radial-gradient(circle, #00FF94 0%, #49b197 60%, transparent 100%);
+  opacity: 0;
+
+  /* Position aléatoire via --i */
+  left: calc((var(--i) * 357 % 100) * 1%);
+  top: calc(110% + (var(--i) * 13 % 20) * 1px);
+
+  animation: particleRise calc(6s + (var(--i) * 0.4s)) calc(var(--i) * 0.35s) ease-in infinite;
+}
+
+@keyframes particleRise {
+  0%   { opacity: 0;    transform: translateY(0)    scale(0.6); }
+  15%  { opacity: 0.7;  }
+  80%  { opacity: 0.15; }
+  100% { opacity: 0;    transform: translateY(-110vh) scale(1.2); }
+}
+
+/* ── Carte principale ── */
+.card {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 520px;
+
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(28px) saturate(120%);
+  -webkit-backdrop-filter: blur(28px) saturate(120%);
+
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 32px;
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(0, 255, 148, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+
+  padding: clamp(32px, 6vw, 56px) clamp(28px, 5vw, 52px);
+  text-align: center;
+
+  animation: cardEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Lueur interne subtile */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 32px;
+  background: radial-gradient(
+    ellipse at top center,
+    rgba(0, 255, 148, 0.09) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+/* Shake animation pour mauvaise action éventuelle */
+.shake {
+  animation: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shake {
+  10%, 90%  { transform: translateX(-3px); }
+  20%, 80%  { transform: translateX(5px); }
+  30%, 50%, 70% { transform: translateX(-6px); }
+  40%, 60%  { transform: translateX(6px); }
+  100%      { transform: translateX(0); }
+}
+
+/* ── Badge 18+ ── */
+.badgeWrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.badgeRing {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #49b197 0%, #1F4B40 100%);
+  box-shadow:
+    0 0 0 3px rgba(0, 255, 148, 0.3),
+    0 0 30px rgba(0, 255, 148, 0.2),
+    0 12px 30px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: badgePulse 3s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(0, 255, 148, 0.3), 0 0 30px rgba(0, 255, 148, 0.2), 0 12px 30px rgba(0,0,0,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(0, 255, 148, 0.15), 0 0 50px rgba(0, 255, 148, 0.3), 0 12px 30px rgba(0,0,0,0.4); }
+}
+
+.badge {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+}
+
+.badgeNumber {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.badgePlus {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #00FF94;
+  line-height: 1;
+}
+
+/* Feuilles décoratives de part et d'autre du badge */
+.leafLeft,
+.leafRight {
+  position: absolute;
+  width: 44px;
+  height: 60px;
+  animation: leafSway 4s ease-in-out infinite;
+}
+
+.leafLeft  { left: -30px;  transform-origin: bottom right;  transform: rotate(-20deg); }
+.leafRight { right: -30px; transform-origin: bottom left;   transform: rotate(20deg); animation-delay: -2s; }
+
+@keyframes leafSway {
+  0%, 100% { transform: rotate(-20deg) scale(1); }
+  50%       { transform: rotate(-12deg) scale(1.04); }
+}
+
+.leafRight {
+  animation-name: leafSwayRight;
+}
+
+@keyframes leafSwayRight {
+  0%, 100% { transform: rotate(20deg) scale(1); }
+  50%       { transform: rotate(12deg) scale(1.04); }
+}
+
+/* ── Contenu texte ── */
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #00FF94;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.title {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+.brand {
+  background: linear-gradient(90deg, #49b197, #00FF94);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: clamp(0.88rem, 2vw, 1rem);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.65;
+  margin-bottom: 32px;
+}
+
+.subtitle strong {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 700;
+}
+
+/* ── Boutons ── */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.btnAccept {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 28px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+
+  background: linear-gradient(135deg, #49b197 0%, #1F4B40 100%);
+  color: #ffffff;
+  box-shadow:
+    0 8px 25px rgba(73, 177, 151, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btnAccept::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #00FF94 0%, #49b197 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: inherit;
+}
+
+.btnAccept:hover::after {
+  opacity: 1;
+}
+
+.btnAccept:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 35px rgba(0, 255, 148, 0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.btnAccept:active {
+  transform: scale(0.98);
+  transition-duration: 0.1s;
+}
+
+.btnAccept span,
+.btnAccept > * {
+  position: relative;
+  z-index: 1;
+}
+
+.btnIcon {
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.btnRefuse {
+  width: 100%;
+  padding: 13px 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  background: transparent;
+  letter-spacing: 0.01em;
+
+  transition: color 0.2s ease,
+              border-color 0.2s ease,
+              background 0.2s ease;
+}
+
+.btnRefuse:hover {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Texte légal ── */
+.legal {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.28);
+  line-height: 1.6;
+}
+
+/* ── Écran de refus ── */
+.refusedCard {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  color: white;
+  max-width: 400px;
+  animation: cardEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  padding: 20px;
+}
+
+.refusedIcon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+}
+
+.dashCircle {
+  animation: dashSpin 8s linear infinite;
+  transform-origin: 40px 40px;
+}
+
+@keyframes dashSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.refusedTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.refusedText {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.refusedText strong {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.refusedEmoji {
+  font-size: 2.5rem;
+  animation: emojiFloat 3s ease-in-out infinite;
+  display: block;
+}
+
+@keyframes emojiFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .card {
+    border-radius: 24px;
+    padding: 32px 24px;
+  }
+
+  .badgeRing {
+    width: 76px;
+    height: 76px;
+  }
+
+  .leafLeft, .leafRight {
+    width: 36px;
+    height: 48px;
+  }
+
+  .leafLeft  { left: -22px; }
+  .leafRight { right: -22px; }
+}

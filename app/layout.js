@@ -74,6 +74,7 @@ export const metadata = {
 
 import JsonLd from "@/components/JsonLd";
 import CartDrawer from "@/components/Cart/CartDrawer";
+import AgeGate from "@/components/AgeGate/AgeGate";
 
 export default function RootLayout({ children }) {
   return (
@@ -83,6 +84,7 @@ export default function RootLayout({ children }) {
           <AuthProvider>
             <CartProvider>
               <JsonLd />
+              <AgeGate />
               <ScrollToTop />
               {children}
               <CartDrawer />
