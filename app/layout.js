@@ -75,6 +75,7 @@ export const metadata = {
 import JsonLd from "@/components/JsonLd";
 import CartDrawer from "@/components/Cart/CartDrawer";
 import AgeGate from "@/components/AgeGate/AgeGate";
+import LogoutHandler from "@/components/LogoutHandler/LogoutHandler";
 
 export default function RootLayout({ children }) {
   return (
@@ -85,6 +86,7 @@ export default function RootLayout({ children }) {
             <CartProvider>
               <JsonLd />
               <AgeGate />
+              <LogoutHandler />
               <ScrollToTop />
               {children}
               <CartDrawer />
