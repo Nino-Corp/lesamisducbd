@@ -16,6 +16,7 @@ export function CartProvider({ children }) {
     const { showToast } = useToast();
     const { data: session, status } = useSession();
     const hasInitializedSession = useRef(false);
+    const prevStatus = useRef(null); // Track session status transitions for cart clear on logout
     // Use loose equality or cast to String to be robust against PrestaShop's string IDs
     const isPro = String(session?.user?.id_default_group) === "4";
 
@@ -71,6 +72,19 @@ export function CartProvider({ children }) {
             localStorage.setItem('cart', JSON.stringify(cart));
         }
     }, [cart, isLoaded]);
+
+    // Clear cart on logout — detects transition from authenticated → unauthenticated
+    useEffect(() => {
+        if (status === 'loading') return; // Wait until session is resolved
+
+        if (prevStatus.current === 'authenticated' && status === 'unauthenticated') {
+            setCart([]);
+            try { localStorage.removeItem('cart'); } catch (_) {}
+            showToast('Panier vidé suite à la déconnexion', 'info');
+        }
+
+        prevStatus.current = status;
+    }, [status]);
 
     // Recalculate prices on Session Change (Login/Logout)
     useEffect(() => {
