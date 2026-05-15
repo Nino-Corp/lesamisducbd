@@ -76,28 +76,35 @@ export async function GET(request) {
             let carrierName = 'Non défini';
 
             try {
-                // Fetch carrier data for tracking
+                let finalCarrierId = order.id_carrier;
+
+                // 1. Fetch order_carriers for tracking number (PrestaShop creates one when shipping)
                 const ocRes = await fetch(`${prestaUrl}/order_carriers?ws_key=${prestaKey}&output_format=JSON&display=full&filter[id_order]=${order.id}`);
                 const ocData = await ocRes.json();
+                
                 if (ocData?.order_carriers?.length > 0) {
                     const oc = ocData.order_carriers[0];
                     trackingNumber = oc.tracking_number || null;
+                    if (oc.id_carrier && oc.id_carrier !== '0') {
+                        finalCarrierId = oc.id_carrier;
+                    }
+                }
 
-                    // Fetch the carrier's tracking URL from PrestaShop (instead of hardcoding La Poste)
-                    if (trackingNumber && oc.id_carrier) {
-                        try {
-                            const carrierRes = await fetch(`${prestaUrl}/carriers/${oc.id_carrier}?ws_key=${prestaKey}&output_format=JSON&display=[name,url]`);
-                            const carrierData = await carrierRes.json();
+                // 2. Fetch carrier details (name and tracking url template)
+                if (finalCarrierId && finalCarrierId !== '0') {
+                    const carrierRes = await fetch(`${prestaUrl}/carriers/${finalCarrierId}?ws_key=${prestaKey}&output_format=JSON&display=[name,url]`);
+                    const carrierData = await carrierRes.json();
 
-                            if (carrierData?.carrier) {
-                                carrierName = carrierData.carrier.name;
-                                const carrierUrl = carrierData.carrier.url;
-                                if (carrierUrl && carrierUrl !== 'null' && carrierUrl.length > 0) {
-                                    // PrestaShop uses @ as placeholder for the tracking number
-                                    trackingUrl = carrierUrl.replace('@', trackingNumber);
-                                }
-                            }
-                        } catch (cErr) { /* Silently fail, we just won't have a URL */ }
+                    if (carrierData?.carrier) {
+                        const fetchedName = carrierData.carrier.name;
+                        if (fetchedName && fetchedName !== '0') {
+                            carrierName = fetchedName;
+                        }
+
+                        const carrierUrl = carrierData.carrier.url;
+                        if (trackingNumber && carrierUrl && carrierUrl !== 'null' && carrierUrl.length > 0) {
+                            trackingUrl = carrierUrl.replace('@', trackingNumber);
+                        }
                     }
                 }
             } catch (err) {
