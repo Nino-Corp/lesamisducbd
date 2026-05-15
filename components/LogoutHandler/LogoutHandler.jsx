@@ -30,16 +30,28 @@ function LogoutHandlerInner() {
         const cleanUrl = pathname || '/';
         window.history.replaceState({}, '', cleanUrl);
 
-        // 2. Clear cart from localStorage
-        try {
-            localStorage.removeItem('cart');
-        } catch (_) { /* SSR-safe */ }
+        // 2. Clear cart from localStorage & save it
+        const saveAndClearCart = async () => {
+            try {
+                const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                if (currentCart.length > 0) {
+                    await fetch('/api/user/cart', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ cart: currentCart })
+                    });
+                }
+                localStorage.removeItem('cart');
+            } catch (_) { /* SSR-safe */ }
+        };
 
-        // 3. Sign out of Next-Auth (destroy JWT session cookie client-side)
-        //    redirect: false so we stay on the current page
-        signOut({ redirect: false }).then(() => {
-            // 4. Open the login modal once the session is destroyed
-            setShowLoginModal(true);
+        saveAndClearCart().finally(() => {
+            // 3. Sign out of Next-Auth (destroy JWT session cookie client-side)
+            //    redirect: false so we stay on the current page
+            signOut({ redirect: false }).then(() => {
+                // 4. Open the login modal once the session is destroyed
+                setShowLoginModal(true);
+            });
         });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

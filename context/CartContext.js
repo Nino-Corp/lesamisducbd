@@ -72,6 +72,25 @@ export function CartProvider({ children }) {
         }
     }, [cart, isLoaded]);
 
+    // Restore cart from KV on login
+    useEffect(() => {
+        if (status === 'authenticated' && session?.user?.id) {
+            fetch('/api/user/cart')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.cart) {
+                        setCart(prevCart => {
+                            const merged = consolidateCart([...prevCart, ...data.cart]);
+                            localStorage.setItem('cart', JSON.stringify(merged));
+                            return merged;
+                        });
+                        showToast('Votre panier précédent a été restauré', 'info');
+                    }
+                })
+                .catch(err => console.error('Failed to restore cart:', err));
+        }
+    }, [status, session?.user?.id]);
+
     // Recalculate prices on Session Change (Login/Logout)
     useEffect(() => {
         if (!isLoaded || cart.length === 0) return;

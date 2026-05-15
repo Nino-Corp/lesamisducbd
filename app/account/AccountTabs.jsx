@@ -71,8 +71,18 @@ export default function AccountTabs({ userSession }) {
                 </button>
                 <button
                     className={`${styles.tabButton} ${styles.logoutBtn}`}
-                    onClick={() => {
-                        try { localStorage.removeItem('cart'); } catch (_) {}
+                    onClick={async () => {
+                        try {
+                            const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                            if (currentCart.length > 0) {
+                                await fetch('/api/user/cart', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ cart: currentCart })
+                                });
+                            }
+                            localStorage.removeItem('cart'); 
+                        } catch (_) {}
                         signOut({ callbackUrl: '/' });
                     }}
                 >
