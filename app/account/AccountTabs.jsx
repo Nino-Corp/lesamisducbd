@@ -71,7 +71,10 @@ export default function AccountTabs({ userSession }) {
                 </button>
                 <button
                     className={`${styles.tabButton} ${styles.logoutBtn}`}
-                    onClick={() => signOut({ callbackUrl: '/' })}
+                    onClick={() => {
+                        try { localStorage.removeItem('cart'); } catch (_) {}
+                        signOut({ callbackUrl: '/' });
+                    }}
                 >
                     <LogOut size={20} />
                     <span>Se déconnecter</span>
