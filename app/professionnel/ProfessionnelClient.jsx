@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
@@ -16,8 +17,20 @@ import { ArrowRight, CheckCircle, TrendingUp, Truck } from 'lucide-react';
 
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
 import ContentHero from '@/components/ContentHero/ContentHero';
+import ContactModal from '@/components/ContactModal/ContactModal';
 
 export default function ProfessionnelClient({ content, globalContent }) {
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const [isContactOpen, setIsContactOpen] = useState(false);
+
+    useEffect(() => {
+        if (searchParams.get('action') === 'contact') {
+            setIsContactOpen(true);
+            const cleanUrl = pathname || '/professionnel';
+            window.history.replaceState({}, '', cleanUrl);
+        }
+    }, [searchParams, pathname]);
 
     const headerProps = {
         bannerVisible: globalContent?.visibility?.headerBanner !== false,
@@ -148,6 +161,12 @@ export default function ProfessionnelClient({ content, globalContent }) {
 
             {/* FOOTER */}
             <Footer {...footerProps} />
+
+            {/* CONTACT MODAL */}
+            <ContactModal 
+                isOpen={isContactOpen} 
+                onClose={() => setIsContactOpen(false)} 
+            />
         </div>
     );
 }

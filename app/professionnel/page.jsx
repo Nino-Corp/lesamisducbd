@@ -1,4 +1,5 @@
 import { kv } from '@vercel/kv';
+import { Suspense } from 'react';
 import ProfessionnelClient from './ProfessionnelClient';
 import { SHARED_TITLE } from '@/app/shared-metadata';
 
@@ -48,5 +49,9 @@ export default async function ProfessionnelPage() {
     } catch (e) {
         console.error('KV error (professionnel/global):', e);
     }
-    return <ProfessionnelClient content={content} globalContent={globalContent} />;
+    return (
+        <Suspense fallback={null}>
+            <ProfessionnelClient content={content} globalContent={globalContent} />
+        </Suspense>
+    );
 }
