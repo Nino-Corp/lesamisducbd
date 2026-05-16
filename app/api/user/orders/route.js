@@ -92,7 +92,7 @@ export async function GET(request) {
 
                 // 2. Fetch carrier details (name and tracking url template)
                 if (finalCarrierId && finalCarrierId !== '0') {
-                    const carrierRes = await fetch(`${prestaUrl}/carriers/${finalCarrierId}?ws_key=${prestaKey}&output_format=JSON&display=[name,url]`);
+                    const carrierRes = await fetch(`${prestaUrl}/carriers/${finalCarrierId}?ws_key=${prestaKey}&output_format=JSON`);
                     const carrierData = await carrierRes.json();
 
                     if (carrierData?.carrier) {
