@@ -340,6 +340,93 @@ export function DividerEditor({ props, onChange }) {
     </>;
 }
 
+export function AuthorCardEditor({ props, onChange }) {
+    return <>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <Field label="Nom"><input style={inputStyle} value={props.name || ''} onChange={e => onChange({ name: e.target.value })} placeholder="Prénom Nom" /></Field>
+            <Field label="Rôle / Titre"><input style={inputStyle} value={props.role || ''} onChange={e => onChange({ role: e.target.value })} placeholder="Rédacteur CBD" /></Field>
+        </div>
+        <Field label="Bio"><textarea style={textareaStyle} value={props.bio || ''} onChange={e => onChange({ bio: e.target.value })} rows={3} /></Field>
+        <Field label="Photo de profil"><ImageUploader value={props.imageSrc || ''} onChange={url => onChange({ imageSrc: url })} folder="pages/authors" /></Field>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+            <Field label="Twitter / X" hint="URL complète"><input style={inputStyle} value={props.twitter || ''} onChange={e => onChange({ twitter: e.target.value })} placeholder="https://x.com/..." /></Field>
+            <Field label="LinkedIn" hint="URL complète"><input style={inputStyle} value={props.linkedin || ''} onChange={e => onChange({ linkedin: e.target.value })} placeholder="https://linkedin.com/..." /></Field>
+            <Field label="Site web"><input style={inputStyle} value={props.website || ''} onChange={e => onChange({ website: e.target.value })} placeholder="https://..." /></Field>
+        </div>
+    </>;
+}
+
+export function CalloutBoxEditor({ props, onChange }) {
+    return <>
+        <Field label="Type d'encadré">
+            <select style={selectStyle} value={props.type || 'tip'} onChange={e => onChange({ type: e.target.value })}>
+                <option value="note">ℹ️ Note</option>
+                <option value="tip">💡 Conseil</option>
+                <option value="warning">⚠️ Attention</option>
+                <option value="danger">🚨 Important</option>
+                <option value="quote">💬 À retenir</option>
+            </select>
+        </Field>
+        <Field label="Émoji personnalisé (optionnel)" hint="Laissez vide pour utiliser l'émoji par défaut">
+            <input style={inputStyle} value={props.emoji || ''} onChange={e => onChange({ emoji: e.target.value })} placeholder="ex: 🌿" maxLength={4} />
+        </Field>
+        <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Bon à savoir" /></Field>
+        <Field label="Contenu (HTML)" hint="<p>, <strong>, <a href=''>..."><textarea style={{ ...textareaStyle, minHeight: '100px' }} value={props.content || ''} onChange={e => onChange({ content: e.target.value })} /></Field>
+    </>;
+}
+
+export function RelatedArticlesEditor({ props, onChange }) {
+    const articles = props.articles || [];
+    const updateArticle = (i, field, val) => onChange({ articles: articles.map((a, idx) => idx === i ? { ...a, [field]: val } : a) });
+    const addArticle = () => onChange({ articles: [...articles, { title: 'Titre', href: '/p/', excerpt: '', category: '', image: '' }] });
+    const removeArticle = i => onChange({ articles: articles.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre de la section"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '8px' }}>
+            {articles.map((article, i) => (
+                <div key={i} style={{ background: '#f9f9f9', borderRadius: '10px', padding: '14px', border: '1px solid #eee' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong style={{ fontSize: '0.85rem' }}>Article {i + 1}</strong>
+                        <button type="button" onClick={() => removeArticle(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}>✕</button>
+                    </div>
+                    <Field label="Titre"><input style={inputStyle} value={article.title || ''} onChange={e => updateArticle(i, 'title', e.target.value)} /></Field>
+                    <Field label="URL" hint="ex: /p/mon-article"><input style={inputStyle} value={article.href || ''} onChange={e => updateArticle(i, 'href', e.target.value)} placeholder="/p/" /></Field>
+                    <Field label="Catégorie (optionnel)"><input style={inputStyle} value={article.category || ''} onChange={e => updateArticle(i, 'category', e.target.value)} placeholder="CBD, Bien-être..." /></Field>
+                    <Field label="Extrait"><textarea style={textareaStyle} value={article.excerpt || ''} onChange={e => updateArticle(i, 'excerpt', e.target.value)} rows={2} /></Field>
+                    <Field label="Image"><ImageUploader value={article.image || ''} onChange={url => updateArticle(i, 'image', url)} folder="pages/articles" /></Field>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addArticle} style={{ marginTop: '8px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#1F4B40', border: '1px dashed #1F4B40', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter un article</button>
+    </>;
+}
+
+export function TableOfContentsEditor({ props, onChange }) {
+    const items = props.items || [];
+    const updateItem = (i, field, val) => onChange({ items: items.map((item, idx) => idx === i ? { ...item, [field]: val } : item) });
+    const addItem = () => onChange({ items: [...items, { text: 'Nouveau titre', anchor: 'section', level: 2 }] });
+    const removeItem = i => onChange({ items: items.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre du sommaire"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+            {items.map((item, i) => (
+                <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto auto', gap: '8px', alignItems: 'center' }}>
+                    <input style={inputStyle} value={item.text || ''} onChange={e => updateItem(i, 'text', e.target.value)} placeholder="Titre de section" />
+                    <input style={inputStyle} value={item.anchor || ''} onChange={e => updateItem(i, 'anchor', e.target.value.replace(/\s+/g, '-').toLowerCase())} placeholder="ancre (sans #)" />
+                    <select style={{ ...selectStyle, width: 'auto' }} value={item.level || 2} onChange={e => updateItem(i, 'level', +e.target.value)}>
+                        <option value={2}>H2</option>
+                        <option value={3}>H3</option>
+                    </select>
+                    <button type="button" onClick={() => removeItem(i)} style={{ padding: '8px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>✕</button>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addItem} style={{ marginTop: '8px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#1F4B40', border: '1px dashed #1F4B40', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter une entrée</button>
+    </>;
+}
+
 export const EDITORS = {
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
@@ -352,4 +439,8 @@ export const EDITORS = {
     VideoEmbed: VideoEmbedEditor,
     FAQ: FAQEditor,
     Divider: DividerEditor,
+    AuthorCard: AuthorCardEditor,
+    CalloutBox: CalloutBoxEditor,
+    RelatedArticles: RelatedArticlesEditor,
+    TableOfContents: TableOfContentsEditor,
 };

@@ -1,0 +1,46 @@
+.wrapper {
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0;
+}
+
+.list {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.link {
+    font-size: 0.82rem;
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.link:hover { color: #1F4B40; text-decoration: underline; }
+
+.sep {
+    font-size: 0.85rem;
+    color: #d1d5db;
+}
+
+.current {
+    font-size: 0.82rem;
+    color: #1F4B40;
+    font-weight: 600;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

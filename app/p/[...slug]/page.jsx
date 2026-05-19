@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import PageBuilder from '@/components/PageBuilder';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
+import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 
 export const revalidate = 60; // Cache for 1 minute
 
@@ -10,7 +11,18 @@ async function getPageData(slug) {
     try {
         const pages = await kv.get('builder_pages');
         if (pages && pages[slug]) {
-            return pages[slug];
+            const page = pages[slug];
+
+            // Block draft pages from public access
+            const status = page.status || 'published'; // Legacy pages without status are considered published
+            if (status === 'draft') return null;
+
+            // Block scheduled pages that haven't reached their publish date
+            if (status === 'scheduled' && page.scheduledAt) {
+                if (new Date(page.scheduledAt) > new Date()) return null;
+            }
+
+            return page;
         }
     } catch (error) {
         console.error('Error fetching dynamic page:', error);
@@ -27,8 +39,9 @@ export async function generateMetadata({ params }) {
 
     const seo = page.seo || {};
     const title = seo.metaTitle || `${page.title} - Les Amis du CBD`;
-    const description = seo.metaDescription || `Découvrez notre page ${page.title} dédiée au CBD premium.`;
+    const description = seo.metaDescription || seo.excerpt || `Découvrez notre page ${page.title} dédiée au CBD premium.`;
     const canonical = seo.canonicalUrl || `/p/${pageSlug}`;
+    const ogImage = seo.ogImage || '/images/og-image.jpg';
 
     return {
         title,
@@ -39,11 +52,76 @@ export async function generateMetadata({ params }) {
             follow: !seo.noindex,
         },
         openGraph: {
-            title,
-            description,
-            images: seo.ogImage ? [{ url: seo.ogImage }] : [],
+            title: seo.ogTitle || title,
+            description: seo.ogDescription || description,
+            url: canonical,
+            siteName: 'Les Amis du CBD',
+            images: [{ url: ogImage, width: 1200, height: 630 }],
+            type: (seo.pageType === 'Article' || seo.pageType === 'BlogPosting') ? 'article' : 'website',
+            ...(seo.publishedAt ? { publishedTime: seo.publishedAt } : {}),
+            ...(seo.author ? { authors: [seo.author] } : {}),
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: seo.ogTitle || title,
+            description: seo.ogDescription || description,
+            images: [ogImage],
+        },
+    };
+}
+
+// Build JSON-LD schema based on page type
+function buildJsonLd(page, pageSlug) {
+    const seo = page.seo || {};
+    const url = `https://www.lesamisducbd.fr/p/${pageSlug}`;
+    const title = seo.metaTitle || page.title;
+    const description = seo.metaDescription || seo.excerpt || '';
+    const image = seo.ogImage || seo.featuredImage || 'https://www.lesamisducbd.fr/images/og-image.jpg';
+
+    const base = {
+        '@context': 'https://schema.org',
+        name: title,
+        description,
+        url,
+        image,
+        publisher: {
+            '@type': 'Organization',
+            name: 'Les Amis du CBD',
+            url: 'https://www.lesamisducbd.fr',
+            logo: { '@type': 'ImageObject', url: 'https://www.lesamisducbd.fr/images/logo.webp' }
         }
     };
+
+    if (seo.pageType === 'Article' || seo.pageType === 'BlogPosting') {
+        return {
+            ...base,
+            '@type': seo.pageType || 'Article',
+            headline: title,
+            datePublished: seo.publishedAt || page.updatedAt,
+            dateModified: page.updatedAt,
+            author: { '@type': 'Person', name: seo.author || 'Les Amis du CBD' },
+            keywords: seo.tags || '',
+            articleSection: seo.category || 'CBD',
+            mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+        };
+    }
+
+    if (seo.pageType === 'FAQPage') {
+        // Auto-extract FAQ items from page sections
+        const faqSections = (page.sections || []).filter(s => s.type === 'FAQ');
+        const faqItems = faqSections.flatMap(s => (s.props?.items || []).map(item => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer }
+        })));
+        return {
+            '@type': 'FAQPage',
+            '@context': 'https://schema.org',
+            mainEntity: faqItems,
+        };
+    }
+
+    return { ...base, '@type': 'WebPage' };
 }
 
 export default async function DynamicPage({ params }) {
@@ -68,10 +146,11 @@ export default async function DynamicPage({ params }) {
     const pageSections = page.sections || [];
     const hasHeader = pageSections.some(s => s.type === 'Header');
     const hasFooter = pageSections.some(s => s.type === 'Footer');
+    const hideHeaderFooter = page.seo?.hideHeaderFooter === true;
 
     const finalSections = [...pageSections];
 
-    if (!hasHeader) {
+    if (!hasHeader && !hideHeaderFooter) {
         finalSections.unshift({
             type: 'Header',
             props: {
@@ -87,7 +166,7 @@ export default async function DynamicPage({ params }) {
         });
     }
 
-    if (!hasFooter) {
+    if (!hasFooter && !hideHeaderFooter) {
         finalSections.push({
             type: 'Footer',
             props: {
@@ -113,8 +192,38 @@ export default async function DynamicPage({ params }) {
         });
     }
 
+    const jsonLd = buildJsonLd(page, pageSlug);
+    const isArticle = ['Article', 'BlogPosting'].includes(page.seo?.pageType);
+
+    // Build breadcrumb items for articles
+    const breadcrumbItems = isArticle ? [
+        { label: 'Accueil', href: '/' },
+        { label: 'Blog', href: '/blog' },
+        ...(page.seo?.category ? [{ label: page.seo.category, href: `/blog?cat=${encodeURIComponent(page.seo.category)}` }] : []),
+        { label: page.title, href: `/p/${pageSlug}` },
+    ] : [];
+
+    // BreadcrumbList JSON-LD
+    const breadcrumbJsonLd = isArticle ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: breadcrumbItems.map((item, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: item.label,
+            item: `https://www.lesamisducbd.fr${item.href}`,
+        }))
+    } : null;
+
     return (
         <main>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+            {breadcrumbJsonLd && (
+                <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+            )}
+            {isArticle && breadcrumbItems.length > 0 && (
+                <Breadcrumb items={breadcrumbItems} />
+            )}
             <PageBuilder sections={finalSections} />
         </main>
     );

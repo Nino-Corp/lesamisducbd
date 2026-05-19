@@ -115,11 +115,55 @@ export const TEMPLATES = [
         category: 'layout',
         defaultProps: { style: 'line', spacing: 'medium', color: '#e5e7eb' },
     },
+    {
+        type: 'AuthorCard',
+        label: 'Carte Auteur',
+        icon: '✍️',
+        description: 'Bio auteur avec photo et réseaux sociaux (E-E-A-T)',
+        category: 'blog',
+        defaultProps: { name: 'Prénom Nom', role: 'Rédacteur CBD', bio: 'Passionné par le CBD et le bien-être naturel.', imageSrc: '', twitter: '', linkedin: '', website: '' },
+    },
+    {
+        type: 'CalloutBox',
+        label: 'Encadré',
+        icon: '💡',
+        description: 'Note, Conseil, Attention, Important (améliore lisibilité)',
+        category: 'blog',
+        defaultProps: { type: 'tip', title: 'Bon à savoir', content: '<p>Votre information importante ici.</p>', emoji: '' },
+    },
+    {
+        type: 'RelatedArticles',
+        label: 'Articles similaires',
+        icon: '🔗',
+        description: 'Maillage interne — liens vers d\'autres articles',
+        category: 'blog',
+        defaultProps: {
+            title: 'Articles similaires',
+            articles: [
+                { title: 'Titre de l\'article', href: '/p/mon-article', excerpt: 'Courte description…', category: 'CBD', image: '' },
+            ]
+        },
+    },
+    {
+        type: 'TableOfContents',
+        label: 'Sommaire',
+        icon: '📋',
+        description: 'Table des matières auto-générée depuis les titres',
+        category: 'blog',
+        defaultProps: {
+            title: 'Sommaire',
+            items: [
+                { text: 'Introduction', anchor: 'introduction', level: 2 },
+                { text: 'Section principale', anchor: 'section-1', level: 2 },
+            ]
+        },
+    },
 ];
 
 export const CATEGORIES = [
     { id: 'layout', label: 'Mise en page' },
     { id: 'content', label: 'Contenu' },
+    { id: 'blog', label: '📝 Blog / Article' },
     { id: 'conversion', label: 'Conversion' },
     { id: 'media', label: 'Médias' },
 ];

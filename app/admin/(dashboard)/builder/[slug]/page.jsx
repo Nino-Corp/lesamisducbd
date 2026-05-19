@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import styles from '../Builder.module.css';
 import { TEMPLATES, CATEGORIES } from '../builderConfig';
 import { EDITORS } from '../builderEditors';
 import LivePreview from '../LivePreview';
+import SEOPanel from '../SEOPanel';
 
 export default function PageEditor() {
     const { slug } = useParams();
@@ -20,8 +21,11 @@ export default function PageEditor() {
     const [activeCategory, setActiveCategory] = useState('all');
     const [showPreview, setShowPreview] = useState(true);
     const [showSEOModal, setShowSEOModal] = useState(false);
+    const [showHistoryModal, setShowHistoryModal] = useState(false);
+    const [pageHistory, setPageHistory] = useState([]);
     const [dragOver, setDragOver] = useState(null);
     const [dragging, setDragging] = useState(null);
+    const originalSlugRef = useRef(null); // Track original slug to handle renames
 
     useEffect(() => { if (slug) fetchPage(); }, [slug]);
 
@@ -29,7 +33,9 @@ export default function PageEditor() {
         try {
             const res = await fetch(`/api/admin/builder?slug=${slug}`);
             if (!res.ok) throw new Error('Failed');
-            setPage(await res.json());
+            const data = await res.json();
+            setPage(data);
+            originalSlugRef.current = data.slug; // Memorize original slug
         } catch {
             router.push('/admin/builder');
         } finally {
@@ -37,12 +43,45 @@ export default function PageEditor() {
         }
     };
 
-    const save = async () => {
+    const save = async (overrideStatus) => {
         setSaving(true);
         try {
-            const res = await fetch('/api/admin/builder', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(page) });
-            if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 2500); }
+            const payload = { ...page, originalSlug: originalSlugRef.current, status: overrideStatus || page.status || 'draft' };
+            const res = await fetch('/api/admin/builder', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            if (res.ok) {
+                setSaved(true);
+                setTimeout(() => setSaved(false), 2500);
+                originalSlugRef.current = page.slug;
+                if (overrideStatus) setPage(prev => ({ ...prev, status: overrideStatus }));
+            }
         } finally { setSaving(false); }
+    };
+
+    const duplicate = async () => {
+        const newSlug = `${page.slug}-copie-${Date.now().toString(36)}`;
+        const newTitle = `${page.title} (copie)`;
+        const res = await fetch('/api/admin/builder', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'duplicate', originalSlug: page.slug, slug: newSlug, title: newTitle })
+        });
+        if (res.ok) {
+            window.open(`/admin/builder/${newSlug}`, '_blank');
+        }
+    };
+
+    const loadHistory = async () => {
+        try {
+            const res = await fetch(`/api/admin/builder?slug=${page.slug}&action=history`);
+            if (res.ok) setPageHistory(await res.json());
+        } catch (e) { /* silent */ }
+        setShowHistoryModal(true);
+    };
+
+    const restoreVersion = (snapshot) => {
+        if (!confirm('Restaurer cette version ? Les modifications non sauvegardées seront perdues.')) return;
+        setPage(prev => ({ ...prev, sections: snapshot.sections, seo: snapshot.seo || prev.seo, title: snapshot.title || prev.title }));
+        setShowHistoryModal(false);
     };
 
     const addSection = (template) => {
@@ -133,19 +172,55 @@ export default function PageEditor() {
                     </div>
                 </div>
                 <div className={styles.headerActions}>
+                    {/* Status badge */}
+                    {(() => {
+                        const s = page.status || 'draft';
+                        const cfg = {
+                            draft:     { label: '📝 Brouillon',  bg: '#f3f4f6', color: '#374151' },
+                            published: { label: '✅ Publié',      bg: '#f0fdf4', color: '#166534' },
+                            scheduled: { label: '🕐 Planifié',   bg: '#fffbeb', color: '#92400e' },
+                        }[s] || { label: s, bg: '#f3f4f6', color: '#374151' };
+                        return (
+                            <span style={{ padding: '6px 12px', borderRadius: '8px', background: cfg.bg, color: cfg.color, fontWeight: 700, fontSize: '0.8rem', border: `1px solid ${cfg.color}30` }}>
+                                {cfg.label}
+                            </span>
+                        );
+                    })()}
                     <button
                         onClick={() => setShowSEOModal(true)}
                         style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #1F4B40', background: 'white', color: '#1F4B40', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}
                     >
                         ⚙️ SEO
                     </button>
+                    <button onClick={loadHistory}
+                        style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #e5e7eb', background: 'white', color: '#6b7280', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}
+                        title="Historique des versions">
+                        🕐
+                    </button>
+                    <button onClick={duplicate}
+                        style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #e5e7eb', background: 'white', color: '#6b7280', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}
+                        title="Dupliquer la page">
+                        📋
+                    </button>
                     <a href={`https://www.lesamisducbd.fr/p/${page.slug}`} target="_blank" rel="noopener noreferrer"
                         style={{ padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>
-                        🔗 Voir en ligne
+                        🔗 Voir
                     </a>
+                    {(page.status === 'published') ? (
+                        <button onClick={() => save('draft')} disabled={saving}
+                            style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #d97706', background: '#fffbeb', color: '#92400e', fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem' }}>
+                            Dépublier
+                        </button>
+                    ) : (
+                        <button onClick={() => save('published')} disabled={saving}
+                            className={styles.saveButton}
+                            style={{ background: '#166534', borderColor: '#166534' }}>
+                            🚀 Publier
+                        </button>
+                    )}
                     <button
                         className={`${styles.saveButton} ${saved ? styles.saveSuccess : ''}`}
-                        onClick={save} disabled={saving}
+                        onClick={() => save()} disabled={saving}
                     >
                         {saving ? 'Enregistrement…' : saved ? '✓ Sauvegardé !' : 'Sauvegarder'}
                     </button>
@@ -165,7 +240,23 @@ export default function PageEditor() {
                             </div>
 
                             <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
+                                {/* H1 Warning */}
+                                {(() => {
+                                    const h1Count = page.sections?.filter(s => s.type === 'ContentHero').length || 0;
+                                    if (h1Count === 0) return (
+                                        <div style={{ margin: '4px 0 8px', padding: '10px 12px', background: '#fffbeb', borderRadius: '8px', border: '1px solid #fde68a', fontSize: '0.75rem', color: '#92400e', display: 'flex', gap: '6px' }}>
+                                            ⚠️ <span>Pas de <strong>H1</strong> — ajoutez un bloc Hero.</span>
+                                        </div>
+                                    );
+                                    if (h1Count > 1) return (
+                                        <div style={{ margin: '4px 0 8px', padding: '10px 12px', background: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca', fontSize: '0.75rem', color: '#991b1b', display: 'flex', gap: '6px' }}>
+                                            🚨 <span><strong>{h1Count} H1</strong> détectés — conservez-en un seul.</span>
+                                        </div>
+                                    );
+                                    return null;
+                                })()}
                                 {(!page.sections || page.sections.length === 0) && (
+
                                     <div style={{ textAlign: 'center', padding: '40px 16px', color: '#aaa', fontSize: '0.85rem' }}>
                                         <p>Aucune section.</p>
                                         <p>Cliquez sur "+ Ajouter" ci-dessous.</p>
@@ -360,72 +451,69 @@ export default function PageEditor() {
                 </div>
             )}
 
-            {/* SEO Modal */}
+            {/* SEO Panel */}
             {showSEOModal && (
-                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
-                    onClick={() => setShowSEOModal(false)}>
-                    <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+                <SEOPanel
+                    page={page}
+                    sections={page.sections || []}
+                    onUpdate={(patch) => setPage(prev => ({ ...prev, ...patch, seo: { ...prev.seo, ...patch.seo } }))}
+                    onClose={() => setShowSEOModal(false)}
+                />
+            )}
+
+            {/* History Modal */}
+            {showHistoryModal && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
+                    onClick={() => setShowHistoryModal(false)}>
+                    <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '600px', maxHeight: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 25px 60px rgba(0,0,0,0.25)' }}
                         onClick={e => e.stopPropagation()}>
                         <div style={{ padding: '20px 24px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#1F4B40' }}>⚙️ Paramètres SEO</h2>
-                            <button onClick={() => setShowSEOModal(false)} style={{ background: 'none', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#999' }}>✕</button>
+                            <div>
+                                <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: '#1F4B40' }}>🕐 Historique des versions</h2>
+                                <p style={{ margin: '4px 0 0', fontSize: '0.78rem', color: '#9ca3af' }}>Les 10 dernières sauvegardes sont conservées</p>
+                            </div>
+                            <button onClick={() => setShowHistoryModal(false)} style={{ background: 'none', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#9ca3af' }}>✕</button>
                         </div>
-
-                        <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                            <div>
-                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>Meta Title</label>
-                                <input 
-                                    type="text" 
-                                    value={page.seo?.metaTitle || ''} 
-                                    onChange={e => setPage({ ...page, seo: { ...page.seo, metaTitle: e.target.value } })}
-                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem' }}
-                                    placeholder={`${page.title} - Les Amis du CBD`}
-                                />
-                                <div style={{ fontSize: '0.75rem', color: (page.seo?.metaTitle?.length || 0) > 60 ? '#ef4444' : '#6b7280', marginTop: '4px' }}>
-                                    {page.seo?.metaTitle?.length || 0} / 60 caractères (recommandé)
+                        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 24px' }}>
+                            {pageHistory.length === 0 ? (
+                                <p style={{ textAlign: 'center', color: '#9ca3af', padding: '40px 0' }}>Aucune version précédente.<br />L'historique se remplit à chaque sauvegarde.</p>
+                            ) : (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {pageHistory.map((snapshot, i) => (
+                                        <div key={i} style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#111827' }}>{snapshot.title || page.title}</div>
+                                                <div style={{ fontSize: '0.78rem', color: '#6b7280', marginTop: '2px' }}>
+                                                    {new Date(snapshot.savedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                                    {' · '}{snapshot.sections?.length || 0} section{snapshot.sections?.length !== 1 ? 's' : ''}
+                                                </div>
+                                            </div>
+                                            <button onClick={() => restoreVersion(snapshot)}
+                                                style={{ padding: '7px 14px', borderRadius: '8px', background: '#1F4B40', color: '#00FF94', border: 'none', fontWeight: 700, cursor: 'pointer', fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+                                                Restaurer
+                                            </button>
+                                        </div>
+                                    ))}
                                 </div>
-                            </div>
-
-                            <div>
-                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>Meta Description</label>
-                                <textarea 
-                                    value={page.seo?.metaDescription || ''} 
-                                    onChange={e => setPage({ ...page, seo: { ...page.seo, metaDescription: e.target.value } })}
-                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem', minHeight: '80px', resize: 'vertical' }}
-                                    placeholder={`Découvrez notre page ${page.title} dédiée au CBD premium.`}
-                                />
-                                <div style={{ fontSize: '0.75rem', color: (page.seo?.metaDescription?.length || 0) > 160 ? '#ef4444' : '#6b7280', marginTop: '4px' }}>
-                                    {page.seo?.metaDescription?.length || 0} / 160 caractères (recommandé)
-                                </div>
-                            </div>
-
-                            <div>
-                                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '6px' }}>URL Canonique (optionnel)</label>
-                                <input 
-                                    type="text" 
-                                    value={page.seo?.canonicalUrl || ''} 
-                                    onChange={e => setPage({ ...page, seo: { ...page.seo, canonicalUrl: e.target.value } })}
-                                    style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem' }}
-                                    placeholder={`/p/${page.slug}`}
-                                />
-                            </div>
-
-                            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer', marginTop: '8px' }}>
-                                <input 
-                                    type="checkbox" 
-                                    checked={!!page.seo?.noindex} 
-                                    onChange={e => setPage({ ...page, seo: { ...page.seo, noindex: e.target.checked } })}
-                                    style={{ width: '16px', height: '16px' }}
-                                />
-                                Ne pas indexer cette page (noindex)
-                            </label>
-
-                            <button onClick={() => setShowSEOModal(false)}
-                                style={{ width: '100%', padding: '12px', background: '#1F4B40', color: '#00FF94', border: 'none', borderRadius: '8px', fontWeight: 700, cursor: 'pointer', fontSize: '1rem', marginTop: '12px' }}>
-                                Valider
-                            </button>
+                            )}
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Scheduled publish panel (shown when status=scheduled) */}
+            {page.status === 'scheduled' && (
+                <div style={{ position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '16px', zIndex: 50, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
+                    <span style={{ fontSize: '0.85rem', color: '#92400e', fontWeight: 600 }}>🕐 Publication planifiée :</span>
+                    <input type="datetime-local"
+                        value={page.scheduledAt ? page.scheduledAt.slice(0, 16) : ''}
+                        onChange={e => setPage(prev => ({ ...prev, scheduledAt: e.target.value }))}
+                        style={{ border: '1px solid #fde68a', borderRadius: '8px', padding: '6px 10px', fontSize: '0.85rem', background: '#fff', color: '#92400e' }}
+                    />
+                    <button onClick={() => save('scheduled')}
+                        style={{ padding: '7px 14px', borderRadius: '8px', background: '#d97706', color: '#fff', border: 'none', fontWeight: 700, cursor: 'pointer', fontSize: '0.82rem' }}>
+                        Confirmer
+                    </button>
                 </div>
             )}
         </div>

@@ -23,6 +23,10 @@ import CardsGrid from './CardsGrid/CardsGrid';
 import StatsBanner from './StatsBanner/StatsBanner';
 import VideoEmbed from './VideoEmbed/VideoEmbed';
 import Divider from './Divider/Divider';
+import AuthorCard from './AuthorCard/AuthorCard';
+import CalloutBox from './CalloutBox/CalloutBox';
+import RelatedArticles from './RelatedArticles/RelatedArticles';
+import TableOfContents from './TableOfContents/TableOfContents';
 
 const componentMap = {
     Header,
@@ -48,6 +52,11 @@ const componentMap = {
     StatsBanner,
     VideoEmbed,
     Divider,
+    // Blog blocks
+    AuthorCard,
+    CalloutBox,
+    RelatedArticles,
+    TableOfContents,
 };
 
 const NO_ANIMATE = new Set(['Header', 'Hero']);

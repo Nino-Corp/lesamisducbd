@@ -13,6 +13,10 @@ import CardsGrid from '@/components/CardsGrid/CardsGrid';
 import StatsBanner from '@/components/StatsBanner/StatsBanner';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 import Divider from '@/components/Divider/Divider';
+import AuthorCard from '@/components/AuthorCard/AuthorCard';
+import CalloutBox from '@/components/CalloutBox/CalloutBox';
+import RelatedArticles from '@/components/RelatedArticles/RelatedArticles';
+import TableOfContents from '@/components/TableOfContents/TableOfContents';
 
 const PREVIEW_COMPONENTS = {
     ContentHero,
@@ -26,6 +30,10 @@ const PREVIEW_COMPONENTS = {
     StatsBanner,
     VideoEmbed,
     Divider,
+    AuthorCard,
+    CalloutBox,
+    RelatedArticles,
+    TableOfContents,
 };
 
 export default function LivePreview({ 
