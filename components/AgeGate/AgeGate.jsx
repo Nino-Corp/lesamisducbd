@@ -21,7 +21,7 @@ export default function AgeGate() {
   useEffect(() => {
     if (isExcluded) return;
     try {
-      const verified = sessionStorage.getItem(STORAGE_KEY);
+      const verified = localStorage.getItem(STORAGE_KEY);
       if (!verified) {
         // Légère pause pour laisser la page se monter
         const t = setTimeout(() => setVisible(true), 80);
@@ -46,7 +46,7 @@ export default function AgeGate() {
 
   const handleAccept = () => {
     setPhase('exiting');
-    sessionStorage.setItem(STORAGE_KEY, '1');
+    localStorage.setItem(STORAGE_KEY, '1');
     setTimeout(() => {
       setVisible(false);
       document.body.style.overflow = '';
@@ -146,7 +146,7 @@ export default function AgeGate() {
             </div>
 
             <p className={styles.legal}>
-              En entrant, vous confirmez avoir l'âge légal requis dans votre pays de résidence pour accéder à ce site. Ce site utilise des cookies de session pour mémoriser votre choix.
+              En entrant, vous confirmez avoir l'âge légal requis dans votre pays de résidence pour accéder à ce site. Ce site utilise le stockage local de votre navigateur pour mémoriser votre choix.
             </p>
           </div>
         </div>
