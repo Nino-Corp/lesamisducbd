@@ -223,6 +223,38 @@
     gap: 20px;
 }
 
+.userName {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #00FFC2;
+    margin-left: 6px;
+    opacity: 0.9;
+    white-space: nowrap;
+    animation: fadeInName 0.4s ease forwards;
+}
+
+@keyframes fadeInName {
+    from { opacity: 0; transform: translateX(-4px); }
+    to   { opacity: 0.9; transform: translateX(0); }
+}
+
+@media (max-width: 1024px) {
+    .userName {
+        display: none;
+    }
+}
+
+.loggedInBtn {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .iconBtn {
     background: none;
     border: none;

@@ -87,6 +87,11 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
                                     title={`Mon Compte`}
                                 >
                                     <User size={20} />
+                                    {user?.name?.split(' ')[0] || user?.email?.split('@')[0] ? (
+                                        <span className={styles.userName}>
+                                            {user.name?.split(' ')[0] || user.email.split('@')[0]}
+                                        </span>
+                                    ) : null}
                                 </Link>
                             </div>
                         ) : (
