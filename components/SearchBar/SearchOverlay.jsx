@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 import { X, Search, Loader2, FileText, Package } from 'lucide-react';
+import Fuse from 'fuse.js';
 import styles from './SearchOverlay.module.css';
 
 // Strip HTML tags for plain-text search
@@ -34,6 +35,33 @@ export default function SearchOverlay({ isOpen, onClose }) {
     const inputRef = useRef(null);
     const debounceRef = useRef(null);
     const hasFetched = useRef(false);
+
+    // Instances Fuse
+    const fusePages = useRef(null);
+    const fuseProducts = useRef(null);
+
+    // Initialiser Fuse quand les données changent
+    useEffect(() => {
+        if (allPages && allPages.length > 0) {
+            fusePages.current = new Fuse(allPages, {
+                keys: ['title', 'desc', 'keywords', 'content'],
+                threshold: 0.35, // 0 = exact, 1 = n'importe quoi
+                ignoreLocation: true, // Très important pour les textes longs (chercher n'importe où)
+                minMatchCharLength: 2,
+            });
+        }
+    }, [allPages]);
+
+    useEffect(() => {
+        if (allProducts && allProducts.length > 0) {
+            fuseProducts.current = new Fuse(allProducts, {
+                keys: ['name', 'descriptionShort', 'reference'],
+                threshold: 0.35,
+                ignoreLocation: true,
+                minMatchCharLength: 2,
+            });
+        }
+    }, [allProducts]);
 
     // Fetch all products and pages content once, keep in memory
     const fetchData = useCallback(async () => {
@@ -117,29 +145,24 @@ export default function SearchOverlay({ isOpen, onClose }) {
         }
         
         debounceRef.current = setTimeout(() => {
-            const q = query.toLowerCase().trim();
-            const queryTerms = q.split(/\s+/).filter(Boolean); // Séparer par mots
+            const q = query.trim();
             
-            // 1. Filtrer les pages (avec le contenu complet)
-            const filteredPages = allPages.filter(page => {
-                const haystack = `${page.title} ${page.desc} ${page.keywords || ''} ${page.content || ''}`.toLowerCase();
-                // Il faut que CHAQUE mot de la requête soit présent dans la page
-                return queryTerms.every(term => haystack.includes(term));
-            }).slice(0, 3);
-            setPageResults(filteredPages);
+            // 1. Filtrer les pages
+            if (fusePages.current) {
+                const results = fusePages.current.search(q);
+                setPageResults(results.map(r => r.item).slice(0, 3));
+            }
 
             // 2. Filtrer les produits
-            if (allProducts) {
-                const filteredProducts = allProducts.filter((p) => {
-                    const haystack = `${p.name} ${stripHtml(p.descriptionShort)} ${p.reference || ''}`.toLowerCase();
-                    // Il faut que CHAQUE mot de la requête soit présent pour le produit
-                    return queryTerms.every(term => haystack.includes(term));
-                }).slice(0, 5);
-                setProductResults(filteredProducts);
+            if (fuseProducts.current) {
+                // Strip HTML for fuse search is complicated since it mutates data, 
+                // but Fuse handles HTML fairly well since we just match strings.
+                const results = fuseProducts.current.search(q);
+                setProductResults(results.map(r => r.item).slice(0, 5));
             }
         }, 250);
         return () => clearTimeout(debounceRef.current);
-    }, [query, allProducts]);
+    }, [query]);
 
     if (!isOpen && phase === 'idle') return null;
 
