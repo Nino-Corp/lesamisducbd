@@ -158,6 +158,92 @@ export const TEMPLATES = [
             ]
         },
     },
+    {
+        type: 'FeaturedProducts',
+        label: 'Produit(s) en vedette',
+        icon: '🛍️',
+        description: 'Affiche un ou plusieurs produits spécifiques (par référence)',
+        category: 'conversion',
+        defaultProps: {
+            title: 'Notre Sélection',
+            subtitle: '',
+            skus: 'FLEUR-GOR-01',
+            columns: 4
+        }
+    },
+    {
+        type: 'Marquee',
+        label: 'Bandeau défilant',
+        icon: '🔄',
+        description: 'Texte défilant en continu (style promo)',
+        category: 'conversion',
+        defaultProps: {
+            text: 'OFFRE SPÉCIALE : Livraison offerte dès 50€ !',
+            speed: 20
+        }
+    },
+    {
+        type: 'OfferComparator',
+        label: "Comparateur d'offres",
+        icon: '⚖️',
+        description: 'Comparateur de prix interactif',
+        category: 'conversion',
+        defaultProps: {}
+    },
+    {
+        type: 'PartnersNetwork',
+        label: 'Logos partenaires',
+        icon: '🤝',
+        description: 'Grille ou ligne de logos partenaires/certifications',
+        category: 'content',
+        defaultProps: {
+            title: 'Ils nous font confiance',
+            partners: [
+                { image: '', name: 'Partenaire 1' },
+                { image: '', name: 'Partenaire 2' }
+            ]
+        }
+    },
+    {
+        type: 'QualityBanner',
+        label: 'Bandeau Qualité',
+        icon: '🌟',
+        description: 'Bandeau d\'assurance qualité',
+        category: 'content',
+        defaultProps: {
+            title: 'Qualité Premium',
+            subtitle: '100% Naturel et Testé en Laboratoire'
+        }
+    },
+    {
+        type: 'WhyChooseUs',
+        label: 'Pourquoi nous choisir',
+        icon: '✅',
+        description: 'Section avec image et liste d\'avantages',
+        category: 'content',
+        defaultProps: {
+            title: 'Pourquoi choisir Les Amis du CBD ?',
+            features: [
+                { title: 'Qualité', description: 'Nos produits sont testés.' },
+                { title: 'Livraison Rapide', description: 'Expédition en 24h.' }
+            ],
+            ctaLabel: 'En savoir plus',
+            ctaLink: '/essentiel',
+            imageSrc: '',
+            imageAlt: 'Expertise',
+            isReversed: false
+        }
+    },
+    {
+        type: 'CodeEmbed',
+        label: 'Code / Iframe',
+        icon: '🧑‍💻',
+        description: 'Insérer du code HTML, CSS ou Iframe personnalisé',
+        category: 'layout',
+        defaultProps: {
+            code: '<div style="padding:20px; background:#f0f0f0; text-align:center;">Code HTML personnalisé ici</div>'
+        }
+    }
 ];
 
 export const CATEGORIES = [

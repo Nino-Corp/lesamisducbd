@@ -12,6 +12,31 @@ const PAGE_TYPES = [
     { value: 'FAQPage',     label: 'FAQ',            icon: '❓', color: '#d97706' },
 ];
 
+const PAGE_TEMPLATES = {
+    blank: { label: 'Page Vide', icon: '📄', sections: [] },
+    blog: { 
+        label: 'Article de Blog Typique', 
+        icon: '📝',
+        sections: [
+            { id: `hero-${Date.now()}`, type: 'ContentHero', props: { title: 'Titre de l\'article', textAlign: 'center' } },
+            { id: `toc-${Date.now()}`, type: 'TableOfContents', props: { title: 'Sommaire', items: [] } },
+            { id: `rt-${Date.now()}`, type: 'RichText', props: { content: '<h2>Introduction</h2><p>Commencez à écrire ici...</p>' } },
+            { id: `auth-${Date.now()}`, type: 'AuthorCard', props: { name: 'Auteur', role: 'Rédacteur CBD' } },
+            { id: `rel-${Date.now()}`, type: 'RelatedArticles', props: { title: 'À lire aussi', articles: [] } }
+        ]
+    },
+    landing: {
+        label: 'Landing Page Promo',
+        icon: '🎯',
+        sections: [
+            { id: `hero-${Date.now()}`, type: 'ContentHero', props: { title: 'Offre Spéciale', textAlign: 'center' } },
+            { id: `why-${Date.now()}`, type: 'WhyChooseUs', props: { title: 'Pourquoi choisir nos produits ?' } },
+            { id: `prod-${Date.now()}`, type: 'FeaturedProducts', props: { title: 'Notre Sélection' } },
+            { id: `cta-${Date.now()}`, type: 'CTABlock', props: { title: 'Prêt à commander ?' } }
+        ]
+    }
+};
+
 function seoScore(page) {
     const seo = page.seo || {};
     const checks = [
@@ -49,7 +74,10 @@ export default function BuilderIndex() {
     const [loading, setLoading] = useState(true);
     const [isCreating, setIsCreating] = useState(false);
     const [filterType, setFilterType] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [sortBy, setSortBy] = useState('updated_desc');
     const [newPage, setNewPage] = useState({ title: '', slug: '', seo: { pageType: 'WebPage' } });
+    const [selectedTemplate, setSelectedTemplate] = useState('blank');
 
     useEffect(() => { fetchPages(); }, []);
 
@@ -68,10 +96,14 @@ export default function BuilderIndex() {
     const handleCreate = async (e) => {
         e.preventDefault();
         try {
+            const initialSections = PAGE_TEMPLATES[selectedTemplate]?.sections || [];
+            // Re-generate IDs to ensure uniqueness at creation
+            const sectionsWithNewIds = initialSections.map(s => ({ ...s, id: `${s.type}-${Date.now()}-${Math.floor(Math.random() * 1000)}` }));
+
             const res = await fetch('/api/admin/builder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...newPage, sections: [] })
+                body: JSON.stringify({ ...newPage, sections: sectionsWithNewIds })
             });
             if (res.ok) {
                 const { page } = await res.json();
@@ -111,10 +143,29 @@ export default function BuilderIndex() {
     };
 
     const pageList = useMemo(() => {
-        const all = Object.values(pages);
-        if (filterType === 'all') return all;
-        return all.filter(p => (p.seo?.pageType || 'WebPage') === filterType);
-    }, [pages, filterType]);
+        let all = Object.values(pages);
+        
+        // 1. Filter by type
+        if (filterType !== 'all') {
+            all = all.filter(p => (p.seo?.pageType || 'WebPage') === filterType);
+        }
+        
+        // 2. Filter by search query
+        if (searchQuery.trim() !== '') {
+            const query = searchQuery.toLowerCase();
+            all = all.filter(p => p.title?.toLowerCase().includes(query) || p.slug?.toLowerCase().includes(query));
+        }
+
+        // 3. Sort
+        all.sort((a, b) => {
+            if (sortBy === 'updated_desc') return new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0);
+            if (sortBy === 'title_asc') return (a.title || '').localeCompare(b.title || '');
+            if (sortBy === 'seo_desc') return seoScore(b) - seoScore(a);
+            return 0;
+        });
+
+        return all;
+    }, [pages, filterType, searchQuery, sortBy]);
 
     if (loading) return <div className={styles.container}>Chargement...</div>;
 
@@ -154,6 +205,25 @@ export default function BuilderIndex() {
                         ))}
                     </div>
 
+                    {/* Modèles de départ */}
+                    <div style={{ marginBottom: '16px' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 600, color: '#444' }}>Démarrer avec un modèle :</label>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                            {Object.entries(PAGE_TEMPLATES).map(([key, tpl]) => (
+                                <button key={key} type="button" onClick={() => setSelectedTemplate(key)}
+                                    style={{
+                                        padding: '8px 16px', borderRadius: '8px',
+                                        border: `2px solid ${selectedTemplate === key ? '#00FF94' : '#e5e7eb'}`,
+                                        background: selectedTemplate === key ? '#f0fdf4' : '#fff',
+                                        cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', color: '#1F4B40',
+                                        transition: 'all 0.15s'
+                                    }}>
+                                    {tpl.icon} {tpl.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     <form onSubmit={handleCreate} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                         <input
                             type="text"
@@ -178,6 +248,33 @@ export default function BuilderIndex() {
                         <button type="submit" className={styles.createBtn}>Créer</button>
                         <button type="button" onClick={() => setIsCreating(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#999', padding: '10px' }}>Annuler</button>
                     </form>
+                </div>
+            )}
+
+            {/* Search and Sort Toolbar */}
+            {allPages.length > 0 && (
+                <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', flexWrap: 'wrap', alignItems: 'center', background: '#fff', padding: '16px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
+                    <div style={{ flex: 1, minWidth: '250px' }}>
+                        <input 
+                            type="text" 
+                            placeholder="Rechercher par titre ou slug..." 
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem' }}
+                        />
+                    </div>
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                        <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#444' }}>Trier par :</label>
+                        <select 
+                            value={sortBy} 
+                            onChange={(e) => setSortBy(e.target.value)}
+                            style={{ padding: '9px 12px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem', background: '#fff', cursor: 'pointer' }}
+                        >
+                            <option value="updated_desc">Mise à jour (récent en premier)</option>
+                            <option value="title_asc">Titre (A-Z)</option>
+                            <option value="seo_desc">Score SEO (décroissant)</option>
+                        </select>
+                    </div>
                 </div>
             )}
 

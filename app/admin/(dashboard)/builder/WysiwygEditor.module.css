@@ -1,0 +1,60 @@
+.editorWrapper {
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: border-color 0.2s;
+    position: relative;
+    z-index: 10;
+}
+
+.editorWrapper:focus-within {
+    border-color: #00FF94;
+    box-shadow: 0 0 0 3px rgba(0, 255, 148, 0.15);
+    z-index: 100;
+}
+
+.editorWrapper :global(.quill) {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.editorWrapper :global(.ql-picker-options) {
+    z-index: 100 !important;
+}
+
+.editorWrapper :global(.ql-color .ql-picker-options),
+.editorWrapper :global(.ql-background .ql-picker-options) {
+    right: 0 !important;
+    left: auto !important;
+}
+
+.editorWrapper :global(.ql-toolbar) {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    background-color: #f9fdf9;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.editorWrapper :global(.ql-container) {
+    border: none;
+    font-size: 0.95rem;
+    color: #1F4B40;
+    font-family: inherit;
+    min-height: 150px;
+    position: relative;
+    z-index: 1;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.editorWrapper :global(.ql-editor) {
+    min-height: 150px;
+    padding: 14px;
+}

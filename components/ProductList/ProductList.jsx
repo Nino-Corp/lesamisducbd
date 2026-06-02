@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
 import styles from './ProductList.module.css';
 
-function ProductCardItem({ product, index, groupId }) {
+export function ProductCardItem({ product, index, groupId }) {
     const [selectedVariant, setSelectedVariant] = useState(product.variations ? product.variations[0] : product);
 
     const currentRaw = selectedVariant.rawProduct || product.rawProduct;

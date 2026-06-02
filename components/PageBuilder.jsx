@@ -27,6 +27,9 @@ import AuthorCard from './AuthorCard/AuthorCard';
 import CalloutBox from './CalloutBox/CalloutBox';
 import RelatedArticles from './RelatedArticles/RelatedArticles';
 import TableOfContents from './TableOfContents/TableOfContents';
+import FeaturedProducts from './FeaturedProducts/FeaturedProducts';
+import OfferComparator from './OfferComparator/OfferComparator';
+import CodeEmbed from './CodeEmbed/CodeEmbed';
 
 const componentMap = {
     Header,
@@ -57,6 +60,9 @@ const componentMap = {
     CalloutBox,
     RelatedArticles,
     TableOfContents,
+    FeaturedProducts,
+    OfferComparator,
+    CodeEmbed,
 };
 
 const NO_ANIMATE = new Set(['Header', 'Hero']);

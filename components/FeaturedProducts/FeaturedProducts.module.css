@@ -1,0 +1,30 @@
+.section {
+    padding: 2rem 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.title {
+    font-size: 2rem;
+    color: #1F4B40;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.grid {
+    display: grid;
+    gap: 20px;
+    justify-content: center;
+}

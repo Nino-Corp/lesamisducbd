@@ -23,9 +23,13 @@ export default function PageEditor() {
     const [showSEOModal, setShowSEOModal] = useState(false);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
     const [pageHistory, setPageHistory] = useState([]);
+    const [undoStack, setUndoStack] = useState([]);
+    const [redoStack, setRedoStack] = useState([]);
     const [dragOver, setDragOver] = useState(null);
     const [dragging, setDragging] = useState(null);
     const originalSlugRef = useRef(null); // Track original slug to handle renames
+    const initialLoadRef = useRef(true); // Track initial load for auto-save
+    const autoSaveTimerRef = useRef(null); // Track auto-save timer
 
     useEffect(() => { if (slug) fetchPage(); }, [slug]);
 
@@ -43,19 +47,39 @@ export default function PageEditor() {
         }
     };
 
-    const save = async (overrideStatus) => {
+    const save = async (overrideStatus, pageStateToSave = null) => {
         setSaving(true);
         try {
-            const payload = { ...page, originalSlug: originalSlugRef.current, status: overrideStatus || page.status || 'draft' };
+            const stateToSave = pageStateToSave || page;
+            const payload = { ...stateToSave, originalSlug: originalSlugRef.current, status: overrideStatus || stateToSave.status || 'draft' };
             const res = await fetch('/api/admin/builder', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
             if (res.ok) {
                 setSaved(true);
                 setTimeout(() => setSaved(false), 2500);
-                originalSlugRef.current = page.slug;
-                if (overrideStatus) setPage(prev => ({ ...prev, status: overrideStatus }));
+                originalSlugRef.current = stateToSave.slug;
+                if (overrideStatus && !pageStateToSave) setPage(prev => ({ ...prev, status: overrideStatus }));
             }
         } finally { setSaving(false); }
     };
+
+    // Auto-save logic
+    useEffect(() => {
+        if (!page) return;
+        if (initialLoadRef.current) {
+            initialLoadRef.current = false;
+            return;
+        }
+
+        if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+        
+        autoSaveTimerRef.current = setTimeout(() => {
+            save(null, page);
+        }, 3000);
+
+        return () => {
+            if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+        };
+    }, [page]);
 
     const duplicate = async () => {
         const newSlug = `${page.slug}-copie-${Date.now().toString(36)}`;
@@ -84,7 +108,50 @@ export default function PageEditor() {
         setShowHistoryModal(false);
     };
 
+    const pushToHistory = () => {
+        if (!page?.sections) return;
+        setUndoStack(prev => [...prev, JSON.stringify(page.sections)].slice(-30));
+        setRedoStack([]);
+    };
+
+    const undo = () => {
+        if (undoStack.length === 0) return;
+        const previousSections = JSON.parse(undoStack[undoStack.length - 1]);
+        setRedoStack(prev => [...prev, JSON.stringify(page.sections)]);
+        setUndoStack(prev => prev.slice(0, -1));
+        setPage(prev => ({ ...prev, sections: previousSections }));
+    };
+
+    const redo = () => {
+        if (redoStack.length === 0) return;
+        const nextSections = JSON.parse(redoStack[redoStack.length - 1]);
+        setUndoStack(prev => [...prev, JSON.stringify(page.sections)]);
+        setRedoStack(prev => prev.slice(0, -1));
+        setPage(prev => ({ ...prev, sections: nextSections }));
+    };
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            const activeTag = document.activeElement?.tagName?.toLowerCase();
+            const isInput = activeTag === 'input' || activeTag === 'textarea' || document.activeElement?.isContentEditable;
+            
+            if (!isInput && (e.ctrlKey || e.metaKey)) {
+                if (e.key === 'z') {
+                    e.preventDefault();
+                    if (e.shiftKey) redo();
+                    else undo();
+                } else if (e.key === 'y') {
+                    e.preventDefault();
+                    redo();
+                }
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [undoStack, redoStack, page]);
+
     const addSection = (template) => {
+        pushToHistory();
         const newSection = { id: `${template.type.toLowerCase()}-${Date.now()}`, type: template.type, props: { ...template.defaultProps } };
         const next = [...(page.sections || []), newSection];
         setPage({ ...page, sections: next });
@@ -94,6 +161,7 @@ export default function PageEditor() {
 
     const removeSection = (index) => {
         if (!confirm('Supprimer cette section ?')) return;
+        pushToHistory();
         const next = page.sections.filter((_, i) => i !== index);
         setPage({ ...page, sections: next });
         if (activeSection === index) setActiveSection(null);
@@ -101,6 +169,7 @@ export default function PageEditor() {
     };
 
     const duplicateSection = (index) => {
+        pushToHistory();
         const orig = page.sections[index];
         const copy = { ...orig, id: `${orig.type.toLowerCase()}-${Date.now()}`, props: { ...orig.props } };
         const next = [...page.sections];
@@ -113,6 +182,7 @@ export default function PageEditor() {
         const next = [...page.sections];
         const target = index + dir;
         if (target < 0 || target >= next.length) return;
+        pushToHistory();
         [next[index], next[target]] = [next[target], next[index]];
         setPage({ ...page, sections: next });
         setActiveSection(target);
@@ -136,6 +206,7 @@ export default function PageEditor() {
     const onDrop = (e, index) => {
         e.preventDefault();
         if (dragging === null || dragging === index) { setDragOver(null); setDragging(null); return; }
+        pushToHistory();
         const next = [...page.sections];
         const [moved] = next.splice(dragging, 1);
         next.splice(index, 0, moved);
@@ -147,6 +218,7 @@ export default function PageEditor() {
 
     // Reorder from LivePreview canvas
     const handleReorder = (fromIndex, toIndex) => {
+        pushToHistory();
         const next = [...page.sections];
         const [moved] = next.splice(fromIndex, 1);
         next.splice(toIndex, 0, moved);

@@ -1,6 +1,7 @@
 'use client';
 
 // All per-block editor forms for the Page Builder
+import WysiwygEditor from './WysiwygEditor';
 
 function Field({ label, hint, children }) {
     return (
@@ -74,8 +75,8 @@ export function HeroEditor({ props, onChange }) {
 export function TwoColumnsEditor({ props, onChange }) {
     return <>
         <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
-        <Field label="Texte (HTML)" hint="Supporte <p>, <strong>, <ul>...">
-            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={6} />
+        <Field label="Texte (HTML)" hint="Saisissez votre contenu">
+            <WysiwygEditor value={props.text || ''} onChange={val => onChange({ text: val })} />
         </Field>
         <Field label="Image">
             <ImageUploader value={props.imageSrc || ''} onChange={url => onChange({ imageSrc: url })} folder="pages" />
@@ -108,8 +109,8 @@ export function TwoColumnsEditor({ props, onChange }) {
 export function RichTextEditor({ props, onChange }) {
     return <>
         <Field label="Titre de section"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Laisser vide pour masquer" /></Field>
-        <Field label="Contenu (HTML)" hint="<p>, <strong>, <ul>, <a href=''>...">
-            <textarea style={{ ...textareaStyle, minHeight: '180px' }} value={props.content || ''} onChange={e => onChange({ content: e.target.value })} />
+        <Field label="Contenu (HTML)">
+            <WysiwygEditor value={props.content || ''} onChange={val => onChange({ content: val })} />
         </Field>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <Field label="Alignement du texte">
@@ -371,7 +372,9 @@ export function CalloutBoxEditor({ props, onChange }) {
             <input style={inputStyle} value={props.emoji || ''} onChange={e => onChange({ emoji: e.target.value })} placeholder="ex: 🌿" maxLength={4} />
         </Field>
         <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Bon à savoir" /></Field>
-        <Field label="Contenu (HTML)" hint="<p>, <strong>, <a href=''>..."><textarea style={{ ...textareaStyle, minHeight: '100px' }} value={props.content || ''} onChange={e => onChange({ content: e.target.value })} /></Field>
+        <Field label="Contenu (HTML)">
+            <WysiwygEditor value={props.content || ''} onChange={val => onChange({ content: val })} />
+        </Field>
     </>;
 }
 
@@ -427,6 +430,106 @@ export function TableOfContentsEditor({ props, onChange }) {
     </>;
 }
 
+export function FeaturedProductsEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre de section (optionnel)"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Notre Sélection" /></Field>
+        <Field label="Sous-titre (optionnel)"><input style={inputStyle} value={props.subtitle || ''} onChange={e => onChange({ subtitle: e.target.value })} placeholder="Découvrez nos meilleurs produits" /></Field>
+        <Field label="Références SKU" hint="Séparez les références par des virgules. Ex: FLEUR-GOR-01, HUILE-10-01">
+            <input style={inputStyle} value={props.skus || ''} onChange={e => onChange({ skus: e.target.value })} placeholder="SKU-1, SKU-2" />
+        </Field>
+        <Field label="Colonnes (Desktop)">
+            <select style={selectStyle} value={props.columns || 4} onChange={e => onChange({ columns: +e.target.value })}>
+                <option value={2}>2 colonnes (grandes cartes)</option>
+                <option value={3}>3 colonnes</option>
+                <option value={4}>4 colonnes (petites cartes)</option>
+            </select>
+        </Field>
+    </>;
+}
+
+export function MarqueeEditor({ props, onChange }) {
+    return <>
+        <Field label="Texte défilant"><input style={inputStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} placeholder="OFFRE SPÉCIALE..." /></Field>
+        <Field label="Vitesse (secondes)"><input type="number" style={inputStyle} value={props.speed || 20} onChange={e => onChange({ speed: +e.target.value })} /></Field>
+    </>;
+}
+
+export function OfferComparatorEditor() {
+    return <div style={{ padding: '20px', textAlign: 'center', color: '#666', fontSize: '0.9rem' }}>Ce bloc est interactif et n'a pas de paramètres configurables.</div>;
+}
+
+export function PartnersNetworkEditor({ props, onChange }) {
+    const partners = props.partners || [];
+    const updatePartner = (i, field, val) => onChange({ partners: partners.map((p, idx) => idx === i ? { ...p, [field]: val } : p) });
+    const addPartner = () => onChange({ partners: [...partners, { image: '', name: 'Nouveau partenaire' }] });
+    const removePartner = i => onChange({ partners: partners.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre de section"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+            {partners.map((partner, i) => (
+                <div key={i} style={{ background: '#f9f9f9', borderRadius: '10px', padding: '14px', border: '1px solid #eee' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong style={{ fontSize: '0.85rem' }}>Logo {i + 1}</strong>
+                        <button type="button" onClick={() => removePartner(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}>✕</button>
+                    </div>
+                    <Field label="Nom"><input style={inputStyle} value={partner.name || ''} onChange={e => updatePartner(i, 'name', e.target.value)} /></Field>
+                    <Field label="Image"><ImageUploader value={partner.image || ''} onChange={url => updatePartner(i, 'image', url)} folder="pages/partners" /></Field>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addPartner} style={{ marginTop: '8px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#1F4B40', border: '1px dashed #1F4B40', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter un logo</button>
+    </>;
+}
+
+export function QualityBannerEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <Field label="Sous-titre"><input style={inputStyle} value={props.subtitle || ''} onChange={e => onChange({ subtitle: e.target.value })} /></Field>
+    </>;
+}
+
+export function WhyChooseUsEditor({ props, onChange }) {
+    const features = props.features || [];
+    const updateFeature = (i, field, val) => onChange({ features: features.map((f, idx) => idx === i ? { ...f, [field]: val } : f) });
+    const addFeature = () => onChange({ features: [...features, { title: 'Nouvel avantage', description: 'Description...' }] });
+    const removeFeature = i => onChange({ features: features.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre Principal"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <Field label="Image"><ImageUploader value={props.imageSrc || ''} onChange={url => onChange({ imageSrc: url })} folder="pages/why" /></Field>
+        <Field label="Texte Alternatif Image"><input style={inputStyle} value={props.imageAlt || ''} onChange={e => onChange({ imageAlt: e.target.value })} /></Field>
+        <Field label="Inverser la disposition (Image à droite)">
+            <input type="checkbox" checked={!!props.isReversed} onChange={e => onChange({ isReversed: e.target.checked })} />
+        </Field>
+        <Field label="Label du bouton"><input style={inputStyle} value={props.ctaLabel || ''} onChange={e => onChange({ ctaLabel: e.target.value })} /></Field>
+        <Field label="Lien du bouton"><input style={inputStyle} value={props.ctaLink || ''} onChange={e => onChange({ ctaLink: e.target.value })} /></Field>
+
+        <label style={{ display: 'block', fontWeight: 600, fontSize: '0.82rem', marginTop: '16px', marginBottom: '8px' }}>AVANTAGES</label>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {features.map((feature, i) => (
+                <div key={i} style={{ background: '#f9f9f9', borderRadius: '10px', padding: '14px', border: '1px solid #eee' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong style={{ fontSize: '0.85rem' }}>Avantage {i + 1}</strong>
+                        <button type="button" onClick={() => removeFeature(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}>✕</button>
+                    </div>
+                    <Field label="Titre"><input style={inputStyle} value={feature.title || ''} onChange={e => updateFeature(i, 'title', e.target.value)} /></Field>
+                    <Field label="Description"><textarea style={textareaStyle} value={feature.description || ''} onChange={e => updateFeature(i, 'description', e.target.value)} rows={2} /></Field>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addFeature} style={{ marginTop: '8px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#1F4B40', border: '1px dashed #1F4B40', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter un avantage</button>
+    </>;
+}
+
+export function CodeEmbedEditor({ props, onChange }) {
+    return <>
+        <Field label="Code HTML / Iframe" hint="Attention, ce code sera exécuté tel quel sur la page finale. Ne collez que du code de confiance.">
+            <textarea style={{ ...textareaStyle, fontFamily: 'monospace', fontSize: '0.85rem' }} value={props.code || ''} onChange={e => onChange({ code: e.target.value })} rows={10} placeholder="<iframe>...</iframe> ou <script>...</script>" />
+        </Field>
+    </>;
+}
+
 export const EDITORS = {
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
@@ -443,4 +546,11 @@ export const EDITORS = {
     CalloutBox: CalloutBoxEditor,
     RelatedArticles: RelatedArticlesEditor,
     TableOfContents: TableOfContentsEditor,
+    FeaturedProducts: FeaturedProductsEditor,
+    Marquee: MarqueeEditor,
+    OfferComparator: OfferComparatorEditor,
+    PartnersNetwork: PartnersNetworkEditor,
+    QualityBanner: QualityBannerEditor,
+    WhyChooseUs: WhyChooseUsEditor,
+    CodeEmbed: CodeEmbedEditor,
 };

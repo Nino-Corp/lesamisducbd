@@ -17,6 +17,14 @@ import AuthorCard from '@/components/AuthorCard/AuthorCard';
 import CalloutBox from '@/components/CalloutBox/CalloutBox';
 import RelatedArticles from '@/components/RelatedArticles/RelatedArticles';
 import TableOfContents from '@/components/TableOfContents/TableOfContents';
+import FeaturedProducts from '@/components/FeaturedProducts/FeaturedProducts';
+import Marquee from '@/components/Marquee/Marquee';
+import OfferComparator from '@/components/OfferComparator/OfferComparator';
+import PartnersNetwork from '@/components/PartnersNetwork/PartnersNetwork';
+import QualityBanner from '@/components/QualityBanner/QualityBanner';
+import WhyChooseUs from '@/components/WhyChooseUs/WhyChooseUs';
+import CodeEmbed from '@/components/CodeEmbed/CodeEmbed';
+import { useState } from 'react';
 
 const PREVIEW_COMPONENTS = {
     ContentHero,
@@ -34,6 +42,13 @@ const PREVIEW_COMPONENTS = {
     CalloutBox,
     RelatedArticles,
     TableOfContents,
+    FeaturedProducts,
+    Marquee,
+    OfferComparator,
+    PartnersNetwork,
+    QualityBanner,
+    WhyChooseUs,
+    CodeEmbed,
 };
 
 export default function LivePreview({ 
@@ -55,9 +70,39 @@ export default function LivePreview({
         );
     }
 
+    const [previewMode, setPreviewMode] = useState('desktop');
+
+    // Calcul des styles de la frame de preview
+    let frameStyles = { 
+        background: '#fff', 
+        minHeight: '100%', 
+        marginTop: '0px',
+        marginBottom: '0px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        transition: 'all 0.3s' 
+    };
+    
+    if (previewMode === 'desktop') {
+        frameStyles = { ...frameStyles, transform: 'scale(0.75)', transformOrigin: 'top center', width: '133%', marginLeft: '-16.5%' };
+    } else if (previewMode === 'tablet') {
+        frameStyles = { ...frameStyles, width: '768px', marginTop: '40px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' };
+    } else if (previewMode === 'mobile') {
+        frameStyles = { ...frameStyles, width: '375px', marginTop: '40px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', border: '8px solid #333' };
+    }
+
     return (
-        <div style={{ height: '100%', overflowY: 'auto', background: '#f5f5f5' }}>
-            <div style={{ background: '#fff', minHeight: '100%', transform: 'scale(0.75)', transformOrigin: 'top center', width: '133%', marginLeft: '-16.5%' }}>
+        <div style={{ height: '100%', overflowY: 'auto', background: '#e5e7eb', position: 'relative' }}>
+            {/* Barre de sélection Responsive */}
+            <div style={{ position: 'sticky', top: '12px', left: '0', right: '0', display: 'flex', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
+                <div style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(10px)', padding: '4px', borderRadius: '99px', display: 'flex', gap: '4px', pointerEvents: 'auto', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                    <button onClick={() => setPreviewMode('desktop')} style={{ background: previewMode === 'desktop' ? '#fff' : 'transparent', color: previewMode === 'desktop' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>💻 PC</button>
+                    <button onClick={() => setPreviewMode('tablet')} style={{ background: previewMode === 'tablet' ? '#fff' : 'transparent', color: previewMode === 'tablet' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>📱 Tablette</button>
+                    <button onClick={() => setPreviewMode('mobile')} style={{ background: previewMode === 'mobile' ? '#fff' : 'transparent', color: previewMode === 'mobile' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>📱 Mobile</button>
+                </div>
+            </div>
+
+            <div style={frameStyles}>
                 {sections.map((section, i) => {
                     const Component = PREVIEW_COMPONENTS[section.type];
                     const isActive = activeIndex === i;
