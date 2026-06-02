@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import styles from './Header.module.css';
-import { User, ShoppingBag, Menu, X } from 'lucide-react';
+import { User, ShoppingBag, Menu, X, Search } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import LoginModal from '../LoginModal/LoginModal';
+import SearchOverlay from '../SearchBar/SearchOverlay';
 
 import { useCart } from '@/context/CartContext';
 
@@ -13,6 +14,7 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
     const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isLoginOpen, setIsLoginOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
     // Auth session
     const { data: session, status } = useSession();
@@ -104,6 +106,15 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
                             </button>
                         )}
 
+                        {/* Loupe — Recherche */}
+                        <button
+                            className={styles.iconBtn}
+                            aria-label="Rechercher"
+                            onClick={() => setIsSearchOpen(true)}
+                        >
+                            <Search size={20} />
+                        </button>
+
                         <button
                             className={`${styles.iconBtn} ${styles.cartBtn}`}
                             aria-label="Panier"
@@ -136,6 +147,9 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
 
             {/* Login Modal */}
             {!isAuthenticated && <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />}
+
+            {/* Search Overlay */}
+            <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
         </>
     );
 }
