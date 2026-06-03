@@ -530,6 +530,23 @@ export function CodeEmbedEditor({ props, onChange }) {
     </>;
 }
 
+export function NewsletterBlockEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <Field label="Description"><textarea style={textareaStyle} value={props.description || ''} onChange={e => onChange({ description: e.target.value })} rows={3} /></Field>
+        <Field label="Texte du bouton"><input style={inputStyle} value={props.buttonText || ''} onChange={e => onChange({ buttonText: e.target.value })} /></Field>
+        <Field label="Placeholder E-mail"><input style={inputStyle} value={props.placeholder || ''} onChange={e => onChange({ placeholder: e.target.value })} /></Field>
+    </>;
+}
+
+export function ContactFormBlockEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <Field label="Description"><textarea style={textareaStyle} value={props.description || ''} onChange={e => onChange({ description: e.target.value })} rows={3} /></Field>
+        <Field label="Texte du bouton"><input style={inputStyle} value={props.buttonText || ''} onChange={e => onChange({ buttonText: e.target.value })} /></Field>
+    </>;
+}
+
 export const EDITORS = {
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
@@ -553,4 +570,6 @@ export const EDITORS = {
     QualityBanner: QualityBannerEditor,
     WhyChooseUs: WhyChooseUsEditor,
     CodeEmbed: CodeEmbedEditor,
+    NewsletterBlock: NewsletterBlockEditor,
+    ContactFormBlock: ContactFormBlockEditor,
 };

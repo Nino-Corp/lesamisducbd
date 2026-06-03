@@ -44,7 +44,7 @@ export default async function BlogPage() {
     const headerProps = {
         logoText: 'LES AMIS DU CBD',
         logoImage: '/images/logo.webp',
-        menuItems: [
+        menuItems: globalConfig?.headerLinks || [
             { label: 'PRODUITS', href: '/produits' },
             { label: "L'ESSENTIEL", href: '/essentiel' },
             { label: 'CBD & USAGES', href: '/usages' },

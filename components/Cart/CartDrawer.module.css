@@ -138,6 +138,69 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
+.upsellSection {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed rgba(31, 75, 64, 0.2);
+}
+
+.upsellTitle {
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    color: #1F4B40;
+    font-weight: 700;
+}
+
+.upsellList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.upsellItem {
+    display: flex;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 10px;
+    border-radius: 12px;
+    align-items: center;
+    border: 1px solid rgba(0, 255, 148, 0.2);
+}
+
+.upsellImageWrapper {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.upsellInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.upsellName {
+    font-size: 0.9rem;
+    color: #1F4B40;
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: 4px;
+}
+
+.upsellName:hover {
+    text-decoration: underline;
+}
+
+.upsellPrice {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 700;
+}
+
 .imageConfig {
     width: 80px;
     height: 80px;

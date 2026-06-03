@@ -129,7 +129,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
     return (
         <main className={styles.main}>
             <ProductSchema product={product} productUrl={productUrl} />
-            <Header {...HEADER_PROPS} bannerVisible={globalContent?.visibility?.headerBanner !== false} />
+            <Header {...HEADER_PROPS} menuItems={globalContent?.headerLinks || HEADER_PROPS.menuItems} bannerVisible={globalContent?.visibility?.headerBanner !== false} />
 
             <div className={styles.container}>
                 <Link href="/produits" className={styles.backLink}>

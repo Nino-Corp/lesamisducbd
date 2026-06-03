@@ -37,7 +37,7 @@ export default function ProfessionnelClient({ content, globalContent }) {
 
         logoText: "LES AMIS DU CBD",
         logoImage: "/images/logo.webp",
-        menuItems: [
+        menuItems: globalContent?.headerLinks || [
             { label: "PRODUITS", href: "/produits" },
             { label: "L'ESSENTIEL", href: "/essentiel" },
             { label: "CBD & USAGES", href: "/usages" },

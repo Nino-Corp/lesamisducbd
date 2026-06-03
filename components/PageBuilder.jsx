@@ -30,6 +30,8 @@ import TableOfContents from './TableOfContents/TableOfContents';
 import FeaturedProducts from './FeaturedProducts/FeaturedProducts';
 import OfferComparator from './OfferComparator/OfferComparator';
 import CodeEmbed from './CodeEmbed/CodeEmbed';
+import NewsletterBlock from './NewsletterBlock/NewsletterBlock';
+import ContactFormBlock from './ContactFormBlock/ContactFormBlock';
 
 const componentMap = {
     Header,
@@ -63,6 +65,8 @@ const componentMap = {
     FeaturedProducts,
     OfferComparator,
     CodeEmbed,
+    NewsletterBlock,
+    ContactFormBlock,
 };
 
 const NO_ANIMATE = new Set(['Header', 'Hero']);

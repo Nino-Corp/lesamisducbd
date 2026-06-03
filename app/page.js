@@ -217,7 +217,13 @@ export default async function Home() {
 
     // If you plan to apply global content to Header later (like phone number)
     if (section.type === 'Header' && globalConfig) {
-      return { ...section };
+      return { 
+        ...section,
+        props: {
+          ...section.props,
+          menuItems: globalConfig.headerLinks || section.props.menuItems
+        }
+      };
     }
 
     return section;

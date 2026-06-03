@@ -49,7 +49,7 @@ export default function PrivacyClient({ globalContent, content }) {
 
     return (
         <main className={styles.main}>
-            <Header {...HEADER_PROPS} bannerVisible={globalContent?.visibility?.headerBanner !== false} />
+            <Header {...HEADER_PROPS} menuItems={globalContent?.headerLinks || HEADER_PROPS.menuItems} bannerVisible={globalContent?.visibility?.headerBanner !== false} />
 
             <div className={styles.container}>
                 <div className={styles.header}>

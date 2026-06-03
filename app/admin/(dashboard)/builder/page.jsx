@@ -71,6 +71,7 @@ function TypeBadge({ pageType }) {
 
 export default function BuilderIndex() {
     const [pages, setPages] = useState({});
+    const [analytics, setAnalytics] = useState({});
     const [loading, setLoading] = useState(true);
     const [isCreating, setIsCreating] = useState(false);
     const [filterType, setFilterType] = useState('all');
@@ -83,9 +84,14 @@ export default function BuilderIndex() {
 
     const fetchPages = async () => {
         try {
-            const res = await fetch('/api/admin/builder');
-            const data = await res.json();
+            const [pagesRes, analyticsRes] = await Promise.all([
+                fetch('/api/admin/builder'),
+                fetch('/api/admin/builder/analytics')
+            ]);
+            const data = await pagesRes.json();
+            const analyticsData = await analyticsRes.json();
             setPages(data);
+            setAnalytics(analyticsData);
         } catch (error) {
             console.error('Error fetching pages:', error);
         } finally {
@@ -336,6 +342,9 @@ export default function BuilderIndex() {
                                     {isArticle && page.seo?.publishedAt && (
                                         <><br />Publié le {new Date(page.seo.publishedAt).toLocaleDateString('fr-FR')}</>
                                     )}
+                                    <div style={{ marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px', color: '#1F4B40', fontWeight: 600 }}>
+                                        👁 {analytics[page.slug] || 0} vue{analytics[page.slug] !== 1 ? 's' : ''}
+                                    </div>
                                 </div>
                                 <div className={styles.actions}>
                                     <Link href={`/admin/builder/${page.slug}`} className={styles.editLink}>Modifier</Link>

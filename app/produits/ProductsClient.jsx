@@ -202,7 +202,7 @@ export default function ProductsClient({ initialProducts, globalContent }) {
 
     return (
         <main className={styles.main}>
-            <Header {...HEADER_PROPS} />
+            <Header {...HEADER_PROPS} menuItems={globalContent?.headerLinks || HEADER_PROPS.menuItems} />
 
             {/* Hero Carousel */}
             <div className={styles.carouselContainer}>

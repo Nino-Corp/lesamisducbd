@@ -65,6 +65,12 @@ const DEFAULTS = {
             phone: "06 71 82 42 87",
             email: "lesamisducbd@gmail.com"
         },
+        headerLinks: [
+            { label: "PRODUITS", href: "/produits" },
+            { label: "L'ESSENTIEL", href: "/essentiel" },
+            { label: "CBD & USAGES", href: "/usages" },
+            { label: "PROFESSIONNEL", href: "/professionnel" }
+        ],
         footerLinks: [
             { label: "Livraison", href: "/livraison" },
             { label: "CGV", href: "/cgv" },

@@ -17,6 +17,12 @@ const DEFAULTS = {
         { label: "Politique de confidentialité", href: "/privacy" },
         { label: "Transparence", href: "/transparence" },
         { label: "Buraliste", href: "/professionnel" }
+    ],
+    headerLinks: [
+        { label: "PRODUITS", href: "/produits" },
+        { label: "L'ESSENTIEL", href: "/essentiel" },
+        { label: "CBD & USAGES", href: "/usages" },
+        { label: "PROFESSIONNEL", href: "/professionnel" }
     ]
 };
 
@@ -27,6 +33,7 @@ export default function GlobalContentPage() {
 
     const [contact, setContact] = useState(DEFAULTS.contact);
     const [footerLinks, setFooterLinks] = useState(DEFAULTS.footerLinks);
+    const [headerLinks, setHeaderLinks] = useState(DEFAULTS.headerLinks);
     const [visibility, setVisibility] = useState({
         headerBanner: true,
         newsletter: true
@@ -39,6 +46,7 @@ export default function GlobalContentPage() {
             .then(data => {
                 if (data.contact) setContact(data.contact);
                 if (data.footerLinks) setFooterLinks(data.footerLinks);
+                if (data.headerLinks) setHeaderLinks(data.headerLinks);
                 if (data.visibility) setVisibility(prev => ({ ...prev, ...data.visibility }));
                 setLoaded(true);
             }).catch(err => {
@@ -54,7 +62,7 @@ export default function GlobalContentPage() {
             await fetch('/api/admin/content/global', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contact, footerLinks, visibility })
+                body: JSON.stringify({ contact, footerLinks, headerLinks, visibility })
             });
             alert('Modifications enregistrées !');
         } catch { alert('Erreur lors de la sauvegarde'); }
@@ -69,14 +77,24 @@ export default function GlobalContentPage() {
         });
     };
 
+    const updateHeaderLink = (index, field, value) => {
+        setHeaderLinks(prev => {
+            const next = [...prev];
+            next[index] = { ...next[index], [field]: value };
+            return next;
+        });
+    };
+
     const addLink = () => setFooterLinks(prev => [...prev, { label: '', href: '/' }]);
     const removeLink = (index) => setFooterLinks(prev => prev.filter((_, i) => i !== index));
+
+    const addHeaderLink = () => setHeaderLinks(prev => [...prev, { label: '', href: '/' }]);
+    const removeHeaderLink = (index) => setHeaderLinks(prev => prev.filter((_, i) => i !== index));
 
     if (!loaded) return <div style={{ padding: 20 }}>Chargement...</div>;
 
     const TABS = [
         { id: 'contact', label: '📞 Informations de contact' },
-        { id: 'footer', label: '🔗 Liens Footer' },
         { id: 'visibility', label: '👁️ Visibilité' }
     ];
 
@@ -126,30 +144,6 @@ export default function GlobalContentPage() {
                         ))}
                     </>
                 )}
-
-                {/* Footer links */}
-                {tab === 'footer' && (
-                    <>
-                        {footerLinks.map((link, i) => (
-                            <div key={i} style={{ border: '1px solid #eee', borderRadius: 8, padding: 15, background: '#fafafa', display: 'flex', gap: 12, alignItems: 'flex-end' }}>
-                                <div className={styles.fieldGroup} style={{ flex: 1, marginBottom: 0 }}>
-                                    <label>Label</label>
-                                    <input className={styles.input} value={link.label} onChange={e => updateLink(i, 'label', e.target.value)} />
-                                </div>
-                                <div className={styles.fieldGroup} style={{ flex: 2, marginBottom: 0 }}>
-                                    <label>URL</label>
-                                    <input className={styles.input} value={link.href} onChange={e => updateLink(i, 'href', e.target.value)} />
-                                </div>
-                                <button type="button" onClick={() => removeLink(i)} style={{ color: 'red', background: 'none', border: '1px solid #fcc', borderRadius: 6, padding: '8px 12px', cursor: 'pointer', flexShrink: 0 }}>✕</button>
-                            </div>
-                        ))}
-                        <button type="button" onClick={addLink} style={{
-                            padding: '10px', background: '#e0fbf4', border: '1px dashed #1F4B40',
-                            color: '#1F4B40', borderRadius: 8, cursor: 'pointer', fontWeight: 700, width: '100%', marginTop: 5
-                        }}>+ Ajouter un lien</button>
-                    </>
-                )}
-
                 {/* Visibilité */}
                 {tab === 'visibility' && (
                     <div style={{ padding: '20px', background: '#f8f9fa', borderRadius: '8px', borderLeft: '4px solid #1F4B40' }}>

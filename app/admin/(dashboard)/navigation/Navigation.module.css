@@ -1,0 +1,233 @@
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, #1F4B40, #00FF94);
+    padding: 24px 32px;
+    border-radius: 16px;
+    color: white;
+    box-shadow: 0 10px 25px rgba(31, 75, 64, 0.2);
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.subtitle {
+    margin: 8px 0 0;
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+
+.saveButton {
+    background: white;
+    color: #1F4B40;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 99px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.saveButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.saveButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.sidebar {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: sticky;
+    top: 20px;
+}
+
+.tabBtn {
+    background: transparent;
+    border: none;
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tabBtn:hover {
+    background: #f3f4f6;
+    color: #1F4B40;
+}
+
+.tabBtnActive {
+    background: white;
+    color: #1F4B40;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.content {
+    flex: 1;
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.sectionTitle {
+    font-size: 1.4rem;
+    color: #1F4B40;
+    margin: 0 0 8px;
+    font-weight: 800;
+}
+
+.sectionDesc {
+    color: #666;
+    font-size: 0.95rem;
+    margin: 0 0 24px;
+}
+
+.linkCard {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.linkCard:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.cardControls {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.iconBtn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.iconBtn:hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+.iconBtnDanger:hover {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.inputs {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+}
+
+.inputWrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.inputLabel {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 0.5px;
+}
+
+.inputField {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    outline: none;
+    background: white;
+}
+
+.inputField:focus {
+    border-color: #00FF94;
+    box-shadow: 0 0 0 3px rgba(0, 255, 148, 0.1);
+}
+
+.addBtn {
+    width: 100%;
+    padding: 16px;
+    background: transparent;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.addBtn:hover {
+    border-color: #1F4B40;
+    color: #1F4B40;
+    background: #f0fdf4;
+}

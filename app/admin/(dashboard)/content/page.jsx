@@ -56,7 +56,7 @@ const PAGES = [
         id: 'global',
         label: 'Éléments Globaux',
         icon: '🌍',
-        description: 'Informations de contact, Liens du footer (toutes pages)',
+        description: 'Informations de contact de la boutique, Bannière, Newsletter',
         count: 2,
         href: '/admin/content/global'
     },

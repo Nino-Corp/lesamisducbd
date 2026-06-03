@@ -243,6 +243,31 @@ export const TEMPLATES = [
         defaultProps: {
             code: '<div style="padding:20px; background:#f0f0f0; text-align:center;">Code HTML personnalisé ici</div>'
         }
+    },
+    {
+        type: 'NewsletterBlock',
+        label: 'Newsletter',
+        icon: '✉️',
+        description: 'Formulaire de capture d\'e-mail',
+        category: 'leads',
+        defaultProps: {
+            title: 'Rejoignez notre Newsletter',
+            description: 'Recevez nos dernières offres.',
+            buttonText: "S'inscrire",
+            placeholder: 'Votre e-mail'
+        }
+    },
+    {
+        type: 'ContactFormBlock',
+        label: 'Formulaire de Contact',
+        icon: '📝',
+        description: 'Formulaire de contact complet',
+        category: 'leads',
+        defaultProps: {
+            title: 'Contactez-nous',
+            description: 'Laissez-nous un message et nous vous répondrons rapidement.',
+            buttonText: 'Envoyer le message'
+        }
     }
 ];
 
@@ -251,5 +276,6 @@ export const CATEGORIES = [
     { id: 'content', label: 'Contenu' },
     { id: 'blog', label: '📝 Blog / Article' },
     { id: 'conversion', label: 'Conversion' },
+    { id: 'leads', label: 'Acquisition / Leads' },
     { id: 'media', label: 'Médias' },
 ];

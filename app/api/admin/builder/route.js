@@ -4,6 +4,7 @@ import { kv } from '@vercel/kv';
 export const dynamic = 'force-dynamic';
 
 const PAGES_KEY = 'builder_pages';
+const BLOCKS_KEY = 'builder_saved_blocks';
 const MAX_HISTORY = 10; // Keep last 10 versions per page
 
 // GET: Retrieve all pages or a specific page
@@ -12,6 +13,12 @@ export async function GET(request) {
         const { searchParams } = new URL(request.url);
         const slug = searchParams.get('slug');
         const action = searchParams.get('action');
+
+        // Return saved blocks
+        if (action === 'blocks') {
+            const blocks = await kv.get(BLOCKS_KEY) || [];
+            return NextResponse.json(blocks);
+        }
 
         const pages = await kv.get(PAGES_KEY) || {};
 
@@ -52,6 +59,17 @@ export async function POST(request) {
         const originalSlug = body.originalSlug || slug;
         // Duplication action
         const action = body.action;
+
+        // ── SAVE BLOCK ACTION ──
+        if (action === 'save_block') {
+            const { block } = body;
+            if (!block) return NextResponse.json({ error: 'Block data is required' }, { status: 400 });
+            const blocks = await kv.get(BLOCKS_KEY) || [];
+            // prepend new block
+            blocks.unshift(block);
+            await kv.set(BLOCKS_KEY, blocks);
+            return NextResponse.json({ success: true, blocks });
+        }
 
         if (!slug || !title) {
             return NextResponse.json({ error: 'Slug and Title are required' }, { status: 400 });
@@ -175,6 +193,16 @@ export async function DELETE(request) {
     try {
         const { searchParams } = new URL(request.url);
         const slug = searchParams.get('slug');
+        const action = searchParams.get('action');
+        const blockId = searchParams.get('blockId');
+
+        // ── DELETE SAVED BLOCK ──
+        if (action === 'delete_block' && blockId) {
+            let blocks = await kv.get(BLOCKS_KEY) || [];
+            blocks = blocks.filter(b => b.id !== blockId);
+            await kv.set(BLOCKS_KEY, blocks);
+            return NextResponse.json({ success: true });
+        }
 
         if (!slug) {
             return NextResponse.json({ error: 'Slug is required' }, { status: 400 });

@@ -17,11 +17,26 @@ export default function CartDrawer() {
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const [checkoutStep, setCheckoutStep] = useState(0);
+    const [upsellProducts, setUpsellProducts] = useState([]);
     const { data: session } = useSession();
     // Use String comparison to handle both number and string types from session
     const isPro = String(session?.user?.id_default_group) === "4";
 
     const router = useRouter();
+
+    // Fetch upsell products
+    useEffect(() => {
+        if (isCartOpen && cart.length > 0 && upsellProducts.length === 0) {
+            fetch('/api/products')
+                .then(res => res.json())
+                .then(data => {
+                    const cartSlugs = cart.map(item => item.slug);
+                    const recommendations = data.filter(p => !cartSlugs.includes(p.slug)).slice(0, 2);
+                    setUpsellProducts(recommendations);
+                })
+                .catch(err => console.error('Failed to fetch upsell products:', err));
+        }
+    }, [isCartOpen, cart]);
 
     // Lock scroll when cart is open
     useLockBodyScroll(isCartOpen);
@@ -165,6 +180,30 @@ export default function CartDrawer() {
                                 </div>
                             </div>
                         ))
+                    )}
+                    
+                    {/* Upsell / Cross-Selling Section */}
+                    {cart.length > 0 && upsellProducts.length > 0 && (
+                        <div className={styles.upsellSection}>
+                            <h4 className={styles.upsellTitle}>Vous aimerez aussi...</h4>
+                            <div className={styles.upsellList}>
+                                {upsellProducts.map(product => (
+                                    <div key={product.id} className={styles.upsellItem}>
+                                        {product.image && (
+                                            <div className={styles.upsellImageWrapper}>
+                                                <Image src={product.image} alt={product.name} fill style={{ objectFit: 'contain' }} />
+                                            </div>
+                                        )}
+                                        <div className={styles.upsellInfo}>
+                                            <Link href={`/produits/${product.slug}`} className={styles.upsellName} onClick={() => setIsCartOpen(false)}>
+                                                {product.name}
+                                            </Link>
+                                            <div className={styles.upsellPrice}>{isPro ? product.priceHT : product.priceTTC}€</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     )}
                 </div>
 

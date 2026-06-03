@@ -12,6 +12,7 @@ export default function DashboardLayout({ children }) {
                 <div className={styles.logo}>CBD Admin</div>
                 <nav className={styles.nav}>
                     <Link href="/admin/content" className={styles.link}>Contenu Site</Link>
+                    <Link href="/admin/navigation" className={styles.link}>Navigation</Link>
                     <Link href="/admin/builder" className={styles.link}>Page Builder</Link>
                     <Link href="/admin/products" className={styles.link}>Produits</Link>
                     <Link href="/admin/partners" className={styles.link}>Professionnels</Link>

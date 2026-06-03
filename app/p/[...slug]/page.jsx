@@ -7,19 +7,21 @@ import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 
 export const revalidate = 60; // Cache for 1 minute
 
-async function getPageData(slug) {
+async function getPageData(slug, isPreview = false) {
     try {
         const pages = await kv.get('builder_pages');
         if (pages && pages[slug]) {
             const page = pages[slug];
 
-            // Block draft pages from public access
-            const status = page.status || 'published'; // Legacy pages without status are considered published
-            if (status === 'draft') return null;
+            if (!isPreview) {
+                // Block draft pages from public access
+                const status = page.status || 'published'; // Legacy pages without status are considered published
+                if (status === 'draft') return null;
 
-            // Block scheduled pages that haven't reached their publish date
-            if (status === 'scheduled' && page.scheduledAt) {
-                if (new Date(page.scheduledAt) > new Date()) return null;
+                // Block scheduled pages that haven't reached their publish date
+                if (status === 'scheduled' && page.scheduledAt) {
+                    if (new Date(page.scheduledAt) > new Date()) return null;
+                }
             }
 
             return page;
@@ -124,17 +126,30 @@ function buildJsonLd(page, pageSlug) {
     return { ...base, '@type': 'WebPage' };
 }
 
-export default async function DynamicPage({ params }) {
-    const { slug } = await params;
+export default async function DynamicPage(props) {
+    const params = await props.params;
+    const searchParams = await props.searchParams || {};
+    
+    const { slug } = params;
+    const isPreview = searchParams.preview === 'true';
     const pageSlug = Array.isArray(slug) ? slug.join('/') : slug;
 
     const [page, globalConfig] = await Promise.all([
-        getPageData(pageSlug),
+        getPageData(pageSlug, isPreview),
         kv.get('global_content').catch(() => null)
     ]);
 
     if (!page) {
         notFound();
+    }
+
+    // Analytics: increment view counter on the server side (only if not previewing)
+    if (!isPreview) {
+        try {
+            await kv.incr(`builder_views:${pageSlug}`);
+        } catch (e) {
+            console.error('Failed to increment view counter', e);
+        }
     }
 
     // Prepare sections, injecting global header/footer if needed
@@ -156,7 +171,7 @@ export default async function DynamicPage({ params }) {
             props: {
                 logoText: "LES AMIS DU CBD",
                 logoImage: "/images/logo.webp",
-                menuItems: [
+                menuItems: globalConfig?.headerLinks || [
                     { label: "PRODUITS", href: "/produits" },
                     { label: "L'ESSENTIEL", href: "/essentiel" },
                     { label: "CBD & USAGES", href: "/usages" },

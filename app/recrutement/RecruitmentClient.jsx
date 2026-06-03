@@ -34,7 +34,7 @@ export default function RecruitmentClient({ globalContent, content }) {
 
         logoText: "LES AMIS DU CBD",
         logoImage: "/images/logo.webp",
-        menuItems: [
+        menuItems: globalContent?.headerLinks || [
             { label: "PRODUITS", href: "/produits" },
             { label: "L'ESSENTIEL", href: "/essentiel" },
             { label: "CBD & USAGES", href: "/usages" },
