@@ -85,12 +85,6 @@ ul {
     flex-shrink: 0;
   }
 
-  /* Ensure editor forms take full width */
-  [style*="maxWidth: 800"] {
-    max-width: 100% !important;
-    padding: 0 4px;
-  }
-
     /* Prevent inline tab buttons from being too small */
   [style*="borderBottom"][style*="cursor: 'pointer'"] {
     white-space: nowrap;
@@ -109,3 +103,10 @@ ul {
     display: none !important;
   }
 }
+
+/* ─── Quill WYSIWYG alignment fallbacks ─── */
+/* When Quill uses class-based alignment (ql-align-*), these ensure it works
+   everywhere the HTML is rendered, not just inside the Quill editor. */
+.ql-align-center { text-align: center; }
+.ql-align-right { text-align: right; }
+.ql-align-justify { text-align: justify; }

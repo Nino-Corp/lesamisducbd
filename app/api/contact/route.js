@@ -7,8 +7,8 @@ export async function POST(req) {
 
         const { name, company, email, phone, message } = data;
 
-        if (!name || !company || !email || !phone) {
-            return NextResponse.json({ error: 'Champs obligatoires manquants' }, { status: 400 });
+        if (!name || !email) {
+            return NextResponse.json({ error: 'Champs obligatoires manquants (Nom et Email)' }, { status: 400 });
         }
 
         // Pour configurer cet envoi avec Brevo, il faut ajouter EMAIL_USER (login SMTP Brevo) et EMAIL_PASS (clé SMTP) dans .env.local
@@ -29,14 +29,14 @@ export async function POST(req) {
             from: process.env.EMAIL_USER || '"Les Amis du CBD" <no-reply@lesamisducbd.fr>',
             to: recipient,
             replyTo: email,
-            subject: `🔥 Nouveau prospect Buraliste : ${company}`,
+            subject: company ? `🔥 Nouveau prospect Buraliste : ${company}` : `Nouveau message de contact : ${name}`,
             text: `
-Nouveau prospect Buraliste !
+Nouveau message de contact !
 
 Nom : ${name}
-Société : ${company}
+${company ? `Société : ${company}` : ''}
 Email : ${email}
-Téléphone : ${phone}
+${phone ? `Téléphone : ${phone}` : ''}
 
 Message :
 ${message || 'Aucun message.'}
@@ -195,19 +195,20 @@ ${message || 'Aucun message.'}
                 <div class="email-container">
                     <div class="email-header">
                         <p class="logo-text">Les Amis <span class="logo-accent">du CBD</span></p>
-                        <p class="header-title">Nouveau Lead Buraliste</p>
+                        <p class="header-title">${company ? 'Nouveau Lead Buraliste' : 'Nouveau Message'}</p>
                     </div>
                     
                     <div class="email-body">
                         <div class="greeting">
-                            Un buraliste souhaite vous rejoindre ! 🚀
+                            ${company ? 'Un buraliste souhaite vous rejoindre ! 🚀' : 'Un utilisateur vous a contacté ! 📬'}
                         </div>
                         
                         <div class="info-card">
+                            ${company ? `
                             <div class="info-row">
                                 <span class="info-label">Société / Nom du tabac</span>
                                 <span class="info-value">${company}</span>
-                            </div>
+                            </div>` : ''}
                             <div class="info-row">
                                 <span class="info-label">Contact</span>
                                 <span class="info-value">${name}</span>
@@ -216,10 +217,11 @@ ${message || 'Aucun message.'}
                                 <span class="info-label">Email</span>
                                 <span class="info-value"><a href="mailto:${email}" style="color: #49B197; text-decoration: none;">${email}</a></span>
                             </div>
+                            ${phone ? `
                             <div class="info-row">
                                 <span class="info-label">Téléphone</span>
                                 <span class="info-value"><a href="tel:${phone.replace(/\s+/g, '')}" style="color: #1A1A1A; text-decoration: none;">${phone}</a></span>
-                            </div>
+                            </div>` : ''}
                         </div>
 
                         <div class="message-card">

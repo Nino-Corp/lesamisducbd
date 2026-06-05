@@ -11,7 +11,7 @@ export default function RichText({ content, title, textAlign = "left", maxWidth 
                 {title && <Tag className={styles.title}>{title}</Tag>}
                 <div
                     className={styles.content}
-                    dangerouslySetInnerHTML={{ __html: content }}
+                    dangerouslySetInnerHTML={{ __html: content.replace(/&nbsp;/g, ' ') }}
                 />
             </div>
         </section>

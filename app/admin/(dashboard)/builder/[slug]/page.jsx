@@ -341,6 +341,7 @@ export default function PageEditor() {
                         <button
                             className={`${styles.saveButton} ${saved ? styles.saveSuccess : ''}`}
                             onClick={() => save()} disabled={saving}
+                            style={{ minWidth: '180px', display: 'flex', justifyContent: 'center', whiteSpace: 'nowrap' }}
                         >
                             {saving ? 'Enregistrement…' : saved ? '✓ Sauvegardé !' : 'Sauvegarder'}
                         </button>
@@ -422,10 +423,16 @@ export default function PageEditor() {
                                                         {section.props?.title || section.props?.text || section.props?.src || 'Cliquez pour éditer'}
                                                     </div>
                                                 </div>
-                                                <button onClick={(e) => { e.stopPropagation(); toggleVisibility(index); }} title={isHidden ? 'Afficher' : 'Masquer'}
-                                                    style={{ padding: '4px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9rem', color: isActive ? '#fff' : '#666' }}>
-                                                    {isHidden ? '👁' : '🙈'}
-                                                </button>
+                                                <div style={{ display: 'flex', gap: '4px' }}>
+                                                    <button onClick={(e) => { e.stopPropagation(); toggleVisibility(index); }} title={isHidden ? 'Afficher' : 'Masquer'}
+                                                        style={{ padding: '4px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: isActive ? '#fff' : '#666' }}>
+                                                        {isHidden ? '👁' : '🙈'}
+                                                    </button>
+                                                    <button onClick={(e) => { e.stopPropagation(); removeSection(index); }} title="Supprimer"
+                                                        style={{ padding: '4px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: isActive ? '#fecaca' : '#ef4444' }}>
+                                                        🗑️
+                                                    </button>
+                                                </div>
                                             </div>
                                         );
                                     })}

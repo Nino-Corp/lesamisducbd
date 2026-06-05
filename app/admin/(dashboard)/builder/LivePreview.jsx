@@ -24,7 +24,7 @@ import PartnersNetwork from '@/components/PartnersNetwork/PartnersNetwork';
 import QualityBanner from '@/components/QualityBanner/QualityBanner';
 import WhyChooseUs from '@/components/WhyChooseUs/WhyChooseUs';
 import CodeEmbed from '@/components/CodeEmbed/CodeEmbed';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 
 const PREVIEW_COMPONENTS = {
     ContentHero,
@@ -51,7 +51,7 @@ const PREVIEW_COMPONENTS = {
     CodeEmbed,
 };
 
-export default function LivePreview({ 
+const LivePreview = memo(function LivePreview({ 
     sections = [], 
     activeIndex = null, 
     onSelect,
@@ -89,7 +89,7 @@ export default function LivePreview({
     } else if (previewMode === 'tablet') {
         frameStyles = { ...frameStyles, width: '768px', marginTop: '40px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' };
     } else if (previewMode === 'mobile') {
-        frameStyles = { ...frameStyles, width: '375px', marginTop: '40px', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', border: '8px solid #333' };
+        frameStyles = { ...frameStyles, width: '375px', height: '667px', overflowY: 'auto', marginTop: '40px', borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', border: '8px solid #333' };
     }
 
     return (
@@ -191,4 +191,6 @@ export default function LivePreview({
             </div>
         </div>
     );
-}
+});
+
+export default LivePreview;

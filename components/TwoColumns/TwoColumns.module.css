@@ -4,12 +4,13 @@
     padding: 16px 20px;
     display: flex;
     justify-content: center;
+    container-type: inline-size;
 }
 
 .bubble {
     width: 100%;
     max-width: var(--container-width, 1400px);
-    border-radius: clamp(20px, 4vw, 40px);
+    border-radius: clamp(20px, 4cqi, 40px);
     overflow: hidden;
     padding: 60px 56px;
 }
@@ -35,7 +36,7 @@
 }
 
 .title {
-    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-size: clamp(1.8rem, 3cqi, 2.5rem);
     font-weight: 800;
     color: #1F4B40;
     line-height: 1.2;
@@ -48,8 +49,13 @@
     font-size: 1rem;
 }
 
-.text p { margin: 0 0 12px; }
+.text p { margin: 0 0 4px; }
 .text p:last-child { margin: 0; }
+
+/* Quill alignment class fallbacks */
+.text :global(.ql-align-center) { text-align: center; }
+.text :global(.ql-align-right) { text-align: right; }
+.text :global(.ql-align-justify) { text-align: justify; }
 
 .btn {
     display: inline-block;
@@ -94,6 +100,12 @@
 }
 
 @media (max-width: 768px) {
+    .bubble { padding: 40px 28px; }
+    .inner { grid-template-columns: 1fr; gap: 32px; }
+    .reversed .inner { direction: ltr; }
+}
+
+@container (max-width: 768px) {
     .bubble { padding: 40px 28px; }
     .inner { grid-template-columns: 1fr; gap: 32px; }
     .reversed .inner { direction: ltr; }

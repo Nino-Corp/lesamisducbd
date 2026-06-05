@@ -1,60 +1,335 @@
+/* ═══════════════════════════════════════════════════════════
+   WysiwygEditor.module.css
+   Premium WYSIWYG editor styling for the Page Builder
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Wrapper ─────────────────────────────────────────────── */
 .editorWrapper {
-    background-color: white;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    transition: border-color 0.2s;
+    background: #fff;
+    border-radius: 12px;
+    border: 1.5px solid #e2e8f0;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
     position: relative;
     z-index: 10;
+    overflow: hidden;
 }
 
-.editorWrapper:focus-within {
-    border-color: #00FF94;
-    box-shadow: 0 0 0 3px rgba(0, 255, 148, 0.15);
+.editorWrapper.focused {
+    border-color: #1F4B40;
+    box-shadow: 0 0 0 3px rgba(31, 75, 64, 0.1), 0 2px 12px rgba(31, 75, 64, 0.06);
     z-index: 100;
 }
 
+/* ── Loading placeholder ─────────────────────────────────── */
+.loadingPlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 200px;
+    background: #fafbfc;
+    border-radius: 12px;
+}
+
+.loadingDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    animation: dotPulse 1.2s ease-in-out infinite;
+}
+.loadingDot:nth-child(2) { animation-delay: 0.15s; }
+.loadingDot:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes dotPulse {
+    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1.1); }
+}
+
+/* ── Quill internal layout ───────────────────────────────── */
 .editorWrapper :global(.quill) {
     display: flex;
     flex-direction: column;
     position: relative;
 }
 
-.editorWrapper :global(.ql-picker-options) {
-    z-index: 100 !important;
+/* ── Toolbar ─────────────────────────────────────────────── */
+.editorWrapper :global(.ql-toolbar.ql-snow) {
+    border: none;
+    border-bottom: 1px solid #e9ecef;
+    background: linear-gradient(180deg, #f8faf8 0%, #f3f6f3 100%);
+    padding: 8px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px;
 }
 
+/* Toolbar groups */
+.editorWrapper :global(.ql-toolbar .ql-formats) {
+    margin-right: 6px;
+    display: flex;
+    align-items: center;
+    gap: 1px;
+}
+
+/* Toolbar buttons — ensure proper size for icons */
+.editorWrapper :global(.ql-toolbar button) {
+    width: 32px !important;
+    height: 32px !important;
+    padding: 4px !important;
+    border-radius: 6px;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+}
+
+/* Make SVG icons inside buttons a proper visible size */
+.editorWrapper :global(.ql-toolbar button svg) {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.editorWrapper :global(.ql-toolbar button:hover) {
+    background: rgba(31, 75, 64, 0.08);
+}
+
+.editorWrapper :global(.ql-toolbar button.ql-active) {
+    background: rgba(31, 75, 64, 0.12);
+    color: #1F4B40;
+}
+
+.editorWrapper :global(.ql-toolbar button.ql-active .ql-stroke) {
+    stroke: #1F4B40;
+}
+
+.editorWrapper :global(.ql-toolbar button.ql-active .ql-fill) {
+    fill: #1F4B40;
+}
+
+/* Color picker button — the small colored square indicator */
+.editorWrapper :global(.ql-toolbar .ql-color-picker .ql-picker-label svg) {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.editorWrapper :global(.ql-toolbar .ql-color-picker .ql-picker-label) {
+    padding: 2px 4px !important;
+}
+
+/* Align picker icons */
+.editorWrapper :global(.ql-snow .ql-picker.ql-align svg) {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.editorWrapper :global(.ql-snow .ql-picker.ql-align .ql-picker-item) {
+    padding: 6px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Pickers (font, size, header, color, align) ──────────── */
+.editorWrapper :global(.ql-snow .ql-picker) {
+    height: 32px;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.editorWrapper :global(.ql-snow .ql-picker:hover) {
+    background: rgba(31, 75, 64, 0.05);
+}
+
+.editorWrapper :global(.ql-snow .ql-picker .ql-picker-label) {
+    border: 1px solid #dce0e4;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 0.82rem;
+    color: #475569;
+    background: #fff;
+    transition: border-color 0.15s;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.editorWrapper :global(.ql-snow .ql-picker .ql-picker-label:hover) {
+    border-color: #1F4B40;
+    color: #1F4B40;
+}
+
+/* Picker dropdown panel */
+.editorWrapper :global(.ql-snow .ql-picker-options) {
+    z-index: 200 !important;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+    padding: 6px;
+    background: #fff;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+/* Picker items */
+.editorWrapper :global(.ql-snow .ql-picker-options .ql-picker-item) {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.82rem;
+    color: #334155;
+    transition: background 0.12s;
+}
+
+.editorWrapper :global(.ql-snow .ql-picker-options .ql-picker-item:hover) {
+    background: #f0fdf4;
+    color: #1F4B40;
+}
+
+.editorWrapper :global(.ql-snow .ql-picker-options .ql-picker-item.ql-selected) {
+    background: #1F4B40;
+    color: #fff;
+}
+
+/* Font picker width */
+.editorWrapper :global(.ql-snow .ql-picker.ql-font) {
+    width: 170px;
+}
+
+/* Size picker width */
+.editorWrapper :global(.ql-snow .ql-picker.ql-size) {
+    width: 72px;
+}
+
+/* Header picker width */
+.editorWrapper :global(.ql-snow .ql-picker.ql-header) {
+    width: 110px;
+}
+
+/* Color picker dropdowns */
 .editorWrapper :global(.ql-color .ql-picker-options),
 .editorWrapper :global(.ql-background .ql-picker-options) {
     right: 0 !important;
     left: auto !important;
+    width: auto;
 }
 
-.editorWrapper :global(.ql-toolbar) {
-    border: none;
-    border-bottom: 1px solid #ddd;
-    background-color: #f9fdf9;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    position: relative;
-    z-index: 10;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.editorWrapper :global(.ql-container) {
+/* ── Editor container ────────────────────────────────────── */
+.editorWrapper :global(.ql-container.ql-snow) {
     border: none;
     font-size: 0.95rem;
-    color: #1F4B40;
-    font-family: inherit;
-    min-height: 150px;
+    color: #1e293b;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 220px;
     position: relative;
     z-index: 1;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
 }
 
+/* ── The actual editable area ────────────────────────────── */
 .editorWrapper :global(.ql-editor) {
-    min-height: 150px;
-    padding: 14px;
+    min-height: 220px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 18px 20px;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    color: #1e293b;
+}
+
+/* Match preview spacing: tight paragraphs */
+.editorWrapper :global(.ql-editor p) {
+    margin-bottom: 4px;
+}
+
+/* Placeholder text */
+.editorWrapper :global(.ql-editor.ql-blank::before) {
+    color: #94a3b8;
+    font-style: normal;
+    font-size: 0.9rem;
+    left: 20px;
+    right: 20px;
+}
+
+/* Editor headings */
+.editorWrapper :global(.ql-editor h2) {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1F4B40;
+    margin: 0.8em 0 0.3em;
+    line-height: 1.3;
+}
+
+.editorWrapper :global(.ql-editor h3) {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2d5a4e;
+    margin: 0.6em 0 0.2em;
+    line-height: 1.35;
+}
+
+.editorWrapper :global(.ql-editor h4) {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #3d6b5f;
+    margin: 0.5em 0 0.2em;
+}
+
+/* Editor links */
+.editorWrapper :global(.ql-editor a) {
+    color: #1F4B40;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* Editor lists */
+.editorWrapper :global(.ql-editor ol),
+.editorWrapper :global(.ql-editor ul) {
+    padding-left: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.editorWrapper :global(.ql-editor li) {
+    padding-left: 4px;
+    margin-bottom: 0.2em;
+}
+
+/* Scrollbar inside editor */
+.editorWrapper :global(.ql-editor::-webkit-scrollbar) {
+    width: 6px;
+}
+
+.editorWrapper :global(.ql-editor::-webkit-scrollbar-track) {
+    background: transparent;
+}
+
+.editorWrapper :global(.ql-editor::-webkit-scrollbar-thumb) {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.editorWrapper :global(.ql-editor::-webkit-scrollbar-thumb:hover) {
+    background: #94a3b8;
+}
+
+/* ── Tooltip (link editor) ───────────────────────────────── */
+.editorWrapper :global(.ql-tooltip) {
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 8px 12px;
+    z-index: 300;
+}
+
+.editorWrapper :global(.ql-tooltip input[type="text"]) {
+    border-radius: 6px;
+    border: 1px solid #dce0e4;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+}
+
+/* ── Clean button ────────────────────────────────────────── */
+.editorWrapper :global(.ql-toolbar .ql-clean) {
+    margin-left: auto;
 }

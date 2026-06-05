@@ -108,4 +108,14 @@ Le constructeur inclut tous les éléments de design professionnels du site :
 2. **Duplication rapide** : N'hésitez pas à créer une page "Brouillon" avec tous vos blocs préférés, et à la dupliquer à chaque fois que vous créez une nouvelle Landing Page !
 3. **Ne surchargez pas** : Utilisez les options "Marge Haut / Bas" pour laisser vos pages respirer. Un design aéré fait beaucoup plus professionnel.
 
-*(Généré par Antigravity)*
+---
+
+## 7. Gestion de la Navigation Globale (Header & Footer)
+
+Le menu latéral de votre interface d'administration intègre désormais un onglet **Navigation**. Cette section vous permet de gérer les liens qui apparaissent en haut (Header) et en bas (Footer) de toutes les pages de votre site.
+
+* **Interface Premium & Fluide :** Une page dédiée et claire pour la gestion de vos liens globaux.
+* **Réorganisation facile :** Utilisez les flèches haut (↑) et bas (↓) à côté de chaque lien pour modifier l'ordre d'affichage du menu instantanément.
+* **Synchronisation en temps réel :** Dès que vous cliquez sur "Publier les changements", le menu se met à jour automatiquement sur l'ensemble de votre boutique (y compris sur les pages générées avec le Builder).
+
+*(Généré et mis à jour par Antigravity)*

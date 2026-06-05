@@ -27,7 +27,7 @@ export default function TwoColumns({
                 >
                     <div className={styles.textCol}>
                         {title && <Tag className={styles.title}>{title}</Tag>}
-                        <div className={styles.text} dangerouslySetInnerHTML={{ __html: text }} />
+                        <div className={styles.text} dangerouslySetInnerHTML={{ __html: text.replace(/&nbsp;/g, ' ') }} />
                         {buttonText && (
                             <a href={buttonLink || '#'} className={styles.btn}>{buttonText}</a>
                         )}

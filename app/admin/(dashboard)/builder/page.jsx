@@ -305,6 +305,28 @@ export default function BuilderIndex() {
             )}
 
             {/* Grid */}
+            <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '1rem', color: '#1F4B40', marginBottom: '12px' }}>Pages de base (Ancien éditeur)</h2>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    {[
+                        { href: '/admin/content/accueil', label: "Page d'Accueil" },
+                        { href: '/admin/content/essentiel', label: "L'Essentiel" },
+                        { href: '/admin/content/professionnel', label: "Professionnel" },
+                        { href: '/admin/content/usages', label: "CBD & Usages" },
+                        { href: '/admin/content/transparence', label: "Transparence" },
+                        { href: '/admin/content/recrutement', label: "Recrutement" },
+                        { href: '/admin/content/global', label: "Éléments Globaux" },
+                        { href: '/admin/content/legal/cgv', label: "CGV" },
+                        { href: '/admin/content/legal/livraison', label: "Livraison" },
+                        { href: '/admin/content/legal/privacy', label: "Confidentialité" }
+                    ].map(p => (
+                        <Link key={p.href} href={p.href} style={{ padding: '8px 16px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', textDecoration: 'none', color: '#374151', fontSize: '0.85rem', fontWeight: 600 }}>
+                            {p.label} ↗
+                        </Link>
+                    ))}
+                </div>
+            </div>
+
             <div className={styles.grid}>
                 {pageList.length === 0 ? (
                     <div className={styles.empty}>
