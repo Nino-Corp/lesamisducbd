@@ -33,6 +33,8 @@ import CodeEmbed from './CodeEmbed/CodeEmbed';
 import NewsletterBlock from './NewsletterBlock/NewsletterBlock';
 import ContactFormBlock from './ContactFormBlock/ContactFormBlock';
 
+import { EssentielIntro, EssentielCarousel, EssentielPoints } from './EssentielBlocks/EssentielBlocks';
+
 const componentMap = {
     Header,
     Marquee,
@@ -44,20 +46,20 @@ const componentMap = {
     WhyChooseUs,
     PartnersNetwork,
     InteractiveMap: InteractiveMapWrapper,
-    JoinUs,
-    FAQ,
+    InteractiveMapWrapper,
     Partners,
-    Quote,
+    FAQ,
+    JoinUs,
+    ScrollReveal,
     RichText,
     Footer,
-    // New blocks
+    Quote,
     CTABlock,
     TwoColumns,
     CardsGrid,
     StatsBanner,
     VideoEmbed,
     Divider,
-    // Blog blocks
     AuthorCard,
     CalloutBox,
     RelatedArticles,
@@ -67,6 +69,9 @@ const componentMap = {
     CodeEmbed,
     NewsletterBlock,
     ContactFormBlock,
+    EssentielIntro,
+    EssentielCarousel,
+    EssentielPoints
 };
 
 const NO_ANIMATE = new Set(['Header', 'Hero']);

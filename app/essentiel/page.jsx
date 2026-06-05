@@ -51,5 +51,21 @@ export default async function EssentielPage() {
     } catch (e) {
         console.error('KV error (essentiel/global):', e);
     }
-    return <EssentielClient content={content} globalContent={globalContent} />;
+
+    // Convert legacy data to sections if needed
+    let sections = content.sections;
+    if (!sections) {
+        const visibility = content.visibility || {};
+        sections = [
+            { id: 'hero', type: 'ContentHero', props: { imageSrc: content?.hero?.imageSrc || "/images/about/team.webp", imagePosition: "center 35%", imageAlt: "L'équipe Les Amis du CBD", title: content?.hero?.title || "L'Essentiel" }, isVisible: visibility.hero !== false },
+            { id: 'intro', type: 'EssentielIntro', props: { items: content.intro }, isVisible: visibility.intro !== false },
+            { id: 'legal', type: 'EssentielCarousel', props: { title: "CBD : transparence,<br />légalité et ce qu'il faut<br />vraiment savoir.", intro: "Le CBD est partout. Mais entre informations approximatives, promesses exagérées et discours flous, il devient difficile de s'y retrouver. Cette page a un seul objectif : vous donner des informations claires, vérifiées et conformes à la réglementation française, pour consommer le CBD sans confusion.", items: content.legalItems }, isVisible: visibility.legalItems !== false },
+            { id: 'culture', type: 'EssentielCarousel', props: { title: "Culture naturelle : ce que cela change<br />vraiment.", intro: "La manière dont est planté et cultivé influence directement sa qualité finale. Une culture naturelle permet :", items: content.cultureItems }, isVisible: visibility.cultureItems !== false },
+            { id: 'essential', type: 'EssentielPoints', props: { items: content.essentialPoints }, isVisible: visibility.essentialPoints !== false },
+            { id: 'quote', type: 'Quote', props: content.quote, isVisible: visibility.quote !== false },
+            { id: 'joinus', type: 'JoinUs', props: { title: "Nous rejoindre", buttonLabel: "Venez par ici", buttonLink: "/recrutement", text: "Tu penses avoir le profil pour rejoindre l'équipe ? On attend ta candidature !" } }
+        ];
+    }
+
+    return <EssentielClient content={{ ...content, sections }} globalContent={globalContent} />;
 }

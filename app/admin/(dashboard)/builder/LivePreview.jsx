@@ -24,7 +24,15 @@ import PartnersNetwork from '@/components/PartnersNetwork/PartnersNetwork';
 import QualityBanner from '@/components/QualityBanner/QualityBanner';
 import WhyChooseUs from '@/components/WhyChooseUs/WhyChooseUs';
 import CodeEmbed from '@/components/CodeEmbed/CodeEmbed';
-import { useState, memo } from 'react';
+import Hero from '@/components/Hero/Hero';
+import ProductList from '@/components/ProductList/ProductList';
+import Partners from '@/components/Partners/Partners';
+import InteractiveMapWrapper from '@/components/InteractiveMap/InteractiveMapWrapper';
+import JoinUs from '@/components/JoinUs/JoinUs';
+import Header from '@/components/Header/Header';
+import Footer from '@/components/Footer/Footer';
+import { EssentielIntro, EssentielCarousel, EssentielPoints } from '@/components/EssentielBlocks/EssentielBlocks';
+import { useState, memo, useMemo } from 'react';
 
 const PREVIEW_COMPONENTS = {
     ContentHero,
@@ -49,6 +57,16 @@ const PREVIEW_COMPONENTS = {
     QualityBanner,
     WhyChooseUs,
     CodeEmbed,
+    Hero,
+    ProductList,
+    Partners,
+    InteractiveMap: InteractiveMapWrapper,
+    JoinUs,
+    Header,
+    Footer,
+    EssentielIntro,
+    EssentielCarousel,
+    EssentielPoints
 };
 
 const LivePreview = memo(function LivePreview({ 
@@ -179,7 +197,18 @@ const LivePreview = memo(function LivePreview({
                                 </div>
                             )}
                             {Component ? (
-                                <Component {...componentProps} />
+                                (() => {
+                                    const finalProps = { ...componentProps };
+                                    if (section.type === 'ProductList' && (!finalProps.products || finalProps.products.length === 0)) {
+                                        finalProps.products = [
+                                            { name: "Produit Test 1", image: "/images/hero.webp", formattedPrice: "10,00 €", slug: "test-1" },
+                                            { name: "Produit Test 2", image: "/images/hero.webp", formattedPrice: "20,00 €", slug: "test-2" },
+                                            { name: "Produit Test 3", image: "/images/hero.webp", formattedPrice: "30,00 €", slug: "test-3" },
+                                            { name: "Produit Test 4", image: "/images/hero.webp", formattedPrice: "40,00 €", slug: "test-4" }
+                                        ];
+                                    }
+                                    return <Component {...finalProps} />;
+                                })()
                             ) : (
                                 <div style={{ padding: '32px', textAlign: 'center', background: '#fafafa', color: '#999', fontFamily: 'monospace', fontSize: '0.9rem' }}>
                                     [{section.type}] — aperçu non disponible

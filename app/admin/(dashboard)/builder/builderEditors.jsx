@@ -547,6 +547,73 @@ export function ContactFormBlockEditor({ props, onChange }) {
     </>;
 }
 
+export function EssentielIntroEditor({ props, onChange }) {
+    const items = props.items || [];
+    const updateItem = (i, val) => onChange({ items: items.map((p, idx) => idx === i ? val : p) });
+    const addItem = () => onChange({ items: [...items, 'Nouveau paragraphe...'] });
+    const removeItem = (i) => onChange({ items: items.filter((_, idx) => idx !== i) });
+
+    return <>
+        <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '12px' }}>Paragraphes d'introduction :</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {items.map((p, i) => (
+                <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                    <textarea style={textareaStyle} value={p} onChange={e => updateItem(i, e.target.value)} rows={3} />
+                    <button type="button" onClick={() => removeItem(i)} style={{ padding: '8px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>✕</button>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addItem} style={{ marginTop: '8px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#1F4B40', border: '1px dashed #1F4B40', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter un paragraphe</button>
+    </>;
+}
+
+export function EssentielCarouselEditor({ props, onChange }) {
+    const items = props.items || [];
+    const updateItem = (i, field, val) => onChange({ items: items.map((p, idx) => idx === i ? { ...p, [field]: val } : p) });
+    const addItem = () => onChange({ items: [...items, { title: 'Nouveau point', description: 'Description...', image: '' }] });
+    const removeItem = (i) => onChange({ items: items.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre de section" hint="Optionnel"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <Field label="Introduction" hint="Optionnel"><textarea style={textareaStyle} value={props.intro || ''} onChange={e => onChange({ intro: e.target.value })} rows={2} /></Field>
+        
+        <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '12px', marginTop: '16px' }}>Éléments du carrousel :</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {items.map((item, i) => (
+                <div key={i} style={{ padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', background: '#f8fafc', position: 'relative' }}>
+                    <button type="button" onClick={() => removeItem(i)} style={{ position: 'absolute', top: '12px', right: '12px', padding: '6px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.7rem' }}>✕</button>
+                    <Field label={`Titre ${i+1}`}><input style={inputStyle} value={item.title || ''} onChange={e => updateItem(i, 'title', e.target.value)} /></Field>
+                    <Field label="Description"><textarea style={textareaStyle} value={item.description || ''} onChange={e => updateItem(i, 'description', e.target.value)} rows={3} /></Field>
+                    <Field label="Image">
+                        <ImageUploader value={item.image || ''} onChange={url => updateItem(i, 'image', url)} folder="pages/essentiel" />
+                    </Field>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addItem} style={{ marginTop: '12px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#1F4B40', border: '1px dashed #1F4B40', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter un élément</button>
+    </>;
+}
+
+export function EssentielPointsEditor({ props, onChange }) {
+    const items = props.items || [];
+    const updateItem = (i, val) => onChange({ items: items.map((p, idx) => idx === i ? val : p) });
+    const addItem = () => onChange({ items: [...items, 'Nouveau point...'] });
+    const removeItem = (i) => onChange({ items: items.filter((_, idx) => idx !== i) });
+
+    return <>
+        <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '12px' }}>Points essentiels à retenir :</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {items.map((p, i) => (
+                <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <input style={inputStyle} value={p} onChange={e => updateItem(i, e.target.value)} />
+                    <button type="button" onClick={() => removeItem(i)} style={{ padding: '8px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>✕</button>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addItem} style={{ marginTop: '8px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#1F4B40', border: '1px dashed #1F4B40', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter un point</button>
+    </>;
+}
+
 export const EDITORS = {
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
@@ -572,4 +639,7 @@ export const EDITORS = {
     CodeEmbed: CodeEmbedEditor,
     NewsletterBlock: NewsletterBlockEditor,
     ContactFormBlock: ContactFormBlockEditor,
+    EssentielIntro: EssentielIntroEditor,
+    EssentielCarousel: EssentielCarouselEditor,
+    EssentielPoints: EssentielPointsEditor,
 };

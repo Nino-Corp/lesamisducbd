@@ -54,6 +54,7 @@ export async function POST(request) {
         // Check if we are doing a bulk update (from the new unified Accueil layout)
         if (body.sections && Array.isArray(body.sections)) {
             data.sections = body.sections;
+            if (body.meta) data.meta = { ...data.meta, ...body.meta };
             await kv.set(KV_KEY, data);
             return NextResponse.json({ success: true, updatedSections: data.sections.length });
         }

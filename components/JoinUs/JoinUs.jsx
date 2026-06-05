@@ -9,7 +9,7 @@ export default function JoinUs({ title, buttonLabel, buttonLink, text }) {
                 <Link href={buttonLink || "/recrutement"} className={styles.button}>
                     {buttonLabel}
                 </Link>
-                <p className={styles.text}>{text}</p>
+                {text && <div className={styles.text} dangerouslySetInnerHTML={{ __html: text }} />}
             </div>
         </section>
     );
