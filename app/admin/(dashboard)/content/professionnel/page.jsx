@@ -1,65 +1,208 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import styles from '../[id]/Editor.module.css';
+import WysiwygEditor from '../../builder/WysiwygEditor';
+import LivePreview from '../../builder/LivePreview';
 import ImageUpload from '@/components/Admin/ImageUpload';
+import { TEMPLATES, CATEGORIES } from '../../builder/builderConfig';
+import { EDITORS } from '../../builder/builderEditors';
+import SEOPanel from '../../builder/SEOPanel';
 
-const DEFAULTS = {
-    hero: {
-        badgeText: "Nous rejoindre ?",
-        title: "CBD accessible et pas cher pour professionnels : devenez partenaire des Amis du CBD.",
-        text: "Les Amis du CBD est une marque française pensée pour les professionnels et revendeurs : du CBD naturel, légal, accessible en prix et simple à commercialiser.\n\nNotre ambition est claire : démocratiser le CBD de qualité, sans promesses floues ni prix excessifs.\n\nVotre boutique est le lieu idéal pour proposer un CBD pas cher, fiable et conforme à la réglementation, à une clientèle de plus en plus demandeuse."
-    },
-    features1: [
-        { title: "Sécurité & légalité avant tout", description: "Produits conformes à la législation française, avec moins de 0,3 % de THC." },
-        { title: "Produits testés et traçables", description: "Analyses par des laboratoires indépendants et vente sous scellé de protection." },
-        { title: "Zéro risque en boutique", description: "Une gamme pensée pour une vente simple, claire et sans mauvaise surprise." },
-        { title: "CBD 100 % naturel, sans lavage chimique", description: "Fleurs cultivées naturellement, sans traitements artificiels, pour une qualité constante." },
-        { title: "Prix public ultra accessible", description: "Des fleurs entre 1,50 € et 2 € le gramme, adaptées à une forte demande." }
-    ],
-    features2: [
-        { title: "Gain de temps au quotidien", description: "Commandes rapides et gestion simplifiée pour se concentrer sur les ventes." },
-        { title: "Accompagnement clé en main", description: "Présentoirs adaptés, supports pédagogiques et outils d'aide à la vente inclus." },
-        { title: "Différenciation en point de vente", description: "Une offre CBD claire qui vous démarque de la concurrence." },
-        { title: "Marge attractive pour le professionnel", description: "Un produit accessible qui reste rentable et compétitif." },
-        { title: "Excellent rapport qualité / prix", description: "Un positionnement rare sur le marché, apprécié par les clients exigeants." }
-    ],
-    steps: [
-        { title: "CONTACTEZ NOTRE ÉQUIPE COMMERCIALE", text: "Notre équipe est disponible pour répondre à vos questions et vous accompagner dans la mise en place.\n06 71 82 42 87" },
-        { title: "DEMANDEZ VOTRE KIT DE DÉMARRAGE", text: "Vous souhaitez tester le potentiel du CBD dans votre boutique ?\n\nDemandez votre kit de démarrage gratuit, incluant une sélection de nos produits phares, pour évaluer rapidement les ventes." },
-        { title: "Prenez une longueur d'avance sur vos concurrents", text: "Transformez votre commerce en un point de référence du CBD accessible et pas cher, tout en rassurant votre clientèle sur la qualité et la légalité des produits.\n\nLes Amis du CBD, c'est le CBD bien fait, bien expliqué, et bien vendu.\n\nAmicalement,\nLes Amis du CBD" }
-    ]
+/* ── Section type metadata ────────────────────────── */
+const LEGACY_META = {
+    ProHero:        { icon: '🏷', label: 'Héro Professionnel' },
+    OfferComparator:{ icon: '📊', label: 'Simulateur de revenus' },
+    WhyChooseUs:    { icon: '✅', label: 'Nos atouts' },
+    ProSteps:       { icon: '📋', label: 'Étapes partenaire' },
+    ContentHero:    { icon: '🖼', label: 'Héro principal' },
+    QualityBanner:  { icon: '🏅', label: 'Bandeau Qualité' },
+    ProductList:    { icon: '🛍️', label: 'Produits vedettes' },
+    FAQ:            { icon: '❓', label: 'FAQ' },
+    Partners:       { icon: '💬', label: 'Témoignages' },
+    InteractiveMap: { icon: '🗺️', label: 'Carte interactive' },
+    PartnersNetwork:{ icon: '🤝', label: 'Réseau partenaires' },
+    Quote:          { icon: '✍️', label: 'Citation' },
+    JoinUs:         { icon: '👋', label: 'Recrutement' },
+    Header:         { icon: '🔝', label: 'En-tête (Header)' },
+    Footer:         { icon: '🔻', label: 'Pied de page (Footer)' },
 };
 
-export default function BuralisteContentPage() {
+const SYSTEM_TYPES = new Set(['Header', 'Footer']);
+
+/* ── Shared styles ───────────────────────────────── */
+const inputStyle = {
+    width: '100%', padding: '10px 14px', borderRadius: '10px',
+    border: '1.5px solid #e2e8f0', fontSize: '0.9rem', fontFamily: 'inherit',
+    boxSizing: 'border-box', background: '#fff', outline: 'none',
+    transition: 'border-color 0.2s',
+};
+
+function Field({ label, hint, children }) {
+    return (
+        <div style={{ marginBottom: '18px' }}>
+            {label && <label style={{ display: 'block', fontWeight: 600, fontSize: '0.78rem', color: '#64748b', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</label>}
+            {children}
+            {hint && <span style={{ display: 'block', fontSize: '0.72rem', color: '#94a3b8', marginTop: '5px' }}>{hint}</span>}
+        </div>
+    );
+}
+
+/* ── Legacy-specific editors ─────────────────────── */
+function HeroLegacyEditor({ props, onChange }) {
+    return <>
+        <Field label="Image de fond">
+            <ImageUpload currentImage={props.backgroundImage || ''} onImageChange={url => onChange({ backgroundImage: url })} />
+        </Field>
+        <Field label="Titre principal" hint="Supporte HTML (<br/>, <strong>…)">
+            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} />
+        </Field>
+        <Field label="Description">
+            <WysiwygEditor value={props.description || ''} onChange={val => onChange({ description: val })} />
+        </Field>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <Field label="Bouton — texte"><input style={inputStyle} value={props.ctaLabel || ''} onChange={e => onChange({ ctaLabel: e.target.value })} /></Field>
+            <Field label="Bouton — lien"><input style={inputStyle} value={props.ctaLink || ''} onChange={e => onChange({ ctaLink: e.target.value })} placeholder="/produits" /></Field>
+        </div>
+    </>;
+}
+
+function PartnersLegacyEditor({ props, onChange }) {
+    const partners = props.partners || [];
+    const update = (i, f, v) => onChange({ partners: partners.map((p, idx) => idx === i ? { ...p, [f]: v } : p) });
+    const add = () => onChange({ partners: [...partners, { name: '', role: '', quote: '' }] });
+    const remove = i => onChange({ partners: partners.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <Field label="Sous-titre"><WysiwygEditor value={props.subtitle || ''} onChange={val => onChange({ subtitle: val })} /></Field>
+        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155', marginBottom: '12px', marginTop: '8px' }}>Témoignages ({partners.length})</div>
+        {partners.map((p, i) => (
+            <div key={i} style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '16px', marginBottom: '12px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                    <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#334155' }}>Témoignage {i + 1}</span>
+                    <button type="button" onClick={() => remove(i)} style={{ width: '28px', height: '28px', borderRadius: '8px', background: '#fef2f2', border: '1px solid #fecaca', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem' }}>✕</button>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <Field label="Boutique"><input style={inputStyle} value={p.name || ''} onChange={e => update(i, 'name', e.target.value)} /></Field>
+                    <Field label="Gérant"><input style={inputStyle} value={p.role || ''} onChange={e => update(i, 'role', e.target.value)} /></Field>
+                </div>
+                <Field label="Citation"><WysiwygEditor value={p.quote || ''} onChange={val => update(i, 'quote', val)} /></Field>
+            </div>
+        ))}
+        <button type="button" onClick={add} style={{ width: '100%', padding: '12px', background: 'transparent', border: '2px dashed #cbd5e1', borderRadius: '12px', cursor: 'pointer', fontWeight: 700, fontSize: '0.85rem', color: '#64748b' }}>+ Ajouter un témoignage</button>
+    </>;
+}
+
+function JoinUsLegacyEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <Field label="Texte principal"><WysiwygEditor value={props.text || ''} onChange={val => onChange({ text: val })} /></Field>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <Field label="Bouton — texte"><input style={inputStyle} value={props.buttonLabel || ''} onChange={e => onChange({ buttonLabel: e.target.value })} /></Field>
+            <Field label="Bouton — lien"><input style={inputStyle} value={props.buttonLink || ''} onChange={e => onChange({ buttonLink: e.target.value })} placeholder="/recrutement" /></Field>
+        </div>
+    </>;
+}
+
+function InteractiveMapLegacyEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre de la carte"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <Field label="Texte descriptif"><WysiwygEditor value={props.description || ''} onChange={val => onChange({ description: val })} /></Field>
+    </>;
+}
+
+function ProductListLegacyEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <Field label="Description"><WysiwygEditor value={props.description || ''} onChange={val => onChange({ description: val })} /></Field>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <Field label="Lien — texte"><input style={inputStyle} value={props.linkLabel || ''} onChange={e => onChange({ linkLabel: e.target.value })} /></Field>
+            <Field label="Lien — URL"><input style={inputStyle} value={props.linkHref || ''} onChange={e => onChange({ linkHref: e.target.value })} /></Field>
+        </div>
+        <div style={{ padding: '12px', background: '#f0f9ff', borderRadius: '10px', border: '1px solid #bae6fd', marginTop: '8px' }}>
+            <span style={{ fontSize: '0.78rem', color: '#0369a1' }}>ℹ️ Les produits affichés sont automatiquement récupérés depuis votre catalogue.</span>
+        </div>
+    </>;
+}
+
+const LEGACY_EDITORS = {
+    Hero: HeroLegacyEditor,
+    Partners: PartnersLegacyEditor,
+    JoinUs: JoinUsLegacyEditor,
+    InteractiveMap: InteractiveMapLegacyEditor,
+    ProductList: ProductListLegacyEditor,
+};
+
+function getEditor(type) {
+    return LEGACY_EDITORS[type] || EDITORS[type] || null;
+}
+
+function getMeta(type) {
+    const legacy = LEGACY_META[type];
+    if (legacy) return legacy;
+    const tpl = TEMPLATES.find(t => t.type === type);
+    if (tpl) return { icon: tpl.icon, label: tpl.label };
+    return { icon: '🧩', label: type };
+}
+
+/* ── Main Component ──────────────────────────────── */
+export default function ProfessionnelContentPage() {
     const [loaded, setLoaded] = useState(false);
     const [saving, setSaving] = useState(false);
-    const [tab, setTab] = useState('hero');
-
-    const [hero, setHero] = useState(DEFAULTS.hero);
-    const [features1, setFeatures1] = useState(DEFAULTS.features1);
-    const [features2, setFeatures2] = useState(DEFAULTS.features2);
-    const [steps, setSteps] = useState(DEFAULTS.steps);
-
-    const [visibility, setVisibility] = useState({
-        hero: true,
-        features1: true,
-        features2: true,
-        steps: true,
-        calculator: true
-    });
+    const [saved, setSaved] = useState(false);
+    const [sections, setSections] = useState([]);
+    const [meta, setMeta] = useState({ title: '', description: '' });
+    const [activeSection, setActiveSection] = useState(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showSEOModal, setShowSEOModal] = useState(false);
+    const [addCategory, setAddCategory] = useState('all');
+    const [dragOver, setDragOver] = useState(null);
+    const [dragging, setDragging] = useState(null);
+    const initialLoadRef = useRef(true);
+    const autoSaveTimerRef = useRef(null);
 
     useEffect(() => {
         const controller = new AbortController();
         fetch('/api/admin/content/professionnel', { signal: controller.signal })
             .then(r => r.json())
             .then(data => {
-                if (data.hero) setHero(data.hero);
-                if (data.features1) setFeatures1(data.features1);
-                if (data.features2) setFeatures2(data.features2);
-                if (data.steps) setSteps(data.steps);
-                if (data.visibility) setVisibility(prev => ({ ...prev, ...data.visibility }));
+                if (!data.sections) {
+                    const visibility = data.visibility || {};
+                    data.sections = [
+                        { id: 'prohero', type: 'ProHero', props: {
+                            imageSrc: data?.hero?.imageSrc || "/images/professionnel/header-illustration.webp",
+                            imagePosition: "center 40%",
+                            imageAlt: "Partenariat Professionnel",
+                            badgeText: data?.hero?.badgeText || "Nous rejoindre ?",
+                            title: data?.hero?.title || "CBD accessible et pas cher pour professionnels",
+                            text: data?.hero?.text || ""
+                        }, isVisible: visibility.hero !== false },
+                        { id: 'calculator', type: 'OfferComparator', props: {}, isVisible: visibility.calculator !== false },
+                        { id: 'features1', type: 'WhyChooseUs', props: {
+                            title: "Pourquoi choisir Les Amis du CBD pour votre Boutique ?",
+                            features: data.features1 || [],
+                            ctaLabel: "",
+                            imageSrc: "/images/whychooseus/Scientist.webp",
+                            imageAlt: "Expert Professionnel"
+                        }, isVisible: visibility.features1 !== false },
+                        { id: 'features2', type: 'WhyChooseUs', props: {
+                            title: "",
+                            features: data.features2 || [],
+                            ctaLabel: "",
+                            imageSrc: "/images/whychooseus/Woman.webp",
+                            imageAlt: "Partenaire satisfaite",
+                            isReversed: true
+                        }, isVisible: visibility.features2 !== false },
+                        { id: 'steps', type: 'ProSteps', props: {
+                            title: "Comment devenir partenaire Les Amis du CBD ?",
+                            steps: data.steps || []
+                        }, isVisible: visibility.steps !== false }
+                    ];
+                }
+                if (data.sections) setSections(data.sections);
+                if (data.meta) setMeta(data.meta);
                 setLoaded(true);
             }).catch(err => {
                 if (err.name !== 'AbortError') setLoaded(true);
@@ -67,165 +210,431 @@ export default function BuralisteContentPage() {
         return () => controller.abort();
     }, []);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    /* Auto-save 3s after any change */
+    useEffect(() => {
+        if (!loaded) return;
+        if (initialLoadRef.current) { initialLoadRef.current = false; return; }
+        if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = setTimeout(() => { save(); }, 3000);
+        return () => { if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current); };
+    }, [sections, meta]);
+
+    const save = async () => {
         setSaving(true);
         try {
             await fetch('/api/admin/content/professionnel', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ hero, features1, features2, steps, visibility })
+                body: JSON.stringify({ sections, meta })
             });
-            alert('Modifications enregistrées !');
+            setSaved(true);
+            setTimeout(() => setSaved(false), 2000);
         } catch { alert('Erreur lors de la sauvegarde'); }
         finally { setSaving(false); }
     };
 
-    const updateFeature = (setter, index, field, value) => {
-        setter(prev => {
-            const next = [...prev];
-            next[index] = { ...next[index], [field]: value };
-            return next;
-        });
+    /* ── Section manipulation ─────────────────────── */
+    const updateProps = (index, newProps) => {
+        setSections(prev => prev.map((s, i) => i === index ? { ...s, props: { ...s.props, ...newProps } } : s));
     };
 
-    const updateStep = (index, field, value) => {
-        setSteps(prev => {
-            const next = [...prev];
-            next[index] = { ...next[index], [field]: value };
-            return next;
-        });
+    const removeSection = (index) => {
+        if (!confirm('Supprimer cette section ?')) return;
+        setSections(prev => prev.filter((_, i) => i !== index));
+        if (activeSection === index) setActiveSection(null);
+        else if (activeSection > index) setActiveSection(activeSection - 1);
     };
 
-    const TABS = [
-        { id: 'hero', label: '🏷 Hero' },
-        { id: 'features1', label: '🔒 Sécurité (5 args)' },
-        { id: 'features2', label: '📈 Business (5 args)' },
-        { id: 'steps', label: '📋 Étapes' }
-    ];
+    const moveSection = (index, dir) => {
+        const target = index + dir;
+        if (target < 0 || target >= sections.length) return;
+        setSections(prev => {
+            const next = [...prev];
+            [next[index], next[target]] = [next[target], next[index]];
+            return next;
+        });
+        if (activeSection === index) setActiveSection(target);
+    };
 
-    if (!loaded) return <div style={{ padding: 20 }}>Chargement...</div>;
+    const duplicateSection = (index) => {
+        const orig = sections[index];
+        const copy = { ...orig, id: `${orig.type.toLowerCase()}-${Date.now()}`, props: { ...orig.props } };
+        setSections(prev => {
+            const next = [...prev];
+            next.splice(index + 1, 0, copy);
+            return next;
+        });
+        setActiveSection(index + 1);
+    };
+
+    const toggleVisibility = (index) => {
+        setSections(prev => prev.map((s, i) =>
+            i === index ? { ...s, props: { ...s.props, isVisible: s.props?.isVisible === false ? true : false } } : s
+        ));
+    };
+
+    const addSection = (template) => {
+        const newSection = { id: `${template.type.toLowerCase()}-${Date.now()}`, type: template.type, props: { ...template.defaultProps } };
+        setSections(prev => [...prev, newSection]);
+        setActiveSection(sections.length);
+        setShowAddModal(false);
+    };
+
+    /* Drag & drop */
+    const onDragStart = (e, index) => { setDragging(index); e.dataTransfer.effectAllowed = 'move'; };
+    const onDragOver = (e, index) => { e.preventDefault(); setDragOver(index); };
+    const onDrop = (e, index) => {
+        e.preventDefault();
+        if (dragging === null || dragging === index) { setDragOver(null); setDragging(null); return; }
+        setSections(prev => {
+            const next = [...prev];
+            const [moved] = next.splice(dragging, 1);
+            next.splice(index, 0, moved);
+            return next;
+        });
+        setActiveSection(index);
+        setDragOver(null); setDragging(null);
+    };
+
+    const handleReorder = (fromIndex, toIndex) => {
+        setSections(prev => {
+            const next = [...prev];
+            const [moved] = next.splice(fromIndex, 1);
+            next.splice(toIndex, 0, moved);
+            return next;
+        });
+        setActiveSection(toIndex);
+    };
+
+    if (!loaded) return (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', gap: '12px', color: '#64748b' }}>
+            <div style={{ width: '24px', height: '24px', border: '3px solid #e2e8f0', borderTopColor: '#1F4B40', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+            <span style={{ fontSize: '0.95rem', fontWeight: 500 }}>Chargement…</span>
+            <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+        </div>
+    );
+
+    const previewSections = sections.filter(s => !SYSTEM_TYPES.has(s.type));
+    const editableSections = sections.map((s, i) => ({ ...s, _origIndex: i })).filter(s => !SYSTEM_TYPES.has(s.type));
+
+    const currentSection = activeSection !== null ? sections[activeSection] : null;
+    const CurrentEditor = currentSection ? getEditor(currentSection.type) : null;
+    const currentMeta = currentSection ? getMeta(currentSection.type) : null;
+
+    const filteredTemplates = addCategory === 'all' ? TEMPLATES : TEMPLATES.filter(t => t.category === addCategory);
 
     return (
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
-            <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
-                <Link href="/admin/content" style={{ textDecoration: 'none', color: '#666' }}>← Retour</Link>
-                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1F4B40', margin: 0 }}>🏪 Professionnel</h1>
-            </div>
-
-            {/* Tabs */}
-            <div className={styles.adminTabsContainer}>
-                {TABS.map(t => (
-                    <button 
-                        key={t.id} 
-                        type="button" 
-                        onClick={() => setTab(t.id)} 
-                        className={`${styles.adminTab} ${tab === t.id ? styles.adminTabActive : ''}`}
-                    >
-                        {t.label}
-                    </button>
-                ))}
-            </div>
-
-            <form onSubmit={handleSubmit} className={styles.form} style={{ maxWidth: '100%' }}>
-
-                <div style={{ marginBottom: '20px', padding: '15px', background: '#f8f9fa', borderRadius: '8px', borderLeft: '4px solid #1F4B40' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: 'bold' }}>
-                        <input
-                            type="checkbox"
-                            checked={visibility[tab] !== false}
-                            onChange={(e) => setVisibility(prev => ({ ...prev, [tab]: e.target.checked }))}
-                            style={{ width: '18px', height: '18px' }}
-                        />
-                        Afficher  sur le site web
-                    </label>
-                    {tab === 'hero' && (
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontWeight: 'bold', marginTop: '10px' }}>
-                            <input
-                                type="checkbox"
-                                checked={visibility.calculator !== false}
-                                onChange={(e) => setVisibility(prev => ({ ...prev, calculator: e.target.checked }))}
-                                style={{ width: '18px', height: '18px' }}
-                            />
-                            Afficher le simulateur de revenus sur le site web
-                        </label>
-                    )}
-                    <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>Décochez cette case pour masquer cette partie au public.</small>
-                </div>
-
-                {tab === 'hero' && (
-                    <>
-                        <div className={styles.fieldGroup}>
-                            <label>Image de fond</label>
-                            <ImageUpload
-                                currentImage={hero?.imageSrc || ''}
-                                onImageChange={(url) => setHero(h => ({ ...h, imageSrc: url }))}
-                            />
+        <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', overflow: 'hidden' }}>
+            {/* ── TOP HEADER ────────────────────────────── */}
+            {!isFullscreen && (
+                <header style={{
+                    padding: '10px 24px', background: '#fff', borderBottom: '1px solid #e2e8f0',
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10, flexShrink: 0,
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <Link href="/admin/content" style={{
+                            color: '#64748b', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600,
+                            padding: '7px 14px', borderRadius: '8px', border: '1px solid #e2e8f0',
+                            display: 'flex', alignItems: 'center', gap: '6px',
+                        }}>← Retour</Link>
+                        <div>
+                            <h1 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>🏪 Professionnel</h1>
+                            <code style={{ fontSize: '0.72rem', color: '#94a3b8' }}>/professionnel</code>
                         </div>
-                        <div className={styles.fieldGroup}>
-                            <label>Titre sur l'image (Badge H2)</label>
-                            <input className={styles.input} value={hero?.badgeText || ''} onChange={e => setHero(h => ({ ...h, badgeText: e.target.value }))} />
-                        </div>
-                        <div className={styles.fieldGroup}>
-                            <label>Titre principal détaillé H1</label>
-                            <textarea className={styles.textarea} value={hero?.title || ''} rows={2} onChange={e => setHero(h => ({ ...h, title: e.target.value }))} />
-                        </div>
-                        <div className={styles.fieldGroup}>
-                            <label>Corps du texte (les retours à la ligne seront respectés)</label>
-                            <textarea className={styles.textarea} value={hero?.text || ''} rows={6} onChange={e => setHero(h => ({ ...h, text: e.target.value }))} />
-                        </div>
-                    </>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <span style={{
+                            padding: '6px 12px', borderRadius: '8px',
+                            background: '#f0fdf4', color: '#166534', fontWeight: 700, fontSize: '0.8rem',
+                            border: '1px solid #16653430',
+                        }}>✅ Publié</span>
+
+                        <button onClick={() => setShowSEOModal(true)} style={{
+                            padding: '8px 16px', borderRadius: '8px', border: '1px solid #1F4B40',
+                            background: 'white', color: '#1F4B40', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem',
+                        }}>⚙️ SEO</button>
+
+                        <a href="/professionnel" target="_blank" rel="noopener noreferrer" style={{
+                            padding: '8px 16px', borderRadius: '8px', background: '#e0f2fe', color: '#0369a1',
+                            textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem',
+                        }}>👁 Aperçu</a>
+
+                        <a href="https://www.lesamisducbd.fr/professionnel" target="_blank" rel="noopener noreferrer" style={{
+                            padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937',
+                            textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem',
+                        }}>🔗 Voir</a>
+
+                        <button onClick={save} disabled={saving} style={{
+                            padding: '8px 20px', borderRadius: '10px', border: 'none',
+                            background: saved ? '#10b981' : '#1F4B40', color: '#fff',
+                            fontWeight: 700, fontSize: '0.85rem', cursor: saving ? 'wait' : 'pointer',
+                            transition: 'all 0.3s', boxShadow: '0 2px 8px rgba(31,75,64,0.25)',
+                            minWidth: '140px', display: 'flex', justifyContent: 'center', whiteSpace: 'nowrap',
+                        }}>
+                            {saved ? '✓ Sauvegardé !' : saving ? 'Enregistrement…' : 'Sauvegarder'}
+                        </button>
+                    </div>
+                </header>
+            )}
+
+            {/* ── MAIN SPLIT LAYOUT ──────────────────────── */}
+            <div style={{
+                flex: 1, display: 'grid',
+                gridTemplateColumns: isFullscreen ? '1fr' : '380px 1fr',
+                overflow: 'hidden',
+            }}>
+                {/* ── LEFT PANEL ─────────────────────────── */}
+                {!isFullscreen && (
+                    <div style={{
+                        display: 'flex', flexDirection: 'column', height: '100%',
+                        background: '#fff', borderRight: '1px solid #e2e8f0', overflow: 'hidden',
+                    }}>
+                        {activeSection === null ? (
+                            /* ═══ SECTION LIST VIEW ═══ */
+                            <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                                <div style={{
+                                    padding: '14px 18px', borderBottom: '1px solid #f1f5f9',
+                                    display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0,
+                                }}>
+                                    <span style={{ fontWeight: 700, fontSize: '0.88rem', color: '#1F4B40' }}>
+                                        Sections <span style={{ background: '#f1f5f9', borderRadius: '99px', padding: '2px 8px', fontSize: '0.75rem', fontWeight: 600 }}>{editableSections.length}</span>
+                                    </span>
+                                </div>
+
+                                <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
+                                    {editableSections.map((section) => {
+                                        const origIdx = section._origIndex;
+                                        const meta = getMeta(section.type);
+                                        const isHidden = section.props?.isVisible === false;
+                                        const isDragTarget = dragOver === origIdx;
+
+                                        return (
+                                            <div
+                                                key={section.id || origIdx}
+                                                draggable
+                                                onDragStart={e => onDragStart(e, origIdx)}
+                                                onDragOver={e => onDragOver(e, origIdx)}
+                                                onDrop={e => onDrop(e, origIdx)}
+                                                onDragLeave={() => setDragOver(null)}
+                                                onClick={() => setActiveSection(origIdx)}
+                                                style={{
+                                                    display: 'flex', alignItems: 'center', gap: '10px',
+                                                    padding: '12px', borderRadius: '10px', marginBottom: '4px',
+                                                    cursor: 'pointer', transition: 'all 0.15s',
+                                                    background: isDragTarget ? '#f0fdf4' : '#f8fafc',
+                                                    border: isDragTarget ? '2px dashed #00FF94' : '1px solid #f1f5f9',
+                                                    opacity: isHidden ? 0.5 : 1,
+                                                }}
+                                                onMouseEnter={e => { if (!isDragTarget) e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
+                                                onMouseLeave={e => { if (!isDragTarget) e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#f1f5f9'; }}
+                                            >
+                                                <span style={{ cursor: 'grab', opacity: 0.4, fontSize: '0.9rem', flexShrink: 0 }}>⠿</span>
+                                                <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{meta.icon}</span>
+                                                <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <div style={{ fontWeight: 700, fontSize: '0.82rem', color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                        {meta.label}
+                                                    </div>
+                                                    <div style={{ fontSize: '0.7rem', color: '#94a3b8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                        {section.props?.title || section.props?.text || section.type}
+                                                    </div>
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '2px', flexShrink: 0 }}>
+                                                    <button onClick={e => { e.stopPropagation(); toggleVisibility(origIdx); }} title={isHidden ? 'Afficher' : 'Masquer'}
+                                                        style={{ padding: '4px 6px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#94a3b8' }}>
+                                                        {isHidden ? '👁' : '🙈'}
+                                                    </button>
+                                                    <button onClick={e => { e.stopPropagation(); removeSection(origIdx); }} title="Supprimer"
+                                                        style={{ padding: '4px 6px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#ef4444' }}>
+                                                        🗑️
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                <div style={{ padding: '14px', borderTop: '1px solid #f1f5f9', flexShrink: 0 }}>
+                                    <button onClick={() => setShowAddModal(true)} style={{
+                                        width: '100%', padding: '12px', background: '#00FF94', color: '#1F4B40',
+                                        border: 'none', borderRadius: '10px', fontWeight: 800, cursor: 'pointer',
+                                        fontSize: '0.9rem', boxShadow: '0 4px 12px rgba(0,255,148,0.2)',
+                                        transition: 'transform 0.2s',
+                                    }}
+                                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
+                                        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                                    >+ Ajouter un bloc</button>
+                                </div>
+                            </div>
+                        ) : (
+                            /* ═══ EDITOR VIEW ═══ */
+                            currentSection && CurrentEditor ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                                    <div style={{
+                                        padding: '12px 16px', borderBottom: '1px solid #f1f5f9',
+                                        display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0,
+                                    }}>
+                                        <button onClick={() => setActiveSection(null)} style={{
+                                            padding: '6px 10px', borderRadius: '8px', border: '1px solid #e2e8f0',
+                                            background: '#fff', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, color: '#64748b',
+                                        }}>← Liste</button>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
+                                            <span style={{ fontSize: '1.1rem' }}>{currentMeta?.icon}</span>
+                                            <div>
+                                                <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#0f172a' }}>{currentMeta?.label}</div>
+                                            </div>
+                                        </div>
+                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                            <button onClick={() => moveSection(activeSection, -1)} disabled={activeSection === 0}
+                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '0.8rem', color: activeSection === 0 ? '#cbd5e1' : '#475569' }} title="Monter">▲</button>
+                                            <button onClick={() => moveSection(activeSection, 1)} disabled={activeSection === sections.length - 1}
+                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '0.8rem', color: activeSection === sections.length - 1 ? '#cbd5e1' : '#475569' }} title="Descendre">▼</button>
+                                            <button onClick={() => duplicateSection(activeSection)}
+                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '0.8rem', color: '#475569' }} title="Dupliquer">📋</button>
+                                            <button onClick={() => removeSection(activeSection)}
+                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', cursor: 'pointer', fontSize: '0.8rem', color: '#ef4444' }} title="Supprimer">🗑</button>
+                                        </div>
+                                    </div>
+
+                                    <div style={{
+                                        padding: '10px 20px', borderBottom: '1px solid #f1f5f9',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0,
+                                    }}>
+                                        <span style={{ fontSize: '0.78rem', fontWeight: 600, color: '#64748b' }}>Visibilité</span>
+                                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                                            <div style={{
+                                                width: '36px', height: '20px', borderRadius: '10px',
+                                                background: currentSection.props?.isVisible !== false ? '#10b981' : '#cbd5e1',
+                                                position: 'relative', transition: 'background 0.3s',
+                                            }}>
+                                                <div style={{
+                                                    width: '16px', height: '16px', borderRadius: '50%', background: '#fff',
+                                                    position: 'absolute', top: '2px',
+                                                    left: currentSection.props?.isVisible !== false ? '18px' : '2px',
+                                                    transition: 'left 0.3s', boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
+                                                }} />
+                                            </div>
+                                            <input type="checkbox" checked={currentSection.props?.isVisible !== false}
+                                                onChange={e => updateProps(activeSection, { isVisible: e.target.checked })}
+                                                style={{ display: 'none' }} />
+                                            <span style={{ fontSize: '0.78rem', fontWeight: 600, color: currentSection.props?.isVisible !== false ? '#10b981' : '#94a3b8' }}>
+                                                {currentSection.props?.isVisible !== false ? 'Visible' : 'Masqué'}
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
+                                        <CurrentEditor
+                                            props={currentSection.props || {}}
+                                            onChange={(newProps) => updateProps(activeSection, newProps)}
+                                        />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '12px', color: '#94a3b8' }}>
+                                    <button onClick={() => setActiveSection(null)} style={{
+                                        padding: '8px 16px', borderRadius: '8px', border: '1px solid #e2e8f0',
+                                        background: '#fff', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600, color: '#64748b',
+                                    }}>← Retour à la liste</button>
+                                    <p style={{ fontSize: '0.85rem' }}>Cet éditeur n'est pas disponible pour ce type de bloc.</p>
+                                </div>
+                            )
+                        )}
+                    </div>
                 )}
 
-                {/* Features 1 */}
-                {tab === 'features1' && features1.map((f, i) => (
-                    <div key={i} style={{ border: '1px solid #eee', borderRadius: 8, padding: 15, background: '#fafafa' }}>
-                        <p style={{ fontWeight: 700, color: '#888', fontSize: '0.8rem', margin: '0 0 10px', textTransform: 'uppercase' }}>Argument {i + 1}</p>
-                        <div className={styles.fieldGroup}>
-                            <label>Titre</label>
-                            <input className={styles.input} value={f.title} onChange={e => updateFeature(setFeatures1, i, 'title', e.target.value)} />
+                {/* ── RIGHT: Live Preview ─────────────────── */}
+                <div style={{ position: 'relative', overflow: 'hidden', background: '#e5e7eb' }}>
+                    <LivePreview
+                        sections={previewSections}
+                        activeIndex={activeSection !== null ? previewSections.findIndex(s => s.id === sections[activeSection]?.id) : null}
+                        onSelect={(idx) => {
+                            const realIdx = sections.findIndex(s => s.id === previewSections[idx]?.id);
+                            if (realIdx !== -1) setActiveSection(realIdx);
+                        }}
+                        onMove={(idx, dir) => {
+                            const realIdx = sections.findIndex(s => s.id === previewSections[idx]?.id);
+                            if (realIdx !== -1) moveSection(realIdx, dir);
+                        }}
+                        onDuplicate={(idx) => {
+                            const realIdx = sections.findIndex(s => s.id === previewSections[idx]?.id);
+                            if (realIdx !== -1) duplicateSection(realIdx);
+                        }}
+                        onUpdateProps={(idx, newProps) => {
+                            const realIdx = sections.findIndex(s => s.id === previewSections[idx]?.id);
+                            if (realIdx !== -1) updateProps(realIdx, newProps);
+                        }}
+                        onReorder={(from, to) => {
+                            const realFrom = sections.findIndex(s => s.id === previewSections[from]?.id);
+                            const realTo = sections.findIndex(s => s.id === previewSections[to]?.id);
+                            if (realFrom !== -1 && realTo !== -1) handleReorder(realFrom, realTo);
+                        }}
+                        isFullscreen={isFullscreen}
+                        setIsFullscreen={setIsFullscreen}
+                    />
+                </div>
+            </div>
+
+            {/* ── ADD BLOCK MODAL ─────────────────────────── */}
+            {showAddModal && (
+                <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    onClick={() => setShowAddModal(false)}>
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }} />
+                    <div style={{
+                        position: 'relative', background: '#fff', borderRadius: '20px', width: '640px', maxHeight: '80vh',
+                        display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
+                    }} onClick={e => e.stopPropagation()}>
+                        <div style={{ padding: '20px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f172a' }}>Ajouter un bloc</h2>
+                            <button onClick={() => setShowAddModal(false)} style={{
+                                width: '32px', height: '32px', borderRadius: '8px', border: '1px solid #e2e8f0',
+                                background: '#fff', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            }}>✕</button>
                         </div>
-                        <div className={styles.fieldGroup}>
-                            <label>Description</label>
-                            <textarea className={styles.textarea} value={f.description} rows={2} onChange={e => updateFeature(setFeatures1, i, 'description', e.target.value)} />
+                        <div style={{ padding: '12px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                            <button onClick={() => setAddCategory('all')} style={{
+                                padding: '5px 12px', borderRadius: '8px', border: 'none', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
+                                background: addCategory === 'all' ? '#1F4B40' : '#f1f5f9', color: addCategory === 'all' ? '#fff' : '#475569',
+                            }}>Tous</button>
+                            {CATEGORIES.map(cat => (
+                                <button key={cat.id} onClick={() => setAddCategory(cat.id)} style={{
+                                    padding: '5px 12px', borderRadius: '8px', border: 'none', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
+                                    background: addCategory === cat.id ? '#1F4B40' : '#f1f5f9', color: addCategory === cat.id ? '#fff' : '#475569',
+                                }}>{cat.label}</button>
+                            ))}
+                        </div>
+                        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            {filteredTemplates.map(tpl => (
+                                <button key={tpl.type} onClick={() => addSection(tpl)} style={{
+                                    padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0',
+                                    background: '#fff', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
+                                    display: 'flex', gap: '12px', alignItems: 'flex-start',
+                                }}
+                                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#1F4B40'; e.currentTarget.style.background = '#f0fdf4'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#fff'; }}
+                                >
+                                    <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>{tpl.icon}</span>
+                                    <div>
+                                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#0f172a' }}>{tpl.label}</div>
+                                        <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>{tpl.description}</div>
+                                    </div>
+                                </button>
+                            ))}
                         </div>
                     </div>
-                ))}
+                </div>
+            )}
 
-                {/* Features 2 */}
-                {tab === 'features2' && features2.map((f, i) => (
-                    <div key={i} style={{ border: '1px solid #eee', borderRadius: 8, padding: 15, background: '#fafafa' }}>
-                        <p style={{ fontWeight: 700, color: '#888', fontSize: '0.8rem', margin: '0 0 10px', textTransform: 'uppercase' }}>Argument {i + 1}</p>
-                        <div className={styles.fieldGroup}>
-                            <label>Titre</label>
-                            <input className={styles.input} value={f.title} onChange={e => updateFeature(setFeatures2, i, 'title', e.target.value)} />
-                        </div>
-                        <div className={styles.fieldGroup}>
-                            <label>Description</label>
-                            <textarea className={styles.textarea} value={f.description} rows={2} onChange={e => updateFeature(setFeatures2, i, 'description', e.target.value)} />
-                        </div>
-                    </div>
-                ))}
-
-                {/* Steps */}
-                {tab === 'steps' && steps.map((step, i) => (
-                    <div key={i} style={{ border: '1px solid #eee', borderRadius: 8, padding: 15, background: '#fafafa' }}>
-                        <p style={{ fontWeight: 700, color: '#888', fontSize: '0.8rem', margin: '0 0 10px', textTransform: 'uppercase' }}>Étape {i + 1}</p>
-                        <div className={styles.fieldGroup}>
-                            <label>Titre</label>
-                            <input className={styles.input} value={step.title} onChange={e => updateStep(i, 'title', e.target.value)} />
-                        </div>
-                        <div className={styles.fieldGroup}>
-                            <label>Texte</label>
-                            <textarea className={styles.textarea} value={step.text} rows={4} onChange={e => updateStep(i, 'text', e.target.value)} />
-                        </div>
-                    </div>
-                ))}
-
-                <button type="submit" className={styles.saveBtn} disabled={saving}>
-                    {saving ? 'Sauvegarde...' : 'Sauvegarder'}
-                </button>
-            </form>
+            {/* ── SEO MODAL ──────────────────────────────── */}
+            {showSEOModal && (
+                <SEOPanel
+                    page={{ slug: '', title: 'Professionnel', seo: meta.seo || {}, status: 'published' }}
+                    sections={previewSections}
+                    onUpdate={(patch) => {
+                        if (patch.seo) setMeta(prev => ({ ...prev, seo: { ...(prev.seo || {}), ...patch.seo } }));
+                    }}
+                    onClose={() => setShowSEOModal(false)}
+                />
+            )}
         </div>
     );
 }

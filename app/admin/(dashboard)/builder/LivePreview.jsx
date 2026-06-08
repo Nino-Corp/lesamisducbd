@@ -32,6 +32,8 @@ import JoinUs from '@/components/JoinUs/JoinUs';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import { EssentielIntro, EssentielCarousel, EssentielPoints } from '@/components/EssentielBlocks/EssentielBlocks';
+import { ProHero, ProSteps } from '@/components/ProBlocks/ProBlocks';
+import { UsagesIntro, UsagesCarouselBlock, UsagesWarning, UsagesEssentialBox } from '@/components/UsagesBlocks/UsagesBlocks';
 import { useState, memo, useMemo } from 'react';
 
 const PREVIEW_COMPONENTS = {
@@ -66,7 +68,13 @@ const PREVIEW_COMPONENTS = {
     Footer,
     EssentielIntro,
     EssentielCarousel,
-    EssentielPoints
+    EssentielPoints,
+    ProHero,
+    ProSteps,
+    UsagesIntro,
+    UsagesCarouselBlock,
+    UsagesWarning,
+    UsagesEssentialBox
 };
 
 const LivePreview = memo(function LivePreview({ 

@@ -614,6 +614,131 @@ export function EssentielPointsEditor({ props, onChange }) {
     </>;
 }
 
+export function ProHeroEditor({ props, onChange }) {
+    return <>
+        <Field label="Image de fond">
+            <ImageUploader value={props.imageSrc || ''} onChange={url => onChange({ imageSrc: url })} folder="pages/professionnel" />
+        </Field>
+        <Field label="Position de l'image" hint="Ex: center 40%">
+            <input style={inputStyle} value={props.imagePosition || 'center 40%'} onChange={e => onChange({ imagePosition: e.target.value })} />
+        </Field>
+        <Field label="Badge (texte sur l'image)">
+            <input style={inputStyle} value={props.badgeText || ''} onChange={e => onChange({ badgeText: e.target.value })} placeholder="Nous rejoindre ?" />
+        </Field>
+        <Field label="Titre principal (H1)">
+            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={3} />
+        </Field>
+        <Field label="Texte descriptif" hint="Les retours à la ligne sont respectés">
+            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={6} />
+        </Field>
+    </>;
+}
+
+export function ProStepsEditor({ props, onChange }) {
+    const steps = props.steps || [];
+    const updateStep = (i, field, val) => onChange({ steps: steps.map((s, idx) => idx === i ? { ...s, [field]: val } : s) });
+    const addStep = () => onChange({ steps: [...steps, { title: 'NOUVELLE ÉTAPE', text: 'Description...' }] });
+    const removeStep = i => onChange({ steps: steps.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre de section">
+            <input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Comment devenir partenaire ?" />
+        </Field>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '8px' }}>
+            {steps.map((step, i) => (
+                <div key={i} style={{ background: '#f9f9f9', borderRadius: '10px', padding: '14px', border: '1px solid #eee' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong style={{ fontSize: '0.85rem' }}>Étape {i + 1}</strong>
+                        <button type="button" onClick={() => removeStep(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}>✕</button>
+                    </div>
+                    <Field label="Titre"><input style={inputStyle} value={step.title || ''} onChange={e => updateStep(i, 'title', e.target.value)} /></Field>
+                    <Field label="Texte" hint="Les retours à la ligne sont respectés"><textarea style={textareaStyle} value={step.text || ''} onChange={e => updateStep(i, 'text', e.target.value)} rows={4} /></Field>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addStep} style={{ marginTop: '8px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#1F4B40', border: '1px dashed #1F4B40', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter une étape</button>
+    </>;
+}
+
+export function UsagesIntroEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre principal" hint="Supporte HTML (ex: <br/> pour un retour à la ligne)">
+            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={3} />
+        </Field>
+        <Field label="Texte introductif">
+            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={6} />
+        </Field>
+    </>;
+}
+
+export function UsagesCarouselBlockEditor({ props, onChange }) {
+    const items = props.items || [];
+    const updateItem = (i, field, val) => onChange({ items: items.map((itm, idx) => idx === i ? { ...itm, [field]: val } : itm) });
+    const addItem = () => onChange({ items: [...items, { title: 'Nouvel usage', description: '', image: '' }] });
+    const removeItem = i => onChange({ items: items.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre du carrousel" hint="Supporte HTML">
+            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={2} />
+        </Field>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+            {items.map((item, i) => (
+                <div key={i} style={{ background: '#f8fafc', borderRadius: '10px', padding: '14px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong style={{ fontSize: '0.85rem', color: '#334155' }}>Usage {i + 1}</strong>
+                        <button type="button" onClick={() => removeItem(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}>✕</button>
+                    </div>
+                    <Field label="Image">
+                        <ImageUploader value={item.image || ''} onChange={url => updateItem(i, 'image', url)} folder="pages/usages" />
+                    </Field>
+                    <Field label="Titre de l'usage">
+                        <input style={inputStyle} value={item.title || ''} onChange={e => updateItem(i, 'title', e.target.value)} />
+                    </Field>
+                    <Field label="Description">
+                        <textarea style={textareaStyle} value={item.description || ''} onChange={e => updateItem(i, 'description', e.target.value)} rows={4} />
+                    </Field>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addItem} style={{ marginTop: '12px', width: '100%', padding: '12px', background: 'transparent', border: '2px dashed #cbd5e1', borderRadius: '10px', cursor: 'pointer', fontWeight: 600, color: '#64748b' }}>+ Ajouter un usage</button>
+    </>;
+}
+
+export function UsagesWarningEditor({ props, onChange }) {
+    return <>
+        <Field label="Avertissement (Titre de gauche)" hint="Supporte HTML">
+            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={4} />
+        </Field>
+        <Field label="Responsabilité (Titre de droite)" hint="Supporte HTML">
+            <textarea style={textareaStyle} value={props.responsibleTitle || ''} onChange={e => onChange({ responsibleTitle: e.target.value })} rows={4} />
+        </Field>
+    </>;
+}
+
+export function UsagesEssentialBoxEditor({ props, onChange }) {
+    const items = props.items || [];
+    const updateItem = (i, val) => onChange({ items: items.map((itm, idx) => idx === i ? val : itm) });
+    const addItem = () => onChange({ items: [...items, 'Nouvel élément essentiel'] });
+    const removeItem = i => onChange({ items: items.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre de l'encart">
+            <input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} />
+        </Field>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
+            {items.map((item, i) => (
+                <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                    <div style={{ flex: 1 }}>
+                        <textarea style={{ ...textareaStyle, minHeight: '60px' }} value={item} onChange={e => updateItem(i, e.target.value)} />
+                    </div>
+                    <button type="button" onClick={() => removeItem(i)} style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#fef2f2', border: '1px solid #fecaca', color: '#ef4444', cursor: 'pointer', flexShrink: 0 }}>✕</button>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addItem} style={{ marginTop: '12px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#166534', border: '1px dashed #166534', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter un point</button>
+    </>;
+}
+
 export const EDITORS = {
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
@@ -642,4 +767,10 @@ export const EDITORS = {
     EssentielIntro: EssentielIntroEditor,
     EssentielCarousel: EssentielCarouselEditor,
     EssentielPoints: EssentielPointsEditor,
+    ProHero: ProHeroEditor,
+    ProSteps: ProStepsEditor,
+    UsagesIntro: UsagesIntroEditor,
+    UsagesCarouselBlock: UsagesCarouselBlockEditor,
+    UsagesWarning: UsagesWarningEditor,
+    UsagesEssentialBox: UsagesEssentialBoxEditor,
 };

@@ -34,6 +34,8 @@ import NewsletterBlock from './NewsletterBlock/NewsletterBlock';
 import ContactFormBlock from './ContactFormBlock/ContactFormBlock';
 
 import { EssentielIntro, EssentielCarousel, EssentielPoints } from './EssentielBlocks/EssentielBlocks';
+import { ProHero, ProSteps } from './ProBlocks/ProBlocks';
+import { UsagesIntro, UsagesCarouselBlock, UsagesWarning, UsagesEssentialBox } from './UsagesBlocks/UsagesBlocks';
 
 const componentMap = {
     Header,
@@ -71,10 +73,16 @@ const componentMap = {
     ContactFormBlock,
     EssentielIntro,
     EssentielCarousel,
-    EssentielPoints
+    EssentielPoints,
+    ProHero,
+    ProSteps,
+    UsagesIntro,
+    UsagesCarouselBlock,
+    UsagesWarning,
+    UsagesEssentialBox
 };
 
-const NO_ANIMATE = new Set(['Header', 'Hero']);
+const NO_ANIMATE = new Set(['Header', 'Hero', 'ProHero']);
 
 export default function PageBuilder({ sections }) {
     if (!sections) return null;

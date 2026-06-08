@@ -49,9 +49,46 @@ export default async function ProfessionnelPage() {
     } catch (e) {
         console.error('KV error (professionnel/global):', e);
     }
+
+    // Convert legacy data to sections if needed
+    let sections = content.sections;
+    if (!sections) {
+        const visibility = content.visibility || {};
+        sections = [
+            { id: 'prohero', type: 'ProHero', props: {
+                imageSrc: content?.hero?.imageSrc || "/images/professionnel/header-illustration.webp",
+                imagePosition: "center 40%",
+                imageAlt: "Partenariat Professionnel",
+                badgeText: content?.hero?.badgeText || "Nous rejoindre ?",
+                title: content?.hero?.title || "CBD accessible et pas cher pour professionnels",
+                text: content?.hero?.text || ""
+            }, isVisible: visibility.hero !== false },
+            { id: 'calculator', type: 'OfferComparator', props: {}, isVisible: visibility.calculator !== false },
+            { id: 'features1', type: 'WhyChooseUs', props: {
+                title: "Pourquoi choisir Les Amis du CBD pour votre Boutique ?",
+                features: content.features1 || [],
+                ctaLabel: "",
+                imageSrc: "/images/whychooseus/Scientist.webp",
+                imageAlt: "Expert Professionnel"
+            }, isVisible: visibility.features1 !== false },
+            { id: 'features2', type: 'WhyChooseUs', props: {
+                title: "",
+                features: content.features2 || [],
+                ctaLabel: "",
+                imageSrc: "/images/whychooseus/Woman.webp",
+                imageAlt: "Partenaire satisfaite",
+                isReversed: true
+            }, isVisible: visibility.features2 !== false },
+            { id: 'steps', type: 'ProSteps', props: {
+                title: "Comment devenir partenaire Les Amis du CBD ?",
+                steps: content.steps || []
+            }, isVisible: visibility.steps !== false }
+        ];
+    }
+
     return (
         <Suspense fallback={null}>
-            <ProfessionnelClient content={content} globalContent={globalContent} />
+            <ProfessionnelClient content={{ ...content, sections }} globalContent={globalContent} />
         </Suspense>
     );
 }
