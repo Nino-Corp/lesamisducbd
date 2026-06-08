@@ -168,7 +168,7 @@ export default function ProfessionnelContentPage() {
         fetch('/api/admin/content/professionnel', { signal: controller.signal })
             .then(r => r.json())
             .then(data => {
-                if (!data.sections) {
+                if (!data.sections || data.sections.length === 0) {
                     const visibility = data.visibility || {};
                     data.sections = [
                         { id: 'prohero', type: 'ProHero', props: {

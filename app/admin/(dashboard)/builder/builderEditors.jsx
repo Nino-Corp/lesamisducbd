@@ -739,6 +739,98 @@ export function UsagesEssentialBoxEditor({ props, onChange }) {
     </>;
 }
 
+export function TransparenceHeaderEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre">
+            <input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} />
+        </Field>
+        <Field label="Sous-titre">
+            <input style={inputStyle} value={props.subtitle || ''} onChange={e => onChange({ subtitle: e.target.value })} />
+        </Field>
+    </>;
+}
+
+export function TransparenceQuoteEditor({ props, onChange }) {
+    return <>
+        <Field label="Image" hint="Taille recommandée: 200x200px">
+            <ImageUploader value={props.image || ''} onChange={url => onChange({ image: url })} folder="pages/transparence" />
+        </Field>
+        <Field label="Citation">
+            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={5} />
+        </Field>
+        <Field label="Auteur">
+            <input style={inputStyle} value={props.author || ''} onChange={e => onChange({ author: e.target.value })} />
+        </Field>
+    </>;
+}
+
+export function TransparenceFeatureEditor({ props, onChange }) {
+    const col1 = props.col1 || {};
+    const col2 = props.col2 || {};
+    
+    return <>
+        <Field label="Titre principal de la section">
+            <input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} />
+        </Field>
+        <Field label="Icône">
+            <select style={inputStyle} value={props.icon || 'star'} onChange={e => onChange({ icon: e.target.value })}>
+                <option value="star">Étoile</option>
+                <option value="badgeEuro">Prix / Euro</option>
+                <option value="shieldCheck">Bouclier / Sécurité</option>
+                <option value="fileText">Document</option>
+            </select>
+        </Field>
+        <div style={{ marginTop: '16px', padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <strong style={{ fontSize: '0.85rem', color: '#334155', display: 'block', marginBottom: '8px' }}>Colonne 1</strong>
+            <Field label="Titre Colonne 1">
+                <input style={inputStyle} value={col1.title || ''} onChange={e => onChange({ col1: { ...col1, title: e.target.value } })} />
+            </Field>
+            <Field label="Texte Colonne 1" hint="- tiret pour une liste">
+                <textarea style={textareaStyle} value={col1.text || ''} onChange={e => onChange({ col1: { ...col1, text: e.target.value } })} rows={4} />
+            </Field>
+        </div>
+        <div style={{ marginTop: '12px', padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+            <strong style={{ fontSize: '0.85rem', color: '#334155', display: 'block', marginBottom: '8px' }}>Colonne 2</strong>
+            <Field label="Titre Colonne 2">
+                <input style={inputStyle} value={col2.title || ''} onChange={e => onChange({ col2: { ...col2, title: e.target.value } })} />
+            </Field>
+            <Field label="Texte Colonne 2" hint="- tiret pour une liste">
+                <textarea style={textareaStyle} value={col2.text || ''} onChange={e => onChange({ col2: { ...col2, text: e.target.value } })} rows={4} />
+            </Field>
+        </div>
+    </>;
+}
+
+export function TransparenceCertificatesEditor({ props, onChange }) {
+    const items = props.items || [];
+    const updateItem = (i, field, val) => onChange({ items: items.map((itm, idx) => idx === i ? { ...itm, [field]: val } : itm) });
+    const addItem = () => onChange({ items: [...items, { src: '', alt: 'Certificat', label: 'Nouveau certificat' }] });
+    const removeItem = i => onChange({ items: items.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre de la section">
+            <input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} />
+        </Field>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+            {items.map((item, i) => (
+                <div key={i} style={{ background: '#f8fafc', borderRadius: '10px', padding: '14px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong style={{ fontSize: '0.85rem', color: '#334155' }}>Document {i + 1}</strong>
+                        <button type="button" onClick={() => removeItem(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}>✕</button>
+                    </div>
+                    <Field label="Fichier (Image ou PDF)">
+                        <ImageUploader value={item.src || ''} onChange={url => updateItem(i, 'src', url)} folder="pages/transparence" />
+                    </Field>
+                    <Field label="Légende">
+                        <input style={inputStyle} value={item.label || ''} onChange={e => updateItem(i, 'label', e.target.value)} />
+                    </Field>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addItem} style={{ marginTop: '12px', width: '100%', padding: '12px', background: 'transparent', border: '2px dashed #cbd5e1', borderRadius: '10px', cursor: 'pointer', fontWeight: 600, color: '#64748b' }}>+ Ajouter un certificat</button>
+    </>;
+}
+
 export const EDITORS = {
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
@@ -773,4 +865,8 @@ export const EDITORS = {
     UsagesCarouselBlock: UsagesCarouselBlockEditor,
     UsagesWarning: UsagesWarningEditor,
     UsagesEssentialBox: UsagesEssentialBoxEditor,
+    TransparenceHeader: TransparenceHeaderEditor,
+    TransparenceQuote: TransparenceQuoteEditor,
+    TransparenceFeature: TransparenceFeatureEditor,
+    TransparenceCertificates: TransparenceCertificatesEditor,
 };

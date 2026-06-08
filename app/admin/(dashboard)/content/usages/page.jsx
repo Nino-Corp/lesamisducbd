@@ -58,7 +58,7 @@ export default function UsagesContentPage() {
         fetch('/api/admin/content/usages', { signal: controller.signal })
             .then(r => r.json())
             .then(data => {
-                if (!data.sections) {
+                if (!data.sections || data.sections.length === 0) {
                     const visibility = data.visibility || {};
                     const usagesItems = data.carousel?.items || [
                         {

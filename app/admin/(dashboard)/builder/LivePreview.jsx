@@ -34,6 +34,7 @@ import Footer from '@/components/Footer/Footer';
 import { EssentielIntro, EssentielCarousel, EssentielPoints } from '@/components/EssentielBlocks/EssentielBlocks';
 import { ProHero, ProSteps } from '@/components/ProBlocks/ProBlocks';
 import { UsagesIntro, UsagesCarouselBlock, UsagesWarning, UsagesEssentialBox } from '@/components/UsagesBlocks/UsagesBlocks';
+import { TransparenceHeader, TransparenceQuote, TransparenceFeature, TransparenceCertificates } from '@/components/TransparenceBlocks/TransparenceBlocks';
 import { useState, memo, useMemo } from 'react';
 
 const PREVIEW_COMPONENTS = {
@@ -74,7 +75,11 @@ const PREVIEW_COMPONENTS = {
     UsagesIntro,
     UsagesCarouselBlock,
     UsagesWarning,
-    UsagesEssentialBox
+    UsagesEssentialBox,
+    TransparenceHeader,
+    TransparenceQuote,
+    TransparenceFeature,
+    TransparenceCertificates
 };
 
 const LivePreview = memo(function LivePreview({ 

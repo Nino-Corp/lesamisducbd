@@ -36,6 +36,7 @@ import ContactFormBlock from './ContactFormBlock/ContactFormBlock';
 import { EssentielIntro, EssentielCarousel, EssentielPoints } from './EssentielBlocks/EssentielBlocks';
 import { ProHero, ProSteps } from './ProBlocks/ProBlocks';
 import { UsagesIntro, UsagesCarouselBlock, UsagesWarning, UsagesEssentialBox } from './UsagesBlocks/UsagesBlocks';
+import { TransparenceHeader, TransparenceQuote, TransparenceFeature, TransparenceCertificates } from './TransparenceBlocks/TransparenceBlocks';
 
 const componentMap = {
     Header,
@@ -79,10 +80,14 @@ const componentMap = {
     UsagesIntro,
     UsagesCarouselBlock,
     UsagesWarning,
-    UsagesEssentialBox
+    UsagesEssentialBox,
+    TransparenceHeader,
+    TransparenceQuote,
+    TransparenceFeature,
+    TransparenceCertificates
 };
 
-const NO_ANIMATE = new Set(['Header', 'Hero', 'ProHero']);
+const NO_ANIMATE = new Set(['Header', 'Hero', 'ProHero', 'TransparenceHeader']);
 
 export default function PageBuilder({ sections }) {
     if (!sections) return null;

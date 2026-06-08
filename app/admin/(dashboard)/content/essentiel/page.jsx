@@ -198,7 +198,7 @@ export default function EssentielContentPage() {
         fetch('/api/admin/content/essentiel', { signal: controller.signal })
             .then(r => r.json())
             .then(data => {
-                if (!data.sections) {
+                if (!data.sections || data.sections.length === 0) {
                     const visibility = data.visibility || {};
                     data.sections = [
                         { id: 'hero', type: 'ContentHero', props: { imageSrc: data?.hero?.imageSrc || "/images/about/team.webp", imagePosition: "center 35%", imageAlt: "L'équipe Les Amis du CBD", title: data?.hero?.title || "L'Essentiel" }, isVisible: visibility.hero !== false },

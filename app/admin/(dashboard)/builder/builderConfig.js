@@ -268,6 +268,111 @@ export const TEMPLATES = [
             description: 'Laissez-nous un message et nous vous répondrons rapidement.',
             buttonText: 'Envoyer le message'
         }
+    },
+    // --- SPECIAL PAGES BLOCKS ---
+    {
+        type: 'EssentielIntro',
+        label: 'Intro Essentiel',
+        icon: '✨',
+        description: 'Bloc d\'intro avec image et badges',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'EssentielCarousel',
+        label: 'Carrousel Essentiel',
+        icon: '🎠',
+        description: 'Carrousel de cartes informatives',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'EssentielPoints',
+        label: 'Points Essentiel',
+        icon: '✅',
+        description: 'Liste de points clés avec icônes',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'ProHero',
+        label: 'Hero Pro',
+        icon: '🏢',
+        description: 'En-tête spécifique espace Pro',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'ProSteps',
+        label: 'Étapes Pro',
+        icon: '🪜',
+        description: 'Bloc des étapes de commande Pro',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'UsagesIntro',
+        label: 'Intro Usages',
+        icon: '🌿',
+        description: 'Bloc d\'intro pour la page Usages',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'UsagesCarouselBlock',
+        label: 'Carrousel Usages',
+        icon: '🎠',
+        description: 'Carrousel d\'informations sur les usages',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'UsagesWarning',
+        label: 'Avertissement Usages',
+        icon: '⚠️',
+        description: 'Bloc d\'avertissement (santé/légal)',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'UsagesEssentialBox',
+        label: 'Box Essentiel Usages',
+        icon: '💡',
+        description: 'Encadré "L\'essentiel à retenir"',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'TransparenceHeader',
+        label: 'En-tête Transparence',
+        icon: '✨',
+        description: 'En-tête avec titre et sous-titre',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'TransparenceQuote',
+        label: 'Citation / Profil',
+        icon: '🗣️',
+        description: 'Citation avec photo de profil',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'TransparenceFeature',
+        label: 'Fonctionnalité',
+        icon: '⭐',
+        description: 'Bloc de 2 colonnes avec icône',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'TransparenceCertificates',
+        label: 'Certificats',
+        icon: '📄',
+        description: 'Galerie de certificats PDF/Images',
+        category: 'special',
+        defaultProps: {}
     }
 ];
 
@@ -278,4 +383,5 @@ export const CATEGORIES = [
     { id: 'conversion', label: 'Conversion' },
     { id: 'leads', label: 'Acquisition / Leads' },
     { id: 'media', label: 'Médias' },
+    { id: 'special', label: 'Spécifique' },
 ];
