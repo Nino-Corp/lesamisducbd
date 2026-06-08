@@ -35,6 +35,7 @@ import { EssentielIntro, EssentielCarousel, EssentielPoints } from '@/components
 import { ProHero, ProSteps } from '@/components/ProBlocks/ProBlocks';
 import { UsagesIntro, UsagesCarouselBlock, UsagesWarning, UsagesEssentialBox } from '@/components/UsagesBlocks/UsagesBlocks';
 import { TransparenceHeader, TransparenceQuote, TransparenceFeature, TransparenceCertificates } from '@/components/TransparenceBlocks/TransparenceBlocks';
+import { RecrutementText, RecrutementJobs, RecrutementContact } from '@/components/RecrutementBlocks/RecrutementBlocks';
 import { useState, memo, useMemo } from 'react';
 
 const PREVIEW_COMPONENTS = {
@@ -79,7 +80,10 @@ const PREVIEW_COMPONENTS = {
     TransparenceHeader,
     TransparenceQuote,
     TransparenceFeature,
-    TransparenceCertificates
+    TransparenceCertificates,
+    RecrutementText,
+    RecrutementJobs,
+    RecrutementContact
 };
 
 const LivePreview = memo(function LivePreview({ 
@@ -88,6 +92,7 @@ const LivePreview = memo(function LivePreview({
     onSelect,
     onMove,
     onDuplicate,
+    onDelete,
     onUpdateProps,
     onReorder,
     isFullscreen,

@@ -37,6 +37,7 @@ import { EssentielIntro, EssentielCarousel, EssentielPoints } from './EssentielB
 import { ProHero, ProSteps } from './ProBlocks/ProBlocks';
 import { UsagesIntro, UsagesCarouselBlock, UsagesWarning, UsagesEssentialBox } from './UsagesBlocks/UsagesBlocks';
 import { TransparenceHeader, TransparenceQuote, TransparenceFeature, TransparenceCertificates } from './TransparenceBlocks/TransparenceBlocks';
+import { RecrutementText, RecrutementJobs, RecrutementContact } from './RecrutementBlocks/RecrutementBlocks';
 
 const componentMap = {
     Header,
@@ -84,7 +85,10 @@ const componentMap = {
     TransparenceHeader,
     TransparenceQuote,
     TransparenceFeature,
-    TransparenceCertificates
+    TransparenceCertificates,
+    RecrutementText,
+    RecrutementJobs,
+    RecrutementContact
 };
 
 const NO_ANIMATE = new Set(['Header', 'Hero', 'ProHero', 'TransparenceHeader']);

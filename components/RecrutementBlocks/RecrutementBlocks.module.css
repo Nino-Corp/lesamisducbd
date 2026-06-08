@@ -1,0 +1,206 @@
+/* CONTENT SECTION */
+.contentSection {
+    padding: 0 20px 60px;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    color: #1F4B40;
+}
+
+.mainTitle {
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 30px;
+    letter-spacing: -0.05em;
+}
+
+.textBlock {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    max-width: 300px;
+    margin: 0 auto 20px auto;
+}
+
+/* CONTACT CARD (Green Box) */
+.contactCardSection {
+    padding: 0 20px 80px;
+    display: flex;
+    justify-content: center;
+}
+
+.contactCard {
+    background: linear-gradient(145deg, #1f4b40 0%, #49b197 100%);
+    border-radius: 20px;
+    padding: 40px 20px;
+    text-align: center;
+    color: white;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(31, 75, 64, 0.3);
+}
+
+.cardTitle {
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.cardText {
+    font-size: 0.95rem;
+    font-weight: 200;
+    max-width: 310px;
+    margin: 0 auto 30px auto;
+    line-height: 1.5;
+}
+
+.contactButton {
+    display: inline-block;
+    background-color: white;
+    color: #1F4B40;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 12px 30px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.contactButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* JOBS SECTION */
+.jobsSection {
+    padding: 0 20px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.jobsTitle {
+    font-size: 2rem;
+    font-weight: 500;
+    color: #1F4B40;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.jobsGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.jobCard {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.2s;
+}
+
+.jobCard:hover {
+    transform: translateY(-5px);
+    border-color: #49b197;
+}
+
+.jobCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.jobTitle {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a2e1a;
+    margin: 0;
+}
+
+.jobBadge {
+    background: #e3fff8;
+    color: #1F4B40;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.jobLocation {
+    font-size: 0.95rem;
+    color: #64748b;
+    margin: 0 0 1.5rem;
+}
+
+.jobDescription {
+    margin-bottom: 2rem;
+}
+
+.jobDescription .textBlock {
+    max-width: none;
+    text-align: left;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    color: #475569;
+}
+
+.jobList {
+    text-align: left;
+    margin: 0 0 1rem 1.5rem;
+    color: #475569;
+    font-size: 0.95rem;
+}
+
+.jobList li {
+    margin-bottom: 0.5rem;
+}
+
+.applyBtn {
+    background: #1F4B40;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.applyBtn:hover {
+    background: #49b197;
+}
+
+/* Responsive Adjustments */
+@media (min-width: 768px) {
+    .mainTitle {
+        font-size: 3rem;
+    }
+
+    .textBlock {
+        max-width: 600px;
+        font-size: 1.1rem;
+    }
+
+    .contactCard {
+        padding: 60px 40px;
+        max-width: 800px;
+    }
+
+    .cardTitle {
+        font-size: 2.5rem;
+    }
+
+    .cardText {
+        max-width: 500px;
+        font-size: 1.1rem;
+    }
+}

@@ -831,6 +831,64 @@ export function TransparenceCertificatesEditor({ props, onChange }) {
     </>;
 }
 
+export function RecrutementTextEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre">
+            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={3} />
+        </Field>
+        <Field label="Texte">
+            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={6} />
+        </Field>
+    </>;
+}
+
+export function RecrutementJobsEditor({ props, onChange }) {
+    const jobs = props.jobs || [];
+    const updateJob = (i, field, val) => onChange({ jobs: jobs.map((itm, idx) => idx === i ? { ...itm, [field]: val } : itm) });
+    const addJob = () => onChange({ jobs: [...jobs, { title: 'Nouveau Poste', type: 'CDI', location: 'Télétravail', description: 'Description du poste...' }] });
+    const removeJob = i => onChange({ jobs: jobs.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Titre de la section">
+            <input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} />
+        </Field>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+            {jobs.map((job, i) => (
+                <div key={i} style={{ background: '#f8fafc', borderRadius: '10px', padding: '14px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong style={{ fontSize: '0.85rem', color: '#334155' }}>Offre {i + 1}</strong>
+                        <button type="button" onClick={() => removeJob(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}>✕</button>
+                    </div>
+                    <Field label="Titre du poste">
+                        <input style={inputStyle} value={job.title || ''} onChange={e => updateJob(i, 'title', e.target.value)} />
+                    </Field>
+                    <Field label="Type de contrat (CDI, Stage...)">
+                        <input style={inputStyle} value={job.type || ''} onChange={e => updateJob(i, 'type', e.target.value)} />
+                    </Field>
+                    <Field label="Lieu">
+                        <input style={inputStyle} value={job.location || ''} onChange={e => updateJob(i, 'location', e.target.value)} />
+                    </Field>
+                    <Field label="Description" hint="- tiret pour une liste">
+                        <textarea style={textareaStyle} value={job.description || ''} onChange={e => updateJob(i, 'description', e.target.value)} rows={5} />
+                    </Field>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addJob} style={{ marginTop: '12px', width: '100%', padding: '12px', background: 'transparent', border: '2px dashed #cbd5e1', borderRadius: '10px', cursor: 'pointer', fontWeight: 600, color: '#64748b' }}>+ Ajouter une offre</button>
+    </>;
+}
+
+export function RecrutementContactEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre">
+            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={3} />
+        </Field>
+        <Field label="Texte">
+            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={5} />
+        </Field>
+    </>;
+}
+
 export const EDITORS = {
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
@@ -869,4 +927,7 @@ export const EDITORS = {
     TransparenceQuote: TransparenceQuoteEditor,
     TransparenceFeature: TransparenceFeatureEditor,
     TransparenceCertificates: TransparenceCertificatesEditor,
+    RecrutementText: RecrutementTextEditor,
+    RecrutementJobs: RecrutementJobsEditor,
+    RecrutementContact: RecrutementContactEditor,
 };

@@ -28,5 +28,30 @@ export default async function RecrutementPage() {
         console.error('KV error (recrutement):', e);
     }
 
+    if (content && !content.sections) {
+        const visibility = content.visibility || {};
+        content.sections = [
+            { id: 'hero', type: 'ContentHero', props: {
+                title: content?.hero?.title || "Intégrer l'équipe ?",
+                imageSrc: content?.hero?.imageSrc || "/images/recrutement/handshake.webp",
+            }, isVisible: visibility.hero !== false },
+            
+            { id: 'content', type: 'RecrutementText', props: {
+                title: content?.content?.title || "Rejoindre l'équipe\nLes Amis du CBD",
+                text: content?.content?.text || "Les Amis du CBD, c'est avant tout une aventure humaine.\nUne équipe qui avance ensemble, avec des valeurs simples : transparence, exigence et proximité.\nNous ne recrutons pas en permanence, mais nous sommes toujours curieux de découvrir de nouveaux profils. Que vous veniez du terrain, du commerce, de la communication ou d'un tout autre horizon, les candidatures spontanées sont les bienvenues.\nSi vous partagez notre vision d'un CBD accessible, responsable et bien fait, n'hésitez pas à nous écrire.\nParfois, les meilleures collaborations commencent sans offre précise."
+            }, isVisible: visibility.content !== false },
+            
+            { id: 'jobs', type: 'RecrutementJobs', props: {
+                title: "Offres en cours",
+                jobs: content?.jobs || []
+            }, isVisible: visibility.jobs !== false },
+
+            { id: 'contact', type: 'RecrutementContact', props: {
+                title: content?.contactCard?.title || "Envie d'en\nsavoir plus ?",
+                text: content?.contactCard?.text || "Un CV, une lettre de motivation ou simplement l'envie d'échanger ?\nContactez-nous, on vous répond avec plaisir."
+            }, isVisible: visibility.contactCard !== false }
+        ];
+    }
+
     return <RecruitmentClient globalContent={globalContent} content={content} />;
 }

@@ -373,6 +373,30 @@ export const TEMPLATES = [
         description: 'Galerie de certificats PDF/Images',
         category: 'special',
         defaultProps: {}
+    },
+    {
+        type: 'RecrutementText',
+        label: 'Texte Recrutement',
+        icon: '📝',
+        description: 'Titre principal et texte descriptif',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'RecrutementJobs',
+        label: 'Offres d\'emploi',
+        icon: '💼',
+        description: 'Liste des postes ouverts',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'RecrutementContact',
+        label: 'Contact Recrutement',
+        icon: '✉️',
+        description: 'Carte de contact avec bouton modal',
+        category: 'special',
+        defaultProps: {}
     }
 ];
 
