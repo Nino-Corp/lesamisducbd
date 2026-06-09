@@ -37,6 +37,8 @@ import { UsagesIntro, UsagesCarouselBlock, UsagesWarning, UsagesEssentialBox } f
 import { TransparenceHeader, TransparenceQuote, TransparenceFeature, TransparenceCertificates } from '@/components/TransparenceBlocks/TransparenceBlocks';
 import { RecrutementText, RecrutementJobs, RecrutementContact } from '@/components/RecrutementBlocks/RecrutementBlocks';
 import DeliverySteps from '@/components/LivraisonBlocks/DeliverySteps';
+import ContactFormBlock from '@/components/ContactFormBlock/ContactFormBlock';
+import NewsletterBlock from '@/components/NewsletterBlock/NewsletterBlock';
 import { useState, memo, useMemo } from 'react';
 
 const PREVIEW_COMPONENTS = {
@@ -62,6 +64,8 @@ const PREVIEW_COMPONENTS = {
     QualityBanner,
     WhyChooseUs,
     CodeEmbed,
+    ContactFormBlock,
+    NewsletterBlock,
     Hero,
     ProductList,
     Partners,
