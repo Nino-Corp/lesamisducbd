@@ -36,6 +36,7 @@ import { ProHero, ProSteps } from '@/components/ProBlocks/ProBlocks';
 import { UsagesIntro, UsagesCarouselBlock, UsagesWarning, UsagesEssentialBox } from '@/components/UsagesBlocks/UsagesBlocks';
 import { TransparenceHeader, TransparenceQuote, TransparenceFeature, TransparenceCertificates } from '@/components/TransparenceBlocks/TransparenceBlocks';
 import { RecrutementText, RecrutementJobs, RecrutementContact } from '@/components/RecrutementBlocks/RecrutementBlocks';
+import DeliverySteps from '@/components/LivraisonBlocks/DeliverySteps';
 import { useState, memo, useMemo } from 'react';
 
 const PREVIEW_COMPONENTS = {
@@ -83,7 +84,8 @@ const PREVIEW_COMPONENTS = {
     TransparenceCertificates,
     RecrutementText,
     RecrutementJobs,
-    RecrutementContact
+    RecrutementContact,
+    DeliverySteps
 };
 
 const LivePreview = memo(function LivePreview({ 
@@ -96,7 +98,8 @@ const LivePreview = memo(function LivePreview({
     onUpdateProps,
     onReorder,
     isFullscreen,
-    setIsFullscreen
+    setIsFullscreen,
+    pageKey
 }) {
     if (!sections.length) {
         return (
@@ -225,6 +228,40 @@ const LivePreview = memo(function LivePreview({
                                             { name: "Produit Test 4", image: "/images/hero.webp", formattedPrice: "40,00 €", slug: "test-4" }
                                         ];
                                     }
+
+                                    // Intercept rendering for legal pages to match their custom client-side designs
+                                    const isLegalPage = ['cgv', 'livraison', 'mentions', 'privacy'].includes(pageKey);
+                                    if (isLegalPage) {
+                                        if (section.type === 'ContentHero') {
+                                            return (
+                                                <div style={{ textAlign: 'center', marginTop: i > 0 ? '60px' : '40px', marginBottom: '60px', padding: '0 20px' }}>
+                                                    <h1 style={{ fontSize: '3rem', fontWeight: 800, color: '#1F4B40', marginBottom: '12px', letterSpacing: '-0.02em', lineHeight: 1.1 }} dangerouslySetInnerHTML={{ __html: finalProps.title || "Titre" }} />
+                                                    <p style={{ fontSize: '1.2rem', color: '#1F4B40', fontWeight: 500, margin: 0 }}>{finalProps.subtitle || ""}</p>
+                                                </div>
+                                            );
+                                        }
+                                        if (section.type === 'RichText') {
+                                            return (
+                                                <div style={{ 
+                                                    maxWidth: pageKey === 'livraison' ? '800px' : '1200px', 
+                                                    margin: i > 0 ? '40px auto 0' : '0 auto', 
+                                                    padding: '40px', 
+                                                    background: '#fff', 
+                                                    borderRadius: '24px', 
+                                                    boxShadow: '0 10px 40px rgba(0,0,0,0.03)', 
+                                                    border: '1px solid rgba(0,0,0,0.02)',
+                                                    overflowWrap: 'break-word',
+                                                    color: '#1F4B40',
+                                                    lineHeight: 1.7,
+                                                    fontSize: '1.05rem',
+                                                    fontFamily: 'inherit'
+                                                }}>
+                                                    <div dangerouslySetInnerHTML={{ __html: (finalProps.content || "Contenu texte libre...").replace(/&nbsp;/g, ' ') }} />
+                                                </div>
+                                            );
+                                        }
+                                    }
+
                                     return <Component {...finalProps} />;
                                 })()
                             ) : (

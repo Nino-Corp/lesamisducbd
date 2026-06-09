@@ -82,16 +82,24 @@ export default function LegalContentPage({ params }) {
                     const visibility = data.visibility || {};
                     const defaultInfo = DEFAULT_MAP[pageKey] || { hero: { title: pageKey.toUpperCase() } };
 
-                    data.sections = [
+                    let newSections = [
                         { id: 'hero', type: 'ContentHero', props: {
                             title: data?.hero?.title || defaultInfo.hero.title,
                             subtitle: data?.hero?.subtitle || defaultInfo.hero.subtitle || "",
-                        }, isVisible: visibility.hero !== false },
-                        
-                        { id: 'content', type: 'RichText', props: {
-                            content: data.markdown ? simpleMarkdownToHtml(data.markdown) : "<p>Insérez votre contenu légal ici...</p>"
-                        }, isVisible: visibility.content !== false }
+                        }, isVisible: visibility.hero !== false }
                     ];
+
+                    if (pageKey === 'livraison') {
+                        newSections.push({ id: 'deliverysteps', type: 'DeliverySteps', props: {} });
+                    }
+
+                    const defaultLivraisonText = `<h2 style="text-align: center; margin-bottom: 24px;">Expédition de votre colis</h2><p>Pour les commandes passées avant 12h, le colis est expédié le jour même. Cependant, notez que les délais de préparation peuvent être allongés lors de fortes affluences de commande ou de situation exceptionnelle.</p><p>Quel que soit le mode de livraison choisi, nous vous envoyons un lien pour suivre votre colis en ligne.</p><p>L'envoi est <strong>très discret</strong>, le sachet est opaque et le colis n'a pas d'information permettant de savoir ce qu'il y a dedans.</p>`;
+
+                    newSections.push({ id: 'content', type: 'RichText', props: {
+                            content: data.markdown ? simpleMarkdownToHtml(data.markdown) : (pageKey === 'livraison' ? defaultLivraisonText : "<p>Insérez votre contenu légal ici...</p>")
+                        }, isVisible: visibility.content !== false });
+
+                    data.sections = newSections;
                 }
                 if (data.sections) setSections(data.sections);
                 if (data.meta) setMeta(data.meta);
@@ -433,6 +441,7 @@ export default function LegalContentPage({ params }) {
                 {/* ── RIGHT: Live Preview ─────────────────── */}
                 <div style={{ position: 'relative', overflow: 'hidden', background: '#e5e7eb' }}>
                     <LivePreview
+                        pageKey={pageKey}
                         sections={previewSections}
                         activeIndex={activeSection !== null ? previewSections.findIndex(s => s.id === sections[activeSection]?.id) : null}
                         onSelect={(idx) => {

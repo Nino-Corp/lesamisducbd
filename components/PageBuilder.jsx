@@ -38,6 +38,7 @@ import { ProHero, ProSteps } from './ProBlocks/ProBlocks';
 import { UsagesIntro, UsagesCarouselBlock, UsagesWarning, UsagesEssentialBox } from './UsagesBlocks/UsagesBlocks';
 import { TransparenceHeader, TransparenceQuote, TransparenceFeature, TransparenceCertificates } from './TransparenceBlocks/TransparenceBlocks';
 import { RecrutementText, RecrutementJobs, RecrutementContact } from './RecrutementBlocks/RecrutementBlocks';
+import DeliverySteps from './LivraisonBlocks/DeliverySteps';
 
 const componentMap = {
     Header,
@@ -88,7 +89,8 @@ const componentMap = {
     TransparenceCertificates,
     RecrutementText,
     RecrutementJobs,
-    RecrutementContact
+    RecrutementContact,
+    DeliverySteps
 };
 
 const NO_ANIMATE = new Set(['Header', 'Hero', 'ProHero', 'TransparenceHeader']);

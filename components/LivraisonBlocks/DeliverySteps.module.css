@@ -1,38 +1,11 @@
-.main {
-    background-color: var(--background-light);
-    min-height: 100vh;
-}
-
-.pageContainer {
-    width: 100%;
-    max-width: var(--container-width);
-    margin: 120px auto 100px;
-    padding: 0 20px;
-}
-
-/* Header */
-.header {
-    text-align: center;
-    margin-bottom: 60px;
-    animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.title {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    font-weight: 800;
-    color: var(--primary-dark);
-    margin-bottom: 12px;
-    letter-spacing: -0.02em;
-}
-
-.subtitle {
-    font-size: 1.2rem;
-    color: #4B5563;
-}
-
-/* Schema Grid */
 .schemaSection {
     margin-bottom: 80px;
+    width: 100vw;
+    max-width: var(--container-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 .stepsGrid {
@@ -40,6 +13,8 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 30px;
     position: relative;
+    max-width: var(--container-width);
+    margin: 0 auto;
 }
 
 /* Line connecting the steps (visible only on desktop) */
@@ -135,76 +110,6 @@
     font-weight: 700;
 }
 
-/* Info Section below schema */
-.infoSection {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 40px;
-    background: #fff;
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.02);
-}
-
-.infoTitle {
-    font-size: 2rem;
-    color: #1e2920;
-    /* Olive/Dark text */
-    font-weight: 800;
-    margin-bottom: 24px;
-    text-align: center;
-}
-
-.infoContent {
-    font-size: 1.05rem;
-    color: #4B5563;
-    line-height: 1.7;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.infoContent strong {
-    color: #111827;
-}
-
-.richTextWrapper {
-    width: 100%;
-    word-break: normal;
-    overflow-wrap: normal;
-}
-
-.richTextWrapper h2, .richTextWrapper h1 {
-    font-size: 2rem;
-    color: #1e2920;
-    font-weight: 800;
-    margin-bottom: 24px;
-    text-align: center;
-}
-
-.richTextWrapper p {
-    font-size: 1.05rem;
-    color: #4B5563;
-    line-height: 1.7;
-    margin-bottom: 16px;
-}
-
-.richTextWrapper strong {
-    color: #111827;
-}
-
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* Responsive */
 @media (max-width: 1024px) {
     .stepsGrid {
@@ -214,20 +119,8 @@
 }
 
 @media (max-width: 640px) {
-    .pageContainer {
-        margin-top: 100px;
-    }
-
     .stepsGrid {
         grid-template-columns: 1fr;
         gap: 20px;
-    }
-
-    .infoSection {
-        padding: 30px 20px;
-    }
-
-    .infoTitle {
-        font-size: 1.6rem;
     }
 }

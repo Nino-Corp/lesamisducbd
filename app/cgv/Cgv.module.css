@@ -43,9 +43,8 @@
     font-size: 1.05rem;
     max-width: 1200px;
     margin: 0 auto;
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-word;
+    word-break: normal;
+    overflow-wrap: normal;
 }
 
 .content h1,

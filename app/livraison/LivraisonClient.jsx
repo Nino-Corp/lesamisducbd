@@ -2,9 +2,9 @@
 
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
+import PageBuilder from '@/components/PageBuilder';
 import { renderMarkdown } from '@/lib/utils/markdownRenderer';
 import styles from './Livraison.module.css';
-import { MonitorCheck, PackageSearch, Truck, Home } from 'lucide-react';
 
 const HEADER_PROPS = {
     logoText: "LES AMIS DU CBD",
@@ -46,93 +46,43 @@ export default function LivraisonClient({ globalContent, content }) {
         contactInfo: globalContent?.contact || FOOTER_PROPS.contactInfo
     };
 
-    const heroTitle = content?.hero?.title || "Notre processus de livraison";
-    const heroSubtitle = content?.hero?.subtitle || "Simple, rapide et discret.";
+    const builderSections = content?.sections || [
+        { id: 'hero', type: 'ContentHero', props: { title: content?.hero?.title || "Notre processus de livraison", subtitle: content?.hero?.subtitle || "Simple, rapide et discret." } },
+        { id: 'deliverysteps', type: 'DeliverySteps', props: {} },
+        { id: 'content', type: 'RichText', props: { content: content?.markdown ? renderMarkdown(content.markdown) : "<h2 style=\"text-align: center; margin-bottom: 24px;\">Expédition de votre colis</h2><p>Pour les commandes passées avant 12h, le colis est expédié le jour même. Cependant, notez que les délais de préparation peuvent être allongés lors de fortes affluences de commande ou de situation exceptionnelle.</p><p>Quel que soit le mode de livraison choisi, nous vous envoyons un lien pour suivre votre colis en ligne.</p><p>L'envoi est <strong>très discret</strong>, le sachet est opaque et le colis n'a pas d'information permettant de savoir ce qu'il y a dedans.</p>" } }
+    ];
 
     return (
         <main className={styles.main}>
             <Header {...HEADER_PROPS} menuItems={globalContent?.headerLinks || HEADER_PROPS.menuItems} bannerVisible={globalContent?.visibility?.headerBanner !== false} />
 
             <div className={styles.pageContainer}>
-                {/* Hero / Header */}
-                <div className={styles.header}>
-                    <h1 className={styles.title}>{heroTitle}</h1>
-                    <p className={styles.subtitle}>{heroSubtitle}</p>
-                </div>
+                {builderSections.map((section, index) => {
+                    if (section.props?.isVisible === false) return null;
 
-                {/* 4-Step Schema */}
-                <section className={styles.schemaSection}>
-                    <div className={styles.stepsGrid}>
-                        {/* Step 1 */}
-                        <div className={styles.stepCard}>
-                            <div className={styles.iconContainer}>
-                                <div className={styles.stepNumber}>1</div>
-                                <MonitorCheck size={48} className={styles.icon} />
+                    if (section.type === 'ContentHero') {
+                        return (
+                            <div key={section.id} className={styles.header} style={{ marginTop: index > 0 ? '60px' : 0 }}>
+                                <h1 className={styles.title}>{section.props?.title || "Notre processus de livraison"}</h1>
+                                <p className={styles.subtitle}>{section.props?.subtitle || ""}</p>
                             </div>
-                            <div className={styles.stepHeader}>1. Commande</div>
-                            <p className={styles.stepText}>
-                                Je valide ma commande, et je reçois <strong>un mail de confirmation avec</strong> mes coordonnées.
-                            </p>
+                        );
+                    }
+
+                    if (section.type === 'RichText') {
+                        return (
+                            <section key={section.id} className={styles.infoSection} style={{ marginTop: index > 0 ? '40px' : 0 }}>
+                                <div className={styles.richTextWrapper} dangerouslySetInnerHTML={{ __html: (section.props?.content || "").replace(/&nbsp;/g, ' ') }} />
+                            </section>
+                        );
+                    }
+
+                    return (
+                        <div key={section.id} style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)', marginTop: index > 0 ? '40px' : 0 }}>
+                            <PageBuilder sections={[section]} />
                         </div>
-
-                        {/* Step 2 */}
-                        <div className={styles.stepCard}>
-                            <div className={styles.iconContainer}>
-                                <div className={styles.stepNumber}>2</div>
-                                <PackageSearch size={48} className={styles.icon} />
-                            </div>
-                            <div className={styles.stepHeader}>2. Préparation</div>
-                            <p className={styles.stepText}>
-                                Si j'ai commandé <strong>avant midi</strong>, ma commande est préparée et <strong>expédiée le jour même</strong>.
-                            </p>
-                        </div>
-
-                        {/* Step 3 */}
-                        <div className={styles.stepCard}>
-                            <div className={styles.iconContainer}>
-                                <div className={styles.stepNumber}>3</div>
-                                <Truck size={48} className={styles.icon} />
-                            </div>
-                            <div className={styles.stepHeader}>3. Expédition</div>
-                            <p className={styles.stepText}>
-                                Mon colis est remis aux services postaux et je reçois <strong>un lien de suivi de colis</strong>.
-                            </p>
-                        </div>
-
-                        {/* Step 4 */}
-                        <div className={styles.stepCard}>
-                            <div className={styles.iconContainer}>
-                                <div className={styles.stepNumber}>4</div>
-                                <Home size={48} className={styles.icon} />
-                            </div>
-                            <div className={styles.stepHeader}>4. Livraison</div>
-                            <p className={styles.stepText}>
-                                En moyenne, <strong>48h</strong> plus tard, le livreur m'apporte mon colis <strong>chez moi ou en point relais</strong>.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Additional Information Section */}
-                <section className={styles.infoSection}>
-                    {content && content.markdown ? renderMarkdown(content.markdown) : (
-                        <>
-                            <h2 className={styles.infoTitle}>Expédition de votre colis</h2>
-                            <div className={styles.infoContent}>
-                                <p>
-                                    Pour les commandes passées avant 12h, le colis est expédié le jour même.
-                                    Cependant, notez que les délais de préparation peuvent être allongés lors de fortes affluences de commande ou de situation exceptionnelle.
-                                </p>
-                                <p>
-                                    Quel que soit le mode de livraison choisi, nous vous envoyons un lien pour suivre votre colis en ligne.
-                                </p>
-                                <p>
-                                    L'envoi est <strong>très discret</strong>, le sachet est opaque et le colis n'a pas d'information permettant de savoir ce qu'il y a dedans.
-                                </p>
-                            </div>
-                        </>
-                    )}
-                </section>
+                    );
+                })}
             </div>
 
             <Footer {...footerProps} />

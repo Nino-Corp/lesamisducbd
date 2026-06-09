@@ -49,6 +49,9 @@ export function HeroEditor({ props, onChange }) {
         <Field label="Titre principal" hint="Supporte <strong>, <em>...">
             <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={3} />
         </Field>
+        <Field label="Sous-titre" hint="Texte affiché sous le titre principal (optionnel)">
+            <input style={inputStyle} value={props.subtitle || ''} onChange={e => onChange({ subtitle: e.target.value })} />
+        </Field>
         <Field label="Image de fond">
             <ImageUploader value={props.imageSrc || ''} onChange={url => onChange({ imageSrc: url })} folder="pages/hero" />
         </Field>
@@ -452,6 +455,14 @@ export function MarqueeEditor({ props, onChange }) {
         <Field label="Texte défilant"><input style={inputStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} placeholder="OFFRE SPÉCIALE..." /></Field>
         <Field label="Vitesse (secondes)"><input type="number" style={inputStyle} value={props.speed || 20} onChange={e => onChange({ speed: +e.target.value })} /></Field>
     </>;
+}
+
+export function DeliveryStepsEditor() {
+    return (
+        <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '8px', color: '#64748b', fontSize: '0.85rem' }}>
+            Ce bloc affiche le schéma des 4 étapes de livraison (spécifique à la page Livraison). Ce bloc est statique et n'a pas d'options configurables.
+        </div>
+    );
 }
 
 export function OfferComparatorEditor() {
@@ -930,4 +941,5 @@ export const EDITORS = {
     RecrutementText: RecrutementTextEditor,
     RecrutementJobs: RecrutementJobsEditor,
     RecrutementContact: RecrutementContactEditor,
+    DeliverySteps: DeliveryStepsEditor,
 };

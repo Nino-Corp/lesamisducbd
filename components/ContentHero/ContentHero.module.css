@@ -41,6 +41,15 @@
     line-height: 1.1;
 }
 
+.subtitle {
+    position: relative;
+    z-index: 2;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    margin-top: 16px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
 .heroImageWrapper {
     position: absolute;
     top: 0;

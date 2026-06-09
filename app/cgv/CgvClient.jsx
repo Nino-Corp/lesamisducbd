@@ -72,7 +72,7 @@ export default function CgvClient({ globalContent, content }) {
 
                     if (section.type === 'RichText') {
                         return (
-                            <div key={section.id} className={styles.content} style={{ marginTop: index > 0 ? '40px' : 0 }} dangerouslySetInnerHTML={{ __html: section.props.content || "" }} />
+                            <div key={section.id} className={styles.content} style={{ marginTop: index > 0 ? '40px' : 0 }} dangerouslySetInnerHTML={{ __html: (section.props?.content || "").replace(/&nbsp;/g, ' ') }} />
                         );
                     }
 

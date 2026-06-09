@@ -397,6 +397,14 @@ export const TEMPLATES = [
         description: 'Carte de contact avec bouton modal',
         category: 'special',
         defaultProps: {}
+    },
+    {
+        type: 'DeliverySteps',
+        label: 'Étapes Livraison',
+        icon: '🚚',
+        description: 'Schéma en 4 étapes de livraison (spécifique à la page)',
+        category: 'special',
+        defaultProps: {}
     }
 ];
 
