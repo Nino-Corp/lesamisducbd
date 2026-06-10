@@ -10,6 +10,7 @@ import Footer from '@/components/Footer/Footer';
 import styles from './Products.module.css';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
+import { trackCTA } from '@/utils/analytics';
 
 const HEADER_PROPS = {
     logoText: "LES AMIS DU CBD",
@@ -407,7 +408,7 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId }) {
 
     return (
         <div className={styles.card}>
-            <Link href={`/produit/${activeProduct.slug}`} className={styles.imageLink}>
+            <Link href={`/produit/${activeProduct.slug}`} className={styles.imageLink} onClick={() => trackCTA(`product_click_${activeProduct.slug}`)}>
                 <div className={styles.imageWrapper}>
                     <Image
                         src={activeProduct.image || '/images/placeholder.webp'}

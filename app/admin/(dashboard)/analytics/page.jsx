@@ -158,7 +158,7 @@ export default function AnalyticsDashboard() {
 
     // Format CTA labels
     const formatCTALabel = (key) => {
-        if (key === 'home_hero_discover') return 'Héros: Découvrir les produits';
+        if (key === 'home_hero_discover') return 'Bannière Principale (Héros)';
         if (key === 'recrutement_postuler') return 'Recrutement: Postuler';
         if (key === 'professionnel_contact') return 'Pro: Modale Contact';
         return key;
