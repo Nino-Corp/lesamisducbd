@@ -24,5 +24,12 @@ export default async function TransparencePage() {
         console.error('KV error (transparence):', e);
     }
 
+    // Analytics: increment view counter
+    try {
+        await kv.incr(`builder_views:transparence`);
+    } catch (e) {
+        console.error('Failed to increment view counter', e);
+    }
+
     return <TransparenceClient globalContent={globalContent} content={content} />;
 }

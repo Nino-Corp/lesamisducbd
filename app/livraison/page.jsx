@@ -25,5 +25,12 @@ export default async function LivraisonPage() {
         console.error('KV error (livraison):', e);
     }
 
+    // Analytics: increment view counter
+    try {
+        await kv.incr(`builder_views:legal/livraison`);
+    } catch (e) {
+        console.error('Failed to increment view counter', e);
+    }
+
     return <LivraisonClient globalContent={globalContent} content={content} />;
 }

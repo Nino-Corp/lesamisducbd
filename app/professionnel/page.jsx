@@ -86,6 +86,13 @@ export default async function ProfessionnelPage() {
         ];
     }
 
+    // Analytics: increment view counter
+    try {
+        await kv.incr(`builder_views:professionnel`);
+    } catch (e) {
+        console.error('Failed to increment view counter', e);
+    }
+
     return (
         <Suspense fallback={null}>
             <ProfessionnelClient content={{ ...content, sections }} globalContent={globalContent} />

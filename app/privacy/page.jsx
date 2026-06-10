@@ -25,5 +25,12 @@ export default async function PrivacyPage() {
         console.error('KV error (privacy):', e);
     }
 
+    // Analytics: increment view counter
+    try {
+        await kv.incr(`builder_views:legal/privacy`);
+    } catch (e) {
+        console.error('Failed to increment view counter', e);
+    }
+
     return <PrivacyClient globalContent={globalContent} content={content} />;
 }

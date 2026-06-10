@@ -39,5 +39,12 @@ export default async function ProductsPage() {
         });
     }
 
+    // Analytics: increment view counter
+    try {
+        await kv.incr(`builder_views:produits`);
+    } catch (e) {
+        console.error('Failed to increment view counter', e);
+    }
+
     return <ProductsClient initialProducts={visibleProducts} globalContent={globalContent} />;
 }

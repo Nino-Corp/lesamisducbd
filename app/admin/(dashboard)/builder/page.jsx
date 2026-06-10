@@ -80,7 +80,19 @@ export default function BuilderIndex() {
     const [newPage, setNewPage] = useState({ title: '', slug: '', seo: { pageType: 'WebPage' } });
     const [selectedTemplate, setSelectedTemplate] = useState('blank');
 
-    useEffect(() => { fetchPages(); }, []);
+    useEffect(() => { 
+        fetchPages(); 
+        
+        // Actualisation automatique des vues toutes les 15 secondes
+        const interval = setInterval(() => {
+            fetch('/api/admin/builder/analytics')
+                .then(res => res.json())
+                .then(data => setAnalytics(data))
+                .catch(err => console.error('Erreur actualisation vues:', err));
+        }, 15000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     const fetchPages = async () => {
         try {
@@ -309,19 +321,20 @@ export default function BuilderIndex() {
                 <h2 style={{ fontSize: '1rem', color: '#1F4B40', marginBottom: '12px' }}>Pages de base (Ancien éditeur)</h2>
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                     {[
-                        { href: '/admin/content/accueil', label: "Page d'Accueil" },
-                        { href: '/admin/content/essentiel', label: "L'Essentiel" },
-                        { href: '/admin/content/professionnel', label: "Professionnel" },
-                        { href: '/admin/content/usages', label: "CBD & Usages" },
-                        { href: '/admin/content/transparence', label: "Transparence" },
-                        { href: '/admin/content/recrutement', label: "Recrutement" },
+                        { href: '/admin/content/accueil', label: "Page d'Accueil", slug: 'accueil' },
+                        { href: '/admin/content/essentiel', label: "L'Essentiel", slug: 'essentiel' },
+                        { href: '/admin/content/professionnel', label: "Professionnel", slug: 'professionnel' },
+                        { href: '/admin/content/usages', label: "CBD & Usages", slug: 'usages' },
+                        { href: '/admin/content/transparence', label: "Transparence", slug: 'transparence' },
+                        { href: '/admin/content/recrutement', label: "Recrutement", slug: 'recrutement' },
                         { href: '/admin/content/global', label: "Éléments Globaux" },
-                        { href: '/admin/content/legal/cgv', label: "CGV" },
-                        { href: '/admin/content/legal/livraison', label: "Livraison" },
-                        { href: '/admin/content/legal/privacy', label: "Confidentialité" }
+                        { href: '/admin/content/legal/cgv', label: "CGV", slug: 'legal/cgv' },
+                        { href: '/admin/content/legal/livraison', label: "Livraison", slug: 'legal/livraison' },
+                        { href: '/admin/content/legal/privacy', label: "Confidentialité", slug: 'legal/privacy' }
                     ].map(p => (
-                        <Link key={p.href} href={p.href} style={{ padding: '8px 16px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', textDecoration: 'none', color: '#374151', fontSize: '0.85rem', fontWeight: 600 }}>
-                            {p.label} ↗
+                        <Link key={p.href} href={p.href} style={{ padding: '8px 16px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', textDecoration: 'none', color: '#374151', fontSize: '0.85rem', fontWeight: 600, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <div>{p.label} ↗</div>
+                            {p.slug && <div style={{ fontSize: '0.75rem', color: '#1F4B40', fontWeight: 700 }}>👁 {analytics[p.slug] || 0} vue(s)</div>}
                         </Link>
                     ))}
                 </div>

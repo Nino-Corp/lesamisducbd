@@ -28,19 +28,28 @@ export async function GET(request) {
         // Vercel KV doesn't have a simple way to get all keys with a prefix and their values in one go easily,
         // but since we only have a handful of pages, we can get the pages array and fetch views for each.
         const pages = await kv.get('builder_pages') || {};
-        const slugs = Object.keys(pages);
+        const builderSlugs = Object.keys(pages);
         
-        if (slugs.length === 0) return NextResponse.json({});
+        // Add static pages
+        const staticSlugs = [
+            'accueil', 'essentiel', 'professionnel', 'usages', 
+            'transparence', 'recrutement', 'produits',
+            'legal/cgv', 'legal/livraison', 'legal/privacy'
+        ];
+        
+        const allSlugs = [...builderSlugs, ...staticSlugs];
+        
+        if (allSlugs.length === 0) return NextResponse.json({});
 
         const pipeline = kv.pipeline();
-        slugs.forEach(slug => {
+        allSlugs.forEach(slug => {
             pipeline.get(`builder_views:${slug}`);
         });
         
         const results = await pipeline.exec();
         
         const viewsMap = {};
-        slugs.forEach((slug, index) => {
+        allSlugs.forEach((slug, index) => {
             viewsMap[slug] = results[index] || 0;
         });
 

@@ -222,5 +222,12 @@ export default async function CgvPage() {
         ];
     }
 
+    // Analytics: increment view counter
+    try {
+        await kv.incr(`builder_views:legal/cgv`);
+    } catch (e) {
+        console.error('Failed to increment view counter', e);
+    }
+
     return <CgvClient globalContent={globalContent} content={content} />;
 }

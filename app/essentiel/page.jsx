@@ -67,5 +67,12 @@ export default async function EssentielPage() {
         ];
     }
 
+    // Analytics: increment view counter
+    try {
+        await kv.incr(`builder_views:essentiel`);
+    } catch (e) {
+        console.error('Failed to increment view counter', e);
+    }
+
     return <EssentielClient content={{ ...content, sections }} globalContent={globalContent} />;
 }
