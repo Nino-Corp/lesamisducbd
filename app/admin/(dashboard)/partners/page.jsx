@@ -1,12 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useDeferredValue } from 'react';
 import styles from './Partners.module.css';
-import { MapPin, Trash2, Edit2, Search, Loader2, Save, X, Upload, Download, RefreshCw } from 'lucide-react';
+import { MapPin, Trash2, Edit2, Search, Loader2, Save, X, Upload, Download, RefreshCw, ExternalLink } from 'lucide-react';
 import * as XLSX from 'xlsx';
+import Fuse from 'fuse.js';
+import Link from 'next/link';
 
 export default function PartnersAdmin() {
     const [partners, setPartners] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const deferredSearchQuery = useDeferredValue(searchQuery);
+
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [isGeocoding, setIsGeocoding] = useState(false);
@@ -17,6 +22,7 @@ export default function PartnersAdmin() {
     const [importRows, setImportRows] = useState([]);
     const [isImporting, setIsImporting] = useState(false);
     const [importResult, setImportResult] = useState(null);
+    const [exactSync, setExactSync] = useState(false);
 
     // PrestaShop export state
     const [isExportingPresta, setIsExportingPresta] = useState(false);
@@ -37,6 +43,22 @@ export default function PartnersAdmin() {
             setIsLoading(false);
         }
     };
+
+    // 1. Initialiser Fuse.js UNE SEULE FOIS quand la liste des partenaires change
+    const fuse = useMemo(() => {
+        return new Fuse(partners, {
+            keys: ['name', 'city', 'zip', 'address'],
+            threshold: 0.4,
+            ignoreLocation: true,
+            minMatchCharLength: 2
+        });
+    }, [partners]);
+
+    // 2. Filtrer avec la valeur "différée" (useDeferredValue) pour ne pas bloquer la saisie au clavier
+    const filteredPartners = useMemo(() => {
+        if (!deferredSearchQuery) return partners;
+        return fuse.search(deferredSearchQuery).map(result => result.item);
+    }, [deferredSearchQuery, fuse, partners]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -62,14 +84,26 @@ export default function PartnersAdmin() {
         }
     };
 
+    const toSmartTitleCase = (str) => {
+        if (!str) return '';
+        const minorWords = new Set(['de', 'la', 'le', 'les', 'des', 'du', 'd', 'l', 'et', 'à', 'au', 'aux', 'en', 'un', 'une']);
+        return str.toLowerCase().replace(/[\p{L}\p{N}]+/gu, (word, offset) => {
+            if (offset === 0 || !minorWords.has(word)) {
+                return word.charAt(0).toUpperCase() + word.slice(1);
+            }
+            return word;
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSaving(true);
         try {
+            const formattedName = toSmartTitleCase(formData.name.trim());
             const res = await fetch('/api/admin/partners', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...formData, id: editingPartner?.id, lat: parseFloat(formData.lat), lng: parseFloat(formData.lng) })
+                body: JSON.stringify({ ...formData, name: formattedName, id: editingPartner?.id, lat: parseFloat(formData.lat), lng: parseFloat(formData.lng) })
             });
             if (res.ok) {
                 setEditingPartner(null);
@@ -105,10 +139,6 @@ export default function PartnersAdmin() {
             if (!res.ok) { alert(`Erreur: ${data.error}`); return; }
             setPrestaRows(data);
             setPrestaExportDone(true);
-            const ws = XLSX.utils.json_to_sheet(data);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Partenaires');
-            XLSX.writeFile(wb, 'partenaires-presta-export.xlsx');
         } catch (err) {
             console.error(err);
             alert('Erreur lors de la récupération depuis PrestaShop.');
@@ -117,10 +147,18 @@ export default function PartnersAdmin() {
         }
     };
 
+    const handleDownloadPrestaExcel = () => {
+        if (!prestaRows.length) return;
+        const ws = XLSX.utils.json_to_sheet(prestaRows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Partenaires');
+        XLSX.writeFile(wb, 'partenaires-presta.xlsx');
+    };
+
     const handleImportPrestaDirectly = async () => {
         if (!prestaRows.length) return;
-        if (!confirm(`Importer et géocoder ${prestaRows.length} adresses ? (~${Math.ceil(prestaRows.length * 1.5 / 60)} min)`)) return;
-        await runBulkImport(prestaRows);
+        if (!confirm(`Importer et géocoder ${prestaRows.length} adresses ? (~${Math.ceil(prestaRows.length * 0.05 / 60)} min)`)) return;
+        await runBulkImport(prestaRows, exactSync);
     };
 
     // ─── Excel / CSV Upload ─────────────────────────────────────────────────
@@ -137,7 +175,7 @@ export default function PartnersAdmin() {
                 const r = {};
                 for (const k of Object.keys(row)) r[k.toLowerCase().trim()] = String(row[k]).trim();
                 return {
-                    name: r['name'] || r['nom'] || r['commerce'] || r['nom du commerce'] || '',
+                    name: toSmartTitleCase(r['name'] || r['nom'] || r['commerce'] || r['nom du commerce'] || ''),
                     address: r['address'] || r['adresse'] || r['address1'] || '',
                     zip: r['zip'] || r['code postal'] || r['postcode'] || '',
                     city: r['city'] || r['ville'] || '',
@@ -159,14 +197,14 @@ export default function PartnersAdmin() {
         XLSX.writeFile(wb, 'template-import-professionnels.xlsx');
     };
 
-    const runBulkImport = async (rows) => {
+    const runBulkImport = async (rows, syncExact = false) => {
         setIsImporting(true);
         setImportResult(null);
         try {
             const res = await fetch('/api/admin/partners/bulk-import', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(rows),
+                body: JSON.stringify({ rows, exactSync: syncExact }),
             });
             const data = await res.json();
             setImportResult(data);
@@ -181,20 +219,46 @@ export default function PartnersAdmin() {
 
     const handleImportFile = async () => {
         if (!importRows.length) return;
-        if (!confirm(`Importer et géocoder ${importRows.length} lignes ? (~${Math.ceil(importRows.length * 1.5 / 60)} min)`)) return;
-        await runBulkImport(importRows);
+        if (!confirm(`Importer et géocoder ${importRows.length} lignes ? (~${Math.ceil(importRows.length * 0.05 / 60)} min)`)) return;
+        await runBulkImport(importRows, exactSync);
+    };
+
+    const handleDownloadErrors = () => {
+        if (!importResult || !importResult.failedRows || importResult.failedRows.length === 0) return;
+
+        const errorData = importResult.failedRows.map(f => ({
+            "Nom": f.row?.name || '',
+            "Adresse": f.row?.address || '',
+            "Code Postal": f.row?.zip || '',
+            "Ville": f.row?.city || '',
+            "Raison de l'échec": f.reason || 'Erreur inconnue'
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(errorData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Erreurs Géocodage');
+        XLSX.writeFile(wb, 'partenaires-erreurs.xlsx');
     };
 
     return (
         <div className={styles.adminContainer}>
             <div className={styles.header}>
-                <div className={styles.titleGroup}>
+                <div className={styles.titleGroup} style={{ flexGrow: 1 }}>
                     <MapPin className={styles.titleIcon} />
                     <div>
                         <h1>Gestion des Professionnels Partenaires</h1>
                         <p>Ajoutez et gérez les points de vente sur la carte</p>
                     </div>
                 </div>
+                <Link
+                    href="/professionnels"
+                    target="_blank"
+                    className={styles.submitBtn}
+                    style={{ marginTop: "24px", textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', borderRadius: '8px', marginLeft: 'auto' }}
+                >
+                    <ExternalLink size={18} />
+                    Voir la carte publique
+                </Link>
             </div>
 
             {/* ── SECTION: Import en masse ───── */}
@@ -207,21 +271,26 @@ export default function PartnersAdmin() {
                 <div style={{ marginBottom: '20px', padding: '16px', background: 'rgba(0,0,0,0.1)', borderRadius: '10px' }}>
                     <h3 style={{ margin: '0 0 6px', fontSize: '15px', color: '#10B981' }}>1. Depuis PrestaShop (clients Professionnels)</h3>
                     <p style={{ margin: '0 0 12px', fontSize: '13px', color: '#aaa' }}>
-                        Récupère toutes les adresses des pros et télécharge un fichier Excel de sauvegarde.
+                        Récupère toutes les adresses des professionnels directement depuis votre boutique.
                     </p>
                     <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                         <button onClick={handleExportPresta} disabled={isExportingPresta} className={styles.geocodeBtn}>
                             {isExportingPresta ? <><Loader2 size={16} className="animate-spin" /> Récupération...</> : <><RefreshCw size={16} /> Récupérer depuis PrestaShop</>}
                         </button>
                         {prestaExportDone && prestaRows.length > 0 && (
-                            <button onClick={handleImportPrestaDirectly} disabled={isImporting} className={styles.submitBtn}>
-                                {isImporting ? <><Loader2 size={16} className="animate-spin" /> En cours...</> : <><MapPin size={16} /> Géocoder & Importer ({prestaRows.length})</>}
-                            </button>
+                            <>
+                                <button onClick={handleImportPrestaDirectly} disabled={isImporting} className={styles.submitBtn}>
+                                    {isImporting ? <><Loader2 size={16} className="animate-spin" /> En cours...</> : <><MapPin size={16} /> Géocoder & Importer ({prestaRows.length})</>}
+                                </button>
+                                <button onClick={handleDownloadPrestaExcel} className={styles.geocodeBtn} style={{ background: 'transparent', border: '1px solid #10B981', color: '#10B981' }}>
+                                    <Download size={16} /> Télécharger en Excel
+                                </button>
+                            </>
                         )}
                     </div>
                     {prestaExportDone && (
                         <p style={{ marginTop: '10px', fontSize: '13px', color: '#10B981' }}>
-                            ✅ {prestaRows.length} adresses récupérées. Fichier Excel téléchargé.
+                            ✅ {prestaRows.length} adresses récupérées et prêtes à être géocodées.
                         </p>
                     )}
                 </div>
@@ -247,19 +316,49 @@ export default function PartnersAdmin() {
                             </button>
                         </div>
                     )}
-                    {isImporting && (
-                        <p style={{ marginTop: '12px', fontSize: '13px', color: '#f59e0b', fontStyle: 'italic' }}>
-                            ⏳ Ne fermez pas cette page — durée estimée ~{Math.ceil(importRows.length * 1.5 / 60)} min
-                        </p>
-                    )}
-                    {importResult && (
-                        <div style={{ marginTop: '12px', fontSize: '13px', padding: '12px', borderRadius: '8px', background: importResult.failed > 0 ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)' }}>
-                            <p>✅ <strong>{importResult.imported}</strong> importés avec succès.</p>
-                            {importResult.failed > 0 && <p>⚠️ <strong>{importResult.failed}</strong> adresse(s) non géocodée(s).</p>}
-                            <p>📍 Total en base : <strong>{importResult.total}</strong></p>
-                        </div>
-                    )}
                 </div>
+
+                {/* Options globales d'import */}
+                <div style={{ padding: '16px 16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <input
+                        type="checkbox"
+                        id="exactSync"
+                        checked={exactSync}
+                        onChange={(e) => setExactSync(e.target.checked)}
+                        style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+                    />
+                    <label htmlFor="exactSync" style={{ fontSize: '14px', cursor: 'pointer', color: '#4b5563' }}>
+                        <strong>Synchronisation "Miroir"</strong> : Supprimer de la carte les professionnels qui ne sont <u>pas</u> dans ce fichier importé.
+                    </label>
+                </div>
+
+                {/* Résultat global de l'import (PrestaShop ou Excel) */}
+                {isImporting && (
+                    <p style={{ marginTop: '0', fontSize: '13px', color: '#f59e0b', fontStyle: 'italic', padding: '0 16px' }}>
+                        ⏳ Ne fermez pas cette page — géocodage en cours...
+                    </p>
+                )}
+                {importResult && (
+                    <div style={{ margin: '0 16px 16px', fontSize: '13px', padding: '16px', borderRadius: '8px', background: importResult.failed > 0 ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)' }}>
+                        <p>✅ <strong>{importResult.imported || 0}</strong> nouveaux ajoutés.</p>
+                        <p>🔄 <strong>{importResult.updated || 0}</strong> mis à jour (nouvelle adresse).</p>
+                        <p>⏭️ <strong>{importResult.skipped || 0}</strong> ignorés (déjà à jour).</p>
+                        {importResult.deleted > 0 && <p style={{ color: '#dc2626' }}>🗑️ <strong>{importResult.deleted}</strong> obsolètes supprimés de la carte.</p>}
+
+                        {importResult.failed > 0 && (
+                            <div style={{ marginTop: '12px', background: 'rgba(245,158,11,0.1)', padding: '10px', borderRadius: '6px', borderLeft: '3px solid #f59e0b' }}>
+                                <p style={{ color: '#b45309', marginBottom: '8px' }}>⚠️ <strong>{importResult.failed}</strong> échec(s) de géocodage.</p>
+                                <button
+                                    onClick={handleDownloadErrors}
+                                    style={{ background: '#fff', border: '1px solid #d1d5db', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                >
+                                    <Download size={14} /> Télécharger le rapport d'erreurs
+                                </button>
+                            </div>
+                        )}
+                        <p style={{ marginTop: '12px', borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '12px' }}>📍 Total en base : <strong>{importResult.total}</strong></p>
+                    </div>
+                )}
             </div>
 
             <div className={styles.grid}>
@@ -315,14 +414,29 @@ export default function PartnersAdmin() {
 
                 {/* Liste */}
                 <div className={styles.listContainer}>
-                    <h2 className={styles.cardTitle}>Liste des Partenaires ({partners.length})</h2>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                        <h2 className={styles.cardTitle} style={{ marginBottom: 0 }}>
+                            Liste des Partenaires ({filteredPartners.length}/{partners.length})
+                        </h2>
+                        <div style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '8px', padding: '6px 12px', gap: '8px', width: '300px', maxWidth: '100%' }}>
+                            <Search size={16} color="#6b7280" />
+                            <input
+                                type="text"
+                                placeholder="Rechercher (nom, ville, CP)..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%', fontSize: '0.9rem' }}
+                            />
+                        </div>
+                    </div>
+
                     {isLoading ? (
                         <div className={styles.loader}><Loader2 className="animate-spin" /></div>
-                    ) : partners.length === 0 ? (
-                        <div className={styles.empty}>Aucun partenaire enregistré.</div>
+                    ) : filteredPartners.length === 0 ? (
+                        <div className={styles.empty}>Aucun partenaire trouvé.</div>
                     ) : (
                         <div className={styles.list}>
-                            {partners.map(partner => (
+                            {filteredPartners.map(partner => (
                                 <div key={partner.id} className={styles.partnerItem}>
                                     <div className={styles.partnerInfo}>
                                         <h3>{partner.name}</h3>

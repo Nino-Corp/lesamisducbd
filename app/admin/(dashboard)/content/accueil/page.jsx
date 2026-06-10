@@ -133,6 +133,7 @@ function InteractiveMapLegacyEditor({ props, onChange }) {
     return <>
         <Field label="Titre de la carte"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
         <Field label="Texte descriptif"><WysiwygEditor value={props.description || ''} onChange={val => onChange({ description: val })} /></Field>
+        <Field label="Nombre de partenaires (affiché sur la bulle verte)"><input style={inputStyle} value={props.partnerCount || ''} onChange={e => onChange({ partnerCount: e.target.value })} placeholder="ex: 300+" /></Field>
     </>;
 }
 

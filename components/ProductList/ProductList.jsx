@@ -130,7 +130,7 @@ export default function ProductList({ title, description, linkLabel, linkHref, p
                         {titleParts[0]} <br /> pour {titleParts[1]}
                     </h2>
                     <div className={styles.descriptionWrapper}>
-                        <p className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></p>
+                        <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></div>
                     </div>
                 </div>
 

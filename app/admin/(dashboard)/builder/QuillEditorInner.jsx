@@ -90,6 +90,13 @@ function buildPickerCSS() {
 .ql-snow .ql-picker.ql-header .ql-picker-label:not([data-value])::before,
 .ql-snow .ql-picker.ql-header .ql-picker-item:not([data-value])::before { content: "Normal" !important; }\n`;
 
+    // Color and Background "none" option (red cross)
+    css += `.ql-snow .ql-color-picker .ql-picker-item:not([data-value]) {
+    background: linear-gradient(to top left, transparent 45%, #ef4444 45%, #ef4444 55%, transparent 55%), linear-gradient(to top right, transparent 45%, #ef4444 45%, #ef4444 55%, transparent 55%) !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}\n`;
+
     return css;
 }
 
@@ -158,7 +165,7 @@ export default function QuillEditorInner({ value, onChange, placeholder }) {
                 [{ header: [2, 3, false] }],
                 [{ font: FontStyle.whitelist }, { size: SizeStyle.whitelist }],
                 ['bold', 'italic', 'underline', 'strike'],
-                [{ color: PROJECT_COLORS }, { background: PROJECT_COLORS }],
+                [{ color: [false, ...PROJECT_COLORS] }, { background: [false, ...PROJECT_COLORS] }],
                 [{ align: [] }],
                 [{ list: 'ordered' }, { list: 'bullet' }],
                 ['link', 'clean'],

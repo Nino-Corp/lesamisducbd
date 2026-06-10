@@ -137,7 +137,11 @@ const generateStablePoints = (totalPoints = 350) => {
 // We use 320 points to look dense but stay performing (SVG handles < 500 nodes easily at 120fps)
 const STABLE_MARKERS = generateStablePoints(320);
 
-export default function InteractiveMap() {
+export default function InteractiveMap({ 
+    title = "Où nous retrouver ?", 
+    description = "Retrouvez nos produits dans une sélection de points de vente partenaires partout en France : <span class=\"highlight\">plus de 300 bureaux de tabac, shops spécialisés et adresses de confiance.</span>",
+    partnerCount = "300+"
+}) {
     const [center, setCenter] = useState([2.83, 46.5]);
 
     useEffect(() => {
@@ -173,10 +177,13 @@ export default function InteractiveMap() {
         <section className={styles.section}>
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <h2 className={styles.title}>Où nous retrouver ?</h2>
-                    <p className={styles.subtitle}>
-                        Retrouvez nos produits dans une sélection de points de vente partenaires partout en France : <span className={styles.highlight}>plus de 300 bureaux de tabac, shops spécialisés et adresses de confiance.</span>
-                    </p>
+                    <h2 className={styles.title}>{title}</h2>
+                    {description && (
+                        <div 
+                            className={styles.subtitle} 
+                            dangerouslySetInnerHTML={{ __html: description }} 
+                        />
+                    )}
                 </div>
 
                 <div className={styles.mapMapWrapper}>
@@ -215,7 +222,7 @@ export default function InteractiveMap() {
                             <span className={styles.dot}></span>
                             EN DIRECT
                         </div>
-                        <p className={styles.infoText}>300+ Partenaires</p>
+                        <p className={styles.infoText}>{partnerCount} Partenaires</p>
                     </div>
                 </div>
 
