@@ -61,6 +61,9 @@ export async function GET(request) {
         // Parse totals
         for (const [key, value] of Object.entries(totals)) {
             const numVal = Number(value);
+            // Ignore stats for admin pages
+            if (key.includes(':/admin')) continue;
+
             if (key.startsWith('views:')) viewsMap[key.replace('views:', '')] = (viewsMap[key.replace('views:', '')] || 0) + numVal;
             else if (key.startsWith('time:')) timeMap[key.replace('time:', '')] = numVal;
             else if (key.startsWith('sessions:')) sessionsMap[key.replace('sessions:', '')] = numVal;
@@ -76,6 +79,8 @@ export async function GET(request) {
             const pages = {};
             for (const [k, v] of Object.entries(dayData)) {
                 if (k.startsWith('views:')) {
+                    if (k.includes(':/admin')) continue; // Ignore admin pages in daily views
+                    
                     totalViews += Number(v);
                     pages[k.replace('views:', '')] = Number(v);
                 }

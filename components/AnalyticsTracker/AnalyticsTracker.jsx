@@ -21,6 +21,7 @@ export default function AnalyticsTracker() {
 
     const sendDuration = () => {
         if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) return;
+        if (currentPageRef.current.startsWith('/admin')) return;
         
         const duration = Math.round((Date.now() - startTimeRef.current) / 1000);
         if (duration > 0 && duration < 3600) { // Ignore unrealistic times > 1h
@@ -38,6 +39,7 @@ export default function AnalyticsTracker() {
     useEffect(() => {
         if (!pathname) return;
         if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) return;
+        if (pathname.startsWith('/admin')) return;
 
         // If path changes, send duration of previous page
         if (currentPageRef.current !== pathname) {

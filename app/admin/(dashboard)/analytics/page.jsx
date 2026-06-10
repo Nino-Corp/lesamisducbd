@@ -97,6 +97,8 @@ export default function AnalyticsDashboard() {
         });
 
         Object.values(dynamicPages).forEach(page => {
+            if (page.slug.startsWith('/admin')) return; // Ignore admin pages
+
             const views = viewsMap[page.slug] || 0;
             const time = timeMap[page.slug] || 0;
             const sessions = sessionsMap[page.slug] || 0;
