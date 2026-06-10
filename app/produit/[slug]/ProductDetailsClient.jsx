@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
 import { SITE_URL } from '@/app/shared-metadata';
 import ProductSchema from '@/components/JsonLd/ProductSchema';
+import { trackCTA } from '@/utils/analytics';
 
 const HEADER_PROPS = {
     logoText: "LES AMIS DU CBD",
@@ -165,7 +166,11 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                         <button
                                             key={v.slug}
                                             className={`${styles.variantPill} ${v.slug === selectedVariationSlug ? styles.variantPillActive : ''}`}
-                                            onClick={(e) => { e.preventDefault(); setSelectedVariationSlug(v.slug); }}
+                                            onClick={(e) => { 
+                                                e.preventDefault(); 
+                                                setSelectedVariationSlug(v.slug);
+                                                trackCTA(`product_click_${v.slug}`);
+                                            }}
                                         >
                                             {v.label}
                                         </button>
@@ -175,7 +180,11 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                         <button
                                             key={v.id}
                                             className={`${styles.variantPill} ${v.id === selectedVariantId ? styles.variantPillActive : ''}`}
-                                            onClick={(e) => { e.preventDefault(); setSelectedVariantId(v.id); }}
+                                            onClick={(e) => { 
+                                                e.preventDefault(); 
+                                                setSelectedVariantId(v.id);
+                                                trackCTA(`product_click_${product.slug}-${v.id}`);
+                                            }}
                                         >
                                             {v.label}
                                         </button>
@@ -295,7 +304,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                             }
 
                             return (
-                                <Link key={p.name} href={`/produit/${p.slug}`} className={styles.relatedCard}>
+                                <Link key={p.name} href={`/produit/${p.slug}`} className={styles.relatedCard} onClick={() => trackCTA(`product_click_${p.slug}`)}>
                                     <div className={styles.relatedImageWrapper}>
                                         <Image src={p.image || '/images/placeholder.webp'} alt={p.name} fill className={styles.relatedImage} sizes="(max-width: 768px) 50vw, 25vw" />
                                     </div>
