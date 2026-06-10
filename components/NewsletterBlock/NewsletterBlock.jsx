@@ -36,7 +36,7 @@ export default function NewsletterBlock({ title = "Rejoignez notre Newsletter", 
                     <Mail size={32} color="#1F4B40" />
                 </div>
                 <h3 className={styles.title}>{title}</h3>
-                <p className={styles.description}>{description}</p>
+                <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }} />
 
                 {status === 'success' ? (
                     <div className={styles.successMessage}>

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import styles from './Editor.module.css';
+import WysiwygEditor from '../../builder/WysiwygEditor';
 
 export default function FAQEditor({ section, onSave }) {
     const [title, setTitle] = useState(section.props.title || '');
@@ -96,12 +97,9 @@ export default function FAQEditor({ section, onSave }) {
                                 style={{ marginBottom: '10px', fontWeight: 'bold' }}
                                 placeholder="Question"
                             />
-                            <textarea
-                                value={item.answer}
-                                onChange={(e) => handleItemChange(index, 'answer', e.target.value)}
-                                className={styles.textarea}
-                                rows={3}
-                                placeholder="Réponse (HTML accepté)"
+                            <WysiwygEditor
+                                value={item.answer || ''}
+                                onChange={(val) => handleItemChange(index, 'answer', val)}
                             />
                         </div>
                     ))}

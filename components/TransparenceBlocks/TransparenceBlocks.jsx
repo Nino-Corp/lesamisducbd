@@ -58,11 +58,13 @@ export function TransparenceQuote({ text, author, image }) {
                 />
             </div>
             <div className={styles.quoteBlock}>
-                {text && text.split('\n').map((line, i) => (
-                    <p key={i} className={styles.quoteText} style={{ marginBottom: '1rem' }}>
-                        {line}
-                    </p>
-                ))}
+                {text && (
+                    <div
+                        className={styles.quoteText}
+                        style={{ marginBottom: '1rem' }}
+                        dangerouslySetInnerHTML={{ __html: text }}
+                    />
+                )}
                 {author && <p className={styles.quoteAuthor}>{author}</p>}
             </div>
         </section>
@@ -90,11 +92,11 @@ export function TransparenceFeature({ title, icon, col1, col2 }) {
             <div className={styles.columns}>
                 <div className={styles.column}>
                     {col1?.title && <h3>{col1.title}</h3>}
-                    {renderTextLines(col1?.text)}
+                    {col1?.text && <div dangerouslySetInnerHTML={{ __html: col1.text }} />}
                 </div>
                 <div className={styles.column}>
                     {col2?.title && <h3>{col2.title}</h3>}
-                    {renderTextLines(col2?.text)}
+                    {col2?.text && <div dangerouslySetInnerHTML={{ __html: col2.text }} />}
                 </div>
             </div>
         </section>
@@ -122,16 +124,20 @@ export function TransparenceCertificates({ title, items }) {
                         <div
                             key={idx}
                             className={styles.imageCard}
-                            onClick={() => setSelectedImage(analyse)}
+                            onClick={(e) => {
+                                if (analyse.src.toLowerCase().endsWith('.pdf')) {
+                                    window.open(analyse.src, '_blank');
+                                } else {
+                                    setSelectedImage(analyse);
+                                }
+                            }}
                         >
                             <div className={styles.imageWrapper}>
                                 {analyse.src.toLowerCase().endsWith('.pdf') ? (
-                                    <iframe
-                                        src={`${analyse.src}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
-                                        title={analyse.alt || 'Certificat PDF'}
-                                        className={styles.pdfThumbnail}
-                                        tabIndex={-1}
-                                    />
+                                    <div className={styles.pdfThumbnailWrapper}>
+                                        <FileText size={48} className={styles.pdfIcon} />
+                                        <span className={styles.pdfText}>Ouvrir le PDF</span>
+                                    </div>
                                 ) : (
                                     <Image
                                         src={analyse.src}
@@ -163,13 +169,7 @@ export function TransparenceCertificates({ title, items }) {
                         <X size={40} />
                     </button>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                        {selectedImage.src.toLowerCase().endsWith('.pdf') ? (
-                            <iframe
-                                src={selectedImage.src}
-                                className={styles.modalIframe}
-                                title={selectedImage.alt || 'Certificat PDF'}
-                            />
-                        ) : (
+                        {selectedImage.src.toLowerCase().endsWith('.pdf') ? null : (
                             <Image
                                 src={selectedImage.src}
                                 alt={selectedImage.alt || 'Certificat'}

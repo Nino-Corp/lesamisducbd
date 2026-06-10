@@ -38,7 +38,7 @@ export default function AuthorCard({ name, role, bio, imageSrc, twitter, linkedi
                             )}
                         </div>
                     </div>
-                    {bio && <p className={styles.bio}>{bio}</p>}
+                    {bio && <div className={styles.bio} dangerouslySetInnerHTML={{ __html: bio }} />}
                 </div>
             </div>
         </section>

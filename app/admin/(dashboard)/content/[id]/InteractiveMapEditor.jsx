@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Editor.module.css';
+import WysiwygEditor from '../../builder/WysiwygEditor';
 
 export default function InteractiveMapEditor({ section, onSave }) {
     const [title, setTitle] = useState(section.props.title || '');
@@ -25,13 +26,9 @@ export default function InteractiveMapEditor({ section, onSave }) {
             </div>
             <div className={styles.fieldGroup}>
                 <label>Texte descriptif</label>
-                <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className={styles.textarea}
-                    placeholder="Explication ou sous-titre..."
-                    rows={4}
-                    required
+                <WysiwygEditor
+                    value={description || ''}
+                    onChange={(val) => setDescription(val)}
                 />
             </div>
 

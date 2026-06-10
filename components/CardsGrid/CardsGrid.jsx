@@ -38,7 +38,7 @@ export default function CardsGrid({
                         <div key={i} className={`${styles.card} ${cardStyle === 'border' ? styles.cardBorder : styles.cardShadow}`}>
                             {card.icon && <span className={styles.cardIcon}>{ICONS[card.icon] || card.icon}</span>}
                             <h3 className={styles.cardTitle}>{card.title}</h3>
-                            {card.text && <p className={styles.cardText}>{card.text}</p>}
+                            {card.text && <div className={styles.cardText} dangerouslySetInnerHTML={{ __html: card.text }} />}
                         </div>
                     ))}
                 </div>

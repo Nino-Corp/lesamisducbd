@@ -37,7 +37,7 @@ export default function ContactFormBlock({ title = "Contactez-nous", description
         <div className={styles.container}>
             <div className={styles.content}>
                 <h3 className={styles.title}>{title}</h3>
-                <p className={styles.description}>{description}</p>
+                <div className={styles.description} dangerouslySetInnerHTML={{ __html: description }} />
 
                 {status === 'success' ? (
                     <div className={styles.successMessage}>

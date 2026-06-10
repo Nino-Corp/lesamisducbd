@@ -23,7 +23,7 @@ export default function UsagesCarousel({ items }) {
                         </div>
                         <div className={styles.cardContent}>
                             <h3 className={styles.cardTitle}>{item.title}</h3>
-                            <p className={styles.cardText}>{item.description}</p>
+                            <div className={styles.cardText} dangerouslySetInnerHTML={{ __html: item.description || '' }} />
                         </div>
                     </div>
                 ))}

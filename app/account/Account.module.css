@@ -94,6 +94,7 @@
 @media (max-width: 768px) {
     .container {
         margin-top: 40px;
+        padding: 0 10px;
     }
 
     .title {

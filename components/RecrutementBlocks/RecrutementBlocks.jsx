@@ -41,16 +41,9 @@ export function RecrutementText({ title, text }) {
         <ScrollReveal animation="fade-up">
             <section className={styles.contentSection}>
                 {title && (
-                    <h2 className={styles.mainTitle}>
-                        {title.split('\n').map((line, i) => (
-                            <React.Fragment key={i}>
-                                {line}
-                                {i < title.split('\n').length - 1 && <br />}
-                            </React.Fragment>
-                        ))}
-                    </h2>
+                    <h2 className={styles.mainTitle} dangerouslySetInnerHTML={{ __html: title || '' }} />
                 )}
-                {renderText(text)}
+                <div className={styles.textBlock} dangerouslySetInnerHTML={{ __html: text || '' }} />
             </section>
         </ScrollReveal>
     );
@@ -73,9 +66,7 @@ export function RecrutementJobs({ title, jobs }) {
                                 <span className={styles.jobBadge}>{job.type}</span>
                             </div>
                             <p className={styles.jobLocation}>📍 {job.location}</p>
-                            <div className={styles.jobDescription}>
-                                {renderText(job.description)}
-                            </div>
+                                <div dangerouslySetInnerHTML={{ __html: job.description || '' }} />
                             <button onClick={() => setIsModalOpen(true)} className={styles.applyBtn}>
                                 Postuler
                             </button>
@@ -98,24 +89,10 @@ export function RecrutementContact({ title, text }) {
             <section className={styles.contactCardSection}>
                 <div className={styles.contactCard}>
                     {title && (
-                        <h3 className={styles.cardTitle}>
-                            {title.split('\n').map((line, i) => (
-                                <React.Fragment key={i}>
-                                    {line}
-                                    {i < title.split('\n').length - 1 && <br />}
-                                </React.Fragment>
-                            ))}
-                        </h3>
+                        <h3 className={styles.cardTitle} dangerouslySetInnerHTML={{ __html: title || '' }} />
                     )}
                     {text && (
-                        <p className={styles.cardText}>
-                            {text.split('\n').map((line, i) => (
-                                <React.Fragment key={i}>
-                                    {line}
-                                    {i < text.split('\n').length - 1 && <br />}
-                                </React.Fragment>
-                            ))}
-                        </p>
+                        <div className={styles.cardText} dangerouslySetInnerHTML={{ __html: text || '' }} />
                     )}
                     <button onClick={() => setIsModalOpen(true)} className={styles.contactButton}>
                         Contactez-nous !

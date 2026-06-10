@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import styles from './Editor.module.css';
+import WysiwygEditor from '../../builder/WysiwygEditor';
 
 export default function PartnersEditor({ section, onSave }) {
     const [title, setTitle] = useState(section.props.title || '');
@@ -89,11 +90,9 @@ export default function PartnersEditor({ section, onSave }) {
 
             <div className={styles.fieldGroup}>
                 <label>Sous-titre (HTML accepté)</label>
-                <textarea
-                    value={subtitle}
-                    onChange={(e) => setSubtitle(e.target.value)}
-                    className={styles.textarea}
-                    rows={2}
+                <WysiwygEditor
+                    value={subtitle || ''}
+                    onChange={(val) => setSubtitle(val)}
                 />
             </div>
 
@@ -125,12 +124,9 @@ export default function PartnersEditor({ section, onSave }) {
                                 />
                             </div>
 
-                            <textarea
-                                value={partner.quote}
-                                onChange={(e) => handlePartnerChange(index, 'quote', e.target.value)}
-                                className={styles.textarea}
-                                rows={3}
-                                placeholder="Citation"
+                            <WysiwygEditor
+                                value={partner.quote || ''}
+                                onChange={(val) => handlePartnerChange(index, 'quote', val)}
                             />
 
                             <div style={{ marginTop: '10px' }}>

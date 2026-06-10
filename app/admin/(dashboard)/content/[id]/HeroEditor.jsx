@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import styles from './Editor.module.css';
 import ImageUpload from '@/components/Admin/ImageUpload';
+import WysiwygEditor from '../../builder/WysiwygEditor';
 
 export default function HeroEditor({ section, onSave }) {
     const [props, setProps] = useState(section.props);
@@ -60,12 +61,9 @@ export default function HeroEditor({ section, onSave }) {
 
             <div className={styles.fieldGroup}>
                 <label>Description</label>
-                <textarea
-                    name="description"
-                    value={props.description}
-                    onChange={handleChange}
-                    rows={4}
-                    className={styles.textarea}
+                <WysiwygEditor
+                    value={props.description || ''}
+                    onChange={(val) => setProps(prev => ({ ...prev, description: val }))}
                 />
             </div>
 

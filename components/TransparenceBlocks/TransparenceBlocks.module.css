@@ -192,16 +192,29 @@
     padding: 10px;
 }
 
-.pdfThumbnail {
+.pdfThumbnailWrapper {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    border: none;
-    pointer-events: none;
-    overflow: hidden;
-    background: #fff;
-    border-radius: 12px 12px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    color: var(--primary-dark);
+    gap: 10px;
+    border-radius: 16px 16px 0 0;
+}
+
+.pdfIcon {
+    color: #2d6a2d;
+    opacity: 0.8;
+}
+
+.pdfText {
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .imageCaption {

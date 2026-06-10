@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import WysiwygEditor from '../../builder/WysiwygEditor';
 
 export default function WhyChooseUsEditor({ section, onSave }) {
     const [title, setTitle] = useState(section.props.title || '');
@@ -101,11 +102,9 @@ export default function WhyChooseUsEditor({ section, onSave }) {
 
                         <div>
                             <label style={{ display: 'block', marginBottom: 5, fontWeight: 'bold', fontSize: '0.85rem' }}>Description</label>
-                            <textarea
-                                value={feature.description}
-                                onChange={(e) => handleFeatureChange(index, 'description', e.target.value)}
-                                rows={2}
-                                style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #d1d5db', resize: 'vertical' }}
+                            <WysiwygEditor
+                                value={feature.description || ''}
+                                onChange={(val) => handleFeatureChange(index, 'description', val)}
                             />
                         </div>
                     </div>

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import styles from './Editor.module.css';
+import WysiwygEditor from '../../builder/WysiwygEditor';
 
 export default function QuoteEditor({ section, onSave }) {
     const [props, setProps] = useState(section.props);
@@ -35,12 +36,9 @@ export default function QuoteEditor({ section, onSave }) {
 
             <div className={styles.fieldGroup}>
                 <label>Texte de la citation (HTML accepté)</label>
-                <textarea
-                    name="text"
-                    value={props.text}
-                    onChange={handleChange}
-                    rows={5}
-                    className={styles.textarea}
+                <WysiwygEditor
+                    value={props.text || ''}
+                    onChange={(val) => setProps(prev => ({ ...prev, text: val }))}
                 />
             </div>
 

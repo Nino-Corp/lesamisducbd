@@ -11,7 +11,7 @@ export function EssentielIntro({ items }) {
         <ScrollReveal animation="fade-up">
             <section className={styles.introSection}>
                 {items.map((para, i) => (
-                    <p key={i} className={styles.introText}>{para}</p>
+                    <div key={i} className={styles.introText} dangerouslySetInnerHTML={{ __html: para }} />
                 ))}
             </section>
         </ScrollReveal>
@@ -24,7 +24,7 @@ export function EssentielCarousel({ title, intro, items }) {
         <ScrollReveal animation="fade-up" delay={200}>
             <section className={styles.carouselSection}>
                 {title && <h2 className={styles.sectionTitle} dangerouslySetInnerHTML={{ __html: title }} />}
-                {intro && <p className={styles.sectionIntro}>{intro}</p>}
+                {intro && <div className={styles.sectionIntro} dangerouslySetInnerHTML={{ __html: intro || '' }} />}
                 <UsagesCarousel items={items} />
             </section>
         </ScrollReveal>

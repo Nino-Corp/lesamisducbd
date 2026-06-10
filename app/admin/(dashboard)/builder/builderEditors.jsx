@@ -47,7 +47,7 @@ export function ImageUploader({ value, onChange, folder = 'pages' }) {
 export function HeroEditor({ props, onChange }) {
     return <>
         <Field label="Titre principal" hint="Supporte <strong>, <em>...">
-            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={3} />
+            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} />
         </Field>
         <Field label="Sous-titre" hint="Texte affiché sous le titre principal (optionnel)">
             <input style={inputStyle} value={props.subtitle || ''} onChange={e => onChange({ subtitle: e.target.value })} />
@@ -175,7 +175,7 @@ export function CardsGridEditor({ props, onChange }) {
                         </select>
                     </Field>
                     <Field label="Titre"><input style={inputStyle} value={card.title || ''} onChange={e => updateCard(i, 'title', e.target.value)} /></Field>
-                    <Field label="Texte"><textarea style={textareaStyle} value={card.text || ''} onChange={e => updateCard(i, 'text', e.target.value)} rows={2} /></Field>
+                    <Field label="Texte"><WysiwygEditor value={card.text || ''} onChange={val => updateCard(i, 'text', val)} /></Field>
                 </div>
             ))}
         </div>
@@ -231,7 +231,7 @@ export function CTABlockEditor({ props, onChange }) {
 
 export function QuoteEditor({ props, onChange }) {
     return <>
-        <Field label="Citation"><textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={4} /></Field>
+        <Field label="Citation"><WysiwygEditor value={props.text || ''} onChange={val => onChange({ text: val })} /></Field>
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
             <Field label="Auteur"><input style={inputStyle} value={props.author || ''} onChange={e => onChange({ author: e.target.value })} placeholder="Nelson — Les Amis du CBD" /></Field>
             <Field label="Alignement">
@@ -308,13 +308,13 @@ export function FAQEditor({ props, onChange }) {
         <Field label="Titre de la FAQ"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px' }}>
             {items.map((item, i) => (
-                <div key={i} style={{ background: '#f9f9f9', borderRadius: '10px', padding: '14px', border: '1px solid #eee' }}>
+                <div key={i} style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                         <strong style={{ fontSize: '0.85rem' }}>Q{i + 1}</strong>
                         <button type="button" onClick={() => removeItem(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}>✕</button>
                     </div>
                     <Field label="Question"><input style={inputStyle} value={item.question} onChange={e => updateItem(i, 'question', e.target.value)} /></Field>
-                    <Field label="Réponse"><textarea style={textareaStyle} value={item.answer} rows={3} onChange={e => updateItem(i, 'answer', e.target.value)} /></Field>
+                    <Field label="Réponse"><WysiwygEditor value={item.answer} onChange={val => updateItem(i, 'answer', val)} /></Field>
                 </div>
             ))}
         </div>
@@ -350,7 +350,7 @@ export function AuthorCardEditor({ props, onChange }) {
             <Field label="Nom"><input style={inputStyle} value={props.name || ''} onChange={e => onChange({ name: e.target.value })} placeholder="Prénom Nom" /></Field>
             <Field label="Rôle / Titre"><input style={inputStyle} value={props.role || ''} onChange={e => onChange({ role: e.target.value })} placeholder="Rédacteur CBD" /></Field>
         </div>
-        <Field label="Bio"><textarea style={textareaStyle} value={props.bio || ''} onChange={e => onChange({ bio: e.target.value })} rows={3} /></Field>
+        <Field label="Bio"><WysiwygEditor value={props.bio || ''} onChange={val => onChange({ bio: val })} /></Field>
         <Field label="Photo de profil"><ImageUploader value={props.imageSrc || ''} onChange={url => onChange({ imageSrc: url })} folder="pages/authors" /></Field>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
             <Field label="Twitter / X" hint="URL complète"><input style={inputStyle} value={props.twitter || ''} onChange={e => onChange({ twitter: e.target.value })} placeholder="https://x.com/..." /></Field>
@@ -519,13 +519,10 @@ export function WhyChooseUsEditor({ props, onChange }) {
         <label style={{ display: 'block', fontWeight: 600, fontSize: '0.82rem', marginTop: '16px', marginBottom: '8px' }}>AVANTAGES</label>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {features.map((feature, i) => (
-                <div key={i} style={{ background: '#f9f9f9', borderRadius: '10px', padding: '14px', border: '1px solid #eee' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                        <strong style={{ fontSize: '0.85rem' }}>Avantage {i + 1}</strong>
-                        <button type="button" onClick={() => removeFeature(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}>✕</button>
-                    </div>
-                    <Field label="Titre"><input style={inputStyle} value={feature.title || ''} onChange={e => updateFeature(i, 'title', e.target.value)} /></Field>
-                    <Field label="Description"><textarea style={textareaStyle} value={feature.description || ''} onChange={e => updateFeature(i, 'description', e.target.value)} rows={2} /></Field>
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '8px', background: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                    <Field label="Titre de l'argument"><input style={inputStyle} value={feature.title || ''} onChange={e => updateFeature(i, 'title', e.target.value)} /></Field>
+                    <Field label="Description"><WysiwygEditor value={feature.description || ''} onChange={val => updateFeature(i, 'description', val)} /></Field>
+                    <button type="button" onClick={() => removeFeature(i)} style={{ padding: '6px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.8rem', alignSelf: 'flex-start' }}>Supprimer</button>
                 </div>
             ))}
         </div>
@@ -544,7 +541,7 @@ export function CodeEmbedEditor({ props, onChange }) {
 export function NewsletterBlockEditor({ props, onChange }) {
     return <>
         <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
-        <Field label="Description"><textarea style={textareaStyle} value={props.description || ''} onChange={e => onChange({ description: e.target.value })} rows={3} /></Field>
+        <Field label="Description"><WysiwygEditor value={props.description || ''} onChange={val => onChange({ description: val })} /></Field>
         <Field label="Texte du bouton"><input style={inputStyle} value={props.buttonText || ''} onChange={e => onChange({ buttonText: e.target.value })} /></Field>
         <Field label="Placeholder E-mail"><input style={inputStyle} value={props.placeholder || ''} onChange={e => onChange({ placeholder: e.target.value })} /></Field>
     </>;
@@ -553,7 +550,7 @@ export function NewsletterBlockEditor({ props, onChange }) {
 export function ContactFormBlockEditor({ props, onChange }) {
     return <>
         <Field label="Titre"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
-        <Field label="Description"><textarea style={textareaStyle} value={props.description || ''} onChange={e => onChange({ description: e.target.value })} rows={3} /></Field>
+        <Field label="Description"><WysiwygEditor value={props.description || ''} onChange={val => onChange({ description: val })} /></Field>
         <Field label="Texte du bouton"><input style={inputStyle} value={props.buttonText || ''} onChange={e => onChange({ buttonText: e.target.value })} /></Field>
     </>;
 }
@@ -569,8 +566,8 @@ export function EssentielIntroEditor({ props, onChange }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {items.map((p, i) => (
                 <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                    <textarea style={textareaStyle} value={p} onChange={e => updateItem(i, e.target.value)} rows={3} />
-                    <button type="button" onClick={() => removeItem(i)} style={{ padding: '8px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '8px', cursor: 'pointer' }}>✕</button>
+                    <div style={{ flex: 1 }}><WysiwygEditor value={p} onChange={val => updateItem(i, val)} /></div>
+                    <button type="button" onClick={() => removeItem(i)} style={{ padding: '8px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '8px', cursor: 'pointer', flexShrink: 0 }}>✕</button>
                 </div>
             ))}
         </div>
@@ -586,7 +583,7 @@ export function EssentielCarouselEditor({ props, onChange }) {
 
     return <>
         <Field label="Titre de section" hint="Optionnel"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
-        <Field label="Introduction" hint="Optionnel"><textarea style={textareaStyle} value={props.intro || ''} onChange={e => onChange({ intro: e.target.value })} rows={2} /></Field>
+        <Field label="Introduction" hint="Optionnel"><WysiwygEditor value={props.intro || ''} onChange={val => onChange({ intro: val })} /></Field>
         
         <p style={{ fontSize: '0.85rem', color: '#666', marginBottom: '12px', marginTop: '16px' }}>Éléments du carrousel :</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -594,7 +591,7 @@ export function EssentielCarouselEditor({ props, onChange }) {
                 <div key={i} style={{ padding: '12px', border: '1px solid #e2e8f0', borderRadius: '8px', background: '#f8fafc', position: 'relative' }}>
                     <button type="button" onClick={() => removeItem(i)} style={{ position: 'absolute', top: '12px', right: '12px', padding: '6px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.7rem' }}>✕</button>
                     <Field label={`Titre ${i+1}`}><input style={inputStyle} value={item.title || ''} onChange={e => updateItem(i, 'title', e.target.value)} /></Field>
-                    <Field label="Description"><textarea style={textareaStyle} value={item.description || ''} onChange={e => updateItem(i, 'description', e.target.value)} rows={3} /></Field>
+                    <Field label="Description"><WysiwygEditor value={item.description || ''} onChange={val => updateItem(i, 'description', val)} /></Field>
                     <Field label="Image">
                         <ImageUploader value={item.image || ''} onChange={url => updateItem(i, 'image', url)} folder="pages/essentiel" />
                     </Field>
@@ -637,10 +634,10 @@ export function ProHeroEditor({ props, onChange }) {
             <input style={inputStyle} value={props.badgeText || ''} onChange={e => onChange({ badgeText: e.target.value })} placeholder="Nous rejoindre ?" />
         </Field>
         <Field label="Titre principal (H1)">
-            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={3} />
+            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} />
         </Field>
-        <Field label="Texte descriptif" hint="Les retours à la ligne sont respectés">
-            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={6} />
+        <Field label="Texte descriptif">
+            <WysiwygEditor value={props.text || ''} onChange={val => onChange({ text: val })} />
         </Field>
     </>;
 }
@@ -663,7 +660,7 @@ export function ProStepsEditor({ props, onChange }) {
                         <button type="button" onClick={() => removeStep(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}>✕</button>
                     </div>
                     <Field label="Titre"><input style={inputStyle} value={step.title || ''} onChange={e => updateStep(i, 'title', e.target.value)} /></Field>
-                    <Field label="Texte" hint="Les retours à la ligne sont respectés"><textarea style={textareaStyle} value={step.text || ''} onChange={e => updateStep(i, 'text', e.target.value)} rows={4} /></Field>
+                    <Field label="Texte"><WysiwygEditor value={step.text || ''} onChange={val => updateStep(i, 'text', val)} /></Field>
                 </div>
             ))}
         </div>
@@ -674,10 +671,10 @@ export function ProStepsEditor({ props, onChange }) {
 export function UsagesIntroEditor({ props, onChange }) {
     return <>
         <Field label="Titre principal" hint="Supporte HTML (ex: <br/> pour un retour à la ligne)">
-            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={3} />
+            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} />
         </Field>
         <Field label="Texte introductif">
-            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={6} />
+            <WysiwygEditor value={props.text || ''} onChange={val => onChange({ text: val })} />
         </Field>
     </>;
 }
@@ -690,7 +687,7 @@ export function UsagesCarouselBlockEditor({ props, onChange }) {
 
     return <>
         <Field label="Titre du carrousel" hint="Supporte HTML">
-            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={2} />
+            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} />
         </Field>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
             {items.map((item, i) => (
@@ -706,7 +703,7 @@ export function UsagesCarouselBlockEditor({ props, onChange }) {
                         <input style={inputStyle} value={item.title || ''} onChange={e => updateItem(i, 'title', e.target.value)} />
                     </Field>
                     <Field label="Description">
-                        <textarea style={textareaStyle} value={item.description || ''} onChange={e => updateItem(i, 'description', e.target.value)} rows={4} />
+                        <WysiwygEditor value={item.description || ''} onChange={val => updateItem(i, 'description', val)} />
                     </Field>
                 </div>
             ))}
@@ -718,10 +715,10 @@ export function UsagesCarouselBlockEditor({ props, onChange }) {
 export function UsagesWarningEditor({ props, onChange }) {
     return <>
         <Field label="Avertissement (Titre de gauche)" hint="Supporte HTML">
-            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={4} />
+            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} />
         </Field>
         <Field label="Responsabilité (Titre de droite)" hint="Supporte HTML">
-            <textarea style={textareaStyle} value={props.responsibleTitle || ''} onChange={e => onChange({ responsibleTitle: e.target.value })} rows={4} />
+            <WysiwygEditor value={props.responsibleTitle || ''} onChange={val => onChange({ responsibleTitle: val })} />
         </Field>
     </>;
 }
@@ -740,7 +737,7 @@ export function UsagesEssentialBoxEditor({ props, onChange }) {
             {items.map((item, i) => (
                 <div key={i} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                     <div style={{ flex: 1 }}>
-                        <textarea style={{ ...textareaStyle, minHeight: '60px' }} value={item} onChange={e => updateItem(i, e.target.value)} />
+                        <WysiwygEditor value={item} onChange={val => updateItem(i, val)} />
                     </div>
                     <button type="button" onClick={() => removeItem(i)} style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#fef2f2', border: '1px solid #fecaca', color: '#ef4444', cursor: 'pointer', flexShrink: 0 }}>✕</button>
                 </div>
@@ -767,7 +764,7 @@ export function TransparenceQuoteEditor({ props, onChange }) {
             <ImageUploader value={props.image || ''} onChange={url => onChange({ image: url })} folder="pages/transparence" />
         </Field>
         <Field label="Citation">
-            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={5} />
+            <WysiwygEditor value={props.text || ''} onChange={val => onChange({ text: val })} />
         </Field>
         <Field label="Auteur">
             <input style={inputStyle} value={props.author || ''} onChange={e => onChange({ author: e.target.value })} />
@@ -796,8 +793,8 @@ export function TransparenceFeatureEditor({ props, onChange }) {
             <Field label="Titre Colonne 1">
                 <input style={inputStyle} value={col1.title || ''} onChange={e => onChange({ col1: { ...col1, title: e.target.value } })} />
             </Field>
-            <Field label="Texte Colonne 1" hint="- tiret pour une liste">
-                <textarea style={textareaStyle} value={col1.text || ''} onChange={e => onChange({ col1: { ...col1, text: e.target.value } })} rows={4} />
+            <Field label="Texte Colonne 1">
+                <WysiwygEditor value={col1.text || ''} onChange={val => onChange({ col1: { ...col1, text: val } })} />
             </Field>
         </div>
         <div style={{ marginTop: '12px', padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
@@ -805,8 +802,8 @@ export function TransparenceFeatureEditor({ props, onChange }) {
             <Field label="Titre Colonne 2">
                 <input style={inputStyle} value={col2.title || ''} onChange={e => onChange({ col2: { ...col2, title: e.target.value } })} />
             </Field>
-            <Field label="Texte Colonne 2" hint="- tiret pour une liste">
-                <textarea style={textareaStyle} value={col2.text || ''} onChange={e => onChange({ col2: { ...col2, text: e.target.value } })} rows={4} />
+            <Field label="Texte Colonne 2">
+                <WysiwygEditor value={col2.text || ''} onChange={val => onChange({ col2: { ...col2, text: val } })} />
             </Field>
         </div>
     </>;
@@ -845,10 +842,10 @@ export function TransparenceCertificatesEditor({ props, onChange }) {
 export function RecrutementTextEditor({ props, onChange }) {
     return <>
         <Field label="Titre">
-            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={3} />
+            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} />
         </Field>
         <Field label="Texte">
-            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={6} />
+            <WysiwygEditor value={props.text || ''} onChange={val => onChange({ text: val })} />
         </Field>
     </>;
 }
@@ -879,8 +876,8 @@ export function RecrutementJobsEditor({ props, onChange }) {
                     <Field label="Lieu">
                         <input style={inputStyle} value={job.location || ''} onChange={e => updateJob(i, 'location', e.target.value)} />
                     </Field>
-                    <Field label="Description" hint="- tiret pour une liste">
-                        <textarea style={textareaStyle} value={job.description || ''} onChange={e => updateJob(i, 'description', e.target.value)} rows={5} />
+                    <Field label="Description du poste">
+                        <WysiwygEditor value={job.description || ''} onChange={val => updateJob(i, 'description', val)} />
                     </Field>
                 </div>
             ))}
@@ -892,10 +889,10 @@ export function RecrutementJobsEditor({ props, onChange }) {
 export function RecrutementContactEditor({ props, onChange }) {
     return <>
         <Field label="Titre">
-            <textarea style={textareaStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} rows={3} />
+            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} />
         </Field>
         <Field label="Texte">
-            <textarea style={textareaStyle} value={props.text || ''} onChange={e => onChange({ text: e.target.value })} rows={5} />
+            <WysiwygEditor value={props.text || ''} onChange={val => onChange({ text: val })} />
         </Field>
     </>;
 }

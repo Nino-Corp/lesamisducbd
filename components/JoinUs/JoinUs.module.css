@@ -75,9 +75,11 @@
     font-size: clamp(0.9rem, 1.2vw, 1rem);
     color: rgba(255, 255, 255, 0.8);
     max-width: 600px;
+    width: 100%;
     margin: 0;
     line-height: 1.4;
     font-weight: 400;
+    word-break: break-word;
 }
 
 @media (max-width: 768px) {

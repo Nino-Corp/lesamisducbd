@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import styles from './Products.module.css';
+import WysiwygEditor from '../builder/WysiwygEditor';
 
 // Suppression de BADGE_OPTIONS pour saisie libre
 
@@ -492,14 +493,12 @@ export default function ProductsPage() {
                                                         placeholder="Ex: Résine noire premium, taux de CBD entre 30 et 35%..."
                                                     />
                                                     <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Description longue (HTML autorisé)</label>
-                                                    <textarea
-                                                        rows={6}
-                                                        value={editDraft.description}
-                                                        onChange={e => setEditDraft(d => ({ ...d, description: e.target.value }))}
-                                                        className={styles.search}
-                                                        style={{ resize: 'vertical', fontFamily: 'monospace', fontSize: '0.8rem' }}
-                                                        placeholder="<p>Description complète en HTML...</p>"
-                                                    />
+                                                    <div style={{ background: '#fff', border: '1px solid #ddd', borderRadius: '4px' }}>
+                                                        <WysiwygEditor
+                                                            value={editDraft.description || ''}
+                                                            onChange={val => setEditDraft(d => ({ ...d, description: val }))}
+                                                        />
+                                                    </div>
                                                     <div style={{ display: 'flex', gap: 8 }}>
                                                         <button
                                                             className={styles.saveButton}

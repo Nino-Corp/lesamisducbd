@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Editor.module.css';
+import WysiwygEditor from '../../builder/WysiwygEditor';
 
 export default function JoinUsEditor({ section, onSave }) {
     const [title, setTitle] = useState(section.props.title || '');
@@ -27,13 +28,9 @@ export default function JoinUsEditor({ section, onSave }) {
             </div>
             <div className={styles.fieldGroup}>
                 <label>Texte principal</label>
-                <textarea
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    className={styles.textarea}
-                    placeholder="Aucun poste ouvert pour le moment..."
-                    rows={4}
-                    required
+                <WysiwygEditor
+                    value={text || ''}
+                    onChange={(val) => setText(val)}
                 />
             </div>
             

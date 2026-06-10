@@ -24,7 +24,7 @@ export default function WhyChooseUs({ title, features, ctaLabel, ctaLink = "/ess
                     {features.map((feature, index) => (
                         <div key={index} className={styles.item}>
                             <h3 className={styles.itemTitle}>{feature.title}</h3>
-                            <p className={styles.itemDesc}>{feature.description}</p>
+                            <div className={styles.itemDesc} dangerouslySetInnerHTML={{ __html: feature.description }} />
                         </div>
                     ))}
                 </div>

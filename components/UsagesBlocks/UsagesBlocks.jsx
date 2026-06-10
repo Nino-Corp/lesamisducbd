@@ -9,7 +9,7 @@ export function UsagesIntro({ title, text }) {
     return (
         <section className={styles.introSection}>
             {title && <h2 className={styles.introTitle} dangerouslySetInnerHTML={{ __html: title.replace(/\n/g, '<br />') }} />}
-            {text && <p className={styles.introText} dangerouslySetInnerHTML={{ __html: text.replace(/\n/g, '<br />') }} />}
+            {text && <div className={styles.introText} dangerouslySetInnerHTML={{ __html: text }} />}
         </section>
     );
 }
@@ -48,7 +48,7 @@ export function UsagesEssentialBox({ title, items }) {
                 {title && <h3 className={styles.essentialTitle}>{title}</h3>}
                 <ul className={styles.essentialList}>
                     {items.map((item, i) => (
-                        <li key={i}>{item}</li>
+                        <li key={i} dangerouslySetInnerHTML={{ __html: item }} />
                     ))}
                 </ul>
             </div>

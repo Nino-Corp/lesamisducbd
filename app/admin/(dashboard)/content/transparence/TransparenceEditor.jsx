@@ -4,8 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/context/ToastContext';
-import { Save, Loader2, Plus, Trash2 } from 'lucide-react';
+import { Save, Loader2, Plus, Trash2, GripVertical, AlertTriangle } from 'lucide-react';
 import ImageUpload from '@/components/Admin/ImageUpload';
+import WysiwygEditor from '../../builder/WysiwygEditor';
 import styles from './TransparenceEditor.module.css';
 
 export default function TransparenceEditor({ initialData }) {
@@ -128,7 +129,7 @@ export default function TransparenceEditor({ initialData }) {
 
                     <div className={styles.inputGroup}>
                         <label>Citation Manifesto (Texte)</label>
-                        <textarea rows={6} value={data.quote.text} onChange={e => updateNested('quote', 'text', e.target.value)} />
+                        <WysiwygEditor value={data.quote.text || ''} onChange={val => updateNested('quote', 'text', val)} />
                         <span className={styles.hint}>Sauts de ligne autorisés.</span>
                     </div>
 
@@ -158,7 +159,7 @@ export default function TransparenceEditor({ initialData }) {
                             <label>Titre</label>
                             <input type="text" value={data.section1.col1.title} onChange={e => updateDeepNested('section1', 'col1', 'title', e.target.value)} />
                             <label>Contenu</label>
-                            <textarea rows={8} value={data.section1.col1.text} onChange={e => updateDeepNested('section1', 'col1', 'text', e.target.value)} />
+                            <WysiwygEditor value={data.section1.col1.text || ''} onChange={val => updateDeepNested('section1', 'col1', 'text', val)} />
                             <span className={styles.hint}>Commencez une ligne par "-" ou "*" pour créer une puce de liste.</span>
                         </div>
                         <div className={styles.colEditor}>
@@ -166,7 +167,7 @@ export default function TransparenceEditor({ initialData }) {
                             <label>Titre</label>
                             <input type="text" value={data.section1.col2.title} onChange={e => updateDeepNested('section1', 'col2', 'title', e.target.value)} />
                             <label>Contenu</label>
-                            <textarea rows={8} value={data.section1.col2.text} onChange={e => updateDeepNested('section1', 'col2', 'text', e.target.value)} />
+                            <WysiwygEditor value={data.section1.col2.text || ''} onChange={val => updateDeepNested('section1', 'col2', 'text', val)} />
                         </div>
                     </div>
                 </div>
@@ -191,14 +192,14 @@ export default function TransparenceEditor({ initialData }) {
                             <label>Titre</label>
                             <input type="text" value={data.section2.col1.title} onChange={e => updateDeepNested('section2', 'col1', 'title', e.target.value)} />
                             <label>Contenu</label>
-                            <textarea rows={8} value={data.section2.col1.text} onChange={e => updateDeepNested('section2', 'col1', 'text', e.target.value)} />
+                            <WysiwygEditor value={data.section2.col1.text || ''} onChange={val => updateDeepNested('section2', 'col1', 'text', val)} />
                         </div>
                         <div className={styles.colEditor}>
                             <h4>Colonne Droite</h4>
                             <label>Titre</label>
                             <input type="text" value={data.section2.col2.title} onChange={e => updateDeepNested('section2', 'col2', 'title', e.target.value)} />
                             <label>Contenu</label>
-                            <textarea rows={8} value={data.section2.col2.text} onChange={e => updateDeepNested('section2', 'col2', 'text', e.target.value)} />
+                            <WysiwygEditor value={data.section2.col2.text || ''} onChange={val => updateDeepNested('section2', 'col2', 'text', val)} />
                         </div>
                     </div>
                 </div>

@@ -188,7 +188,11 @@ export default function QuillEditorInner({ value, onChange, placeholder }) {
             ref={quillRef}
             theme="snow"
             value={value || ''}
-            onChange={onChange}
+            onChange={(content, delta, source, editor) => {
+                if (source === 'user') {
+                    onChange(content);
+                }
+            }}
             modules={modules}
             formats={formats}
             placeholder={placeholder}

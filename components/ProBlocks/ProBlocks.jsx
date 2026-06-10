@@ -18,10 +18,10 @@ export function ProHero({ imageSrc, imagePosition, imageAlt, badgeText, title, t
             </ContentHero>
 
             <div className={styles.heroTextContent}>
-                <h1 className={styles.heroTitle}>{title}</h1>
+                <h1 className={styles.heroTitle} dangerouslySetInnerHTML={{ __html: title || '' }} />
                 <div
                     className={styles.heroText}
-                    dangerouslySetInnerHTML={{ __html: (text || '').replace(/\n/g, '<br />') }}
+                    dangerouslySetInnerHTML={{ __html: text || '' }}
                 />
             </div>
         </>
@@ -42,7 +42,7 @@ export function ProSteps({ title, steps }) {
                                 <div className={styles.stepHeader}>{step.title}</div>
                                 <div
                                     className={styles.stepText}
-                                    dangerouslySetInnerHTML={{ __html: (step.text || '').replace(/\n/g, '<br />') }}
+                                    dangerouslySetInnerHTML={{ __html: step.text || '' }}
                                 />
                             </div>
                         ))}
