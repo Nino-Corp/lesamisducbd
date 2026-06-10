@@ -146,7 +146,9 @@ export default async function DynamicPage(props) {
     // Analytics: increment view counter on the server side (only if not previewing)
     if (!isPreview) {
         try {
+        if (process.env.NODE_ENV !== 'development') {
             await kv.incr(`builder_views:${pageSlug}`);
+        }
         } catch (e) {
             console.error('Failed to increment view counter', e);
         }

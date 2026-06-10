@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import styles from './RecrutementBlocks.module.css';
 import RecruitmentModal from '@/components/RecruitmentModal/RecruitmentModal';
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
+import { trackCTA } from '@/utils/analytics';
 
 // Helper for rendering multi-line string into <p> or <li>
 const renderText = (textStr) => {
@@ -67,7 +68,7 @@ export function RecrutementJobs({ title, jobs }) {
                             </div>
                             <p className={styles.jobLocation}>📍 {job.location}</p>
                                 <div dangerouslySetInnerHTML={{ __html: job.description || '' }} />
-                            <button onClick={() => setIsModalOpen(true)} className={styles.applyBtn}>
+                            <button onClick={() => { trackCTA('recrutement_postuler'); setIsModalOpen(true); }} className={styles.applyBtn}>
                                 Postuler
                             </button>
                         </div>

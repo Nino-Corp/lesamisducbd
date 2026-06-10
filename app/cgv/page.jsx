@@ -224,7 +224,9 @@ export default async function CgvPage() {
 
     // Analytics: increment view counter
     try {
+    if (process.env.NODE_ENV !== 'development') {
         await kv.incr(`builder_views:legal/cgv`);
+    }
     } catch (e) {
         console.error('Failed to increment view counter', e);
     }

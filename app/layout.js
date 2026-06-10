@@ -76,6 +76,7 @@ import JsonLd from "@/components/JsonLd";
 import CartDrawer from "@/components/Cart/CartDrawer";
 import AgeGate from "@/components/AgeGate/AgeGate";
 import LogoutHandler from "@/components/LogoutHandler/LogoutHandler";
+import AnalyticsTracker from "@/components/AnalyticsTracker/AnalyticsTracker";
 
 export default function RootLayout({ children }) {
   return (
@@ -95,6 +96,7 @@ export default function RootLayout({ children }) {
               <JsonLd />
               <AgeGate />
               <LogoutHandler />
+              <AnalyticsTracker />
               <ScrollToTop />
               {children}
               <CartDrawer />

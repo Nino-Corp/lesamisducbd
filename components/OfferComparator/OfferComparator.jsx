@@ -2,6 +2,7 @@
 import { useState, useMemo } from 'react';
 import styles from './OfferComparator.module.css';
 import ContactModal from '@/components/ContactModal/ContactModal';
+import { trackCTA } from '@/utils/analytics';
 
 export default function OfferComparator() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -171,7 +172,7 @@ export default function OfferComparator() {
                             </ul>
                             <button
                                 className={styles.ctaButton}
-                                onClick={() => setIsModalOpen(true)}
+                                onClick={() => { trackCTA('professionnel_contact'); setIsModalOpen(true); }}
                             >
                                 Contactez un conseiller sympa
                             </button>

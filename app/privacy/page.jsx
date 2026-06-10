@@ -27,7 +27,9 @@ export default async function PrivacyPage() {
 
     // Analytics: increment view counter
     try {
+    if (process.env.NODE_ENV !== 'development') {
         await kv.incr(`builder_views:legal/privacy`);
+    }
     } catch (e) {
         console.error('Failed to increment view counter', e);
     }

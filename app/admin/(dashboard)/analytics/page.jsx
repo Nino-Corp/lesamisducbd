@@ -17,8 +17,39 @@ const STATIC_PAGES = {
     'legal/privacy': "Confidentialité"
 };
 
+// Helper SVG Line Chart
+const Sparkline = ({ data }) => {
+    if (!data || data.length === 0) return null;
+    const maxVal = Math.max(...data.map(d => d.views), 1);
+    const minVal = 0;
+    const padding = 10;
+    const width = 800;
+    const height = 200;
+    const points = data.map((d, i) => {
+        const x = padding + (i / (data.length - 1)) * (width - 2 * padding);
+        const y = height - padding - ((d.views - minVal) / (maxVal - minVal)) * (height - 2 * padding);
+        return `${x},${y}`;
+    }).join(' ');
+
+    return (
+        <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+            <polyline fill="none" stroke="#10b981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points={points} />
+            {data.map((d, i) => {
+                const x = padding + (i / (data.length - 1)) * (width - 2 * padding);
+                const y = height - padding - ((d.views - minVal) / (maxVal - minVal)) * (height - 2 * padding);
+                return (
+                    <g key={i} className={styles.chartPoint}>
+                        <circle cx={x} cy={y} r="5" fill="#fff" stroke="#10b981" strokeWidth="2" />
+                        <title>{`${d.date}: ${d.views} vues`}</title>
+                    </g>
+                );
+            })}
+        </svg>
+    );
+};
+
 export default function AnalyticsDashboard() {
-    const [analytics, setAnalytics] = useState({});
+    const [analytics, setAnalytics] = useState(null);
     const [dynamicPages, setDynamicPages] = useState({});
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -26,9 +57,10 @@ export default function AnalyticsDashboard() {
 
     const fetchData = async () => {
         try {
+            const timestamp = Date.now();
             const [analyticsRes, pagesRes] = await Promise.all([
-                fetch('/api/admin/builder/analytics'),
-                fetch('/api/admin/builder')
+                fetch(`/api/admin/builder/analytics?t=${timestamp}`, { cache: 'no-store' }),
+                fetch(`/api/admin/builder?t=${timestamp}`, { cache: 'no-store' })
             ]);
             const analyticsData = await analyticsRes.json();
             const pagesData = await pagesRes.json();
@@ -44,42 +76,34 @@ export default function AnalyticsDashboard() {
 
     useEffect(() => {
         fetchData();
-
-        // Auto-refresh every 15 seconds
-        const interval = setInterval(() => {
-            fetch('/api/admin/builder/analytics')
-                .then(res => res.json())
-                .then(data => setAnalytics(data))
-                .catch(err => console.error('Auto-refresh error:', err));
-        }, 15000);
-
+        const interval = setInterval(fetchData, 5000);
         return () => clearInterval(interval);
     }, []);
 
-    // Combine all pages into a unified array
     const allPages = useMemo(() => {
+        if (!analytics) return [];
+        const { viewsMap, timeMap, sessionsMap } = analytics;
         const pagesArray = [];
 
-        // 1. Add static pages
         Object.entries(STATIC_PAGES).forEach(([slug, title]) => {
+            const views = viewsMap[slug] || 0;
+            const time = timeMap[slug] || 0;
+            const sessions = sessionsMap[slug] || 0;
             pagesArray.push({
-                slug,
-                title,
-                type: 'static',
-                typeLabel: 'Page de base',
-                views: analytics[slug] || 0,
+                slug, title, type: 'static', typeLabel: 'Page de base',
+                views, avgTime: sessions > 0 ? Math.round(time / sessions) : 0,
                 href: slug.startsWith('legal/') ? `/admin/content/${slug}` : (slug === 'produits' ? '/admin/products' : `/admin/content/${slug}`)
             });
         });
 
-        // 2. Add dynamic pages
         Object.values(dynamicPages).forEach(page => {
+            const views = viewsMap[page.slug] || 0;
+            const time = timeMap[page.slug] || 0;
+            const sessions = sessionsMap[page.slug] || 0;
             pagesArray.push({
-                slug: page.slug,
-                title: page.title,
-                type: 'dynamic',
-                typeLabel: page.seo?.pageType === 'Article' || page.seo?.pageType === 'BlogPosting' ? 'Article / Blog' : 'Page Builder',
-                views: analytics[page.slug] || 0,
+                slug: page.slug, title: page.title, type: 'dynamic', 
+                typeLabel: page.seo?.pageType === 'Article' ? 'Article' : 'Page Builder',
+                views, avgTime: sessions > 0 ? Math.round(time / sessions) : 0,
                 href: `/admin/builder/${page.slug}`
             });
         });
@@ -87,52 +111,44 @@ export default function AnalyticsDashboard() {
         return pagesArray;
     }, [analytics, dynamicPages]);
 
-    // Calculate KPIs
-    const totalViews = allPages.reduce((sum, page) => sum + page.views, 0);
-    const averageViews = allPages.length > 0 ? Math.round(totalViews / allPages.length) : 0;
-    const topPage = [...allPages].sort((a, b) => b.views - a.views)[0] || null;
-
-    // Filter and Sort Table
     const tableData = useMemo(() => {
         let filtered = [...allPages];
-        
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
-            filtered = filtered.filter(p => 
-                p.title.toLowerCase().includes(query) || 
-                p.slug.toLowerCase().includes(query)
-            );
+            filtered = filtered.filter(p => p.title.toLowerCase().includes(query) || p.slug.toLowerCase().includes(query));
         }
-
         filtered.sort((a, b) => {
             if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
             if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
             return 0;
         });
-
         return filtered;
     }, [allPages, searchQuery, sortConfig]);
 
-    // Top 5 for Chart
-    const chartData = [...allPages].sort((a, b) => b.views - a.views).slice(0, 5);
-    const maxChartViews = chartData.length > 0 ? chartData[0].views : 1;
-
-    const handleSort = (key) => {
-        setSortConfig(current => ({
-            key,
-            direction: current.key === key && current.direction === 'desc' ? 'asc' : 'desc'
-        }));
-    };
-
-    if (loading) {
-        return <div className={styles.container}>Chargement des statistiques...</div>;
+    if (loading || !analytics) {
+        return <div className={styles.container}>Chargement des statistiques avancées...</div>;
     }
+
+    const { viewsMap, ctaMap, deviceMap, referrerMap, dailyStats } = analytics;
+    const totalViews = Object.values(viewsMap).reduce((a, b) => a + b, 0);
+    const topPage = [...allPages].sort((a, b) => b.views - a.views)[0] || null;
+    
+    // Sort referrers (exclude localhost and own domain for existing data)
+    const ignoredDomains = ['localhost', '127.0.0.1', 'lesamisducbd.fr'];
+    const topReferrers = Object.entries(referrerMap || {})
+        .filter(([ref]) => !ignoredDomains.some(d => ref.includes(d)))
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+    // Device percentages
+    const totalDevices = (deviceMap?.desktop || 0) + (deviceMap?.mobile || 0) + (deviceMap?.tablet || 0);
+    const getDevicePct = (val) => totalDevices > 0 ? Math.round((val / totalDevices) * 100) : 0;
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1 className={styles.title}>Statistiques des Pages</h1>
-                <p className={styles.subtitle}>Consultez l'audience de votre site en temps réel (actualisation automatique toutes les 15s).</p>
+                <h1 className={styles.title}>Statistiques Avancées</h1>
+                <p className={styles.subtitle}>Temps réel, évolution sur 30 jours, appareils et clics stratégiques.</p>
             </div>
 
             {/* KPIs */}
@@ -143,44 +159,64 @@ export default function AnalyticsDashboard() {
                     <div className={styles.kpiSub}>Sur tout le site</div>
                 </div>
                 <div className={styles.kpiCard}>
-                    <div className={styles.kpiLabel}>Moyenne par page</div>
-                    <div className={styles.kpiValue}>{averageViews.toLocaleString('fr-FR')}</div>
-                    <div className={styles.kpiSub}>Pour {allPages.length} pages actives</div>
+                    <div className={styles.kpiLabel}>Trafic Mobile vs Desktop</div>
+                    <div className={styles.kpiValue} style={{ fontSize: '1.4rem' }}>
+                        📱 {getDevicePct(deviceMap?.mobile || 0)}% / 💻 {getDevicePct(deviceMap?.desktop || 0)}%
+                    </div>
+                    <div className={styles.kpiSub}>Total tracés: {totalDevices}</div>
                 </div>
                 <div className={styles.kpiCard}>
-                    <div className={styles.kpiLabel}>Page la plus populaire</div>
-                    <div className={styles.kpiValue} style={{ fontSize: '1.8rem', marginTop: '10px' }}>
-                        {topPage ? topPage.title : '-'}
-                    </div>
-                    <div className={styles.kpiSub}>{topPage ? `${topPage.views.toLocaleString('fr-FR')} vues` : ''}</div>
+                    <div className={styles.kpiLabel}>Page la plus visitée</div>
+                    <div className={styles.kpiValue} style={{ fontSize: '1.4rem' }}>{topPage ? topPage.title : '-'}</div>
+                    <div className={styles.kpiSub}>{topPage ? `${topPage.views.toLocaleString('fr-FR')} vues (${topPage.avgTime}s en moy.)` : ''}</div>
                 </div>
             </div>
 
-            {/* Chart */}
-            {totalViews > 0 && (
-                <div className={styles.chartContainer}>
-                    <h2 className={styles.chartTitle}>Top 5 des pages les plus visitées</h2>
-                    <div className={styles.chart}>
-                        {chartData.map(page => (
-                            <div key={`chart-${page.slug}`} className={styles.barRow}>
-                                <div className={styles.barLabel}>{page.title}</div>
-                                <div className={styles.barTrack}>
-                                    <div 
-                                        className={styles.barFill} 
-                                        style={{ width: `${Math.max((page.views / maxChartViews) * 100, 1)}%` }}
-                                    />
-                                </div>
-                                <div className={styles.barValue}>{page.views.toLocaleString('fr-FR')}</div>
-                            </div>
-                        ))}
-                    </div>
+            {/* 30 Days Trend */}
+            <div className={styles.sectionBlock}>
+                <h2 className={styles.sectionTitle}>Évolution des vues (30 derniers jours)</h2>
+                <div className={styles.lineChartWrapper} style={{ height: '220px', padding: '20px', background: '#f8fafc', borderRadius: '12px' }}>
+                    <Sparkline data={dailyStats} />
                 </div>
-            )}
+            </div>
+
+            {/* Sub-Grids: Referrers & CTAs */}
+            <div className={styles.grid2}>
+                <div className={styles.sectionBlock}>
+                    <h2 className={styles.sectionTitle}>🌍 Sources de trafic (Top 5)</h2>
+                    <ul className={styles.listBlock}>
+                        {topReferrers.length > 0 ? topReferrers.map(([ref, count]) => (
+                            <li key={ref} className={styles.listItem}>
+                                <span>{ref}</span>
+                                <strong>{count}</strong>
+                            </li>
+                        )) : <li className={styles.listItem}>Aucune donnée récente</li>}
+                    </ul>
+                </div>
+                
+                <div className={styles.sectionBlock}>
+                    <h2 className={styles.sectionTitle}>🖱️ Call-To-Action (Clics)</h2>
+                    <ul className={styles.listBlock}>
+                        <li className={styles.listItem}>
+                            <span>Héros: Découvrir les produits</span>
+                            <strong>{ctaMap?.['home_hero_discover'] || 0}</strong>
+                        </li>
+                        <li className={styles.listItem}>
+                            <span>Recrutement: Postuler</span>
+                            <strong>{ctaMap?.['recrutement_postuler'] || 0}</strong>
+                        </li>
+                        <li className={styles.listItem}>
+                            <span>Pro: Modale Contact</span>
+                            <strong>{ctaMap?.['professionnel_contact'] || 0}</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
             {/* Data Table */}
             <div className={styles.tableSection}>
                 <div className={styles.tableHeader}>
-                    <h2 className={styles.tableTitle}>Toutes les pages</h2>
+                    <h2 className={styles.tableTitle}>Détail par page</h2>
                     <input 
                         type="text" 
                         placeholder="Rechercher une page..." 
@@ -193,37 +229,27 @@ export default function AnalyticsDashboard() {
                     <table className={styles.table}>
                         <thead>
                             <tr>
-                                <th onClick={() => handleSort('title')}>Titre de la page {sortConfig.key === 'title' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</th>
-                                <th onClick={() => handleSort('slug')}>URL / Slug {sortConfig.key === 'slug' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</th>
-                                <th onClick={() => handleSort('typeLabel')}>Type {sortConfig.key === 'typeLabel' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</th>
-                                <th onClick={() => handleSort('views')} style={{ textAlign: 'right' }}>Vues (Temps réel) {sortConfig.key === 'views' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</th>
+                                <th onClick={() => setSortConfig({ key: 'title', direction: sortConfig.direction === 'asc' ? 'desc' : 'asc' })}>Titre</th>
+                                <th>URL</th>
+                                <th>Type</th>
+                                <th onClick={() => setSortConfig({ key: 'views', direction: sortConfig.direction === 'asc' ? 'desc' : 'asc' })} style={{ textAlign: 'right' }}>Vues</th>
+                                <th onClick={() => setSortConfig({ key: 'avgTime', direction: sortConfig.direction === 'asc' ? 'desc' : 'asc' })} style={{ textAlign: 'right' }}>Temps Moyen</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {tableData.length === 0 ? (
-                                <tr>
-                                    <td colSpan="5" style={{ textAlign: 'center', padding: '32px', color: '#6b7280' }}>Aucune page trouvée.</td>
-                                </tr>
+                                <tr><td colSpan="6" style={{ textAlign: 'center', padding: '32px' }}>Aucune page.</td></tr>
                             ) : (
                                 tableData.map(page => (
                                     <tr key={page.slug}>
                                         <td style={{ fontWeight: 600 }}>{page.title}</td>
+                                        <td><div className={styles.pageSlug}>{page.slug}</div></td>
+                                        <td><span className={`${styles.typeBadge} ${styles[page.type]}`}>{page.typeLabel}</span></td>
+                                        <td style={{ textAlign: 'right', fontWeight: 700, color: '#1F4B40' }}>{page.views.toLocaleString('fr-FR')}</td>
+                                        <td style={{ textAlign: 'right', fontWeight: 600 }}>{page.avgTime > 0 ? `${page.avgTime}s` : '-'}</td>
                                         <td>
-                                            <div className={styles.pageSlug}>{page.slug}</div>
-                                        </td>
-                                        <td>
-                                            <span className={`${styles.typeBadge} ${styles[page.type]}`}>
-                                                {page.typeLabel}
-                                            </span>
-                                        </td>
-                                        <td style={{ textAlign: 'right', fontWeight: 700, color: '#1F4B40', fontSize: '1.1rem' }}>
-                                            {page.views.toLocaleString('fr-FR')}
-                                        </td>
-                                        <td>
-                                            <Link href={page.href} style={{ color: '#059669', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>
-                                                Éditer ↗
-                                            </Link>
+                                            <Link href={page.href} style={{ color: '#059669', textDecoration: 'none', fontWeight: 600 }}>Éditer ↗</Link>
                                         </td>
                                     </tr>
                                 ))

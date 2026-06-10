@@ -249,7 +249,9 @@ export default async function Home() {
 
   // Analytics: increment view counter
   try {
-    await kv.incr(`builder_views:accueil`);
+    if (process.env.NODE_ENV !== 'development') {
+      await kv.incr(`builder_views:accueil`);
+    }
   } catch (e) {
     console.error('Failed to increment view counter', e);
   }

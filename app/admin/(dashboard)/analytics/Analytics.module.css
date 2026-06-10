@@ -209,3 +209,66 @@
     background: #fef3c7;
     color: #b45309;
 }
+
+/* New Dashboard Layout */
+.sectionBlock {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.sectionTitle {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1F4B40;
+    margin: 0 0 16px;
+}
+
+.grid2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.listBlock {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #334155;
+}
+
+.listItem strong {
+    color: #059669;
+    font-size: 1.1rem;
+}
+
+.chartPoint {
+    cursor: pointer;
+}
+
+.chartPoint circle {
+    transition: all 0.2s ease;
+}
+
+.chartPoint:hover circle {
+    r: 8;
+    fill: #059669;
+}
