@@ -1,7 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './ProductCard.module.css';
 import { Tag } from 'lucide-react';
+import { trackCTA } from '@/utils/analytics';
 
 /**
  * ProductCard — affiche un produit issu de l'API PrestaShop.
@@ -25,7 +28,7 @@ export default function ProductCard({ product }) {
     }
 
     return (
-        <Link href={`/produit/${product.slug}`} className={styles.card}>
+        <Link href={`/produit/${product.slug}`} className={styles.card} onClick={() => trackCTA(`product_click_${product.slug}`)}>
             {/* Badge Promo */}
             {product.onSale && (
                 <span className={styles.badge}>

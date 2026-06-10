@@ -137,10 +137,30 @@ export default function AnalyticsDashboard() {
     const ignoredDomains = ['localhost', '127.0.0.1', 'lesamisducbd.fr'];
     const topReferrers = Object.entries(referrerMap || {})
         .filter(([ref]) => !ignoredDomains.some(d => ref.includes(d)))
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5);
+        .sort((a, b) => b[1] - a[1]);
 
-    // Device percentages
+    // Separate product clicks from other CTAs
+    const productClicks = [];
+    const mainCTAs = [];
+    
+    Object.entries(ctaMap || {}).forEach(([key, count]) => {
+        if (key.startsWith('product_click_')) {
+            productClicks.push([key.replace('product_click_', ''), count]);
+        } else {
+            mainCTAs.push([key, count]);
+        }
+    });
+
+    productClicks.sort((a, b) => b[1] - a[1]);
+    mainCTAs.sort((a, b) => b[1] - a[1]);
+
+    // Format CTA labels
+    const formatCTALabel = (key) => {
+        if (key === 'home_hero_discover') return 'Héros: Découvrir les produits';
+        if (key === 'recrutement_postuler') return 'Recrutement: Postuler';
+        if (key === 'professionnel_contact') return 'Pro: Modale Contact';
+        return key;
+    };
     const totalDevices = (deviceMap?.desktop || 0) + (deviceMap?.mobile || 0) + (deviceMap?.tablet || 0);
     const getDevicePct = (val) => totalDevices > 0 ? Math.round((val / totalDevices) * 100) : 0;
 
@@ -183,7 +203,7 @@ export default function AnalyticsDashboard() {
             {/* Sub-Grids: Referrers & CTAs */}
             <div className={styles.grid2}>
                 <div className={styles.sectionBlock}>
-                    <h2 className={styles.sectionTitle}>🌍 Sources de trafic (Top 5)</h2>
+                    <h2 className={styles.sectionTitle}>🌍 Sources de trafic</h2>
                     <ul className={styles.listBlock}>
                         {topReferrers.length > 0 ? topReferrers.map(([ref, count]) => (
                             <li key={ref} className={styles.listItem}>
@@ -197,18 +217,24 @@ export default function AnalyticsDashboard() {
                 <div className={styles.sectionBlock}>
                     <h2 className={styles.sectionTitle}>🖱️ Call-To-Action (Clics)</h2>
                     <ul className={styles.listBlock}>
-                        <li className={styles.listItem}>
-                            <span>Héros: Découvrir les produits</span>
-                            <strong>{ctaMap?.['home_hero_discover'] || 0}</strong>
-                        </li>
-                        <li className={styles.listItem}>
-                            <span>Recrutement: Postuler</span>
-                            <strong>{ctaMap?.['recrutement_postuler'] || 0}</strong>
-                        </li>
-                        <li className={styles.listItem}>
-                            <span>Pro: Modale Contact</span>
-                            <strong>{ctaMap?.['professionnel_contact'] || 0}</strong>
-                        </li>
+                        {mainCTAs.length > 0 ? mainCTAs.map(([key, count]) => (
+                            <li key={key} className={styles.listItem}>
+                                <span>{formatCTALabel(key)}</span>
+                                <strong>{count}</strong>
+                            </li>
+                        )) : <li className={styles.listItem}>Aucun clic récent</li>}
+                    </ul>
+                </div>
+
+                <div className={styles.sectionBlock}>
+                    <h2 className={styles.sectionTitle}>🛍️ Produits les plus cliqués</h2>
+                    <ul className={styles.listBlock}>
+                        {productClicks.length > 0 ? productClicks.map(([slug, count]) => (
+                            <li key={slug} className={styles.listItem}>
+                                <span>{slug.replace(/-/g, ' ')}</span>
+                                <strong>{count}</strong>
+                            </li>
+                        )) : <li className={styles.listItem}>Aucun clic récent</li>}
                     </ul>
                 </div>
             </div>

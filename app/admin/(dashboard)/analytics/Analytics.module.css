@@ -241,6 +241,22 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+/* Custom Scrollbar for listBlock */
+.listBlock::-webkit-scrollbar {
+    width: 6px;
+}
+.listBlock::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+.listBlock::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
 }
 
 .listItem {

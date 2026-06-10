@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
+import { trackCTA } from '@/utils/analytics';
 import styles from './ProductList.module.css';
 
 export function ProductCardItem({ product, index, groupId }) {
@@ -109,7 +110,7 @@ export function ProductCardItem({ product, index, groupId }) {
                 </div>
             )}
 
-            <Link href={`/produit/${selectedVariant.slug}`} className={styles.ctaLink}>
+            <Link href={`/produit/${selectedVariant.slug}`} className={styles.ctaLink} onClick={() => trackCTA(`product_click_${selectedVariant.slug}`)}>
                 <button className={styles.cta}>Découvrir cette variété</button>
             </Link>
         </div>
