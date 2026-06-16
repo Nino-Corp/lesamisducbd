@@ -60,6 +60,7 @@ export default function GlobalContentPage() {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const autoSaveTimerRef = useRef(null);
     const initialLoadRef = useRef(true);
+    const [builderPages, setBuilderPages] = useState({});
 
     useEffect(() => {
         const controller = new AbortController();
@@ -75,6 +76,14 @@ export default function GlobalContentPage() {
                 if (err.name !== 'AbortError') setLoaded(true);
             });
         return () => controller.abort();
+    }, []);
+
+    // Fetch builder pages for "Autres" dropdown
+    useEffect(() => {
+        fetch('/api/admin/builder')
+            .then(r => r.json())
+            .then(data => setBuilderPages(data || {}))
+            .catch(() => {});
     }, []);
 
     /* Auto-save 3s after any change */
@@ -246,19 +255,105 @@ export default function GlobalContentPage() {
                                             </div>
                                             <h3 style={{ fontSize: '0.9rem', color: '#1F4B40', marginBottom: '12px' }}>Liens de navigation</h3>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                                {headerLinks.map((link, i) => (
-                                                    <div key={i} style={{ padding: '12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                                                            <strong style={{ fontSize: '0.75rem', color: '#64748b' }}>Lien {i + 1}</strong>
-                                                            <button onClick={() => setHeaderLinks(links => links.filter((_, idx) => idx !== i))} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.8rem' }}>✕</button>
+                                                {headerLinks.filter(l => !l.children).map((link, i) => {
+                                                    const realIndex = headerLinks.indexOf(link);
+                                                    return (
+                                                        <div key={realIndex} style={{ padding: '12px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                                                                <strong style={{ fontSize: '0.75rem', color: '#64748b' }}>Lien {i + 1}</strong>
+                                                                <button onClick={() => setHeaderLinks(links => links.filter((_, idx) => idx !== realIndex))} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.8rem' }}>✕</button>
+                                                            </div>
+                                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                                <input style={{ ...inputStyle, flex: 1 }} placeholder="Texte" value={link.label} onChange={e => setHeaderLinks(links => links.map((l, idx) => idx === realIndex ? { ...l, label: e.target.value } : l))} />
+                                                                <input style={{ ...inputStyle, flex: 1 }} placeholder="URL" value={link.href} onChange={e => setHeaderLinks(links => links.map((l, idx) => idx === realIndex ? { ...l, href: e.target.value } : l))} />
+                                                            </div>
                                                         </div>
-                                                        <div style={{ display: 'flex', gap: '8px' }}>
-                                                            <input style={{ ...inputStyle, flex: 1 }} placeholder="Texte" value={link.label} onChange={e => setHeaderLinks(links => links.map((l, idx) => idx === i ? { ...l, label: e.target.value } : l))} />
-                                                            <input style={{ ...inputStyle, flex: 1 }} placeholder="URL" value={link.href} onChange={e => setHeaderLinks(links => links.map((l, idx) => idx === i ? { ...l, href: e.target.value } : l))} />
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                                    );
+                                                })}
                                                 <button onClick={() => setHeaderLinks(links => [...links, { label: 'Nouveau lien', href: '/' }])} style={{ padding: '10px', background: 'transparent', border: '2px dashed #cbd5e1', borderRadius: '8px', cursor: 'pointer', color: '#64748b', fontWeight: 600 }}>+ Ajouter un lien</button>
+                                            </div>
+
+                                            {/* ── MENU DÉROULANT "AUTRES" ── */}
+                                            <div style={{ marginTop: '32px' }}>
+                                                <h3 style={{ fontSize: '0.9rem', color: '#1F4B40', marginBottom: '8px' }}>📂 Menu déroulant « Autres »</h3>
+                                                <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginBottom: '16px', lineHeight: 1.5 }}>
+                                                    Sélectionnez les pages du Page Builder à afficher dans le menu déroulant. Seules les pages publiées sont listées.
+                                                </p>
+
+                                                {(() => {
+                                                    const publishedPages = Object.values(builderPages).filter(p => p.status === 'published');
+                                                    const existingDropdown = headerLinks.find(l => l.children);
+                                                    const selectedSlugs = (existingDropdown?.children || []).map(c => c.href.replace('/p/', ''));
+
+                                                    const togglePage = (page, checked) => {
+                                                        const child = { label: page.title, href: `/p/${page.slug}` };
+                                                        let updatedLinks = [...headerLinks];
+                                                        let dropdownIndex = updatedLinks.findIndex(l => l.children);
+
+                                                        if (dropdownIndex === -1) {
+                                                            // Create the "Autres" dropdown
+                                                            updatedLinks.push({ label: 'AUTRES', href: '#', children: checked ? [child] : [] });
+                                                        } else {
+                                                            let children = [...(updatedLinks[dropdownIndex].children || [])];
+                                                            if (checked) {
+                                                                if (!children.some(c => c.href === child.href)) children.push(child);
+                                                            } else {
+                                                                children = children.filter(c => c.href !== child.href);
+                                                            }
+                                                            updatedLinks[dropdownIndex] = { ...updatedLinks[dropdownIndex], children };
+                                                        }
+                                                        setHeaderLinks(updatedLinks);
+                                                    };
+
+                                                    if (publishedPages.length === 0) {
+                                                        return (
+                                                            <div style={{ padding: '20px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                                                                <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: 0 }}>Aucune page publiée dans le Page Builder.</p>
+                                                                <Link href="/admin/builder" style={{ fontSize: '0.8rem', color: '#1F4B40', fontWeight: 600, marginTop: '8px', display: 'inline-block' }}>→ Créer une page</Link>
+                                                            </div>
+                                                        );
+                                                    }
+
+                                                    return (
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                            {/* Dropdown label edit */}
+                                                            {existingDropdown && (
+                                                                <div style={{ padding: '12px', background: '#f0fdf4', borderRadius: '8px', border: '1px solid #bbf7d0', marginBottom: '8px' }}>
+                                                                    <label style={{ fontSize: '0.75rem', fontWeight: 600, color: '#166534', marginBottom: '6px', display: 'block' }}>Libellé du bouton</label>
+                                                                    <input 
+                                                                        style={{ ...inputStyle, fontWeight: 700, textTransform: 'uppercase' }} 
+                                                                        value={existingDropdown.label} 
+                                                                        onChange={e => {
+                                                                            const idx = headerLinks.findIndex(l => l.children);
+                                                                            setHeaderLinks(links => links.map((l, i) => i === idx ? { ...l, label: e.target.value } : l));
+                                                                        }} 
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                            {publishedPages.map(page => (
+                                                                <label 
+                                                                    key={page.slug} 
+                                                                    style={{ 
+                                                                        display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px',
+                                                                        background: selectedSlugs.includes(page.slug) ? '#f0fdf4' : '#f8fafc',
+                                                                        border: `1px solid ${selectedSlugs.includes(page.slug) ? '#bbf7d0' : '#e2e8f0'}`,
+                                                                        borderRadius: '8px', cursor: 'pointer', transition: 'all 0.2s',
+                                                                    }}
+                                                                >
+                                                                    <input 
+                                                                        type="checkbox" 
+                                                                        checked={selectedSlugs.includes(page.slug)}
+                                                                        onChange={e => togglePage(page, e.target.checked)}
+                                                                    />
+                                                                    <div style={{ flex: 1 }}>
+                                                                        <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#1e293b' }}>{page.title}</div>
+                                                                        <code style={{ fontSize: '0.7rem', color: '#94a3b8' }}>/p/{page.slug}</code>
+                                                                    </div>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+                                                    );
+                                                })()}
                                             </div>
                                         </>
                                     )}

@@ -281,7 +281,6 @@
     border-radius: 16px;
     border: 1px solid #e4e9e4;
     min-height: 400px;
-    overflow: hidden;
 }
 
 .editorHeader {
@@ -290,6 +289,7 @@
     justify-content: space-between;
     padding: 18px 24px;
     border-bottom: 1px solid #f0f0f0;
+    border-radius: 16px 16px 0 0;
 }
 
 .editorHeaderLeft {

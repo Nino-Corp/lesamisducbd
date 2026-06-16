@@ -136,6 +136,7 @@ function injectPickerStyles() {
 
 export default function QuillEditorInner({ value, onChange, placeholder }) {
     const quillRef = useRef(null);
+    const boundsId = useMemo(() => 'quill-bounds-' + Math.random().toString(36).substr(2, 9), []);
 
     // Inject styles once on mount
     useEffect(() => { injectPickerStyles(); }, []);
@@ -184,18 +185,21 @@ export default function QuillEditorInner({ value, onChange, placeholder }) {
     ], []);
 
     return (
-        <ReactQuill
-            ref={quillRef}
-            theme="snow"
-            value={value || ''}
-            onChange={(content, delta, source, editor) => {
-                if (source === 'user') {
-                    onChange(content);
-                }
-            }}
-            modules={modules}
-            formats={formats}
-            placeholder={placeholder}
-        />
+        <div id={boundsId} className="quill-bounds-wrapper" style={{ position: 'relative' }}>
+            <ReactQuill
+                ref={quillRef}
+                theme="snow"
+                value={value || ''}
+                onChange={(content, delta, source, editor) => {
+                    if (source === 'user') {
+                        onChange(content);
+                    }
+                }}
+                modules={modules}
+                formats={formats}
+                placeholder={placeholder}
+                bounds={`#${boundsId}`}
+            />
+        </div>
     );
 }

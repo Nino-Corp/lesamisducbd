@@ -113,19 +113,25 @@ export default function BuilderIndex() {
 
     const handleCreate = async (e) => {
         e.preventDefault();
+        // Check for duplicate slug
+        if (pages[newPage.slug]) {
+            alert(`Une page avec le slug "${newPage.slug}" existe déjà. Veuillez choisir un autre nom.`);
+            return;
+        }
         try {
             const initialSections = PAGE_TEMPLATES[selectedTemplate]?.sections || [];
-            // Re-generate IDs to ensure uniqueness at creation
             const sectionsWithNewIds = initialSections.map(s => ({ ...s, id: `${s.type}-${Date.now()}-${Math.floor(Math.random() * 1000)}` }));
 
             const res = await fetch('/api/admin/builder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...newPage, sections: sectionsWithNewIds })
+                body: JSON.stringify({ ...newPage, sections: sectionsWithNewIds, isNew: true })
             });
             if (res.ok) {
                 const { page } = await res.json();
                 window.location.href = `/admin/builder/${page.slug}`;
+            } else if (res.status === 409) {
+                alert('Ce slug est déjà utilisé par une autre page.');
             }
         } catch (error) {
             console.error('Error creating page:', error);
@@ -242,28 +248,43 @@ export default function BuilderIndex() {
                         </div>
                     </div>
 
-                    <form onSubmit={handleCreate} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                        <input
-                            type="text"
-                            placeholder="Titre de la page"
-                            value={newPage.title}
-                            onChange={(e) => {
-                                const title = e.target.value;
-                                const slug = title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                                setNewPage({ ...newPage, title, slug });
-                            }}
-                            style={{ flex: 2, padding: '10px 14px', borderRadius: '8px', border: '1px solid #ddd', minWidth: '200px' }}
-                            required
-                        />
-                        <input
-                            type="text"
-                            placeholder="slug"
-                            value={newPage.slug}
-                            onChange={(e) => setNewPage({ ...newPage, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') })}
-                            style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', border: '1px solid #ddd', fontFamily: 'monospace', minWidth: '150px' }}
-                            required
-                        />
-                        <button type="submit" className={styles.createBtn}>Créer</button>
+                    <form onSubmit={handleCreate} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-start' }}>
+                        <div style={{ flex: 2, minWidth: '200px' }}>
+                            <input
+                                type="text"
+                                placeholder="Titre de la page"
+                                value={newPage.title}
+                                onChange={(e) => {
+                                    const title = e.target.value;
+                                    const slug = title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                                    setNewPage({ ...newPage, title, slug });
+                                }}
+                                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #ddd' }}
+                                required
+                            />
+                        </div>
+                        <div style={{ flex: 1, minWidth: '150px' }}>
+                            <input
+                                type="text"
+                                placeholder="slug"
+                                value={newPage.slug}
+                                onChange={(e) => setNewPage({ ...newPage, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') })}
+                                style={{ 
+                                    width: '100%', padding: '10px 14px', borderRadius: '8px', fontFamily: 'monospace',
+                                    border: `1px solid ${newPage.slug && pages[newPage.slug] ? '#ef4444' : '#ddd'}`,
+                                    background: newPage.slug && pages[newPage.slug] ? '#fef2f2' : '#fff',
+                                }}
+                                required
+                            />
+                            {newPage.slug && pages[newPage.slug] && (
+                                <div style={{ fontSize: '0.75rem', color: '#ef4444', fontWeight: 600, marginTop: '4px' }}>
+                                    ⚠️ Ce slug est déjà utilisé
+                                </div>
+                            )}
+                        </div>
+                        <button type="submit" className={styles.createBtn} disabled={!!(newPage.slug && pages[newPage.slug])}
+                            style={newPage.slug && pages[newPage.slug] ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                        >Créer</button>
                         <button type="button" onClick={() => setIsCreating(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#999', padding: '10px' }}>Annuler</button>
                     </form>
                 </div>

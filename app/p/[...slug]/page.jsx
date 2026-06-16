@@ -161,11 +161,24 @@ export default async function DynamicPage(props) {
 
     // Check if sections already contain Header/Footer
     const pageSections = page.sections || [];
+    
+    // Utility to recursively clean &nbsp; from all string props
+    const cleanHtmlStrings = (obj) => {
+        if (typeof obj === 'string') return obj.replace(/&nbsp;/g, ' ');
+        if (Array.isArray(obj)) return obj.map(cleanHtmlStrings);
+        if (typeof obj === 'object' && obj !== null) {
+            const newObj = {};
+            for (const key in obj) newObj[key] = cleanHtmlStrings(obj[key]);
+            return newObj;
+        }
+        return obj;
+    };
+
     const hasHeader = pageSections.some(s => s.type === 'Header');
     const hasFooter = pageSections.some(s => s.type === 'Footer');
     const hideHeaderFooter = page.seo?.hideHeaderFooter === true;
 
-    const finalSections = [...pageSections];
+    const finalSections = cleanHtmlStrings([...pageSections]);
 
     if (!hasHeader && !hideHeaderFooter) {
         finalSections.unshift({

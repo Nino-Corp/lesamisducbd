@@ -11,7 +11,6 @@
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
     position: relative;
     z-index: 10;
-    overflow: hidden;
 }
 
 .editorWrapper.focused {
@@ -63,6 +62,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 2px;
+    border-radius: 12px 12px 0 0;
 }
 
 /* Toolbar groups */
@@ -225,6 +225,7 @@
     min-height: 220px;
     position: relative;
     z-index: 1;
+    border-radius: 0 0 12px 12px;
 }
 
 /* ── The actual editable area ────────────────────────────── */

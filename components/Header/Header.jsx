@@ -1,9 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import styles from './Header.module.css';
-import { User, ShoppingBag, Menu, X, Search } from 'lucide-react';
+import { User, ShoppingBag, Menu, X, Search, ChevronDown } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import LoginModal from '../LoginModal/LoginModal';
 import SearchOverlay from '../SearchBar/SearchOverlay';
@@ -16,6 +16,9 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const [openDropdown, setOpenDropdown] = useState(null);
+    const [mobileDropdown, setMobileDropdown] = useState(null);
+    const dropdownTimeoutRef = useRef(null);
     // Auth session
     const { data: session, status } = useSession();
     const isAuthenticated = status === 'authenticated';
@@ -73,9 +76,40 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
                     <nav className={styles.desktopNav}>
                         <ul>
                             {menuItems && menuItems.map((item, index) => (
-                                <li key={index}>
-                                    <Link href={item.href}>{item.label}</Link>
-                                </li>
+                                item.children && item.children.length > 0 ? (
+                                    <li 
+                                        key={index} 
+                                        className={styles.dropdownWrapper}
+                                        onMouseEnter={() => {
+                                            if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                                            setOpenDropdown(index);
+                                        }}
+                                        onMouseLeave={() => {
+                                            dropdownTimeoutRef.current = setTimeout(() => setOpenDropdown(null), 200);
+                                        }}
+                                    >
+                                        <button className={styles.dropdownTrigger}>
+                                            {item.label}
+                                            <ChevronDown size={14} className={`${styles.chevron} ${openDropdown === index ? styles.chevronOpen : ''}`} />
+                                        </button>
+                                        <div className={`${styles.dropdownMenu} ${openDropdown === index ? styles.dropdownOpen : ''}`}>
+                                            {item.children.map((child, ci) => (
+                                                <Link 
+                                                    key={ci} 
+                                                    href={child.href} 
+                                                    className={styles.dropdownItem}
+                                                    onClick={() => setOpenDropdown(null)}
+                                                >
+                                                    {child.label}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </li>
+                                ) : (
+                                    <li key={index}>
+                                        <Link href={item.href}>{item.label}</Link>
+                                    </li>
+                                )
                             ))}
                         </ul>
                     </nav>
@@ -134,11 +168,34 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
                 <nav className={styles.mobileNavOverlay}>
                     <ul>
                         {menuItems && menuItems.map((item, index) => (
-                            <li key={index}>
-                                <Link href={item.href} onClick={() => setIsMenuOpen(false)}>
-                                    {item.label}
-                                </Link>
-                            </li>
+                            item.children && item.children.length > 0 ? (
+                                <li key={index} className={styles.mobileDropdownWrapper}>
+                                    <button 
+                                        className={styles.mobileDropdownTrigger}
+                                        onClick={() => setMobileDropdown(mobileDropdown === index ? null : index)}
+                                    >
+                                        {item.label}
+                                        <ChevronDown size={18} className={`${styles.chevron} ${mobileDropdown === index ? styles.chevronOpen : ''}`} />
+                                    </button>
+                                    {mobileDropdown === index && (
+                                        <ul className={styles.mobileDropdownList}>
+                                            {item.children.map((child, ci) => (
+                                                <li key={ci}>
+                                                    <Link href={child.href} onClick={() => { setIsMenuOpen(false); setMobileDropdown(null); }}>
+                                                        {child.label}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </li>
+                            ) : (
+                                <li key={index}>
+                                    <Link href={item.href} onClick={() => setIsMenuOpen(false)}>
+                                        {item.label}
+                                    </Link>
+                                </li>
+                            )
                         ))}
                     </ul>
                 </nav>,

@@ -223,7 +223,19 @@ const LivePreview = memo(function LivePreview({
                             )}
                             {Component ? (
                                 (() => {
-                                    const finalProps = { ...componentProps };
+                                    // Utility to recursively clean &nbsp; from all string props
+                                    const cleanHtmlStrings = (obj) => {
+                                        if (typeof obj === 'string') return obj.replace(/&nbsp;/g, ' ');
+                                        if (Array.isArray(obj)) return obj.map(cleanHtmlStrings);
+                                        if (typeof obj === 'object' && obj !== null) {
+                                            const newObj = {};
+                                            for (const key in obj) newObj[key] = cleanHtmlStrings(obj[key]);
+                                            return newObj;
+                                        }
+                                        return obj;
+                                    };
+
+                                    const finalProps = cleanHtmlStrings({ ...componentProps });
                                     if (section.type === 'ProductList' && (!finalProps.products || finalProps.products.length === 0)) {
                                         finalProps.products = [
                                             { name: "Produit Test 1", image: "/images/hero.webp", formattedPrice: "10,00 €", slug: "test-1" },

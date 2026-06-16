@@ -49,6 +49,7 @@
     font-size: clamp(1rem, 1.5vw, 1.25rem);
     font-weight: 700;
     text-align: left;
+    white-space: normal !important; /* Allow long questions to wrap */
     transition: var(--transition-smooth);
     border-radius: 40px;
     position: relative;

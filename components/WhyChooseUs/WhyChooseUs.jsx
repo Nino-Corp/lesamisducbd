@@ -9,7 +9,7 @@ export default function WhyChooseUs({ title, features, ctaLabel, ctaLink = "/ess
                 <div className={styles.imageCol}>
                     <div className={styles.imageWrapper}>
                         <Image
-                            src={imageSrc}
+                            src={imageSrc || '/images/whychooseus/Scientist.webp'}
                             alt={imageAlt}
                             width={800}
                             height={1000}
@@ -24,7 +24,7 @@ export default function WhyChooseUs({ title, features, ctaLabel, ctaLink = "/ess
                     {features.map((feature, index) => (
                         <div key={index} className={styles.item}>
                             <h3 className={styles.itemTitle}>{feature.title}</h3>
-                            <div className={styles.itemDesc} dangerouslySetInnerHTML={{ __html: feature.description }} />
+                            <div className={styles.itemDesc} dangerouslySetInnerHTML={{ __html: (feature.description || '').replace(/&nbsp;/g, ' ') }} />
                         </div>
                     ))}
                 </div>

@@ -25,6 +25,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  min-width: 0;
 }
 
 html,
@@ -41,6 +42,24 @@ body {
   background-color: var(--background-light);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Global Text Wrapping ─── */
+/* Forbid mid-word cuts globally on all text elements as requested */
+p, h1, h2, h3, h4, h5, h6, li, blockquote, div[class*="Desc"], div[class*="Text"], .ql-editor {
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  word-wrap: normal !important;
+  hyphens: none !important;
+  -webkit-hyphens: none !important;
+}
+
+/* Protect buttons from having their words aggressively cut or shrinking too much */
+button, a[class*="cta"], a[class*="btn"], a[class*="button"], a[class*="Link"], [role="button"] {
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  white-space: nowrap;
+  min-width: min-content; /* Prevent flex shrinking below text size */
 }
 
 main {

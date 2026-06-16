@@ -99,6 +99,11 @@ export async function POST(request) {
             return NextResponse.json({ success: true, page: pages[slug] });
         }
 
+        // ── Prevent creating a page with an existing slug (only for NEW pages) ──
+        if (body.isNew && pages[slug]) {
+            return NextResponse.json({ error: 'A page with this slug already exists' }, { status: 409 });
+        }
+
         // ── Handle slug rename: delete old key ──
         if (originalSlug !== slug && pages[originalSlug]) {
             const oldHistory = pages[originalSlug].history || [];
@@ -217,16 +222,42 @@ export async function DELETE(request) {
         delete pages[slug];
         await kv.set(PAGES_KEY, pages);
 
-        // Remove from global footer links
+        // Remove from global footer links and header links
         try {
             const globalContent = await kv.get('global_content');
-            if (globalContent?.footerLinks) {
+            if (globalContent) {
+                let modified = false;
                 const pageHref = `/p/${slug}`;
-                globalContent.footerLinks = globalContent.footerLinks.filter(link => link.href !== pageHref);
-                await kv.set('global_content', globalContent);
+
+                if (globalContent.footerLinks) {
+                    const originalLength = globalContent.footerLinks.length;
+                    globalContent.footerLinks = globalContent.footerLinks.filter(link => link.href !== pageHref);
+                    if (globalContent.footerLinks.length !== originalLength) modified = true;
+                }
+
+                if (globalContent.headerLinks) {
+                    let newHeaderLinks = [...globalContent.headerLinks];
+                    for (let i = 0; i < newHeaderLinks.length; i++) {
+                        let link = newHeaderLinks[i];
+                        if (link.href === pageHref) {
+                            newHeaderLinks.splice(i, 1);
+                            i--;
+                            modified = true;
+                        } else if (link.children && Array.isArray(link.children)) {
+                            const originalChildrenLength = link.children.length;
+                            link.children = link.children.filter(child => child.href !== pageHref);
+                            if (link.children.length !== originalChildrenLength) modified = true;
+                        }
+                    }
+                    if (modified) globalContent.headerLinks = newHeaderLinks;
+                }
+
+                if (modified) {
+                    await kv.set('global_content', globalContent);
+                }
             }
-        } catch (footerError) {
-            console.error('Error removing global footer link:', footerError);
+        } catch (cleanupError) {
+            console.error('Error removing global links on page deletion:', cleanupError);
         }
 
         return NextResponse.json({ success: true });
