@@ -34,6 +34,19 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
             setScrolled(window.scrollY > 20);
         };
         window.addEventListener('scroll', handleScroll);
+
+        // Auto-open search if coming from PrestaShop (e.g. ?openSearch=true)
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('openSearch') === 'true') {
+                setIsSearchOpen(true);
+                // Clean the URL without reloading
+                const newUrl = new URL(window.location.href);
+                newUrl.searchParams.delete('openSearch');
+                window.history.replaceState({}, '', newUrl.toString());
+            }
+        }
+
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
