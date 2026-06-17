@@ -35,14 +35,27 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
         };
         window.addEventListener('scroll', handleScroll);
 
-        // Auto-open search if coming from PrestaShop (e.g. ?openSearch=true)
+        // Auto-open search or cart if coming from PrestaShop
         if (typeof window !== 'undefined') {
             const urlParams = new URLSearchParams(window.location.search);
+            let urlChanged = false;
+
             if (urlParams.get('openSearch') === 'true') {
                 setIsSearchOpen(true);
+                urlParams.delete('openSearch');
+                urlChanged = true;
+            }
+
+            if (urlParams.get('action') === 'cart') {
+                setTimeout(() => setIsCartOpen(true), 100); // Slight delay for hydration/context readiness
+                urlParams.delete('action');
+                urlChanged = true;
+            }
+
+            if (urlChanged) {
                 // Clean the URL without reloading
                 const newUrl = new URL(window.location.href);
-                newUrl.searchParams.delete('openSearch');
+                newUrl.search = urlParams.toString();
                 window.history.replaceState({}, '', newUrl.toString());
             }
         }
