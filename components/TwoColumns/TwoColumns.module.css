@@ -52,6 +52,20 @@
 .text p { margin: 0 0 4px; }
 .text p:last-child { margin: 0; }
 
+.text ul,
+.text ol {
+    padding-left: 1.8em;
+    margin: 0.6em 0;
+}
+
+.text ul { list-style-type: disc; }
+.text ol { list-style-type: decimal; }
+
+.text li {
+    margin-bottom: 0.3em;
+    padding-left: 0.3em;
+}
+
 /* Quill alignment class fallbacks */
 .text :global(.ql-align-center) { text-align: center; }
 .text :global(.ql-align-right) { text-align: right; }

@@ -17,7 +17,7 @@ import AuthorCard from '@/components/AuthorCard/AuthorCard';
 import CalloutBox from '@/components/CalloutBox/CalloutBox';
 import RelatedArticles from '@/components/RelatedArticles/RelatedArticles';
 import TableOfContents from '@/components/TableOfContents/TableOfContents';
-import FeaturedProducts from '@/components/FeaturedProducts/FeaturedProducts';
+import FeaturedProductsPreview from '@/components/FeaturedProducts/FeaturedProductsPreview';
 import Marquee from '@/components/Marquee/Marquee';
 import OfferComparator from '@/components/OfferComparator/OfferComparator';
 import PartnersNetwork from '@/components/PartnersNetwork/PartnersNetwork';
@@ -57,7 +57,7 @@ const PREVIEW_COMPONENTS = {
     CalloutBox,
     RelatedArticles,
     TableOfContents,
-    FeaturedProducts,
+    FeaturedProducts: FeaturedProductsPreview,
     Marquee,
     OfferComparator,
     PartnersNetwork,

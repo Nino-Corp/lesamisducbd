@@ -87,7 +87,8 @@ a {
   color: inherit;
 }
 
-ul {
+/* Reset list styles only for navigation, not for content areas */
+nav ul, header ul, footer ul {
   list-style: none;
 }
 
@@ -129,3 +130,22 @@ ul {
 .ql-align-center { text-align: center; }
 .ql-align-right { text-align: right; }
 .ql-align-justify { text-align: justify; }
+
+/* ─── Aligned lists (Quill uses inline style="text-align:…") ─── */
+/* When a list item is centered or right-aligned, move the bullet inside
+   so it follows the text instead of staying stuck on the left edge. */
+li[style*="text-align: center"],
+li[style*="text-align:center"],
+li[style*="text-align: right"],
+li[style*="text-align:right"] {
+  list-style-position: inside;
+}
+
+/* Remove the left padding on parent ul/ol when ALL items are centered,
+   so the list block itself can be truly centered on the page. */
+ul:has(> li[style*="text-align: center"]),
+ul:has(> li[style*="text-align:center"]),
+ol:has(> li[style*="text-align: center"]),
+ol:has(> li[style*="text-align:center"]) {
+  padding-left: 0;
+}

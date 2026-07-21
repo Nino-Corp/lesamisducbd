@@ -20,7 +20,9 @@ export default function Hero({ backgroundImage, title, description, ctaLabel, ct
                 />
             )}
             <div className={`${styles.glassCard} ${centered ? styles.centeredCard : ''}`}>
-                <h1 className={styles.title} dangerouslySetInnerHTML={{ __html: title }}></h1>
+                <h1 className={styles.title} dangerouslySetInnerHTML={{ 
+                    __html: (title || '').replace(/<\/?(p|h[1-6]|div)[^>]*>/gi, '') 
+                }}></h1>
                 <p className={styles.description} dangerouslySetInnerHTML={{ __html: description }}></p>
                 <Link href={ctaLink || '/produits'} className={styles.ctaLink} onClick={() => trackCTA('home_hero_discover')}>
                     <button className={styles.cta}>{ctaLabel}</button>

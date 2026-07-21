@@ -8,6 +8,26 @@
     text-align: center;
 }
 
+.centered ul, .centered ol {
+    padding-left: 0;
+}
+
+.centered li {
+    list-style-position: inside;
+}
+
+.rightAligned {
+    text-align: right;
+}
+
+.rightAligned ul, .rightAligned ol {
+    padding-left: 0;
+}
+
+.rightAligned li {
+    list-style-position: inside;
+}
+
 .title {
     font-size: 2.5rem;
     font-weight: 800;
@@ -30,6 +50,25 @@
 
 .content p {
     margin-bottom: 4px;
+}
+
+.content ul,
+.content ol {
+    padding-left: 1.8em;
+    margin: 0.6em 0;
+}
+
+.content ul {
+    list-style-type: disc;
+}
+
+.content ol {
+    list-style-type: decimal;
+}
+
+.content li {
+    margin-bottom: 0.3em;
+    padding-left: 0.3em;
 }
 
 /* Quill alignment class fallbacks (for older content that used class-based align) */

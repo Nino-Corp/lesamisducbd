@@ -25,8 +25,18 @@ SizeStyle.whitelist = [
 ];
 Quill.register(SizeStyle, true);
 
-// Use style-based align so output is style="text-align:center" not class="ql-align-center"
-const AlignStyle = Quill.import('attributors/style/align');
+// Create a custom style attributor for alignment that works on LI
+const DefaultAlignStyle = Quill.import('attributors/style/align');
+const StyleAttributor = Object.getPrototypeOf(DefaultAlignStyle).constructor;
+
+class CustomAlignStyle extends StyleAttributor {
+    canAdd(node, value) {
+        return super.canAdd(node, value) || node.tagName === 'LI';
+    }
+}
+const AlignStyle = new CustomAlignStyle('align', 'text-align', {
+    whitelist: ['left', 'center', 'right', 'justify']
+});
 Quill.register(AlignStyle, true);
 
 /* ─────────────────────────────────────────────────────────
@@ -168,19 +178,134 @@ export default function QuillEditorInner({ value, onChange, placeholder }) {
                 ['bold', 'italic', 'underline', 'strike'],
                 [{ color: [false, ...PROJECT_COLORS] }, { background: [false, ...PROJECT_COLORS] }],
                 [{ align: [] }],
-                [{ list: 'ordered' }, { list: 'bullet' }],
+                [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
                 ['link', 'clean'],
             ],
+            handlers: {
+                align: function(value) {
+                    const quill = this.quill;
+                    const range = quill.getSelection();
+                    if (!range) return;
+
+                    // Check if cursor is inside a list item
+                    const [line] = quill.getLine(range.index);
+                    const domNode = line?.domNode;
+
+                    if (domNode && domNode.tagName === 'LI') {
+                        // Get all selected lines
+                        const lines = quill.getLines(range.index, range.length || 1);
+                        lines.forEach(l => {
+                            if (l.domNode && l.domNode.tagName === 'LI') {
+                                l.domNode.style.textAlign = value || '';
+                            }
+                        });
+                        // Trigger content change so it gets saved
+                        quill.update('user');
+                    } else {
+                        // Default Quill behavior for non-list elements
+                        quill.format('align', value, 'user');
+                    }
+                }
+            }
         },
         clipboard: { matchVisual: false },
     }), []);
+
+    // Removed broken ListBlot patch
+
+    // Inject native color pickers into the Quill color/background dropdowns
+    useEffect(() => {
+        if (!quillRef.current) return;
+        
+        // Use a short timeout to ensure the toolbar DOM is fully rendered
+        const timer = setTimeout(() => {
+            const quill = quillRef.current.getEditor();
+            const toolbar = quill.getModule('toolbar').container;
+            if (!toolbar) return;
+
+            ['color', 'background'].forEach(formatType => {
+                const pickers = toolbar.querySelectorAll(`.ql-${formatType} .ql-picker-options`);
+                
+                pickers.forEach(picker => {
+                    if (picker.querySelector('.custom-color-picker-wrapper')) return;
+
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'custom-color-picker-wrapper';
+                    wrapper.style.padding = '8px 4px 4px 4px';
+                    wrapper.style.borderTop = '1px solid #e2e8f0';
+                    wrapper.style.marginTop = '6px';
+                    wrapper.style.display = 'flex';
+                    wrapper.style.alignItems = 'center';
+                    wrapper.style.justifyContent = 'space-between';
+                    wrapper.style.gap = '8px';
+                    wrapper.style.cursor = 'default';
+                    wrapper.style.width = '100%';
+                    wrapper.style.boxSizing = 'border-box';
+
+                    let savedSelection = null;
+
+                    // Prevent click from bubbling to Quill's picker which would close it prematurely
+                    // Also save the text selection because opening the OS picker will steal focus
+                    wrapper.addEventListener('mousedown', (e) => {
+                        e.stopPropagation();
+                        savedSelection = quill.getSelection();
+                    });
+                    wrapper.addEventListener('click', (e) => e.stopPropagation());
+
+                    const label = document.createElement('span');
+                    label.innerText = 'Perso :';
+                    label.style.fontSize = '12px';
+                    label.style.color = '#475569';
+                    label.style.fontFamily = 'sans-serif';
+                    label.style.whiteSpace = 'nowrap';
+
+                    const input = document.createElement('input');
+                    input.type = 'color';
+                    input.style.width = '28px';
+                    input.style.height = '28px';
+                    input.style.padding = '0';
+                    input.style.border = '1px solid #cbd5e1';
+                    input.style.borderRadius = '4px';
+                    input.style.cursor = 'pointer';
+                    input.style.flexShrink = '0';
+                    input.style.background = 'none';
+
+                    wrapper.appendChild(label);
+                    wrapper.appendChild(input);
+
+                    // Apply color when it changes
+                    input.addEventListener('change', (e) => {
+                        const val = e.target.value;
+                        
+                        // Restore the selection that was lost when the OS picker opened
+                        if (savedSelection) {
+                            quill.setSelection(savedSelection);
+                        }
+                        
+                        // Format the text
+                        quill.format(formatType, val, 'user');
+                        
+                        // Close the Quill dropdown
+                        const pickerElement = picker.closest('.ql-picker');
+                        if (pickerElement) {
+                            pickerElement.classList.remove('ql-expanded');
+                        }
+                    });
+
+                    picker.appendChild(wrapper);
+                });
+            });
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     const formats = useMemo(() => [
         'header', 'font', 'size',
         'bold', 'italic', 'underline', 'strike',
         'color', 'background',
         'align',
-        'list',
+        'list', 'indent',
         'link',
     ], []);
 

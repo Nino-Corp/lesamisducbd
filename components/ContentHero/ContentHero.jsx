@@ -7,7 +7,9 @@ export default function ContentHero({ title, subtitle, children, imageSrc, image
         <section className={styles.heroSection}>
             <div className={styles.heroContainer}>
                 <div className={styles.heroContent} style={{ textAlign }}>
-                    {title && <h1 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />}
+                    {title && <h1 className={styles.title} dangerouslySetInnerHTML={{ 
+                        __html: title.replace(/<\/?(p|h[1-6]|div)[^>]*>/gi, '') 
+                    }} />}
                     {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
                     {children}
                 </div>

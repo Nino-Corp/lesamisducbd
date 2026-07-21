@@ -5,8 +5,12 @@ export default function RichText({ content, title, textAlign = "left", maxWidth 
 
     const Tag = headingTag;
 
+    let alignClass = '';
+    if (textAlign === 'center') alignClass = styles.centered;
+    if (textAlign === 'right') alignClass = styles.rightAligned;
+
     return (
-        <section className={styles.section} style={{ textAlign }}>
+        <section className={`${styles.section} ${alignClass}`.trim()} style={{ textAlign }}>
             <div className="container" style={{ maxWidth: `${maxWidth}px`, margin: '0 auto' }}>
                 {title && <Tag className={styles.title}>{title}</Tag>}
                 <div

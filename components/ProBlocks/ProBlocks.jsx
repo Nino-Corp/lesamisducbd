@@ -18,7 +18,7 @@ export function ProHero({ imageSrc, imagePosition, imageAlt, badgeText, title, t
             </ContentHero>
 
             <div className={styles.heroTextContent}>
-                <h1 className={styles.heroTitle} dangerouslySetInnerHTML={{ __html: title || '' }} />
+                <h1 className={styles.heroTitle} dangerouslySetInnerHTML={{ __html: (title || '').replace(/<\/?(p|h[1-6]|div)[^>]*>/gi, '') }} />
                 <div
                     className={styles.heroText}
                     dangerouslySetInnerHTML={{ __html: text || '' }}
