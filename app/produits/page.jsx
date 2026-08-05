@@ -16,12 +16,23 @@ export const metadata = {
 export const revalidate = 60; // ISR cache every minute
 
 export default async function ProductsPage() {
-    const [products, hiddenIds, globalContent, productOrder] = await Promise.all([
+    const [products, hiddenIds, globalContent, productOrder, categoryOverrides, pageConfigData] = await Promise.all([
         productService.getProducts(),
         kv.get('hidden_products').catch(() => []),
         kv.get('global_content').catch(() => null),
-        kv.get('product_order').catch(() => [])
+        kv.get('product_order').catch(() => []),
+        kv.get('category_overrides').catch(() => ({})),
+        kv.get('products_page_config').catch(() => null)
     ]);
+
+    const pageConfig = pageConfigData || {
+        carousel: [
+            { id: 1, title: "L'Essentiel du CBD", subtitle: "Découvrez notre sélection rigoureuse, pensée pour votre bien-être au quotidien.", image: "/images/hero.webp", buttonText: "Notre histoire", buttonLink: "/essentiel" },
+            { id: 2, title: "La Qualité Premium", subtitle: "Des fleurs et résines exceptionnelles, cultivées avec passion pour des arômes uniques.", image: "/images/carousel_nature_cbd.png", buttonText: "Voir nos fleurs", buttonLink: "/produits?cat=fleur" },
+            { id: 3, title: "Bien-être & Sérénité", subtitle: "Des conseils experts pour intégrer nos produits à votre routine détente.", image: "/images/carousel_wellness_cbd.png", buttonText: "Nos conseils", buttonLink: "/usages" }
+        ],
+        premiumBadge: { enabled: true, text: "Qualité Premium" }
+    };
 
     const hidden = Array.isArray(hiddenIds) ? hiddenIds : [];
     let visibleProducts = hidden.length > 0
@@ -48,5 +59,5 @@ export default async function ProductsPage() {
         console.error('Failed to increment view counter', e);
     }
 
-    return <ProductsClient initialProducts={visibleProducts} globalContent={globalContent} />;
+    return <ProductsClient initialProducts={visibleProducts} globalContent={globalContent} categoryOverrides={categoryOverrides || {}} pageConfig={pageConfig} />;
 }

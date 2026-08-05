@@ -83,12 +83,15 @@ const buildFlower = (entry, product) => {
 
 export default async function Home() {
   // Fetch CMS content, PrestaShop products and vitrine config in parallel
-  const [data, allProducts, vitrineConfig, globalConfig] = await Promise.all([
+  const [data, allProducts, vitrineConfig, globalConfig, categoryOverrides] = await Promise.all([
     getData(),
     productService.getProducts().catch(() => []),
     kv.get('vitrine_config').catch(() => null),
-    kv.get('global_content').catch(() => null)
+    kv.get('global_content').catch(() => null),
+    kv.get('category_overrides').catch(() => ({}))
   ]);
+
+  const catOverrides = categoryOverrides || {};
 
   const bySlug = Object.fromEntries(allProducts.map(p => [p.slug, p]));
 
@@ -173,10 +176,14 @@ export default async function Home() {
       .filter(Boolean)
       .slice(0, 4);
   } else {
-    // Fallback: first resins found in catalogue
+    // Fallback: first resins found in catalogue (using overrides + keywords)
     const RESIN_KEYWORDS = ['hash', 'pollen', 'resin', 'r\u00e9sine', 'harsh', 'golden'];
     resins = allProducts
-      .filter(p => RESIN_KEYWORDS.some(k => p.name.toLowerCase().includes(k)))
+      .filter(p => {
+        if (catOverrides[p.id] === 'resine') return true;
+        if (catOverrides[p.id] && catOverrides[p.id] !== 'resine') return false;
+        return RESIN_KEYWORDS.some(k => p.name.toLowerCase().includes(k));
+      })
       .slice(0, 4)
       .map(p => toCard({}, p));
   }

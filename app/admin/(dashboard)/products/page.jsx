@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import styles from './Products.module.css';
 import WysiwygEditor from '../builder/WysiwygEditor';
+import ImageUpload from '@/components/Admin/ImageUpload';
 
 // Suppression de BADGE_OPTIONS pour saisie libre
 
@@ -28,7 +30,7 @@ const OrderInput = ({ idx, total, onChange, className }) => {
 };
 
 export default function ProductsPage() {
-    const [tab, setTab] = useState('vitrine'); // 'vitrine' | 'visibility' | 'descriptions'
+    const [tab, setTab] = useState('vitrine'); // 'vitrine' | 'visibility' | 'descriptions' | 'categories' | 'couverture'
     const [allProducts, setAllProducts] = useState([]);
     const [vitrine, setVitrine] = useState({ flowers: [], resins: [] });
     const [hiddenIds, setHiddenIds] = useState([]);
@@ -46,12 +48,33 @@ export default function ProductsPage() {
     const [descSaving, setDescSaving] = useState(false);
     const [descSaved, setDescSaved] = useState(false);
 
+    // Category overrides
+    const [categoryOverrides, setCategoryOverrides] = useState({});
+    const [catSearch, setCatSearch] = useState('');
+    const [catFilter, setCatFilter] = useState('all'); // 'all' | 'overridden' | 'auto'
+    const [catSaving, setCatSaving] = useState(false);
+    const [catSaved, setCatSaved] = useState(false);
+
+    // Products Page Config
+    const [pageConfig, setPageConfig] = useState({
+        carousel: [
+            { id: 1, title: "L'Essentiel du CBD", subtitle: "Découvrez notre sélection rigoureuse, pensée pour votre bien-être au quotidien.", image: "/images/hero.webp", buttonText: "Notre histoire", buttonLink: "/essentiel" },
+            { id: 2, title: "La Qualité Premium", subtitle: "Des fleurs et résines exceptionnelles, cultivées avec passion pour des arômes uniques.", image: "/images/carousel_nature_cbd.png", buttonText: "Voir nos fleurs", buttonLink: "/produits?cat=fleur" },
+            { id: 3, title: "Bien-être & Sérénité", subtitle: "Des conseils experts pour intégrer nos produits à votre routine détente.", image: "/images/carousel_wellness_cbd.png", buttonText: "Nos conseils", buttonLink: "/usages" }
+        ],
+        premiumBadge: { enabled: true, text: "Qualité Premium" }
+    });
+    const [configSaving, setConfigSaving] = useState(false);
+    const [configSaved, setConfigSaved] = useState(false);
+
     useEffect(() => {
         Promise.all([
             fetch('/api/products').then(r => r.json()),
             fetch('/api/admin/vitrine').then(r => r.json()),
-            fetch('/api/admin/product-overrides').then(r => r.json())
-        ]).then(([products, config, overridesData]) => {
+            fetch('/api/admin/product-overrides').then(r => r.json()),
+            fetch('/api/admin/category-overrides').then(r => r.json()),
+            fetch('/api/admin/products-page-config').then(r => r.json())
+        ]).then(([products, config, overridesData, catOverridesData, pageConfigData]) => {
             const fetchedProducts = Array.isArray(products) ? products : [];
             const pOrder = Array.isArray(config?.productOrder) ? config.productOrder : [];
 
@@ -82,6 +105,10 @@ export default function ProductsPage() {
             });
             
             setHiddenIds(Array.isArray(config?.hiddenIds) ? config.hiddenIds : []);
+            setCategoryOverrides(catOverridesData || {});
+            if (pageConfigData && pageConfigData.carousel) {
+                setPageConfig(pageConfigData);
+            }
         }).catch(console.error).finally(() => setLoading(false));
     }, []);
 
@@ -94,6 +121,61 @@ export default function ProductsPage() {
 
     const RESIN_KEYWORDS = ['hash', 'pollen', 'resin', 'résine', 'harsh', 'golden'];
     const isResin = (p) => RESIN_KEYWORDS.some(k => p.name.toLowerCase().includes(k));
+
+    // Category detection (same logic as ProductsClient for consistency)
+    const CATEGORY_OPTIONS = [
+        { id: 'auto', label: '🤖 Auto-détection' },
+        { id: 'fleur', label: '🌿 Fleur CBD' },
+        { id: 'resine', label: '🍫 Résine / Pollen' },
+        { id: 'pack', label: '📦 Pack' },
+        { id: 'autre', label: '🔧 Accessoire / Divers' }
+    ];
+
+    const detectCategory = (product) => {
+        const nameNorm = (product.name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        if (['plv', 'flyer', 'tourniquet', 'presentoir', 'accessoire', 'goodies', 'feuille', 'briquet', 'grinder'].some(k => nameNorm.includes(k))) return 'autre';
+        if (['resine', 'hash', 'filtre', 'pollen'].some(k => nameNorm.includes(k))) return 'resine';
+        if (['pack', 'mystere', 'decouverte'].some(k => nameNorm.includes(k))) return 'pack';
+        if (['fleur', 'trim', 'mix', 'skunk', 'amnesia', 'gorilla', 'remedy', 'cbd', 'kush', 'haze', 'gelato'].some(k => nameNorm.includes(k)) || product.category === 3) return 'fleur';
+        if (/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*g\b/.test(nameNorm)) return 'fleur';
+        return 'autre';
+    };
+
+    const getEffectiveCategory = (product) => {
+        return categoryOverrides[product.id] || detectCategory(product);
+    };
+
+    const saveCategoryOverrides = async () => {
+        setCatSaving(true);
+        try {
+            const res = await fetch('/api/admin/category-overrides', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(categoryOverrides)
+            });
+            if (res.ok) {
+                setCatSaved(true);
+                setTimeout(() => setCatSaved(false), 3000);
+            } else alert('Erreur lors de la sauvegarde');
+        } catch { alert('Erreur réseau'); }
+        finally { setCatSaving(false); }
+    };
+
+    const savePageConfig = async () => {
+        setConfigSaving(true);
+        try {
+            const res = await fetch('/api/admin/products-page-config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pageConfig)
+            });
+            if (res.ok) {
+                setConfigSaved(true);
+                setTimeout(() => setConfigSaved(false), 3000);
+            } else alert('Erreur lors de la sauvegarde');
+        } catch { alert('Erreur réseau'); }
+        finally { setConfigSaving(false); }
+    };
 
     const filteredProducts = allProducts.filter(p => !search || matchSearch(p, search));
     const filteredVis = allProducts.filter(p => !visSearch || matchSearch(p, visSearch));
@@ -267,6 +349,19 @@ export default function ProductsPage() {
                 >
                     ✏️ Descriptions
                     {Object.keys(overrides).length > 0 && <span className={styles.hiddenBadge}>{Object.keys(overrides).length} modifié{Object.keys(overrides).length > 1 ? 's' : ''}</span>}
+                </button>
+                <button
+                    onClick={() => setTab('categories')}
+                    className={`${styles.tab} ${tab === 'categories' ? styles.activeTab : ''}`}
+                >
+                    🏷️ Catégories
+                    {Object.keys(categoryOverrides).length > 0 && <span className={styles.hiddenBadge}>{Object.keys(categoryOverrides).length} forcé{Object.keys(categoryOverrides).length > 1 ? 's' : ''}</span>}
+                </button>
+                <button
+                    onClick={() => setTab('couverture')}
+                    className={`${styles.tab} ${tab === 'couverture' ? styles.activeTab : ''}`}
+                >
+                    🖼️ Page Couverture
                 </button>
             </div>
 
@@ -593,6 +688,290 @@ export default function ProductsPage() {
                                 );
                             })
                         }
+                    </div>
+                </div>
+            )}
+
+            {/* ══════════════ TAB: CATÉGORIES ══════════════ */}
+            {tab === 'categories' && (
+                <div className={styles.panel} style={{ maxWidth: '100%' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                        <div>
+                            <h2 className={styles.panelTitle} style={{ marginBottom: '4px' }}>
+                                Gestion des catégories
+                                <span className={styles.counter}>{allProducts.length} produits</span>
+                            </h2>
+                            <p style={{ fontSize: '0.82rem', color: '#888', margin: 0 }}>
+                                Par défaut, la catégorie est détectée automatiquement par le nom du produit. Utilisez le menu pour forcer une catégorie manuellement.
+                            </p>
+                        </div>
+                        <button
+                            onClick={saveCategoryOverrides}
+                            disabled={catSaving}
+                            className={`${styles.saveButton} ${catSaved ? styles.savedButton : ''}`}
+                        >
+                            {catSaving ? 'Enregistrement...' : catSaved ? '✓ Sauvegardé' : '💾 Sauvegarder les catégories'}
+                        </button>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
+                        <input
+                            className={styles.search}
+                            style={{ flex: 1, minWidth: '200px' }}
+                            placeholder="Rechercher un produit..."
+                            value={catSearch}
+                            onChange={e => setCatSearch(e.target.value)}
+                        />
+                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                            {[
+                                { id: 'all', label: 'Tous' },
+                                { id: 'overridden', label: '🔒 Forcés' },
+                                { id: 'fleur', label: '🌿 Fleurs' },
+                                { id: 'resine', label: '🍫 Résines' },
+                                { id: 'pack', label: '📦 Packs' },
+                                { id: 'autre', label: '🔧 Divers' }
+                            ].map(f => (
+                                <button
+                                    key={f.id}
+                                    onClick={() => setCatFilter(f.id)}
+                                    style={{
+                                        padding: '6px 12px',
+                                        borderRadius: '6px',
+                                        border: catFilter === f.id ? '2px solid #1F4B40' : '1px solid #ddd',
+                                        background: catFilter === f.id ? '#E3FFF8' : '#fff',
+                                        color: catFilter === f.id ? '#1F4B40' : '#666',
+                                        fontWeight: catFilter === f.id ? 600 : 400,
+                                        cursor: 'pointer',
+                                        fontSize: '0.82rem',
+                                        transition: 'all 0.15s'
+                                    }}
+                                >
+                                    {f.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className={styles.catalogList}>
+                        {allProducts
+                            .filter(p => !catSearch || matchSearch(p, catSearch))
+                            .filter(p => {
+                                if (catFilter === 'all') return true;
+                                if (catFilter === 'overridden') return !!categoryOverrides[p.id];
+                                return getEffectiveCategory(p) === catFilter;
+                            })
+                            .map(product => {
+                                const detected = detectCategory(product);
+                                const effective = getEffectiveCategory(product);
+                                const isOverridden = !!categoryOverrides[product.id];
+                                const detectedLabel = CATEGORY_OPTIONS.find(o => o.id === detected)?.label || detected;
+
+                                return (
+                                    <div key={product.id} className={styles.catalogItem} style={{ 
+                                        borderLeft: isOverridden ? '3px solid #f59e0b' : '3px solid transparent',
+                                        transition: 'border-color 0.2s'
+                                    }}>
+                                        <img src={product.image} alt={product.name} className={styles.catalogImg} />
+                                        <div className={styles.catalogInfo} style={{ flex: 1, minWidth: 0 }}>
+                                            <strong style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{product.name}</strong>
+                                            <span style={{ fontSize: '0.75rem', color: '#999' }}>
+                                                Auto-détecté : {detectedLabel}
+                                            </span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                                            <select
+                                                value={categoryOverrides[product.id] || 'auto'}
+                                                onChange={e => {
+                                                    const val = e.target.value;
+                                                    setCategoryOverrides(prev => {
+                                                        const next = { ...prev };
+                                                        if (val === 'auto') {
+                                                            delete next[product.id];
+                                                        } else {
+                                                            next[product.id] = val;
+                                                        }
+                                                        return next;
+                                                    });
+                                                    setCatSaved(false);
+                                                }}
+                                                style={{
+                                                    padding: '6px 10px',
+                                                    borderRadius: '6px',
+                                                    border: isOverridden ? '2px solid #f59e0b' : '1px solid #ddd',
+                                                    background: isOverridden ? '#fffbeb' : '#fff',
+                                                    fontSize: '0.85rem',
+                                                    cursor: 'pointer',
+                                                    fontWeight: isOverridden ? 600 : 400,
+                                                    minWidth: '170px'
+                                                }}
+                                            >
+                                                {CATEGORY_OPTIONS.map(opt => (
+                                                    <option key={opt.id} value={opt.id}>{opt.label}</option>
+                                                ))}
+                                            </select>
+                                            {isOverridden && (
+                                                <button
+                                                    onClick={() => {
+                                                        setCategoryOverrides(prev => {
+                                                            const next = { ...prev };
+                                                            delete next[product.id];
+                                                            return next;
+                                                        });
+                                                        setCatSaved(false);
+                                                    }}
+                                                    style={{
+                                                        padding: '4px 8px',
+                                                        borderRadius: '4px',
+                                                        border: '1px solid #fca5a5',
+                                                        background: '#fef2f2',
+                                                        color: '#dc2626',
+                                                        cursor: 'pointer',
+                                                        fontSize: '0.75rem',
+                                                        whiteSpace: 'nowrap'
+                                                    }}
+                                                    title="Remettre en auto-détection"
+                                                >
+                                                    ✕ Reset
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
+                </div>
+            )}
+
+            {/* ══════════════ TAB: PAGE COUVERTURE ══════════════ */}
+            {tab === 'couverture' && (
+                <div className={styles.panel} style={{ maxWidth: '800px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                        <div>
+                            <h2 className={styles.panelTitle} style={{ marginBottom: '4px' }}>Page Couverture (/produits)</h2>
+                            <p style={{ fontSize: '0.85rem', color: '#666', margin: 0 }}>Personnalisez l'en-tête et les badges de la page catalogue.</p>
+                        </div>
+                        <button
+                            onClick={savePageConfig}
+                            disabled={configSaving}
+                            className={`${styles.saveButton} ${configSaved ? styles.savedButton : ''}`}
+                        >
+                            {configSaving ? 'Enregistrement...' : configSaved ? '✓ Sauvegardé' : '💾 Sauvegarder'}
+                        </button>
+                    </div>
+
+                    <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', marginBottom: '24px', border: '1px solid #e2e8f0' }}>
+                        <h3 style={{ margin: '0 0 12px 0', fontSize: '1rem', color: '#1F4B40', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span>🏅</span> Badge Produit
+                        </h3>
+                        <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
+                            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={pageConfig.premiumBadge.enabled}
+                                    onChange={e => setPageConfig(p => ({ ...p, premiumBadge: { ...p.premiumBadge, enabled: e.target.checked } }))}
+                                    style={{ width: '16px', height: '16px', accentColor: '#1F4B40' }}
+                                />
+                                Afficher le badge sur les fleurs/résines
+                            </label>
+                            
+                            {pageConfig.premiumBadge.enabled && (
+                                <input
+                                    type="text"
+                                    value={pageConfig.premiumBadge.text}
+                                    onChange={e => setPageConfig(p => ({ ...p, premiumBadge: { ...p.premiumBadge, text: e.target.value } }))}
+                                    className={styles.search}
+                                    style={{ margin: 0, padding: '8px 12px', minWidth: '250px' }}
+                                    placeholder="Ex: Qualité Premium"
+                                />
+                            )}
+                        </div>
+                    </div>
+
+                    <h3 style={{ margin: '0 0 16px 0', fontSize: '1rem', color: '#1F4B40', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span>🎠</span> Slides du Carousel
+                    </h3>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                        {pageConfig.carousel.map((slide, index) => (
+                            <div key={slide.id} style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
+                                <div style={{ background: '#f1f5f9', padding: '10px 16px', fontWeight: 600, fontSize: '0.9rem', borderBottom: '1px solid #e2e8f0', color: '#334155' }}>
+                                    Slide {index + 1}
+                                </div>
+                                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#64748b', marginBottom: '4px' }}>Titre</label>
+                                        <input
+                                            type="text"
+                                            value={slide.title}
+                                            onChange={e => {
+                                                const newCarousel = [...pageConfig.carousel];
+                                                newCarousel[index].title = e.target.value;
+                                                setPageConfig({ ...pageConfig, carousel: newCarousel });
+                                            }}
+                                            className={styles.search}
+                                            style={{ margin: 0, width: '100%' }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#64748b', marginBottom: '4px' }}>Sous-titre</label>
+                                        <input
+                                            type="text"
+                                            value={slide.subtitle}
+                                            onChange={e => {
+                                                const newCarousel = [...pageConfig.carousel];
+                                                newCarousel[index].subtitle = e.target.value;
+                                                setPageConfig({ ...pageConfig, carousel: newCarousel });
+                                            }}
+                                            className={styles.search}
+                                            style={{ margin: 0, width: '100%' }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#64748b', marginBottom: '4px' }}>Image de la slide</label>
+                                        <ImageUpload
+                                            currentImage={slide.image}
+                                            onImageChange={(url) => {
+                                                const newCarousel = [...pageConfig.carousel];
+                                                newCarousel[index].image = url;
+                                                setPageConfig({ ...pageConfig, carousel: newCarousel });
+                                            }}
+                                            accept="image/*"
+                                        />
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '16px' }}>
+                                        <div style={{ flex: 1 }}>
+                                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#64748b', marginBottom: '4px' }}>Texte du Bouton</label>
+                                            <input
+                                                type="text"
+                                                value={slide.buttonText}
+                                                onChange={e => {
+                                                    const newCarousel = [...pageConfig.carousel];
+                                                    newCarousel[index].buttonText = e.target.value;
+                                                    setPageConfig({ ...pageConfig, carousel: newCarousel });
+                                                }}
+                                                className={styles.search}
+                                                style={{ margin: 0, width: '100%' }}
+                                            />
+                                        </div>
+                                        <div style={{ flex: 1 }}>
+                                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#64748b', marginBottom: '4px' }}>Lien du Bouton</label>
+                                            <input
+                                                type="text"
+                                                value={slide.buttonLink}
+                                                onChange={e => {
+                                                    const newCarousel = [...pageConfig.carousel];
+                                                    newCarousel[index].buttonLink = e.target.value;
+                                                    setPageConfig({ ...pageConfig, carousel: newCarousel });
+                                                }}
+                                                className={styles.search}
+                                                style={{ margin: 0, width: '100%' }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}

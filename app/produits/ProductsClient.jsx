@@ -44,34 +44,16 @@ const FOOTER_PROPS = {
     copyright: "©2024 - Les Amis du CBD"
 };
 
-const CAROUSEL_SLIDES = [
-    {
-        id: 1,
-        title: "L'Essentiel du CBD",
-        subtitle: "Découvrez notre sélection rigoureuse, pensée pour votre bien-être au quotidien.",
-        image: "/images/hero.webp",
-        buttonText: "Notre histoire",
-        buttonLink: "/essentiel"
-    },
-    {
-        id: 2,
-        title: "La Qualité Premium",
-        subtitle: "Des fleurs et résines exceptionnelles, cultivées avec passion pour des arômes uniques.",
-        image: "/images/carousel_nature_cbd.png",
-        buttonText: "Voir nos fleurs",
-        buttonLink: "/produits?cat=fleur"
-    },
-    {
-        id: 3,
-        title: "Bien-être & Sérénité",
-        subtitle: "Des conseils experts pour intégrer nos produits à votre routine détente.",
-        image: "/images/carousel_wellness_cbd.png",
-        buttonText: "Nos conseils",
-        buttonLink: "/usages"
-    }
-];
-
-export default function ProductsClient({ initialProducts, globalContent }) {
+export default function ProductsClient({ initialProducts, globalContent, categoryOverrides = {}, pageConfig }) {
+    // Provide defaults if pageConfig is missing
+    const config = pageConfig || {
+        carousel: [
+            { id: 1, title: "L'Essentiel du CBD", subtitle: "Découvrez notre sélection rigoureuse, pensée pour votre bien-être au quotidien.", image: "/images/hero.webp", buttonText: "Notre histoire", buttonLink: "/essentiel" },
+            { id: 2, title: "La Qualité Premium", subtitle: "Des fleurs et résines exceptionnelles, cultivées avec passion pour des arômes uniques.", image: "/images/carousel_nature_cbd.png", buttonText: "Voir nos fleurs", buttonLink: "/produits?cat=fleur" },
+            { id: 3, title: "Bien-être & Sérénité", subtitle: "Des conseils experts pour intégrer nos produits à votre routine détente.", image: "/images/carousel_wellness_cbd.png", buttonText: "Nos conseils", buttonLink: "/usages" }
+        ],
+        premiumBadge: { enabled: true, text: "Qualité Premium" }
+    };
     const footerProps = {
         ...FOOTER_PROPS,
         newsletter: { ...FOOTER_PROPS.newsletter, isVisible: globalContent?.visibility?.newsletter !== false },
@@ -91,10 +73,10 @@ export default function ProductsClient({ initialProducts, globalContent }) {
     // Carousel Logic
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % CAROUSEL_SLIDES.length);
+            setCurrentSlide((prev) => (prev + 1) % config.carousel.length);
         }, 5000);
         return () => clearInterval(timer);
-    }, []);
+    }, [config.carousel.length]);
 
     // Fermer le tiroir de quantité si on clique ailleurs (Mobile)
     useEffect(() => {
@@ -121,6 +103,11 @@ export default function ProductsClient({ initialProducts, globalContent }) {
 
     // Helper to determine product type robustly 
     const getProductType = (product) => {
+        // Check for admin override first
+        if (categoryOverrides[product.id]) {
+            return categoryOverrides[product.id];
+        }
+
         const nameNorm = (product.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const tagNorm = (product.tag || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -207,7 +194,7 @@ export default function ProductsClient({ initialProducts, globalContent }) {
 
             {/* Hero Carousel */}
             <div className={styles.carouselContainer}>
-                {CAROUSEL_SLIDES.map((slide, index) => (
+                {config.carousel.map((slide, index) => (
                     <div
                         key={slide.id}
                         className={`${styles.carouselSlide} ${index === currentSlide ? styles.slideActive : ''}`}
@@ -235,7 +222,7 @@ export default function ProductsClient({ initialProducts, globalContent }) {
                 </button>
 
                 <div className={styles.carouselIndicators}>
-                    {CAROUSEL_SLIDES.map((_, index) => (
+                    {config.carousel.map((_, index) => (
                         <button
                             key={index}
                             className={`${styles.indicator} ${index === currentSlide ? styles.indicatorActive : ''}`}
@@ -295,6 +282,7 @@ export default function ProductsClient({ initialProducts, globalContent }) {
                                 addItem={addItem}
                                 expandedId={expandedId}
                                 setExpandedId={setExpandedId}
+                                config={config}
                             />
                         );
                     })}
@@ -321,7 +309,8 @@ const getProductType = (product) => {
     return 'autre';
 };
 
-function ProductCard({ product, groupId, addItem, expandedId, setExpandedId }) {
+// Sub-component for individual product cards
+function ProductCard({ product, groupId, addItem, expandedId, setExpandedId, config }) {
     const hasVariations = product.variations && product.variations.length > 0;
     const hasVariants = product.variants && product.variants.length > 0;
 
@@ -429,9 +418,9 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId }) {
             <div className={styles.cardContent}>
                 <div className={styles.cardHeader}>
                     <h3 className={styles.productName}>{activeProduct.name}</h3>
-                    {isPremium && (
+                    {isPremium && config.premiumBadge.enabled && (
                         <p className={styles.productSubtitle}>
-                            Qualité Premium
+                            {config.premiumBadge.text}
                         </p>
                     )}
                 </div>
