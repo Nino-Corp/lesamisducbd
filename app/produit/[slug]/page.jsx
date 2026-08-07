@@ -49,11 +49,16 @@ export const revalidate = 60;
 export default async function ProductPage({ params }) {
     const { slug } = await params;
 
-    const [products, globalContent, overrides] = await Promise.all([
+    const [products, globalContent, overrides, hiddenIds, categoryOverrides] = await Promise.all([
         productService.getProducts(),
         kv.get('global_content').catch(() => null),
-        kv.get('product_overrides').catch(() => null)
+        kv.get('product_overrides').catch(() => null),
+        kv.get('hidden_products').catch(() => []),
+        kv.get('category_overrides').catch(() => ({}))
     ]);
+
+    const hidden = Array.isArray(hiddenIds) ? hiddenIds : [];
+    const catOverrides = categoryOverrides || {};
 
     // Verify slug matching using explicit slug field
     const product = products.find(p => p.slug === slug);
@@ -96,13 +101,32 @@ export default async function ProductPage({ params }) {
         productWithOverrides.variations = variations;
     }
 
-    // Pass related products (exclude variations of the same strain)
-    const relatedProducts = products
+    // Helper to determine product category
+    const getProductCategory = (p) => {
+        if (catOverrides[p.id]) return catOverrides[p.id];
+        const nameNorm = (p.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const tagNorm = (p.tag || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        if (['plv', 'flyer', 'tourniquet', 'presentoir', 'accessoire', 'goodies', 'feuille', 'briquet', 'grinder'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return 'autre';
+        if (['resine', 'hash', 'filtre', 'pollen'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return 'resine';
+        if (['pack', 'mystere', 'decouverte'].some(k => nameNorm.includes(k) || tagNorm.includes(k))) return 'pack';
+        if (['fleur', 'trim', 'mix', 'skunk', 'amnesia', 'gorilla', 'remedy', 'cbd', 'kush', 'haze', 'gelato'].some(k => nameNorm.includes(k) || tagNorm.includes(k)) || p.category === 3) return 'fleur';
+        if (/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*g\b/.test(nameNorm)) return 'fleur';
+        return 'autre';
+    };
+
+    const currentCategory = getProductCategory(product);
+
+    // Pass related products (same category, exclude variations of the same strain and hidden products)
+    let relatedProducts = products
+        .filter(p => !hidden.includes(p.id))
         .filter(p => {
             const pBase = (p.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
             return pBase.toLowerCase() !== baseName.toLowerCase();
         })
-        .slice(0, 4);
+        .filter(p => getProductCategory(p) === currentCategory);
+        
+    // Shuffle randomly to vary the recommendations
+    relatedProducts = relatedProducts.sort(() => 0.5 - Math.random()).slice(0, 4);
 
     return <ProductDetailsClient product={productWithOverrides} relatedProducts={relatedProducts} globalContent={globalContent} />;
 }

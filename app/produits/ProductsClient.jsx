@@ -44,7 +44,7 @@ const FOOTER_PROPS = {
     copyright: "©2024 - Les Amis du CBD"
 };
 
-export default function ProductsClient({ initialProducts, globalContent, categoryOverrides = {}, pageConfig }) {
+export default function ProductsClient({ initialProducts, globalContent, categoryOverrides = {}, pageConfig, productOverrides = {}, productCategories }) {
     // Provide defaults if pageConfig is missing
     const config = pageConfig || {
         carousel: [
@@ -127,13 +127,18 @@ export default function ProductsClient({ initialProducts, globalContent, categor
         return 'autre';
     };
 
-    // Derived Categories
+    // Dynamic Categories
     const categories = [
         { id: 'all', label: 'Tout voir' },
-        { id: 'fleur', label: 'Fleurs CBD' },
-        { id: 'resine', label: 'Résines & Pollens' },
-        { id: 'pack', label: 'Packs' },
-        { id: 'autre', label: 'Accessoires & Divers' }
+        ...(productCategories && productCategories.length > 0 
+            ? productCategories 
+            : [
+                { id: 'fleur', label: '🌿 Fleurs CBD' },
+                { id: 'resine', label: '🍫 Résines & Pollens' },
+                { id: 'pack', label: '📦 Packs & Découverte' },
+                { id: 'autre', label: '🔧 Accessoires & Divers' }
+            ]
+        )
     ];
 
     // Filter Logic
@@ -283,6 +288,7 @@ export default function ProductsClient({ initialProducts, globalContent, categor
                                 expandedId={expandedId}
                                 setExpandedId={setExpandedId}
                                 config={config}
+                                productOverrides={productOverrides}
                             />
                         );
                     })}
@@ -310,7 +316,7 @@ const getProductType = (product) => {
 };
 
 // Sub-component for individual product cards
-function ProductCard({ product, groupId, addItem, expandedId, setExpandedId, config }) {
+function ProductCard({ product, groupId, addItem, expandedId, setExpandedId, config, productOverrides }) {
     const hasVariations = product.variations && product.variations.length > 0;
     const hasVariants = product.variants && product.variants.length > 0;
 
@@ -418,9 +424,9 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId, con
             <div className={styles.cardContent}>
                 <div className={styles.cardHeader}>
                     <h3 className={styles.productName}>{activeProduct.name}</h3>
-                    {isPremium && config.premiumBadge.enabled && (
+                    {(productOverrides[activeProduct.id]?.badge || (isPremium && config.premiumBadge.enabled)) && (
                         <p className={styles.productSubtitle}>
-                            {config.premiumBadge.text}
+                            {productOverrides[activeProduct.id]?.badge || config.premiumBadge.text}
                         </p>
                     )}
                 </div>

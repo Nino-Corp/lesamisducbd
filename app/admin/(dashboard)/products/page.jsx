@@ -44,7 +44,7 @@ export default function ProductsPage() {
     const [overrides, setOverrides] = useState({});
     const [descSearch, setDescSearch] = useState('');
     const [editingId, setEditingId] = useState(null);
-    const [editDraft, setEditDraft] = useState({ description: '', descriptionShort: '' });
+    const [editDraft, setEditDraft] = useState({ description: '', descriptionShort: '', badge: '' });
     const [descSaving, setDescSaving] = useState(false);
     const [descSaved, setDescSaved] = useState(false);
 
@@ -54,6 +54,12 @@ export default function ProductsPage() {
     const [catFilter, setCatFilter] = useState('all'); // 'all' | 'overridden' | 'auto'
     const [catSaving, setCatSaving] = useState(false);
     const [catSaved, setCatSaved] = useState(false);
+    
+    // Dynamic Categories Filters
+    const [dynamicCategories, setDynamicCategories] = useState([]);
+    const [newCatLabel, setNewCatLabel] = useState('');
+    const [newCatId, setNewCatId] = useState('');
+    const [catFiltersSaving, setCatFiltersSaving] = useState(false);
 
     // Products Page Config
     const [pageConfig, setPageConfig] = useState({
@@ -73,8 +79,9 @@ export default function ProductsPage() {
             fetch('/api/admin/vitrine').then(r => r.json()),
             fetch('/api/admin/product-overrides').then(r => r.json()),
             fetch('/api/admin/category-overrides').then(r => r.json()),
-            fetch('/api/admin/products-page-config').then(r => r.json())
-        ]).then(([products, config, overridesData, catOverridesData, pageConfigData]) => {
+            fetch('/api/admin/products-page-config').then(r => r.json()),
+            fetch('/api/admin/product-categories').then(r => r.json())
+        ]).then(([products, config, overridesData, catOverridesData, pageConfigData, categoriesData]) => {
             const fetchedProducts = Array.isArray(products) ? products : [];
             const pOrder = Array.isArray(config?.productOrder) ? config.productOrder : [];
 
@@ -109,6 +116,9 @@ export default function ProductsPage() {
             if (pageConfigData && pageConfigData.carousel) {
                 setPageConfig(pageConfigData);
             }
+            if (categoriesData) {
+                setDynamicCategories(categoriesData);
+            }
         }).catch(console.error).finally(() => setLoading(false));
     }, []);
 
@@ -125,10 +135,7 @@ export default function ProductsPage() {
     // Category detection (same logic as ProductsClient for consistency)
     const CATEGORY_OPTIONS = [
         { id: 'auto', label: '🤖 Auto-détection' },
-        { id: 'fleur', label: '🌿 Fleur CBD' },
-        { id: 'resine', label: '🍫 Résine / Pollen' },
-        { id: 'pack', label: '📦 Pack' },
-        { id: 'autre', label: '🔧 Accessoire / Divers' }
+        ...dynamicCategories
     ];
 
     const detectCategory = (product) => {
@@ -286,6 +293,46 @@ export default function ProductsPage() {
             return arr;
         });
         setSaved(false);
+    };
+
+    // ── Dynamic Categories helpers ───────────────────────────────
+    const saveDynamicCategories = async (newCats) => {
+        setCatFiltersSaving(true);
+        try {
+            const res = await fetch('/api/admin/product-categories', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newCats || dynamicCategories)
+            });
+            if (res.ok) {
+                if (newCats) setDynamicCategories(newCats);
+                setNewCatId('');
+                setNewCatLabel('');
+            } else {
+                alert('Erreur lors de la sauvegarde des filtres');
+            }
+        } catch { alert('Erreur réseau'); }
+        finally { setCatFiltersSaving(false); }
+    };
+
+    const handleAddCategory = () => {
+        if (!newCatId.trim() || !newCatLabel.trim()) return;
+        
+        // Basic validation for ID (only alphanumeric and dashes)
+        const safeId = newCatId.trim().toLowerCase().replace(/[^a-z0-9\-]/g, '');
+        if (dynamicCategories.some(c => c.id === safeId) || ['all', 'overridden', 'auto'].includes(safeId)) {
+            alert('Cet ID est déjà utilisé ou réservé.');
+            return;
+        }
+
+        const newCats = [...dynamicCategories, { id: safeId, label: newCatLabel.trim() }];
+        saveDynamicCategories(newCats);
+    };
+
+    const handleDeleteCategory = (catId) => {
+        if (!window.confirm('Voulez-vous vraiment supprimer ce filtre ? Les produits forcés dans cette catégorie repasseront en auto-détection.')) return;
+        const newCats = dynamicCategories.filter(c => c.id !== catId);
+        saveDynamicCategories(newCats);
     };
 
     // ── Save ─────────────────────────────────────────────────────
@@ -574,7 +621,9 @@ export default function ProductsPage() {
                                         <div className={styles.catalogInfo} style={{ flex: 1 }}>
                                             <strong>{product.name}</strong>
                                             {hasOverride && !isEditing && (
-                                                <span className={styles.statusVisible} style={{ marginLeft: 8, fontSize: '0.75rem' }}>✓ Description personnalisée</span>
+                                                <span className={styles.statusVisible} style={{ marginLeft: 8, fontSize: '0.75rem' }}>
+                                                    ✓ {overrides[product.id].badge ? `Badge: ${overrides[product.id].badge} - ` : ''}Description personnalisée
+                                                </span>
                                             )}
                                             {isEditing ? (
                                                 <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -587,6 +636,17 @@ export default function ProductsPage() {
                                                         style={{ resize: 'vertical', fontFamily: 'inherit', fontSize: '0.85rem' }}
                                                         placeholder="Ex: Résine noire premium, taux de CBD entre 30 et 35%..."
                                                     />
+                                                    
+                                                    <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Badge Produit Personnalisé</label>
+                                                    <input
+                                                        type="text"
+                                                        value={editDraft.badge || ''}
+                                                        onChange={e => setEditDraft(d => ({ ...d, badge: e.target.value }))}
+                                                        className={styles.search}
+                                                        style={{ margin: 0 }}
+                                                        placeholder="Ex: Indoor, Greenhouse, Nouveauté..."
+                                                    />
+
                                                     <label style={{ fontSize: '0.8rem', fontWeight: 600, color: '#666' }}>Description longue (HTML autorisé)</label>
                                                     <div style={{ background: '#fff', border: '1px solid #ddd', borderRadius: '4px' }}>
                                                         <WysiwygEditor
@@ -674,10 +734,12 @@ export default function ProductsPage() {
                                             <button
                                                 className={styles.pinBtn}
                                                 onClick={() => {
+                                                    const existing = overrides[product.id] || {};
                                                     setEditingId(product.id);
                                                     setEditDraft({
-                                                        description: overrides[product.id]?.description || product.description || '',
-                                                        descriptionShort: overrides[product.id]?.descriptionShort || product.descriptionShort || ''
+                                                        description: existing.description ?? product.description ?? '',
+                                                        descriptionShort: existing.descriptionShort ?? product.descriptionShort ?? '',
+                                                        badge: existing.badge ?? ''
                                                     });
                                                 }}
                                             >
@@ -714,6 +776,54 @@ export default function ProductsPage() {
                         </button>
                     </div>
 
+                    <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', marginBottom: '24px', border: '1px solid #e2e8f0' }}>
+                        <h3 style={{ margin: '0 0 12px 0', fontSize: '1rem', color: '#1F4B40', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'space-between' }}>
+                            <span>🏷️ Gérer les filtres de la page Produits</span>
+                            {catFiltersSaving && <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 'normal' }}>Enregistrement...</span>}
+                        </h3>
+                        
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
+                            {dynamicCategories.map(cat => (
+                                <div key={cat.id} style={{ display: 'flex', alignItems: 'center', background: '#fff', border: '1px solid #cbd5e1', borderRadius: '20px', padding: '4px 12px', fontSize: '0.85rem', fontWeight: 500, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
+                                    <span style={{ marginRight: '8px' }}>{cat.label}</span>
+                                    <button 
+                                        onClick={() => handleDeleteCategory(cat.id)}
+                                        style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '0 2px', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.6 }}
+                                        title="Supprimer ce filtre"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                            <input
+                                type="text"
+                                placeholder="ID unique (ex: huiles)"
+                                value={newCatId}
+                                onChange={e => setNewCatId(e.target.value)}
+                                className={styles.search}
+                                style={{ margin: 0, width: '150px' }}
+                            />
+                            <input
+                                type="text"
+                                placeholder="Label affiché (ex: 💧 Huiles CBD)"
+                                value={newCatLabel}
+                                onChange={e => setNewCatLabel(e.target.value)}
+                                className={styles.search}
+                                style={{ margin: 0, width: '250px' }}
+                            />
+                            <button
+                                onClick={handleAddCategory}
+                                className={styles.saveButton}
+                                style={{ padding: '8px 16px', background: '#e2e8f0', color: '#334155', height: '100%' }}
+                            >
+                                + Ajouter
+                            </button>
+                        </div>
+                    </div>
+
                     <div style={{ display: 'flex', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
                         <input
                             className={styles.search}
@@ -726,10 +836,7 @@ export default function ProductsPage() {
                             {[
                                 { id: 'all', label: 'Tous' },
                                 { id: 'overridden', label: '🔒 Forcés' },
-                                { id: 'fleur', label: '🌿 Fleurs' },
-                                { id: 'resine', label: '🍫 Résines' },
-                                { id: 'pack', label: '📦 Packs' },
-                                { id: 'autre', label: '🔧 Divers' }
+                                ...dynamicCategories.map(c => ({ id: c.id, label: c.label }))
                             ].map(f => (
                                 <button
                                     key={f.id}

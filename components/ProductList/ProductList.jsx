@@ -39,6 +39,18 @@ export function ProductCardItem({ product, index, groupId }) {
         }
     }
 
+    // Smart title case: strip leading numbers and capitalize each word
+    const formatProductName = (name) => {
+        if (!name) return '';
+        const clean = name.replace(/^\d+\s*/, '');
+        return clean.split(' ').map(word => {
+            if (!word) return '';
+            // Don't capitalize small connecting words if they are not the first word, though simple titlecase might be enough
+            // Here we just do a simple title case for all words
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        }).join(' ');
+    };
+
     return (
         <div className={styles.card}>
             {product.tag && (
@@ -51,7 +63,7 @@ export function ProductCardItem({ product, index, groupId }) {
             )}
 
             <div className={styles.topInfo}>
-                <div className={styles.subtitlePill}>{product.name}</div>
+                <div className={styles.subtitlePill}>{formatProductName(product.name)}</div>
                 <h3 className={styles.quoteTitle}>{product.quoteTitle}</h3>
             </div>
 

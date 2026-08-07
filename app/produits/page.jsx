@@ -16,13 +16,15 @@ export const metadata = {
 export const revalidate = 60; // ISR cache every minute
 
 export default async function ProductsPage() {
-    const [products, hiddenIds, globalContent, productOrder, categoryOverrides, pageConfigData] = await Promise.all([
+    const [products, hiddenIds, globalContent, productOrder, categoryOverrides, pageConfigData, productOverrides, productCategories] = await Promise.all([
         productService.getProducts(),
         kv.get('hidden_products').catch(() => []),
         kv.get('global_content').catch(() => null),
         kv.get('product_order').catch(() => []),
         kv.get('category_overrides').catch(() => ({})),
-        kv.get('products_page_config').catch(() => null)
+        kv.get('products_page_config').catch(() => null),
+        kv.get('product_overrides').catch(() => ({})),
+        kv.get('product_categories').catch(() => null)
     ]);
 
     const pageConfig = pageConfigData || {
@@ -59,5 +61,5 @@ export default async function ProductsPage() {
         console.error('Failed to increment view counter', e);
     }
 
-    return <ProductsClient initialProducts={visibleProducts} globalContent={globalContent} categoryOverrides={categoryOverrides || {}} pageConfig={pageConfig} />;
+    return <ProductsClient initialProducts={visibleProducts} globalContent={globalContent} categoryOverrides={categoryOverrides || {}} pageConfig={pageConfig} productOverrides={productOverrides || {}} productCategories={productCategories} />;
 }
