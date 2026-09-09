@@ -15,7 +15,7 @@ export const TEMPLATES = [
         icon: '⬛⬛',
         description: 'Texte + image côte à côte',
         category: 'layout',
-        defaultProps: { title: '', text: '<p>Votre texte ici...</p>', imageSrc: '', imagePosition: 'right', imageWidth: 50, buttonText: '', buttonLink: '' },
+        defaultProps: { title: '', text: '<p>Votre texte ici...</p>', imageSrc: '', imagePosition: 'right', imageWidth: 50, buttonText: '', buttonLink: '', imageFit: 'cover' },
     },
     {
         type: 'RichText',
@@ -29,14 +29,28 @@ export const TEMPLATES = [
         type: 'CardsGrid',
         label: 'Grille de cartes',
         icon: '🃏',
-        description: 'Grille de 2 à 4 cartes avec icône',
+        description: 'Grille de 2 à 4 cartes avec icône ou image',
         category: 'content',
         defaultProps: {
-            title: '', subtitle: '', columns: 3, cardStyle: 'shadow', headerAlign: 'center',
+            title: '', subtitle: '', columns: 3, cardStyle: 'shadow', headerAlign: 'center', titleFontFamily: 'inherit',
             cards: [
-                { icon: 'leaf', title: 'Titre', text: 'Description.' },
-                { icon: 'star', title: 'Titre', text: 'Description.' },
-                { icon: 'shield', title: 'Titre', text: 'Description.' },
+                { icon: 'leaf', imageSrc: '', bgColor: '#ffffff', textColor: 'inherit', title: 'Titre', text: 'Description.' },
+                { icon: 'star', imageSrc: '', bgColor: '#ffffff', textColor: 'inherit', title: 'Titre', text: 'Description.' },
+                { icon: 'shield', imageSrc: '', bgColor: '#ffffff', textColor: 'inherit', title: 'Titre', text: 'Description.' },
+            ]
+        },
+    },
+    {
+        type: 'ImageCardsGrid',
+        label: 'Cartes avec Grandes Images',
+        icon: '🖼️🃏',
+        description: 'Grille (Image + Icône + Texte)',
+        category: 'content',
+        defaultProps: {
+            columns: 3,
+            backgroundColor: '#ffffff',
+            cards: [
+                { heroImage: '', icon: 'users', title: 'Titre', description: 'Description', linkText: 'Découvrir', linkUrl: '#' }
             ]
         },
     },
@@ -89,7 +103,7 @@ export const TEMPLATES = [
         icon: '🖼',
         description: 'Image pleine largeur avec légende',
         category: 'media',
-        defaultProps: { src: '', alt: '', caption: '', imageWidth: 100, imageAlign: 'center' },
+        defaultProps: { src: '', alt: '', caption: '', imageWidth: 100, imageAlign: 'center', fullWidth: false },
     },
     {
         type: 'VideoEmbed',
@@ -103,9 +117,9 @@ export const TEMPLATES = [
         type: 'FAQ',
         label: 'FAQ',
         icon: '❓',
-        description: 'Accordéon questions / réponses',
+        description: 'Questions / réponses',
         category: 'content',
-        defaultProps: { title: 'Questions Fréquentes', items: [{ question: 'Ma question ?', answer: 'Ma réponse ici.' }] },
+        defaultProps: { title: 'Questions Fréquentes', variant: 'accordion', items: [{ question: 'Ma question ?', answer: 'Ma réponse ici.' }] },
     },
     {
         type: 'Divider',

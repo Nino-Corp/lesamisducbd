@@ -21,8 +21,21 @@ export default function CartDrawer() {
     const { data: session } = useSession();
     // Use String comparison to handle both number and string types from session
     const isPro = String(session?.user?.id_default_group) === "4";
+    const [rewardSettings, setRewardSettings] = useState(null);
 
     const router = useRouter();
+
+    // Fetch reward settings for loyalty progress
+    useEffect(() => {
+        if (isCartOpen && !rewardSettings) {
+            fetch('/api/rewards?action=get_settings')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.ratio) setRewardSettings(data);
+                })
+                .catch(err => console.error(err));
+        }
+    }, [isCartOpen, rewardSettings]);
 
     // Fetch upsell products
     useEffect(() => {
@@ -209,6 +222,26 @@ export default function CartDrawer() {
 
                 {cart.length > 0 && (
                     <div className={styles.footer}>
+                        
+                        {/* Gamification Loyalty Widget */}
+                        {rewardSettings && !isPro && (
+                            <div className={styles.loyaltyBox}>
+                                <div className={styles.loyaltyHeader}>
+                                    <span className={styles.loyaltyTitle}>✨ Ce panier rapporte :</span>
+                                    <span className={styles.loyaltyPoints}>+{Math.floor(cartTotalTTC / rewardSettings.ratio)} pts</span>
+                                </div>
+                                <div className={styles.loyaltyProgressTrack}>
+                                    <div 
+                                        className={styles.loyaltyProgressBar} 
+                                        style={{ width: `${Math.min(100, (cartTotalTTC / 100) * 100)}%` }}
+                                    ></div>
+                                </div>
+                                <div className={styles.loyaltyHint}>
+                                    Soit ~{(Math.floor(cartTotalTTC / rewardSettings.ratio) * rewardSettings.value).toFixed(2)}€ de réduction future
+                                </div>
+                            </div>
+                        )}
+
                         {isPro ? (
                             <div className={styles.totalRowPro}>
                                 <div className={styles.totalLine}>

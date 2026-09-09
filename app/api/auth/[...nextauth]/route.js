@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { kv } from '@vercel/kv';
 import bcrypt from 'bcryptjs';
 import { prestaCheckoutService } from '@/lib/services/prestaCheckoutService';
+import { cookies } from 'next/headers';
 
 export const authOptions = {
     providers: [
@@ -121,6 +122,24 @@ export const authOptions = {
                                 if (newPsUser && newPsUser.id) {
                                     user = { ...user, legacy_ps_id: newPsUser.id };
                                     await kv.set(userKey, user);
+
+                                    // Lier le filleul à son parrain (si code présent)
+                                    const cookieStore = cookies();
+                                    const sponsorCode = cookieStore.get('sponsorship_code')?.value;
+                                    
+                                    if (sponsorCode) {
+                                        console.log(`[NextAuth] Code de parrainage trouvé: ${sponsorCode}. Enregistrement pour ${newPsUser.id}...`);
+                                        const PRESTASHOP_BASE_URL = process.env.NEXT_PUBLIC_PRESTASHOP_URL || 'https://my.lesamisducbd.fr';
+                                        const REWARDS_API_SECRET = process.env.REWARDS_API_SECRET || 'SecretFidelite2026XyZ';
+                                        
+                                        try {
+                                            const sponsorRes = await fetch(`${PRESTASHOP_BASE_URL}/module/allinone_rewards/api?secret=${REWARDS_API_SECRET}&action=register_sponsorship&new_customer_id=${newPsUser.id}&sponsor_code=${sponsorCode}`);
+                                            const sponsorData = await sponsorRes.json();
+                                            console.log(`[NextAuth] Résultat parrainage:`, sponsorData);
+                                        } catch (e) {
+                                            console.error(`[NextAuth] Erreur appel API parrainage:`, e);
+                                        }
+                                    }
                                 }
                             }
                         } catch (refreshErr) {

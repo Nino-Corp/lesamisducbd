@@ -90,6 +90,12 @@ export function TwoColumnsEditor({ props, onChange }) {
                 <option value="left">Gauche</option>
             </select>
         </Field>
+        <Field label="Ajustement de l'image">
+            <select style={selectStyle} value={props.imageFit || 'cover'} onChange={e => onChange({ imageFit: e.target.value })}>
+                <option value="cover">Remplir la zone (Coupe les bords)</option>
+                <option value="contain">Contenir (Afficher l'image entière)</option>
+            </select>
+        </Field>
         <Field label={`Taille de l'image — ${props.imageWidth || 50}%`}>
             <input
                 type="range"
@@ -154,6 +160,13 @@ export function CardsGridEditor({ props, onChange }) {
                     <option value="border">Bordure</option>
                 </select>
             </Field>
+            <Field label="Police du Titre (Global)">
+                <select style={selectStyle} value={props.titleFontFamily || 'inherit'} onChange={e => onChange({ titleFontFamily: e.target.value })}>
+                    <option value="inherit">Par défaut (Héritée)</option>
+                    <option value="var(--font-bricolage)">Bricolage (Marketing)</option>
+                    <option value="var(--font-inter)">Inter (Texte classique)</option>
+                </select>
+            </Field>
             <Field label="Alignement En-tête">
                 <select style={selectStyle} value={props.headerAlign || 'center'} onChange={e => onChange({ headerAlign: e.target.value })}>
                     <option value="left">Gauche</option>
@@ -169,11 +182,20 @@ export function CardsGridEditor({ props, onChange }) {
                         <strong style={{ fontSize: '0.85rem' }}>Carte {i + 1}</strong>
                         <button type="button" onClick={() => removeCard(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}>✕</button>
                     </div>
-                    <Field label="Icône">
-                        <select style={selectStyle} value={card.icon || 'star'} onChange={e => updateCard(i, 'icon', e.target.value)}>
-                            {ICONS.map(k => <option key={k} value={k}>{ICON_LABELS[k]} {k}</option>)}
-                        </select>
-                    </Field>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <Field label="Icône">
+                            <select style={selectStyle} value={card.icon || 'star'} onChange={e => updateCard(i, 'icon', e.target.value)}>
+                                {ICONS.map(k => <option key={k} value={k}>{ICON_LABELS[k]} {k}</option>)}
+                            </select>
+                        </Field>
+                        <Field label="Ou Image" hint="Remplace l'icône">
+                            <ImageUploader value={card.imageSrc || ''} onChange={url => updateCard(i, 'imageSrc', url)} folder="pages/cards" />
+                        </Field>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <Field label="Couleur de fond"><input type="color" value={card.bgColor || '#ffffff'} onChange={e => updateCard(i, 'bgColor', e.target.value)} style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} /></Field>
+                        <Field label="Couleur du texte"><input type="color" value={card.textColor || '#000000'} onChange={e => updateCard(i, 'textColor', e.target.value)} style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} /></Field>
+                    </div>
                     <Field label="Titre"><input style={inputStyle} value={card.title || ''} onChange={e => updateCard(i, 'title', e.target.value)} /></Field>
                     <Field label="Texte"><WysiwygEditor value={card.text || ''} onChange={val => updateCard(i, 'text', val)} /></Field>
                 </div>
@@ -259,6 +281,9 @@ export function ImageBlockEditor({ props, onChange }) {
                     style={{ width: '100%', accentColor: '#1F4B40', cursor: 'pointer' }}
                 />
             </Field>
+            <Field label="Pleine Largeur (100% écran)">
+                <input type="checkbox" checked={!!props.fullWidth} onChange={e => onChange({ fullWidth: e.target.checked })} />
+            </Field>
             <Field label="Alignement">
                 <select style={selectStyle} value={props.imageAlign || 'center'} onChange={e => onChange({ imageAlign: e.target.value })}>
                     <option value="left">Gauche</option>
@@ -306,6 +331,13 @@ export function FAQEditor({ props, onChange }) {
 
     return <>
         <Field label="Titre de la FAQ"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
+        <Field label="Variante (Design)">
+            <select style={selectStyle} value={props.variant || 'accordion'} onChange={e => onChange({ variant: e.target.value })}>
+                <option value="accordion">Accordéon Classique</option>
+                <option value="cards">Boîtes / Cartes</option>
+                <option value="simple">Texte Simple Épuré</option>
+            </select>
+        </Field>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px' }}>
             {items.map((item, i) => (
                 <div key={i} style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
@@ -897,11 +929,60 @@ export function RecrutementContactEditor({ props, onChange }) {
     </>;
 }
 
+export function ImageCardsGridEditor({ props, onChange }) {
+    const cards = props.cards || [];
+    const ICONS = ['users', 'sprout', 'flask', 'leaf', 'star', 'shield', 'heart', 'check', 'bolt', 'globe', 'truck', 'award', 'smile', 'fire', 'lock'];
+    const ICON_LABELS = { users: '👥', sprout: '🌱', flask: '🧪', leaf: '🌿', star: '⭐', shield: '🛡️', heart: '❤️', check: '✅', bolt: '⚡', globe: '🌍', truck: '🚚', award: '🏆', smile: '😊', fire: '🔥', lock: '🔒' };
+
+    const updateCard = (i, field, val) => onChange({ cards: cards.map((c, idx) => idx === i ? { ...c, [field]: val } : c) });
+    const addCard = () => onChange({ cards: [...cards, { heroImage: '', icon: 'star', title: 'Nouveau', description: 'Description', linkText: '', linkUrl: '' }] });
+    const removeCard = i => onChange({ cards: cards.filter((_, idx) => idx !== i) });
+
+    return <>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <Field label="Colonnes">
+                <select style={selectStyle} value={props.columns || 3} onChange={e => onChange({ columns: +e.target.value })}>
+                    {[1, 2, 3].map(n => <option key={n} value={n}>{n} colonnes</option>)}
+                </select>
+            </Field>
+            <Field label="Couleur de fond globale">
+                <input type="color" value={props.backgroundColor || '#ffffff'} onChange={e => onChange({ backgroundColor: e.target.value })} style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} />
+            </Field>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+            {cards.map((card, i) => (
+                <div key={i} style={{ background: '#f9f9f9', borderRadius: '10px', padding: '14px', border: '1px solid #eee' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong style={{ fontSize: '0.85rem' }}>Carte {i + 1}</strong>
+                        <button type="button" onClick={() => removeCard(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}>✕</button>
+                    </div>
+                    <Field label="Grande Image Top">
+                        <ImageUploader value={card.heroImage || ''} onChange={url => updateCard(i, 'heroImage', url)} folder="pages/cards" />
+                    </Field>
+                    <Field label="Icône Superposée">
+                        <select style={selectStyle} value={card.icon || 'star'} onChange={e => updateCard(i, 'icon', e.target.value)}>
+                            {ICONS.map(k => <option key={k} value={k}>{ICON_LABELS[k] || '✨'} {k}</option>)}
+                        </select>
+                    </Field>
+                    <Field label="Titre"><input style={inputStyle} value={card.title || ''} onChange={e => updateCard(i, 'title', e.target.value)} /></Field>
+                    <Field label="Description (HTML)"><WysiwygEditor value={card.description || ''} onChange={val => updateCard(i, 'description', val)} /></Field>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                        <Field label="Texte du lien"><input style={inputStyle} value={card.linkText || ''} onChange={e => updateCard(i, 'linkText', e.target.value)} placeholder="Découvrir" /></Field>
+                        <Field label="URL du lien"><input style={inputStyle} value={card.linkUrl || ''} onChange={e => updateCard(i, 'linkUrl', e.target.value)} placeholder="/notre-histoire" /></Field>
+                    </div>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addCard} style={{ marginTop: '8px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#1F4B40', border: '1px dashed #1F4B40', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter une carte Image</button>
+    </>;
+}
+
 export const EDITORS = {
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
     RichText: RichTextEditor,
     CardsGrid: CardsGridEditor,
+    ImageCardsGrid: ImageCardsGridEditor,
     StatsBanner: StatsBannerEditor,
     CTABlock: CTABlockEditor,
     Quote: QuoteEditor,

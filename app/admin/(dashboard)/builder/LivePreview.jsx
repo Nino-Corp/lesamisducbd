@@ -10,6 +10,7 @@ import FAQ from '@/components/FAQ/FAQ';
 import CTABlock from '@/components/CTABlock/CTABlock';
 import TwoColumns from '@/components/TwoColumns/TwoColumns';
 import CardsGrid from '@/components/CardsGrid/CardsGrid';
+import ImageCardsGrid from '@/components/ImageCardsGrid/ImageCardsGrid';
 import StatsBanner from '@/components/StatsBanner/StatsBanner';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 import Divider from '@/components/Divider/Divider';
@@ -50,6 +51,7 @@ const PREVIEW_COMPONENTS = {
     CTABlock,
     TwoColumns,
     CardsGrid,
+    ImageCardsGrid,
     StatsBanner,
     VideoEmbed,
     Divider,
@@ -160,9 +162,11 @@ const LivePreview = memo(function LivePreview({
                     const isActive = activeIndex === i;
                     const isHidden = section.props?.isVisible === false;
 
-                    const { paddingTop, paddingBottom, hideMobile, hideDesktop, sectionId, ...componentProps } = section.props || {};
+                    const { paddingTop, paddingBottom, marginTop, marginBottom, hideMobile, hideDesktop, sectionId, ...componentProps } = section.props || {};
 
                     const paddingMap = { none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };
+                    const marginMap = { 'negative-large': '-80px', 'negative-medium': '-40px', 'negative-small': '-20px', none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };
+
                     const wrapperStyle = {
                         position: 'relative',
                         cursor: 'pointer',
@@ -173,6 +177,8 @@ const LivePreview = memo(function LivePreview({
                     };
                     if (paddingTop && paddingMap[paddingTop]) wrapperStyle.paddingTop = paddingMap[paddingTop];
                     if (paddingBottom && paddingMap[paddingBottom]) wrapperStyle.paddingBottom = paddingMap[paddingBottom];
+                    if (marginTop && marginMap[marginTop]) wrapperStyle.marginTop = marginMap[marginTop];
+                    if (marginBottom && marginMap[marginBottom]) wrapperStyle.marginBottom = marginMap[marginBottom];
 
                     return (
                         <div

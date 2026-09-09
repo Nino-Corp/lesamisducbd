@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import styles from './Header.module.css';
-import { User, ShoppingBag, Menu, X, Search, ChevronDown } from 'lucide-react';
+import { User, ShoppingBag, Menu, X, Search, ChevronDown, Gift } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import LoginModal from '../LoginModal/LoginModal';
 import SearchOverlay from '../SearchBar/SearchOverlay';
@@ -19,10 +19,12 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
     const [openDropdown, setOpenDropdown] = useState(null);
     const [mobileDropdown, setMobileDropdown] = useState(null);
     const dropdownTimeoutRef = useRef(null);
-    // Auth session
     const { data: session, status } = useSession();
     const isAuthenticated = status === 'authenticated';
     const user = session?.user;
+    
+    // Loyalty State
+    const [loyaltyData, setLoyaltyData] = useState(null);
 
     // Cart Context
 
@@ -72,6 +74,18 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
         }
         return () => { document.body.style.overflow = ''; };
     }, [isMenuOpen]);
+
+    // Fetch Loyalty Data when authentication status changes
+    useEffect(() => {
+        if (status === 'authenticated' && !loyaltyData) {
+            fetch('/api/rewards?action=get_dashboard')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) setLoyaltyData(data);
+                })
+                .catch(err => console.error("Header loyalty fetch error:", err));
+        }
+    }, [status]);
 
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -141,6 +155,16 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
                     </nav>
 
                     <div className={styles.actions}>
+                        {isAuthenticated && mounted && loyaltyData && (
+                            <div className={styles.headerLoyaltyBtn}>
+                                <Gift size={18} className={styles.loyaltyIcon} />
+                                <span className={styles.loyaltyPts}>{loyaltyData.points_available} pts</span>
+                                <div className={styles.loyaltyTooltip}>
+                                    Vos points ont une valeur de <strong>{loyaltyData.value_available.toFixed(2)}€</strong> de réduction !
+                                </div>
+                            </div>
+                        )}
+
                         {isAuthenticated && mounted ? (
                             <div className={styles.userMenu}>
                                 <Link

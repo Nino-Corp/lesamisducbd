@@ -42,3 +42,8 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# allinone_rewards
+
+allinone_rewards
+api.php

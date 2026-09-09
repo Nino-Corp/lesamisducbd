@@ -20,6 +20,7 @@ import ImageBlock from './ImageBlock/ImageBlock';
 import CTABlock from './CTABlock/CTABlock';
 import TwoColumns from './TwoColumns/TwoColumns';
 import CardsGrid from './CardsGrid/CardsGrid';
+import ImageCardsGrid from './ImageCardsGrid/ImageCardsGrid';
 import StatsBanner from './StatsBanner/StatsBanner';
 import VideoEmbed from './VideoEmbed/VideoEmbed';
 import Divider from './Divider/Divider';
@@ -62,6 +63,7 @@ const componentMap = {
     CTABlock,
     TwoColumns,
     CardsGrid,
+    ImageCardsGrid,
     StatsBanner,
     VideoEmbed,
     Divider,
@@ -109,13 +111,18 @@ export default function PageBuilder({ sections }) {
                     return null;
                 }
 
-                const { paddingTop, paddingBottom, hideMobile, hideDesktop, sectionId, ...componentProps } = section.props || {};
+                const { paddingTop, paddingBottom, marginTop, marginBottom, hideMobile, hideDesktop, sectionId, ...componentProps } = section.props || {};
 
                 // Map padding values to px/rem
                 const paddingMap = { none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };
+                // Map margin values to px/rem (including negative for pulling blocks together)
+                const marginMap = { 'negative-large': '-80px', 'negative-medium': '-40px', 'negative-small': '-20px', none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };
+
                 const wrapperStyle = {};
                 if (paddingTop && paddingMap[paddingTop]) wrapperStyle.paddingTop = paddingMap[paddingTop];
                 if (paddingBottom && paddingMap[paddingBottom]) wrapperStyle.paddingBottom = paddingMap[paddingBottom];
+                if (marginTop && marginMap[marginTop]) wrapperStyle.marginTop = marginMap[marginTop];
+                if (marginBottom && marginMap[marginBottom]) wrapperStyle.marginBottom = marginMap[marginBottom];
 
                 let classNames = '';
                 if (hideMobile) classNames += ' hide-mobile';

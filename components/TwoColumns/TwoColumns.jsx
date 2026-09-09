@@ -11,7 +11,8 @@ export default function TwoColumns({
     backgroundColor = "#ffffff",
     buttonText = "",
     buttonLink = "",
-    headingTag = "h2"
+    headingTag = "h2",
+    imageFit = "cover"
 }) {
     const isReversed = imagePosition === 'left';
     const imgPct = Math.min(80, Math.max(20, Number(imageWidth) || 50));
@@ -39,7 +40,7 @@ export default function TwoColumns({
                                     src={imageSrc}
                                     alt={imageAlt || title || ''}
                                     fill
-                                    style={{ objectFit: 'cover' }}
+                                    style={{ objectFit: imageFit }}
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                 />
                             </div>

@@ -509,3 +509,65 @@
         transform: rotate(360deg);
     }
 }
+
+/* --- LOYALTY WIDGET --- */
+.loyaltyBox {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(0, 255, 148, 0.1));
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.loyaltyHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.loyaltyTitle {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1F4B40;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.loyaltyPoints {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #10B981;
+    background: white;
+    padding: 2px 8px;
+    border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(16, 185, 129, 0.15);
+}
+
+.loyaltyProgressTrack {
+    background: rgba(31, 75, 64, 0.1);
+    height: 8px;
+    border-radius: 10px;
+    width: 100%;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.loyaltyProgressBar {
+    height: 100%;
+    background: linear-gradient(90deg, #10B981, #00FF94);
+    border-radius: 10px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(0, 255, 148, 0.5);
+}
+
+.loyaltyHint {
+    font-size: 0.75rem;
+    color: #6a7c76;
+    text-align: right;
+    font-weight: 500;
+}

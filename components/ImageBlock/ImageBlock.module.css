@@ -21,3 +21,15 @@
     color: #888;
     font-style: italic;
 }
+
+/* Full Width Variant */
+.fullWidthSection {
+    padding: 0;
+}
+.fullWidthWrapper {
+    max-width: 100%;
+}
+.fullWidthImage {
+    border-radius: 0;
+    width: 100vw !important;
+}

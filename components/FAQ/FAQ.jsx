@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import styles from './FAQ.module.css';
 
-export default function FAQ({ items, title, headingTag = "h2" }) {
+export default function FAQ({ items, title, headingTag = "h2", variant = "accordion" }) {
     const [openIndex, setOpenIndex] = useState(null);
 
     const toggle = (index) => {
@@ -26,7 +26,7 @@ export default function FAQ({ items, title, headingTag = "h2" }) {
     };
 
     return (
-        <section className={styles.section}>
+        <section className={`${styles.section} ${styles[variant] || ''}`}>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             {title && <Tag className={styles.title}>{title}</Tag>}
             <div className={styles.container}>

@@ -1,14 +1,14 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import styles from './ProductDetails.module.css';
-import { ArrowLeft, Star, Truck, ShieldCheck, Heart } from 'lucide-react';
+import { ArrowLeft, Star, Truck, ShieldCheck, Heart, Gift } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
 import { SITE_URL } from '@/app/shared-metadata';
@@ -65,6 +65,23 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
 
     const activeVariation = hasVariations ? product.variations.find(v => v.slug === selectedVariationSlug) : null;
     const selectedVariant = hasVariants ? product.variants.find(v => v.id === selectedVariantId) : null;
+    
+    const [rewardSettings, setRewardSettings] = useState(null);
+
+    useEffect(() => {
+        const fetchRewardSettings = async () => {
+            try {
+                const res = await fetch('/api/rewards?action=get_settings');
+                const data = await res.json();
+                if (data.success && data.ratio) {
+                    setRewardSettings(data);
+                }
+            } catch (err) {
+                console.error("Failed to load reward settings", err);
+            }
+        };
+        fetchRewardSettings();
+    }, []);
     
     // Construct active product data (merging selected variation or variant info if any)
     const activeProduct = (() => {
@@ -234,6 +251,28 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                 if (!perGramText) return null;
                                 return <div className={styles.perGramInfo}>{perGramText}</div>;
                             })()}
+
+                            {rewardSettings && (
+                                <div style={{
+                                    marginTop: '1rem',
+                                    padding: '0.75rem',
+                                    background: 'rgba(16, 185, 129, 0.1)',
+                                    border: '1px solid rgba(16, 185, 129, 0.2)',
+                                    borderRadius: '8px',
+                                    color: '#065f46',
+                                    fontSize: '0.9rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}>
+                                    <Gift size={16} color="#10B981" />
+                                    <span>
+                                        En achetant ce produit, vous pouvez gagner jusqu'à <strong>
+                                            {Math.floor((groupPrice.suggestShowHT ? groupPrice.priceHT : (groupPrice?.priceTTC || activeProduct.priceTTC || 0)) / rewardSettings.ratio)} points de fidélité
+                                        </strong> !
+                                    </span>
+                                </div>
+                            )}
                         </div>
 
                         <div className={styles.actions}>
@@ -275,7 +314,9 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
 
                         <div
                             className={styles.description}
-                            dangerouslySetInnerHTML={{ __html: product.description || product.descriptionShort || defaultDescription }}
+                            dangerouslySetInnerHTML={{ 
+                                __html: (product.description || product.descriptionShort || defaultDescription).replace(/&nbsp;/g, ' ')
+                            }}
                         />
                     </div>
                 </div>

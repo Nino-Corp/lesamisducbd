@@ -1,0 +1,516 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+    margin-bottom: 1rem;
+}
+
+.header h2 {
+    font-size: 1.5rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.header p {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.cardsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background: var(--primary-dark);
+    border: 1px solid rgba(0, 255, 148, 0.2);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 255, 148, 0.05) 0%, transparent 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.cardContent {
+    position: relative;
+    z-index: 1;
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--surface-white);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.iconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(0, 255, 148, 0.1);
+    color: var(--accent-neon);
+}
+
+.valueArea {
+    margin-bottom: 1.5rem;
+}
+
+.points {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--surface-white);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.points span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.money {
+    color: var(--accent-neon);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.actionButton {
+    width: 100%;
+    padding: 0.875rem;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent-neon);
+    color: var(--primary-dark);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.actionButton:hover:not(:disabled) {
+    background: #00e082;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 255, 148, 0.2);
+}
+
+.actionButton:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Vouchers Section */
+.vouchersCard {
+    background: var(--surface-white);
+    border: 1px solid rgba(31, 75, 64, 0.1);
+    box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.vouchersList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.voucherItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    border: 1px dashed rgba(31, 75, 64, 0.2);
+    border-radius: 12px;
+    background: var(--background-light);
+    transition: all 0.2s ease;
+}
+
+.voucherItem:hover {
+    border-color: rgba(31, 75, 64, 0.4);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+}
+
+.voucherInfo h4 {
+    margin: 0;
+    color: var(--primary-dark);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.voucherAmount {
+    color: var(--accent-neon);
+    font-weight: 700;
+    font-size: 1.2rem;
+    background: var(--primary-dark);
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.voucherAction {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.voucherCode {
+    font-family: monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    letter-spacing: 1px;
+    border: 1px dashed rgba(31, 75, 64, 0.4);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    background: var(--surface-white);
+}
+
+.voucherDate {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* Sponsorship Section */
+.sponsorshipCard {
+    background: var(--primary-dark);
+    border: 1px solid rgba(0, 255, 148, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.sponsorshipIcon {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    opacity: 0.05;
+    color: var(--surface-white);
+    transform: rotate(15deg);
+}
+
+.sponsorshipContent {
+    position: relative;
+    z-index: 1;
+}
+
+.sponsorshipContent h3 {
+    font-size: 1.25rem;
+    color: var(--surface-white);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+}
+
+.sponsorshipContent p {
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.linkContainer {
+    display: flex;
+    gap: 0.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.linkInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--surface-white);
+    font-size: 0.95rem;
+    padding: 0 0.5rem;
+    outline: none;
+    font-weight: 500;
+}
+
+.copyButton {
+    background: var(--accent-neon);
+    border: none;
+    color: var(--primary-dark);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+}
+
+.copyButton:hover {
+    background: #00e082;
+    transform: translateY(-1px);
+}
+
+.copyButton.copied {
+    background: var(--surface-white);
+    color: var(--primary-dark);
+}
+
+.loadingState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 0;
+    color: #94a3b8;
+    gap: 1rem;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+    color: var(--primary-dark);
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.message {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.message.success {
+    background: rgba(0, 255, 148, 0.1);
+    color: var(--primary-dark);
+    border: 1px solid var(--accent-neon);
+}
+
+.message.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.cardPerspective {
+    perspective: 1000px;
+    width: 100%;
+    max-width: 450px;
+    margin: 1rem auto 2rem auto;
+}
+
+.holoCard {
+    width: 100%;
+    aspect-ratio: 1.586;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #112924, #1F4B40);
+    border: 1px solid rgba(0, 255, 148, 0.3);
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease-out;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+    overflow: hidden;
+    color: white;
+    cursor: pointer;
+}
+
+.holoCard::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at var(--mouseX, 50%) var(--mouseY, 50%), rgba(255, 255, 255, 0.25) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: overlay;
+    transition: opacity 0.3s;
+    opacity: 0;
+}
+
+.holoCard::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; right: -50%; bottom: -50%;
+    background: linear-gradient(
+        105deg,
+        transparent 20%,
+        rgba(0, 255, 194, 0.3) 25%,
+        rgba(255, 255, 255, 0.3) 45%,
+        transparent 50%
+    );
+    background-size: 200% 200%;
+    background-position: calc(var(--mouseX, 50%) * 2) center;
+    pointer-events: none;
+    z-index: 3;
+    mix-blend-mode: color-dodge;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.holoCard:hover::before, .holoCard:hover::after {
+    opacity: 1;
+}
+
+.cardContent {
+    transform: translateZ(40px); /* 3D pop out effect */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+    pointer-events: none;
+    position: relative;
+    z-index: 4;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.cardLogo {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 2px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.cardEmoji {
+    font-size: 2.5rem;
+    color: #00FF94;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 10px rgba(0,255,148,0.5));
+}
+
+.cardBody {
+    margin-top: auto;
+    margin-bottom: 1.5rem;
+}
+
+.cardChip {
+    width: 45px;
+    height: 35px;
+    background: linear-gradient(135deg, #d4af37, #f3e5ab);
+    border-radius: 6px;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.cardChip::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+        linear-gradient(90deg, transparent 48%, rgba(0,0,0,0.1) 48%, rgba(0,0,0,0.1) 52%, transparent 52%),
+        linear-gradient(0deg, transparent 48%, rgba(0,0,0,0.1) 48%, rgba(0,0,0,0.1) 52%, transparent 52%);
+}
+
+.cardFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.cardHolder {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cardRankInfo {
+    text-align: right;
+}
+
+.cardRank {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #00FF94;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0, 255, 148, 0.4);
+}
+
+.cardNext {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.7);
+    margin-top: 4px;
+}
+
+.vipProgressContainer {
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.vipProgressTrack {
+    background: rgba(255, 255, 255, 0.1);
+    height: 12px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.vipProgressBar {
+    height: 100%;
+    background: linear-gradient(90deg, #10B981, #00FF94);
+    border-radius: 20px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 15px rgba(0, 255, 148, 0.6);
+}

@@ -1,10 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { User, MapPin, Package, Loader2, LogOut } from 'lucide-react';
+import { User, MapPin, Package, Gift, Loader2, LogOut } from 'lucide-react';
 import styles from './AccountTabs.module.css';
 import ProfileTab from './Tabs/ProfileTab';
 import AddressesTab from './Tabs/AddressesTab';
 import OrdersList from '@/components/Account/OrdersList';
+import RewardsTab from './Tabs/RewardsTab';
 import { signOut } from 'next-auth/react';
 
 export default function AccountTabs({ userSession }) {
@@ -70,6 +71,13 @@ export default function AccountTabs({ userSession }) {
                     <span>Mes Commandes</span>
                 </button>
                 <button
+                    className={`${styles.tabButton} ${activeTab === 'rewards' ? styles.active : ''}`}
+                    onClick={() => setActiveTab('rewards')}
+                >
+                    <Gift size={20} />
+                    <span>Fidélité & Parrainage</span>
+                </button>
+                <button
                     className={`${styles.tabButton} ${styles.logoutBtn}`}
                     onClick={async () => {
                         try {
@@ -101,6 +109,9 @@ export default function AccountTabs({ userSession }) {
                 )}
                 {activeTab === 'orders' && (
                     <OrdersList />
+                )}
+                {activeTab === 'rewards' && (
+                    <RewardsTab />
                 )}
             </div>
         </div>

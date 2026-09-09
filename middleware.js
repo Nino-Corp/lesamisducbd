@@ -20,7 +20,24 @@ const nextAuthMiddleware = withAuth(
 );
 
 export default async function middleware(req) {
-    const { pathname } = req.nextUrl;
+    const { pathname, searchParams } = req.nextUrl;
+    
+    // We create a base response object. Next.js middleware allows returning this or modifying it.
+    let response = NextResponse.next();
+
+    // 0. Catch Sponsorship Parameter (Tracking)
+    const sponsorship = searchParams.get('sponsorship');
+    if (sponsorship) {
+        // Set a cookie for 30 days
+        response.cookies.set({
+            name: 'sponsorship_code',
+            value: sponsorship,
+            path: '/',
+            maxAge: 60 * 60 * 24 * 30, 
+            httpOnly: true, // Secure, not readable via JS
+            secure: process.env.NODE_ENV === 'production'
+        });
+    }
 
     // 1. Admin Routes Protection
     if (pathname.startsWith('/admin')) {
@@ -50,13 +67,16 @@ export default async function middleware(req) {
         return nextAuthMiddleware(req, Object.assign({}));
     }
 
-    return NextResponse.next();
+    return response;
 }
 
 export const config = {
     matcher: [
+        "/",
         "/admin/:path*",
         "/account/:path*",
-        "/checkout/:path*"
+        "/checkout/:path*",
+        "/produit/:path*",
+        "/produits/:path*"
     ]
 };

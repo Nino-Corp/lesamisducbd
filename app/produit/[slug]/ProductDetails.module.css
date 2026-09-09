@@ -260,7 +260,46 @@
     line-height: 1.6;
     margin-bottom: 40px;
     font-size: 1rem;
-    white-space: pre-line;
+    word-wrap: break-word;
+    overflow-wrap: anywhere; /* Plus agressif que break-word pour couper les longs textes */
+    max-width: 100%; /* S'assure qu'elle ne dépasse jamais de sa colonne */
+    box-sizing: border-box;
+}
+
+/* Sécurité pour le contenu généré par l'éditeur du Dashboard Admin */
+.description img, 
+.description iframe, 
+.description video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.description table {
+    max-width: 100%;
+    display: block;
+    overflow-x: auto; /* Permet de scroller horizontalement si un grand tableau est inséré */
+    white-space: nowrap;
+}
+
+.description pre,
+.description code {
+    white-space: pre-wrap; /* Empêche les balises <pre> de sortir de l'écran */
+    word-break: break-all;
+}
+
+.description p {
+    margin-bottom: 1em;
+}
+
+.description ul,
+.description ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1em;
+}
+
+.description strong {
+    font-weight: 700;
 }
 
 .features {
