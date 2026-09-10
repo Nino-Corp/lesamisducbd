@@ -395,7 +395,7 @@
     opacity: 1;
 }
 
-.cardContent {
+.holoCardContent {
     transform: translateZ(40px); /* 3D pop out effect */
     height: 100%;
     display: flex;

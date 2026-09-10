@@ -10,8 +10,10 @@ export const metadata = {
     description: 'Gérez vos informations personnelles et adresses.',
 };
 
-export default async function AccountPage() {
+export default async function AccountPage({ searchParams }) {
     const session = await getServerSession();
+    const resolvedSearchParams = await searchParams;
+    const initialTab = resolvedSearchParams?.tab || 'profile';
 
     if (!session || !session.user) {
         redirect('/'); // Redirection forcée au cas où le middleware échoue
@@ -36,7 +38,7 @@ export default async function AccountPage() {
             </div>
 
             <div className={styles.content}>
-                <AccountTabs userSession={session.user} />
+                <AccountTabs userSession={session.user} initialTab={initialTab} />
             </div>
         </div>
     );

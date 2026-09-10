@@ -112,25 +112,6 @@ export default function RewardsTab() {
         }
     };
 
-    const handleCheatPoints = async () => {
-        setIsLoading(true);
-        try {
-            const res = await fetch('/api/rewards', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'cheat_points' })
-            });
-            const json = await res.json();
-            if (json.success) {
-                setMessage({ type: 'success', text: '🎁 500 points ajoutés secrètement !' });
-                loadData();
-            }
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleCopy = () => {
         if (!data?.sponsorship_link) return;
@@ -233,7 +214,7 @@ export default function RewardsTab() {
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                 >
-                    <div className={styles.cardContent}>
+                    <div className={styles.holoCardContent}>
                         <div className={styles.cardHeader}>
                             <span className={styles.cardLogo}>Les Amis du CBD Club</span>
                             <span className={styles.cardEmoji}>
@@ -294,14 +275,7 @@ export default function RewardsTab() {
                             {isConverting ? <Loader2 size={18} className={styles.spinner} /> : <Gift size={18} />}
                             Convertir en bon de réduction
                         </button>
-                        {/* CHEAT BUTTON (temporaire pour le dev) */}
-                        <button 
-                            onClick={handleCheatPoints}
-                            disabled={isLoading}
-                            style={{marginTop: '1rem', background: 'transparent', border: '1px dashed rgba(255,255,255,0.3)', color: 'rgba(255,255,255,0.5)', padding: '0.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem', width: '100%'}}
-                        >
-                            [DEV] Ajouter 500 points
-                        </button>
+
                     </div>
                 </div>
             </div>

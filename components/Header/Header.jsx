@@ -10,6 +10,39 @@ import SearchOverlay from '../SearchBar/SearchOverlay';
 
 import { useCart } from '@/context/CartContext';
 
+const AnimatedNumber = ({ value }) => {
+    const [displayValue, setDisplayValue] = useState(0);
+
+    useEffect(() => {
+        if (value === 0) {
+            setDisplayValue(0);
+            return;
+        }
+
+        let startTimestamp = null;
+        const duration = 1500; // 1.5 seconds
+
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            // easeOutExpo for smooth deceleration
+            const easeOut = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+            setDisplayValue(Math.floor(easeOut * value));
+            
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                setDisplayValue(value);
+            }
+        };
+
+        window.requestAnimationFrame(step);
+    }, [value]);
+
+    return displayValue;
+};
+
+
 export default function Header({ logoText, logoImage, menuItems, bannerVisible }) {
     const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -75,13 +108,20 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
         return () => { document.body.style.overflow = ''; };
     }, [isMenuOpen]);
 
-    // Fetch Loyalty Data when authentication status changes
     useEffect(() => {
-        if (status === 'authenticated' && !loyaltyData) {
+        if (status === 'authenticated') {
+            const cached = localStorage.getItem('loyaltyData');
+            if (cached && !loyaltyData) {
+                try { setLoyaltyData(JSON.parse(cached)); } catch(e) {}
+            }
+
             fetch('/api/rewards?action=get_dashboard')
                 .then(res => res.json())
                 .then(data => {
-                    if (data.success) setLoyaltyData(data);
+                    if (data.success) {
+                        setLoyaltyData(data);
+                        localStorage.setItem('loyaltyData', JSON.stringify(data));
+                    }
                 })
                 .catch(err => console.error("Header loyalty fetch error:", err));
         }
@@ -156,13 +196,15 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
 
                     <div className={styles.actions}>
                         {isAuthenticated && mounted && loyaltyData && (
-                            <div className={styles.headerLoyaltyBtn}>
+                            <Link href="/account?tab=rewards" className={styles.headerLoyaltyBtn}>
                                 <Gift size={18} className={styles.loyaltyIcon} />
-                                <span className={styles.loyaltyPts}>{loyaltyData.points_available} pts</span>
+                                <span className={styles.loyaltyPts}>
+                                    <AnimatedNumber value={loyaltyData.points_available} /> pts
+                                </span>
                                 <div className={styles.loyaltyTooltip}>
                                     Vos points ont une valeur de <strong>{loyaltyData.value_available.toFixed(2)}€</strong> de réduction !
                                 </div>
-                            </div>
+                            </Link>
                         )}
 
                         {isAuthenticated && mounted ? (

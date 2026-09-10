@@ -8,10 +8,14 @@ import OrdersList from '@/components/Account/OrdersList';
 import RewardsTab from './Tabs/RewardsTab';
 import { signOut } from 'next-auth/react';
 
-export default function AccountTabs({ userSession }) {
-    const [activeTab, setActiveTab] = useState('profile');
+export default function AccountTabs({ userSession, initialTab = 'profile' }) {
+    const [activeTab, setActiveTab] = useState(initialTab);
     const [userData, setUserData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        setActiveTab(initialTab);
+    }, [initialTab]);
 
     // Charger les données complètes (avec adresses) depuis KV
     useEffect(() => {
