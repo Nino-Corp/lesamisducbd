@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import styles from './FAQ.module.css';
 
-export default function FAQ({ items, title, headingTag = "h2", variant = "accordion" }) {
+export default function FAQ({ items, title, headingTag = "h2", variant = "accordion", columns = 1 }) {
     const [openIndex, setOpenIndex] = useState(null);
 
     const toggle = (index) => {
@@ -29,7 +29,7 @@ export default function FAQ({ items, title, headingTag = "h2", variant = "accord
         <section className={`${styles.section} ${styles[variant] || ''}`}>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             {title && <Tag className={styles.title}>{title}</Tag>}
-            <div className={styles.container}>
+            <div className={`${styles.container} ${Number(columns) === 2 ? styles.twoColumns : ''}`}>
                 {items.map((item, index) => {
                     const isOpen = openIndex === index;
                     return (

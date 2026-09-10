@@ -28,18 +28,22 @@ export default function ImageCardsGrid({
             <div className={styles.grid} style={{ gridTemplateColumns: `repeat(${Math.min(columns, 4)}, 1fr)` }}>
                 {cards.map((card, i) => (
                     <div key={i} className={styles.card}>
-                        <div className={styles.imageContainer}>
-                            <Image 
-                                src={card.heroImage || '/images/placeholder.jpg'} 
-                                alt={card.title}
-                                fill
-                                style={{ objectFit: 'cover' }}
-                            />
-                        </div>
-                        <div className={styles.content}>
-                            <div className={styles.iconWrapper}>
-                                {card.icon && <span className={styles.icon}>{ICONS[card.icon] || card.icon}</span>}
+                        {card.heroImage && (
+                            <div className={styles.imageContainer}>
+                                <Image 
+                                    src={card.heroImage} 
+                                    alt={card.title}
+                                    fill
+                                    style={{ objectFit: 'cover' }}
+                                />
                             </div>
+                        )}
+                        <div className={styles.content}>
+                            {card.icon && card.icon !== 'none' && (
+                                <div className={styles.iconWrapper}>
+                                    <span className={styles.icon}>{ICONS[card.icon] || card.icon}</span>
+                                </div>
+                            )}
                             <h3 className={styles.title}>{card.title}</h3>
                             <p className={styles.description} dangerouslySetInnerHTML={{ __html: card.description }}></p>
                             {card.linkText && (

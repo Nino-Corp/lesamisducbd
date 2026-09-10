@@ -22,13 +22,14 @@
 }
 
 .container {
-    width: 95%;
+    max-width: 800px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(2, 48%);
-    gap: clamp(15px, 2vw, 20px) 4%;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
+
+
 
 .item {
     border-radius: clamp(15px, 2vw, 20px);
@@ -191,4 +192,23 @@
 .cards .item.open .question {
     background: transparent;
     color: #1F4B40;
+}
+
+/* Force 2 Columns overrides */
+.twoColumns,
+.simple .twoColumns,
+.cards .twoColumns {
+    max-width: 1200px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .twoColumns,
+    .simple .twoColumns,
+    .cards .twoColumns {
+        grid-template-columns: 1fr !important;
+    }
 }

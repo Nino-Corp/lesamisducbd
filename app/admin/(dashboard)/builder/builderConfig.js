@@ -55,6 +55,19 @@ export const TEMPLATES = [
         },
     },
     {
+        type: 'IconSummary',
+        label: 'Sommaire Icônes',
+        icon: '🔘',
+        description: 'Liste de points clés avec icônes',
+        category: 'content',
+        defaultProps: {
+            items: [
+                { title: 'Avantage 1', emoji: '✨', link: '' },
+                { title: 'Avantage 2', emoji: '🌿', link: '' }
+            ]
+        },
+    },
+    {
         type: 'StatsBanner',
         label: 'Chiffres clés',
         icon: '📊',

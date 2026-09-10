@@ -23,6 +23,8 @@ export default function PageEditor() {
     const [showSEOModal, setShowSEOModal] = useState(false);
     const [showHistoryModal, setShowHistoryModal] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [isEditingTitle, setIsEditingTitle] = useState(false);
+    const [editTitleValue, setEditTitleValue] = useState("");
     const [pageHistory, setPageHistory] = useState([]);
     const [savedBlocks, setSavedBlocks] = useState([]);
     const [templateTab, setTemplateTab] = useState('models'); // models | blocks
@@ -282,7 +284,46 @@ export default function PageEditor() {
                     <div className={styles.headerLeft}>
                         <Link href="/admin/builder" className={styles.backLink}>← Retour</Link>
                         <div>
-                            <h1 className={styles.title}>Éditeur : {page.title}</h1>
+                            <h1 className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+                                Éditeur : 
+                                {isEditingTitle ? (
+                                    <input 
+                                        autoFocus
+                                        value={editTitleValue}
+                                        onChange={(e) => setEditTitleValue(e.target.value)}
+                                        onBlur={() => {
+                                            if (editTitleValue.trim() && editTitleValue !== page.title) {
+                                                setPage({ ...page, title: editTitleValue.trim() });
+                                            }
+                                            setIsEditingTitle(false);
+                                        }}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                e.target.blur();
+                                            }
+                                            if (e.key === 'Escape') {
+                                                setIsEditingTitle(false);
+                                            }
+                                        }}
+                                        style={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: 'inherit', padding: '2px 8px', border: '2px solid #00FF94', borderRadius: '6px', outline: 'none', background: '#fff', color: '#1F4B40', minWidth: '200px' }}
+                                    />
+                                ) : (
+                                    <>
+                                        {page.title}
+                                        <button 
+                                            onClick={() => {
+                                                setEditTitleValue(page.title);
+                                                setIsEditingTitle(true);
+                                            }}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', opacity: 0.6, padding: '4px' }}
+                                            title="Modifier le titre"
+                                        >
+                                            ✏️
+                                        </button>
+                                    </>
+                                )}
+                            </h1>
                             <code className={styles.pageSlug}>/p/{page.slug}</code>
                         </div>
                     </div>

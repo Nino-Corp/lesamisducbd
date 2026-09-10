@@ -118,9 +118,6 @@ export function TwoColumnsEditor({ props, onChange }) {
 export function RichTextEditor({ props, onChange }) {
     return <>
         <Field label="Titre de section"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Laisser vide pour masquer" /></Field>
-        <Field label="Contenu (HTML)">
-            <WysiwygEditor value={props.content || ''} onChange={val => onChange({ content: val })} />
-        </Field>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <Field label="Alignement du texte">
                 <select style={selectStyle} value={props.textAlign || 'left'} onChange={e => onChange({ textAlign: e.target.value })}>
@@ -131,6 +128,25 @@ export function RichTextEditor({ props, onChange }) {
             </Field>
             <Field label="Largeur max. (px)">
                 <input type="number" style={inputStyle} value={props.maxWidth || 800} onChange={e => onChange({ maxWidth: +e.target.value })} />
+            </Field>
+        </div>
+        <Field label="Contenu (HTML)">
+            <WysiwygEditor value={props.content || ''} onChange={val => onChange({ content: val })} />
+        </Field>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <Field label="Police du Titre">
+                <select style={selectStyle} value={props.titleFontFamily || 'inherit'} onChange={e => onChange({ titleFontFamily: e.target.value })}>
+                    <option value="inherit">Par défaut</option>
+                    <option value="var(--font-bricolage)">Bricolage (Marketing)</option>
+                    <option value="var(--font-inter)">Inter (Texte classique)</option>
+                </select>
+            </Field>
+            <Field label="Colonnes de texte">
+                <select style={selectStyle} value={props.columnCount || 1} onChange={e => onChange({ columnCount: +e.target.value })}>
+                    <option value={1}>1 colonne</option>
+                    <option value={2}>2 colonnes</option>
+                    <option value={3}>3 colonnes</option>
+                </select>
             </Field>
         </div>
     </>;
@@ -331,13 +347,21 @@ export function FAQEditor({ props, onChange }) {
 
     return <>
         <Field label="Titre de la FAQ"><input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} /></Field>
-        <Field label="Variante (Design)">
-            <select style={selectStyle} value={props.variant || 'accordion'} onChange={e => onChange({ variant: e.target.value })}>
-                <option value="accordion">Accordéon Classique</option>
-                <option value="cards">Boîtes / Cartes</option>
-                <option value="simple">Texte Simple Épuré</option>
-            </select>
-        </Field>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <Field label="Variante (Design)">
+                <select style={selectStyle} value={props.variant || 'accordion'} onChange={e => onChange({ variant: e.target.value })}>
+                    <option value="accordion">Accordéon Classique</option>
+                    <option value="cards">Boîtes / Cartes</option>
+                    <option value="simple">Texte Simple Épuré</option>
+                </select>
+            </Field>
+            <Field label="Colonnes (PC)">
+                <select style={selectStyle} value={props.columns || 1} onChange={e => onChange({ columns: +e.target.value })}>
+                    <option value={1}>1 colonne</option>
+                    <option value={2}>2 colonnes</option>
+                </select>
+            </Field>
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px' }}>
             {items.map((item, i) => (
                 <div key={i} style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
@@ -960,7 +984,8 @@ export function ImageCardsGridEditor({ props, onChange }) {
                         <ImageUploader value={card.heroImage || ''} onChange={url => updateCard(i, 'heroImage', url)} folder="pages/cards" />
                     </Field>
                     <Field label="Icône Superposée">
-                        <select style={selectStyle} value={card.icon || 'star'} onChange={e => updateCard(i, 'icon', e.target.value)}>
+                        <select style={selectStyle} value={card.icon || 'none'} onChange={e => updateCard(i, 'icon', e.target.value)}>
+                            <option value="none">Aucune</option>
                             {ICONS.map(k => <option key={k} value={k}>{ICON_LABELS[k] || '✨'} {k}</option>)}
                         </select>
                     </Field>
@@ -977,12 +1002,43 @@ export function ImageCardsGridEditor({ props, onChange }) {
     </>;
 }
 
+export function IconSummaryEditor({ props, onChange }) {
+    const items = props.items || [];
+    const updateItem = (i, field, val) => onChange({ items: items.map((c, idx) => idx === i ? { ...c, [field]: val } : c) });
+    const addItem = () => onChange({ items: [...items, { title: 'Nouveau', emoji: '✨', link: '' }] });
+    const removeItem = i => onChange({ items: items.filter((_, idx) => idx !== i) });
+
+    return <>
+        <Field label="Couleur de fond">
+            <input type="color" value={props.backgroundColor || '#transparent'} onChange={e => onChange({ backgroundColor: e.target.value })} style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} />
+        </Field>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+            {items.map((item, i) => (
+                <div key={i} style={{ background: '#f9f9f9', borderRadius: '10px', padding: '14px', border: '1px solid #eee' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong style={{ fontSize: '0.85rem' }}>Icône {i + 1}</strong>
+                        <button type="button" onClick={() => removeItem(i)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626' }}>✕</button>
+                    </div>
+                    <Field label="Titre"><input style={inputStyle} value={item.title || ''} onChange={e => updateItem(i, 'title', e.target.value)} /></Field>
+                    <Field label="Émoji (ou Image)"><input style={inputStyle} value={item.emoji || ''} onChange={e => updateItem(i, 'emoji', e.target.value)} placeholder="Ex: 🌿" /></Field>
+                    <Field label="Image (remplace l'émoji)">
+                        <ImageUploader value={item.imageSrc || ''} onChange={url => updateItem(i, 'imageSrc', url)} folder="pages/icons" />
+                    </Field>
+                    <Field label="URL du lien"><input style={inputStyle} value={item.link || ''} onChange={e => updateItem(i, 'link', e.target.value)} placeholder="/p/..." /></Field>
+                </div>
+            ))}
+        </div>
+        <button type="button" onClick={addItem} style={{ marginTop: '8px', width: '100%', padding: '10px', background: '#f0fdf4', color: '#1F4B40', border: '1px dashed #1F4B40', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}>+ Ajouter une icône</button>
+    </>;
+}
+
 export const EDITORS = {
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
     RichText: RichTextEditor,
     CardsGrid: CardsGridEditor,
     ImageCardsGrid: ImageCardsGridEditor,
+    IconSummary: IconSummaryEditor,
     StatsBanner: StatsBannerEditor,
     CTABlock: CTABlockEditor,
     Quote: QuoteEditor,

@@ -11,6 +11,7 @@ import CTABlock from '@/components/CTABlock/CTABlock';
 import TwoColumns from '@/components/TwoColumns/TwoColumns';
 import CardsGrid from '@/components/CardsGrid/CardsGrid';
 import ImageCardsGrid from '@/components/ImageCardsGrid/ImageCardsGrid';
+import IconSummary from '@/components/IconSummary/IconSummary';
 import StatsBanner from '@/components/StatsBanner/StatsBanner';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
 import Divider from '@/components/Divider/Divider';
@@ -52,6 +53,7 @@ const PREVIEW_COMPONENTS = {
     TwoColumns,
     CardsGrid,
     ImageCardsGrid,
+    IconSummary,
     StatsBanner,
     VideoEmbed,
     Divider,
