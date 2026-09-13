@@ -97,6 +97,17 @@ const componentMap = {
 
 const NO_ANIMATE = new Set(['Header', 'Hero', 'ProHero', 'TransparenceHeader']);
 
+const cleanHtmlStrings = (obj) => {
+    if (typeof obj === 'string') return obj.replace(/&nbsp;/g, ' ');
+    if (Array.isArray(obj)) return obj.map(cleanHtmlStrings);
+    if (typeof obj === 'object' && obj !== null) {
+        const newObj = {};
+        for (const key in obj) newObj[key] = cleanHtmlStrings(obj[key]);
+        return newObj;
+    }
+    return obj;
+};
+
 export default function PageBuilder({ sections }) {
     if (!sections) return null;
 
@@ -111,7 +122,8 @@ export default function PageBuilder({ sections }) {
                     return null;
                 }
 
-                const { paddingTop, paddingBottom, marginTop, marginBottom, hideMobile, hideDesktop, sectionId, ...componentProps } = section.props || {};
+                const { paddingTop, paddingBottom, marginTop, marginBottom, hideMobile, hideDesktop, sectionId, ...rawProps } = section.props || {};
+                const componentProps = cleanHtmlStrings(rawProps);
 
                 // Map padding values to px/rem
                 const paddingMap = { none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };

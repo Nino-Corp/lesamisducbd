@@ -306,7 +306,7 @@ export default function PageEditor() {
                                                 setIsEditingTitle(false);
                                             }
                                         }}
-                                        style={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: 'inherit', padding: '2px 8px', border: '2px solid #00FF94', borderRadius: '6px', outline: 'none', background: '#fff', color: '#1F4B40', minWidth: '200px' }}
+                                        style={{ fontSize: 'inherit', fontWeight: 'inherit', fontFamily: 'inherit', padding: '2px 8px', border: '2px solid #00FF94', borderRadius: '6px', outline: 'none', background: '#fff', color: '#1F4B40', minWidth: '200px', maxWidth: '100%', width: '100%' }}
                                     />
                                 ) : (
                                     <>

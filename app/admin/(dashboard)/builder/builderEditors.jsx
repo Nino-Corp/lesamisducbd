@@ -1010,7 +1010,7 @@ export function IconSummaryEditor({ props, onChange }) {
 
     return <>
         <Field label="Couleur de fond">
-            <input type="color" value={props.backgroundColor || '#transparent'} onChange={e => onChange({ backgroundColor: e.target.value })} style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} />
+            <input type="color" value={props.backgroundColor || '#ffffff'} onChange={e => onChange({ backgroundColor: e.target.value })} style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} />
         </Field>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
             {items.map((item, i) => (

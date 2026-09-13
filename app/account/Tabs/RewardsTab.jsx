@@ -5,41 +5,41 @@ import styles from './RewardsTab.module.css';
 
 // -- CUSTOM VECTOR ICONS (D.A. Neo-Bank / Minimalist) --
 const IconGraine = ({ className }) => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M12 2c0 0-7 8-7 13a7 7 0 0 0 14 0c0-5-7-13-7-13z" />
-    <circle cx="12" cy="15" r="2" />
-  </svg>
+    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M12 2c0 0-7 8-7 13a7 7 0 0 0 14 0c0-5-7-13-7-13z" />
+        <circle cx="12" cy="15" r="2" />
+    </svg>
 );
 
 const IconBourgeon = ({ className }) => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M12 22v-6" />
-    <path d="M12 16c0 0-4-2-4-8s4-6 4-6 4 0 4 6-4 8-4 8z" />
-    <path d="M12 16c0 0 6 1 6-5s-3-4-3-4" />
-    <path d="M12 16c0 0-6 1-6-5s3-4 3-4" />
-  </svg>
+    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M12 22v-6" />
+        <path d="M12 16c0 0-4-2-4-8s4-6 4-6 4 0 4 6-4 8-4 8z" />
+        <path d="M12 16c0 0 6 1 6-5s-3-4-3-4" />
+        <path d="M12 16c0 0-6 1-6-5s3-4 3-4" />
+    </svg>
 );
 
 const IconFloraison = ({ className }) => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M12 22v-7" />
-    <path d="M12 15c0 0 0-13 0-13s4 3 4 8-4 5-4 5z" />
-    <path d="M12 15c0 0 0-13 0-13s-4 3-4 8 4 5 4 5z" />
-    <path d="M12 15c0 0 8-9 8-9s3 4-1 8-7 1-7 1z" />
-    <path d="M12 15c0 0-8-9-8-9s-3 4 1 8 7 1 7 1z" />
-    <path d="M12 15c0 0 8-2 8-2s1 5-4 5-4-3-4-3z" />
-    <path d="M12 15c0 0-8-2-8-2s-1 5 4 5 4-3 4-3z" />
-  </svg>
+    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M12 22v-7" />
+        <path d="M12 15c0 0 0-13 0-13s4 3 4 8-4 5-4 5z" />
+        <path d="M12 15c0 0 0-13 0-13s-4 3-4 8 4 5 4 5z" />
+        <path d="M12 15c0 0 8-9 8-9s3 4-1 8-7 1-7 1z" />
+        <path d="M12 15c0 0-8-9-8-9s-3 4 1 8 7 1 7 1z" />
+        <path d="M12 15c0 0 8-2 8-2s1 5-4 5-4-3-4-3z" />
+        <path d="M12 15c0 0-8-2-8-2s-1 5 4 5 4-3 4-3z" />
+    </svg>
 );
 
 const IconRecolteur = ({ className }) => (
-  <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M6 3h12l4 6-10 13L2 9l4-6z" />
-    <path d="M2 9h20" />
-    <path d="M12 22V9" />
-    <path d="M6 3l6 6" />
-    <path d="M18 3l-6 6" />
-  </svg>
+    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M6 3h12l4 6-10 13L2 9l4-6z" />
+        <path d="M2 9h20" />
+        <path d="M12 22V9" />
+        <path d="M6 3l6 6" />
+        <path d="M18 3l-6 6" />
+    </svg>
 );
 // ---------------------------------------------------
 
@@ -65,7 +65,7 @@ export default function RewardsTab() {
         try {
             const res = await fetch('/api/rewards?action=get_dashboard');
             const json = await res.json();
-            
+
             // If it successfully loads but points is 0 and no vouchers, it's normal.
             if (json.success || typeof json.points_available !== 'undefined') {
                 setData(json);
@@ -97,7 +97,7 @@ export default function RewardsTab() {
                 body: JSON.stringify({ action: 'convert_points' })
             });
             const json = await res.json();
-            
+
             if (json.success) {
                 setMessage({ type: 'success', text: 'Points convertis avec succès ! Vous pouvez retrouver votre bon de réduction dans votre panier.' });
                 // Refresh dashboard to show 0 points
@@ -115,7 +115,7 @@ export default function RewardsTab() {
 
     const handleCopy = () => {
         if (!data?.sponsorship_link) return;
-        
+
         // We modify the link to point to our Next.js frontend instead of the PrestaShop backend
         const url = new URL(data.sponsorship_link);
         const code = url.searchParams.get('sponsorship') || data.sponsorship_code;
@@ -138,7 +138,7 @@ export default function RewardsTab() {
     // VIP Logic Calculation (L'Arbre à CBD)
     const ratio = data?.ratio || 1;
     const lifetimePoints = data?.lifetime_points || 0;
-    
+
     // Valeur théorique dépensée à vie (pour atteindre ces points)
     const lifetimeSpent = lifetimePoints * ratio;
 
@@ -178,10 +178,10 @@ export default function RewardsTab() {
         const rect = cardRef.current.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        
+
         const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -15;
         const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 15;
-        
+
         const mouseX = (x / rect.width) * 100;
         const mouseY = (y / rect.height) * 100;
 
@@ -207,7 +207,7 @@ export default function RewardsTab() {
 
             {/* VIP Dashboard Card */}
             <div className={styles.cardPerspective}>
-                <div 
+                <div
                     ref={cardRef}
                     className={styles.holoCard}
                     style={cardStyle}
@@ -267,7 +267,7 @@ export default function RewardsTab() {
                                 Valeur : {data?.value_available?.toFixed(2) || '0.00'} €
                             </div>
                         </div>
-                        <button 
+                        <button
                             className={styles.actionButton}
                             disabled={!data?.points_available || data.points_available <= 0 || isConverting}
                             onClick={handleConvert}
@@ -321,17 +321,17 @@ export default function RewardsTab() {
                         Parrainez un ami
                     </h3>
                     <p>
-                        Partagez votre lien de parrainage. Votre ami recevra un bon de réduction de 5€ sur sa première commande, 
+                        Partagez votre lien de parrainage. Votre ami recevra un bon de réduction de 5€ sur sa première commande,
                         et vous recevrez également 5€ une fois sa commande livrée !
                     </p>
                     <div className={styles.linkContainer}>
-                        <input 
-                            type="text" 
-                            className={styles.linkInput} 
+                        <input
+                            type="text"
+                            className={styles.linkInput}
                             value={data?.sponsorship_code ? `${window.location.origin}/?sponsorship=${data.sponsorship_code}` : ''}
-                            readOnly 
+                            readOnly
                         />
-                        <button 
+                        <button
                             className={`${styles.copyButton} ${copied ? styles.copied : ''}`}
                             onClick={handleCopy}
                         >

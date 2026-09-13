@@ -32,6 +32,7 @@
     justify-content: space-between;
     padding: 0 40px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 .mobileToggle {
@@ -349,10 +350,11 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(0, 255, 148, 0.2));
+    background: rgba(31, 75, 64, 0.767); /* Header color with transparency */
+    backdrop-filter: blur(8px);
     padding: 6px 12px;
     border-radius: 99px;
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
     text-decoration: none;
     position: relative;
@@ -360,17 +362,17 @@
 }
 
 .headerLoyaltyBtn:hover {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(0, 255, 148, 0.3));
-    box-shadow: 0 0 10px rgba(0, 255, 148, 0.3);
+    background: rgba(31, 75, 64, 0.95);
+    box-shadow: 0 4px 15px rgba(31, 75, 64, 0.3);
 }
 
 .loyaltyIcon {
-    color: #d2dbd9;
+    color: #d2dbd9ab;
 }
 
 .loyaltyPts {
     font-weight: 800;
-    color: #09cc9e;
+    color: #ffffff9f;
     font-size: 0.9rem;
 }
 
@@ -408,6 +410,22 @@
     opacity: 1;
     visibility: visible;
     transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 768px) {
+    .headerLoyaltyBtn {
+        position: absolute;
+        top: calc(100% + 5px);
+        right: 0; /* Align perfectly with right border of container */
+        left: auto;
+        transform: none;
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .headerLoyaltyBtn:hover {
+        transform: none;
+    }
 }
 
 .userMenu {

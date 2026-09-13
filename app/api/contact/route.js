@@ -26,7 +26,7 @@ export async function POST(req) {
         const recipient = process.env.EMAIL_TO || 'ninoprime@hotmail.com';
 
         const mailOptions = {
-            from: process.env.EMAIL_USER || '"Les Amis du CBD" <no-reply@lesamisducbd.fr>',
+            from: '"Les Amis du CBD" <contact@lesamisducbd.fr>',
             to: recipient,
             replyTo: email,
             subject: company ? `🔥 Nouveau prospect Buraliste : ${company}` : `Nouveau message de contact : ${name}`,

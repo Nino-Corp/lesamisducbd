@@ -89,6 +89,8 @@
     line-height: 1.6;
     border-radius: clamp(20px, 3vw, 30px);
     margin-top: -35px;
+    word-break: break-word;
+    overflow-wrap: break-word;
     position: relative;
     z-index: 1;
     animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);

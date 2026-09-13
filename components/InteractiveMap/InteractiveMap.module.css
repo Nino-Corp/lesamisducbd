@@ -188,7 +188,9 @@
     }
 
     .title {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
+        word-wrap: break-word;
+        padding: 0 10px;
     }
 
     .mapMapWrapper {

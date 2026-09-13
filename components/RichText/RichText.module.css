@@ -88,11 +88,11 @@
 @media (max-width: 768px) {
     .section { padding: 40px 0; }
     .title { font-size: 1.8rem; }
-    .content { font-size: 1rem; }
+    .content { font-size: 1rem; column-count: 1 !important; }
 }
 
 @container (max-width: 768px) {
     .section { padding: 40px 0; }
     .title { font-size: 1.8rem; }
-    .content { font-size: 1rem; }
+    .content { font-size: 1rem; column-count: 1 !important; }
 }
