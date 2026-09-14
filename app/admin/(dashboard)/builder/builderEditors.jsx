@@ -1002,11 +1002,18 @@ export function ImageCardsGridEditor({ props, onChange }) {
     </>;
 }
 
-export function IconSummaryEditor({ props, onChange }) {
+export function IconSummaryEditor({ props, onChange, allSections = [] }) {
     const items = props.items || [];
     const updateItem = (i, field, val) => onChange({ items: items.map((c, idx) => idx === i ? { ...c, [field]: val } : c) });
     const addItem = () => onChange({ items: [...items, { title: 'Nouveau', emoji: '✨', link: '' }] });
     const removeItem = i => onChange({ items: items.filter((_, idx) => idx !== i) });
+
+    const anchors = allSections.map((s, idx) => {
+        const id = s.props?.sectionId || s.id;
+        const rawName = s.props?.title || s.props?.text?.replace(/<[^>]+>/g, '') || `${s.type} ${idx + 1}`;
+        const name = rawName.length > 40 ? rawName.substring(0, 40) + '...' : rawName;
+        return { id, name };
+    }).filter(a => a.id);
 
     return <>
         <Field label="Couleur de fond">
@@ -1024,7 +1031,23 @@ export function IconSummaryEditor({ props, onChange }) {
                     <Field label="Image (remplace l'émoji)">
                         <ImageUploader value={item.imageSrc || ''} onChange={url => updateItem(i, 'imageSrc', url)} folder="pages/icons" />
                     </Field>
-                    <Field label="URL du lien"><input style={inputStyle} value={item.link || ''} onChange={e => updateItem(i, 'link', e.target.value)} placeholder="/p/..." /></Field>
+                    <Field label="URL du lien">
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                            <input style={{...inputStyle, flex: 1}} value={item.link || ''} onChange={e => updateItem(i, 'link', e.target.value)} placeholder="/p/..." />
+                            <select 
+                                style={{...selectStyle, flex: 1}}
+                                value={item.link?.startsWith('#') ? item.link.substring(1) : ''}
+                                onChange={e => {
+                                    if (e.target.value) updateItem(i, 'link', '#' + e.target.value);
+                                }}
+                            >
+                                <option value="">-- Ou choisir un bloc --</option>
+                                {anchors.map(a => (
+                                    <option key={a.id} value={a.id}>{a.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </Field>
                 </div>
             ))}
         </div>

@@ -2,6 +2,21 @@
 
 export const TEMPLATES = [
     {
+        type: 'TitleBlock',
+        label: 'Titre Seul',
+        icon: 'T',
+        description: 'Un bloc titre avec options avancées (taille, police, couleur)',
+        category: 'layout',
+        defaultProps: { 
+            text: 'Votre titre', 
+            htmlTag: 'h2', 
+            textAlign: 'center', 
+            color: '#1F4B40', 
+            fontFamily: 'inherit',
+            fontSize: 'var(--text-3xl)' 
+        },
+    },
+    {
         type: 'ContentHero',
         label: 'Hero / En-tête',
         icon: '🖼️',

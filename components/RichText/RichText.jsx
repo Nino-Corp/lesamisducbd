@@ -1,6 +1,6 @@
 import styles from './RichText.module.css';
 
-export default function RichText({ content, title, textAlign = "left", maxWidth = 800, headingTag = "h2", titleFontFamily = 'inherit', columnCount = 1 }) {
+export default function RichText({ content, title, textAlign = "left", maxWidth = 800, headingTag = "h2", titleFontFamily = 'inherit', titleFontSize = '', titleColor = '', columnCount = 1 }) {
     if (!content) return null;
 
     const Tag = headingTag;
@@ -12,7 +12,7 @@ export default function RichText({ content, title, textAlign = "left", maxWidth 
     return (
         <section className={`${styles.section} ${alignClass}`.trim()} style={{ textAlign }}>
             <div className="container" style={{ maxWidth: `${maxWidth}px`, margin: '0 auto' }}>
-                {title && <Tag className={styles.title} style={{ fontFamily: titleFontFamily }}>{title}</Tag>}
+                {title && <Tag className={styles.title} style={{ fontFamily: titleFontFamily, fontSize: titleFontSize || undefined, color: titleColor || undefined }}>{title}</Tag>}
                 <div
                     className={styles.content}
                     style={{ columnCount: columnCount, columnGap: '40px' }}

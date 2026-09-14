@@ -33,6 +33,8 @@ import OfferComparator from './OfferComparator/OfferComparator';
 import CodeEmbed from './CodeEmbed/CodeEmbed';
 import NewsletterBlock from './NewsletterBlock/NewsletterBlock';
 import ContactFormBlock from './ContactFormBlock/ContactFormBlock';
+import TitleBlock from './TitleBlock/TitleBlock';
+import IconSummary from './IconSummary/IconSummary';
 
 import { EssentielIntro, EssentielCarousel, EssentielPoints } from './EssentielBlocks/EssentielBlocks';
 import { ProHero, ProSteps } from './ProBlocks/ProBlocks';
@@ -58,6 +60,7 @@ const componentMap = {
     JoinUs,
     ScrollReveal,
     RichText,
+    TitleBlock,
     Footer,
     Quote,
     CTABlock,
@@ -71,6 +74,7 @@ const componentMap = {
     CalloutBox,
     RelatedArticles,
     TableOfContents,
+    IconSummary,
     FeaturedProducts,
     OfferComparator,
     CodeEmbed,
@@ -126,9 +130,9 @@ export default function PageBuilder({ sections }) {
                 const componentProps = cleanHtmlStrings(rawProps);
 
                 // Map padding values to px/rem
-                const paddingMap = { none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };
+                const paddingMap = { none: '0px', small: '15px', medium: '30px', large: '50px', xl: '80px' };
                 // Map margin values to px/rem (including negative for pulling blocks together)
-                const marginMap = { 'negative-large': '-80px', 'negative-medium': '-40px', 'negative-small': '-20px', none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };
+                const marginMap = { 'negative-large': '-50px', 'negative-medium': '-30px', 'negative-small': '-15px', none: '0px', small: '15px', medium: '30px', large: '50px', xl: '80px' };
 
                 const wrapperStyle = {};
                 if (paddingTop && paddingMap[paddingTop]) wrapperStyle.paddingTop = paddingMap[paddingTop];
@@ -151,7 +155,7 @@ export default function PageBuilder({ sections }) {
                 return (
                     <div 
                         key={section.id || index} 
-                        id={sectionId || undefined} 
+                        id={sectionId || section.id || undefined} 
                         style={wrapperStyle} 
                         className={classNames.trim() || undefined}
                     >

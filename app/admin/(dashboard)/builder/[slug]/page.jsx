@@ -501,6 +501,7 @@ export default function PageEditor() {
                                         <EditorComponent
                                             props={currentSection.props}
                                             onChange={(newProps) => updateProps(activeSection, newProps)}
+                                            allSections={page.sections}
                                         />
                                         {/* Advanced Options */}
                                         <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px dashed #ccc' }}>
