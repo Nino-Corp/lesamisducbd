@@ -252,7 +252,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                 return <div className={styles.perGramInfo}>{perGramText}</div>;
                             })()}
 
-                            {rewardSettings && (
+                            {false /* TEMPORARILY DISABLED */ && rewardSettings && rewardSettings.ratio > 0 && (
                                 <div style={{
                                     marginTop: '1rem',
                                     padding: '0.75rem',
