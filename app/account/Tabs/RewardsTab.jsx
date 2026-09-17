@@ -243,7 +243,7 @@ export default function RewardsTab() {
                             Le Club VIP se refait une beauté
                         </h2>
                         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', lineHeight: 1.6 }}>
-                            Nous préparons une expérience de fidélité encore plus incroyable. Des récompenses inédites, des avantages exclusifs et bien plus encore arrivent très bientôt.
+                            La fonctionnalité est en travaux mais arrive bientôt pour vous récompenser !
                         </p>
                     </div>
 
