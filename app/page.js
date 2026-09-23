@@ -199,15 +199,18 @@ export default async function Home() {
     
     if (section.id === 'featured-products') {
       if (vitrineFlowersConfigured) {
-        // Admin configured vitrine: use their list (empty = return null = hide section)
         if (flowers.length === 0) return null;
         return { ...section, props: { ...section.props, products: flowers } };
       }
-      // No vitrine config yet: inject dynamic fallback flowers over JSON defaults
       if (flowers.length > 0) {
         return { ...section, props: { ...section.props, products: flowers } };
       }
       return section;
+    }
+
+    if (section.id === 'resins-section') {
+      if (resins.length === 0) return null;
+      return { ...section, props: { ...section.props, products: resins } };
     }
 
     // Inject global content into Header and Footer
@@ -222,7 +225,6 @@ export default async function Home() {
       };
     }
 
-    // If you plan to apply global content to Header later (like phone number)
     if (section.type === 'Header' && globalConfig) {
       return { 
         ...section,
@@ -235,24 +237,6 @@ export default async function Home() {
 
     return section;
   }).filter(Boolean); // filter out null = hidden sections
-
-  // Insert resins section between WhyChooseUs and FAQ
-  if (resins.length > 0) {
-    const whyIdx = sections.findIndex(s => s.type === 'WhyChooseUs');
-    if (whyIdx !== -1) {
-      sections.splice(whyIdx + 1, 0, {
-        id: 'resins-section',
-        type: 'ProductList',
-        props: {
-          title: 'Nos r\u00e9sines phares, pour chaque moment.',
-          description: 'Des r\u00e9sines de CBD soigneusement s\u00e9lectionn\u00e9es pour leur qualit\u00e9 et leur authenticit\u00e9.<br />Black Harsh, Golden Pollen\u2026 chaque r\u00e9sine est un voyage pour les amateurs d\'exp\u00e9riences naturelles et pures.',
-          linkLabel: 'Voir toutes les r\u00e9sines',
-          linkHref: '/produits',
-          products: resins,
-        }
-      });
-    }
-  }
 
   // Analytics: increment view counter
   try {
