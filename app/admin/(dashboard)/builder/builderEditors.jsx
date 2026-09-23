@@ -126,8 +126,12 @@ export function RichTextEditor({ props, onChange }) {
                     <option value="right">Droite</option>
                 </select>
             </Field>
-            <Field label="Largeur max. (px)">
-                <input type="number" style={inputStyle} value={props.maxWidth || 800} onChange={e => onChange({ maxWidth: +e.target.value })} />
+            <Field label="Largeur max.">
+                <select style={selectStyle} value={props.maxWidth || 840} onChange={e => onChange({ maxWidth: e.target.value })}>
+                    <option value={840}>Normale (840px)</option>
+                    <option value={1200}>Large (1200px)</option>
+                    <option value="100%">Pleine largeur (100%)</option>
+                </select>
             </Field>
         </div>
         <Field label="Contenu (HTML)">
@@ -963,14 +967,17 @@ export function ImageCardsGridEditor({ props, onChange }) {
     const removeCard = i => onChange({ cards: cards.filter((_, idx) => idx !== i) });
 
     return <>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
             <Field label="Colonnes">
                 <select style={selectStyle} value={props.columns || 3} onChange={e => onChange({ columns: +e.target.value })}>
-                    {[1, 2, 3].map(n => <option key={n} value={n}>{n} colonnes</option>)}
+                    {[1, 2, 3, 4].map(n => <option key={n} value={n}>{n} colonnes</option>)}
                 </select>
             </Field>
-            <Field label="Couleur de fond globale">
+            <Field label="Fond global">
                 <input type="color" value={props.backgroundColor || '#ffffff'} onChange={e => onChange({ backgroundColor: e.target.value })} style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} />
+            </Field>
+            <Field label="Fond des cartes">
+                <input type="color" value={props.cardBgColor || '#f8f9fa'} onChange={e => onChange({ cardBgColor: e.target.value })} style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} />
             </Field>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>

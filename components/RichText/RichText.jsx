@@ -11,7 +11,7 @@ export default function RichText({ content, title, textAlign = "left", maxWidth 
 
     return (
         <section className={`${styles.section} ${alignClass}`.trim()} style={{ textAlign }}>
-            <div className="container" style={{ maxWidth: `${maxWidth}px`, margin: '0 auto' }}>
+            <div className="container" style={{ maxWidth: isNaN(maxWidth) ? maxWidth : `${maxWidth}px`, margin: '0 auto' }}>
                 {title && <Tag className={styles.title} style={{ fontFamily: titleFontFamily, fontSize: titleFontSize || undefined, color: titleColor || undefined }}>{title}</Tag>}
                 <div
                     className={styles.content}

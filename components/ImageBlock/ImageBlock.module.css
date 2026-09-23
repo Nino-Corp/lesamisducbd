@@ -8,11 +8,18 @@
     text-align: center;
 }
 
-.image {
-    width: 100%;
-    border-radius: 16px;
-    display: block;
-    object-fit: cover;
+/* Full Width Variant */
+.fullWidthSection {
+    padding: 0;
+    overflow: hidden; /* Prevent zoom overflow horizontally */
+}
+.fullWidthWrapper {
+    max-width: 100%;
+}
+.fullWidthImage {
+    border-radius: 0;
+    width: 100% !important; /* Fixed overflow issue */
+    max-width: 100%;
 }
 
 .caption {
@@ -22,14 +29,17 @@
     font-style: italic;
 }
 
-/* Full Width Variant */
-.fullWidthSection {
-    padding: 0;
+/* Hover Zoom Effect */
+.image {
+    width: 100%;
+    border-radius: 16px;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.4s ease-out;
 }
-.fullWidthWrapper {
-    max-width: 100%;
-}
-.fullWidthImage {
-    border-radius: 0;
-    width: 100vw !important;
+
+@media (hover: hover) {
+    .image:hover {
+        transform: scale(1.03);
+    }
 }

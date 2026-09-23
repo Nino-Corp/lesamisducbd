@@ -21,13 +21,14 @@ export default function ImageCardsGrid({
             linkUrl: '/notre-histoire'
         }
     ],
-    backgroundColor = "transparent"
+    backgroundColor = "transparent",
+    cardBgColor = "#f8f9fa"
 }) {
     return (
         <section className={styles.section} style={{ backgroundColor }}>
             <div className={styles.grid} style={{ gridTemplateColumns: `repeat(${Math.min(columns, 4)}, 1fr)` }}>
                 {cards.map((card, i) => (
-                    <div key={i} className={styles.card}>
+                    <div key={i} className={styles.card} style={{ backgroundColor: cardBgColor }}>
                         {card.heroImage && (
                             <div className={styles.imageContainer}>
                                 <Image 

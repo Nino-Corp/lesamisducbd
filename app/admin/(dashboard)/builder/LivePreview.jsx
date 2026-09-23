@@ -41,9 +41,11 @@ import { RecrutementText, RecrutementJobs, RecrutementContact } from '@/componen
 import DeliverySteps from '@/components/LivraisonBlocks/DeliverySteps';
 import ContactFormBlock from '@/components/ContactFormBlock/ContactFormBlock';
 import NewsletterBlock from '@/components/NewsletterBlock/NewsletterBlock';
+import TitleBlock from '@/components/TitleBlock/TitleBlock';
 import { useState, memo, useMemo } from 'react';
 
 const PREVIEW_COMPONENTS = {
+    TitleBlock,
     ContentHero,
     RichText,
     ImageBlock,
