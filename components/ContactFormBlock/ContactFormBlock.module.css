@@ -1,6 +1,6 @@
 .container {
     padding: 60px 20px;
-    background: #ffffff;
+    background: #e3fff8;
     display: flex;
     justify-content: center;
     font-family: var(--font-outfit), sans-serif;
@@ -55,7 +55,7 @@
     border-radius: 12px;
     font-size: 1rem;
     outline: none;
-    background: #fff;
+    background: #e3fff8;
     transition: all 0.2s;
     font-family: inherit;
 }

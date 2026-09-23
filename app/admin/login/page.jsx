@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function AdminLogin() {
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
@@ -18,7 +19,7 @@ export default function AdminLogin() {
             const res = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password }),
+                body: JSON.stringify({ username, password }),
             });
 
             const data = await res.json();
@@ -63,6 +64,28 @@ export default function AdminLogin() {
                 <div style={{ textAlign: 'center' }}>
                     <h1 style={{ color: '#00FF94', fontSize: '2rem', fontWeight: '800', margin: '0 0 10px 0', letterSpacing: '-1px' }}>ADMIN</h1>
                     <p style={{ color: 'rgba(255, 255, 255, 0.6)', margin: 0 }}>Espace de gestion Les Amis du CBD</p>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    <label style={{ fontSize: '0.85rem', fontWeight: '600', color: '#00FF94', marginLeft: '5px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Identifiant</label>
+                    <input
+                        type="text"
+                        placeholder="nelson"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        style={{
+                            padding: '1.25rem',
+                            borderRadius: '16px',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            fontSize: '1rem',
+                            outline: 'none',
+                            background: 'rgba(0, 0, 0, 0.2)',
+                            color: 'white',
+                            transition: 'all 0.2s',
+                            boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)',
+                            width: '100%'
+                        }}
+                    />
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>

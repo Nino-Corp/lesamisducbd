@@ -8,7 +8,7 @@ export default function TwoColumns({
     imageAlt = "",
     imagePosition = "right",
     imageWidth = 50,
-    backgroundColor = "#ffffff",
+    backgroundColor = "#e3fff8",
     buttonText = "",
     buttonLink = "",
     headingTag = "h2",

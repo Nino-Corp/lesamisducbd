@@ -22,7 +22,7 @@ export default function ImageCardsGrid({
         }
     ],
     backgroundColor = "transparent",
-    cardBgColor = "#f8f9fa"
+    cardBgColor = "#e3fff8"
 }) {
     return (
         <section className={styles.section} style={{ backgroundColor }}>
@@ -46,7 +46,7 @@ export default function ImageCardsGrid({
                                 </div>
                             )}
                             <h3 className={styles.title}>{card.title}</h3>
-                            <p className={styles.description} dangerouslySetInnerHTML={{ __html: card.description }}></p>
+                            <div className={styles.description} dangerouslySetInnerHTML={{ __html: card.description }}></div>
                             {card.linkText && (
                                 <Link href={card.linkUrl || '#'} className={styles.link}>
                                     {card.linkText} <span className={styles.arrow}>→</span>

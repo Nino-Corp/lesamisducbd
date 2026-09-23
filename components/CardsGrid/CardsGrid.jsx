@@ -16,7 +16,7 @@ export default function CardsGrid({
         { icon: 'star', title: 'Deuxième carte', text: 'Description courte.' },
         { icon: 'shield', title: 'Troisième carte', text: 'Description courte.' },
     ],
-    backgroundColor = "#f8f9fa",
+    backgroundColor = "#e3fff8",
     cardStyle = "shadow",
     headingTag = "h2",
     titleFontFamily = "inherit",
@@ -41,7 +41,7 @@ export default function CardsGrid({
                             key={i} 
                             className={`${styles.card} ${cardStyle === 'border' ? styles.cardBorder : styles.cardShadow}`}
                             style={{ 
-                                backgroundColor: card.bgColor || '#fff', 
+                                backgroundColor: card.bgColor || '#e3fff8', 
                                 color: card.textColor || 'inherit' 
                             }}
                         >

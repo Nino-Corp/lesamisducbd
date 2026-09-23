@@ -2,10 +2,13 @@
 import Link from 'next/link';
 import styles from './AdminLayout.module.css';
 import LogoutButton from './LogoutButton';
+import { getSession } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
-export default function DashboardLayout({ children }) {
+export default async function DashboardLayout({ children }) {
+    const session = await getSession();
+    
     return (
         <div className={styles.container}>
             <aside className={styles.sidebar}>
@@ -16,6 +19,9 @@ export default function DashboardLayout({ children }) {
                     <Link href="/admin/products" className={styles.link}>Produits</Link>
                     <Link href="/admin/partners" className={styles.link}>Professionnels</Link>
                     <Link href="/admin/analytics" className={styles.link}>Statistiques</Link>
+                    {session?.role === 'superadmin' && (
+                        <Link href="/admin/users" className={styles.link}>Accès & Sécurité</Link>
+                    )}
                     <Link href="/" className={styles.link}>Voir le site</Link>
                     <LogoutButton />
                 </nav>

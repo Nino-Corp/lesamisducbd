@@ -49,9 +49,9 @@ export const TEMPLATES = [
         defaultProps: {
             title: '', subtitle: '', columns: 3, cardStyle: 'shadow', headerAlign: 'center', titleFontFamily: 'inherit',
             cards: [
-                { icon: 'leaf', imageSrc: '', bgColor: '#ffffff', textColor: 'inherit', title: 'Titre', text: 'Description.' },
-                { icon: 'star', imageSrc: '', bgColor: '#ffffff', textColor: 'inherit', title: 'Titre', text: 'Description.' },
-                { icon: 'shield', imageSrc: '', bgColor: '#ffffff', textColor: 'inherit', title: 'Titre', text: 'Description.' },
+                { icon: 'leaf', imageSrc: '', bgColor: '#e3fff8', textColor: 'inherit', title: 'Titre', text: 'Description.' },
+                { icon: 'star', imageSrc: '', bgColor: '#e3fff8', textColor: 'inherit', title: 'Titre', text: 'Description.' },
+                { icon: 'shield', imageSrc: '', bgColor: '#e3fff8', textColor: 'inherit', title: 'Titre', text: 'Description.' },
             ]
         },
     },
@@ -63,7 +63,7 @@ export const TEMPLATES = [
         category: 'content',
         defaultProps: {
             columns: 3,
-            backgroundColor: '#ffffff',
+            backgroundColor: 'transparent',
             cards: [
                 { heroImage: '', icon: 'users', title: 'Titre', description: 'Description', linkText: 'Découvrir', linkUrl: '#' }
             ]

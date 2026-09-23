@@ -52,7 +52,16 @@ export default async function middleware(req) {
         }
 
         try {
-            await jwtVerify(token, key, { algorithms: ['HS256'] });
+            const { payload } = await jwtVerify(token, key, { algorithms: ['HS256'] });
+            
+            // Check for superadmin routes
+            if (pathname.startsWith('/admin/users')) {
+                if (payload.role !== 'superadmin') {
+                    // Redirect non-superadmins back to the main dashboard
+                    return NextResponse.redirect(new URL('/admin/content', req.url));
+                }
+            }
+            
             return NextResponse.next();
         } catch (e) {
             console.error('Middleware Admin JWT Error:', e.message);

@@ -42,7 +42,43 @@ import DeliverySteps from '@/components/LivraisonBlocks/DeliverySteps';
 import ContactFormBlock from '@/components/ContactFormBlock/ContactFormBlock';
 import NewsletterBlock from '@/components/NewsletterBlock/NewsletterBlock';
 import TitleBlock from '@/components/TitleBlock/TitleBlock';
-import { useState, memo, useMemo } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
+import { createPortal } from 'react-dom';
+
+function IFramePreview({ children, style }) {
+    const iframeRef = useRef();
+    const [mountNode, setMountNode] = useState(null);
+
+    useEffect(() => {
+        const doc = iframeRef.current?.contentDocument;
+        if (doc) {
+            const head = doc.head;
+            // Clone all style and link tags from parent head
+            document.head.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => {
+                head.appendChild(el.cloneNode(true));
+            });
+            // Add a base style to match the body
+            const baseStyle = doc.createElement('style');
+            baseStyle.innerHTML = `
+                body { margin: 0; background: #fff; overflow-x: hidden; }
+                * { box-sizing: border-box; }
+            `;
+            head.appendChild(baseStyle);
+            
+            // Copy parent body classes for next/font to work
+            doc.body.className = document.body.className;
+            
+            setMountNode(doc.body);
+        }
+    }, []);
+
+    return (
+        <iframe ref={iframeRef} style={style} frameBorder="0">
+            {mountNode && createPortal(children, mountNode)}
+        </iframe>
+    );
+}
+
 
 const PREVIEW_COMPONENTS = {
     TitleBlock,
@@ -126,6 +162,7 @@ const LivePreview = memo(function LivePreview({
     let frameStyles = { 
         background: '#fff', 
         minHeight: '100%', 
+        display: 'block',
         marginTop: '0px',
         marginBottom: '0px',
         marginLeft: 'auto',
@@ -135,8 +172,6 @@ const LivePreview = memo(function LivePreview({
     
     if (previewMode === 'desktop') {
         frameStyles = { ...frameStyles, transform: 'scale(0.75)', transformOrigin: 'top center', width: '133%', marginLeft: '-16.5%' };
-    } else if (previewMode === 'tablet') {
-        frameStyles = { ...frameStyles, width: '768px', marginTop: '40px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' };
     } else if (previewMode === 'mobile') {
         frameStyles = { ...frameStyles, width: '375px', height: '667px', overflowY: 'auto', marginTop: '40px', borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', border: '8px solid #333' };
     }
@@ -147,7 +182,6 @@ const LivePreview = memo(function LivePreview({
             <div style={{ position: 'sticky', top: '12px', left: '0', right: '0', display: 'flex', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
                 <div style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(10px)', padding: '4px', borderRadius: '99px', display: 'flex', gap: '4px', pointerEvents: 'auto', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', alignItems: 'center' }}>
                     <button onClick={() => setPreviewMode('desktop')} style={{ background: previewMode === 'desktop' ? '#fff' : 'transparent', color: previewMode === 'desktop' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>💻 PC</button>
-                    <button onClick={() => setPreviewMode('tablet')} style={{ background: previewMode === 'tablet' ? '#fff' : 'transparent', color: previewMode === 'tablet' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>📱 Tablette</button>
                     <button onClick={() => setPreviewMode('mobile')} style={{ background: previewMode === 'mobile' ? '#fff' : 'transparent', color: previewMode === 'mobile' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>📱 Mobile</button>
                     
                     <div style={{ width: '1px', background: 'rgba(255,255,255,0.2)', height: '16px', margin: '0 4px' }}></div>
@@ -160,8 +194,8 @@ const LivePreview = memo(function LivePreview({
                 </div>
             </div>
 
-            <div style={frameStyles}>
-                {sections.map((section, i) => {
+            {(() => {
+                const renderSection = (section, i) => {
                     const Component = PREVIEW_COMPONENTS[section.type];
                     const isActive = activeIndex === i;
                     const isHidden = section.props?.isVisible === false;
@@ -233,7 +267,6 @@ const LivePreview = memo(function LivePreview({
                             )}
                             {Component ? (
                                 (() => {
-                                    // Utility to recursively clean &nbsp; from all string props
                                     const cleanHtmlStrings = (obj) => {
                                         if (typeof obj === 'string') return obj.replace(/&nbsp;/g, ' ');
                                         if (Array.isArray(obj)) return obj.map(cleanHtmlStrings);
@@ -255,7 +288,6 @@ const LivePreview = memo(function LivePreview({
                                         ];
                                     }
 
-                                    // Intercept rendering for legal pages to match their custom client-side designs
                                     const isLegalPage = ['cgv', 'livraison', 'mentions', 'privacy'].includes(pageKey);
                                     if (isLegalPage) {
                                         if (section.type === 'ContentHero') {
@@ -297,8 +329,18 @@ const LivePreview = memo(function LivePreview({
                             )}
                         </div>
                     );
-                })}
-            </div>
+                };
+
+                return previewMode === 'mobile' ? (
+                    <IFramePreview style={frameStyles}>
+                        {sections.map((section, i) => renderSection(section, i))}
+                    </IFramePreview>
+                ) : (
+                    <div style={frameStyles}>
+                        {sections.map((section, i) => renderSection(section, i))}
+                    </div>
+                );
+            })()}
         </div>
     );
 });

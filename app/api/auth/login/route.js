@@ -1,7 +1,8 @@
 
 import { signToken } from '@/lib/auth';
 import { NextResponse } from 'next/server';
-
+import { kv } from '@vercel/kv';
+import crypto from 'crypto';
 
 // Simple in-memory rate limiter
 const rateLimit = new Map();
@@ -25,38 +26,46 @@ export async function POST(request) {
     }
 
     const body = await request.json();
-    const { password } = body;
+    const { username, password } = body;
 
-    // Secure Password Check
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-
-    if (!ADMIN_PASSWORD) {
-        console.error('CRITICAL: ADMIN_PASSWORD is not set in environment variables.');
-        return NextResponse.json({ success: false, message: 'Configuration error' }, { status: 500 });
+    if (!username || !password) {
+        return NextResponse.json({ success: false, message: 'Identifiants manquants' }, { status: 400 });
     }
 
-    if (password === ADMIN_PASSWORD) {
-        // Reset attempts on success
-        rateLimit.delete(ip);
+    try {
+        const users = await kv.get('admin_users') || [];
+        const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
 
-        const token = await signToken({ role: 'admin' });
+        if (user) {
+            const hash = crypto.createHash('sha256').update(password).digest('hex');
+            
+            if (hash === user.passwordHash) {
+                // Reset attempts on success
+                rateLimit.delete(ip);
 
-        const response = NextResponse.json({ success: true });
+                const token = await signToken({ role: user.role, username: user.username });
 
-        response.cookies.set('admin_token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            path: '/',
-            maxAge: 60 * 60 * 2 // 2 hours
-        });
+                const response = NextResponse.json({ success: true, role: user.role });
 
-        return response;
+                response.cookies.set('admin_token', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'lax',
+                    path: '/',
+                    maxAge: 60 * 60 * 2 // 2 hours
+                });
+
+                return response;
+            }
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        return NextResponse.json({ success: false, message: 'Erreur serveur' }, { status: 500 });
     }
 
     // Increment attempts on failure
     record.count += 1;
     rateLimit.set(ip, record);
 
-    return NextResponse.json({ success: false, message: 'Mot de passe incorrect' }, { status: 401 });
+    return NextResponse.json({ success: false, message: 'Identifiant ou mot de passe incorrect' }, { status: 401 });
 }

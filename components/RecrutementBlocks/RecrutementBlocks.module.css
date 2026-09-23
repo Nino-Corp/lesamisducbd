@@ -58,7 +58,7 @@
 
 .contactButton {
     display: inline-block;
-    background-color: white;
+    background-color: #e3fff8;
     color: #1F4B40;
     font-weight: 600;
     font-size: 1.1rem;
@@ -98,7 +98,7 @@
 }
 
 .jobCard {
-    background: white;
+    background: #e3fff8;
     border-radius: 16px;
     padding: 2rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);

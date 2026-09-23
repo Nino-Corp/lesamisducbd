@@ -5,7 +5,7 @@
 .container {
     max-width: 760px;
     margin: 0 auto;
-    background: linear-gradient(135deg, #f0fdf4, #fff);
+    background: #e3fff8;
     border: 1px solid #d1fae5;
     border-left: 4px solid #1F4B40;
     border-radius: 14px;
