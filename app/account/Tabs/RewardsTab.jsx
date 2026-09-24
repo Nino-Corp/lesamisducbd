@@ -63,19 +63,31 @@ export default function RewardsTab() {
 
     const loadData = async () => {
         try {
-            const res = await fetch('/api/rewards?action=get_dashboard');
-            const json = await res.json();
+            const [dashRes, settingsRes] = await Promise.all([
+                fetch('/api/rewards?action=get_dashboard'),
+                fetch('/api/rewards?action=get_settings')
+            ]);
+            
+            const json = await dashRes.json();
+            const settingsJson = await settingsRes.json();
 
             // If it successfully loads but points is 0 and no vouchers, it's normal.
             if (json.success || typeof json.points_available !== 'undefined') {
-                setData(json);
+                const combinedData = { ...json };
+                if (settingsJson.success) {
+                    combinedData.ratio = settingsJson.ratio || 1;
+                    combinedData.value = settingsJson.value || 1;
+                }
+                setData(combinedData);
             } else if (json.error) {
                 // Si l'erreur vient de notre backend (ex: pas de legacy_ps_id), on gère silencieusement
                 setData({
                     points_available: 0,
                     value_available: 0,
                     sponsorship_code: '',
-                    vouchers: []
+                    vouchers: [],
+                    ratio: settingsJson.success ? settingsJson.ratio : 1,
+                    value: settingsJson.success ? settingsJson.value : 1
                 });
             } else {
                 setMessage({ type: 'error', text: 'Impossible de charger vos points.' });
@@ -198,68 +210,7 @@ export default function RewardsTab() {
         '--mouseY': `${tilt.mouseY}%`
     };
 
-    // TEMPORARY COMING SOON UI
-    return (
-        <div className={styles.container} style={{ alignItems: 'center', justifyContent: 'center', minHeight: '60vh', padding: '2rem 1rem' }}>
-            <div style={{
-                position: 'relative',
-                background: 'linear-gradient(135deg, #112924, #1F4B40)',
-                borderRadius: '24px',
-                padding: '3rem 2rem',
-                maxWidth: '500px',
-                width: '100%',
-                textAlign: 'center',
-                color: 'white',
-                boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,255,148,0.2)',
-                overflow: 'hidden'
-            }}>
-                <div style={{
-                    position: 'absolute',
-                    top: '-50%',
-                    left: '-50%',
-                    width: '200%',
-                    height: '200%',
-                    background: 'conic-gradient(from 0deg, transparent 0 340deg, rgba(0,255,148,0.4) 360deg)',
-                    animation: 'spin 4s linear infinite',
-                    opacity: 0.8,
-                    pointerEvents: 'none'
-                }} />
-                <div style={{
-                    position: 'absolute', inset: '2px', background: 'linear-gradient(135deg, #112924, #183b32)', borderRadius: '22px', zIndex: 1
-                }} />
-                
-                <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
-                    <div style={{ 
-                        width: '80px', height: '80px', borderRadius: '20px', background: 'rgba(0,255,148,0.1)', 
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        boxShadow: '0 0 20px rgba(0,255,148,0.2), inset 0 0 10px rgba(0,255,148,0.1)',
-                        border: '1px solid rgba(0,255,148,0.3)'
-                    }}>
-                        <Gift size={40} color="#00FF94" />
-                    </div>
-                    
-                    <div>
-                        <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '0.75rem', background: 'linear-gradient(90deg, #fff, #00FF94)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight: 1.2 }}>
-                            Le Club VIP se refait une beauté
-                        </h2>
-                        <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', lineHeight: 1.6 }}>
-                            La fonctionnalité est en travaux mais arrive bientôt pour vous récompenser !
-                        </p>
-                    </div>
 
-                    <div style={{ 
-                        display: 'inline-flex', alignItems: 'center', gap: '8px', 
-                        padding: '10px 20px', background: 'rgba(255,255,255,0.05)', 
-                        borderRadius: '99px', fontSize: '0.9rem', fontWeight: 600,
-                        border: '1px solid rgba(255,255,255,0.1)', marginTop: '0.5rem'
-                    }}>
-                        <span className={styles.pulseDot} style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00FF94', boxShadow: '0 0 10px #00FF94' }}></span>
-                        En cours de développement...
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
 
     return (
         <div className={styles.container}>

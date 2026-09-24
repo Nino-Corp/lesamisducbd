@@ -70,7 +70,7 @@ export default function AdminLogin() {
                     <label style={{ fontSize: '0.85rem', fontWeight: '600', color: '#00FF94', marginLeft: '5px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Identifiant</label>
                     <input
                         type="text"
-                        placeholder="nelson"
+                        placeholder=""
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         style={{
