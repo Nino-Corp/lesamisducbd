@@ -32,7 +32,7 @@
 
 @media (min-width: 1025px) {
     .floatingPanel {
-        top: 100px;
+        top: 70px;
         left: 24px;
         width: 380px;
         max-height: calc(100% - 124px);
