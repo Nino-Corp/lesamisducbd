@@ -3,15 +3,15 @@
 import { useState, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import styles from './StoreLocator.module.css';
-import { Search, MapPin, Loader2, Navigation } from 'lucide-react';
+import { Search, MapPin, Loader2, Navigation, Compass } from 'lucide-react';
 
 // Dynamic import for the Map to avoid SSR errors with Leaflet
 const StoreMap = dynamic(() => import('./StoreMap'), {
     ssr: false,
     loading: () => (
-        <div className={styles.loader}>
+        <div className={styles.mapLoader}>
             <Loader2 className="animate-spin" size={40} />
-            <p>Chargement de la carte...</p>
+            <p>Chargement de la carte interactive...</p>
         </div>
     ),
 });
@@ -37,6 +37,7 @@ export default function StoreLocator({ subtitle = true }) {
     const [nearbyPartners, setNearbyPartners] = useState([]);
     const [isSearchingNearby, setIsSearchingNearby] = useState(false);
     const [isLocating, setIsLocating] = useState(false);
+    const [isPanelExpanded, setIsPanelExpanded] = useState(false);
 
     useEffect(() => {
         const fetchPartners = async () => {
@@ -72,18 +73,13 @@ export default function StoreLocator({ subtitle = true }) {
                 })).sort((a, b) => a.distance - b.distance);
 
                 setSearchQuery(''); // Clear manual search
-                setNearbyPartners(withDistance.slice(0, 5)); // Show 5 closest
-                setIsSearchingNearby(true);
+                setNearbyPartners(withDistance.slice(0, 10)); // Show 10 closest
+                setIsSearchingNearby(false); // Fix: Set to false since the search is done
                 setIsLocating(false);
 
-                // Auto-select the absolute closest one if within reasonable distance (e.g. 50km)
+                // Auto-select the absolute closest one if within reasonable distance (e.g. 80km)
                 if (withDistance[0] && withDistance[0].distance < 80) {
-                    handlePartnerClick(withDistance[0]);
-                }
-
-                // On mobile, scroll to results
-                if (window.innerWidth < 1024) {
-                    document.getElementById('map-wrapper')?.scrollIntoView({ behavior: 'smooth' });
+                    setActivePartner(withDistance[0]);
                 }
             },
             (error) => {
@@ -95,7 +91,7 @@ export default function StoreLocator({ subtitle = true }) {
                 alert(msg);
                 setIsLocating(false);
             },
-            { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 } // Accuracy false for better success rate on slow networks
+            { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 }
         );
     };
 
@@ -116,11 +112,10 @@ export default function StoreLocator({ subtitle = true }) {
                     distance: getDistance(lat, lon, p.lat, p.lng)
                 })).sort((a, b) => a.distance - b.distance);
 
-                setNearbyPartners(withDistance.slice(0, 3));
+                setNearbyPartners(withDistance.slice(0, 5));
 
-                // If we found results, select the first one to move map
                 if (withDistance[0]) {
-                    handlePartnerClick(withDistance[0]);
+                    setActivePartner(withDistance[0]);
                 }
             }
         } catch (err) {
@@ -131,48 +126,36 @@ export default function StoreLocator({ subtitle = true }) {
     };
 
     const filteredPartners = useMemo(() => {
-        if (!searchQuery) return partners;
+        if (!searchQuery) return [];
         const query = searchQuery.toLowerCase().trim();
-
-        // Si on a tapé quelque chose, on désactive le mode "Autour de moi"
-        // (Note: on ne peut pas appeler de setState dans useMemo, donc on gère displayPartners plus bas)
 
         return partners.filter(p => {
             const nameMatch = p.name.toLowerCase().includes(query);
             const cityMatch = p.city.toLowerCase().includes(query);
             const zipMatch = p.zip.includes(query);
 
-            // Special handling for general zip codes (13000 -> Marseille)
             let prefixMatch = false;
             if (query.length >= 2 && /^\d+$/.test(query)) {
-                // If query is the start of the zip code
                 prefixMatch = p.zip.startsWith(query);
-
-                // Specifically handle cases like 13000 matching 13015
                 if (query.endsWith('000')) {
                     prefixMatch = p.zip.startsWith(query.substring(0, 2));
                 } else if (query.endsWith('00')) {
                     prefixMatch = p.zip.startsWith(query.substring(0, 3));
                 }
             }
-
             return nameMatch || cityMatch || zipMatch || prefixMatch;
         });
     }, [partners, searchQuery]);
 
-    // Clear "Nearby" results if user starts typing manually
     useEffect(() => {
         if (searchQuery.length > 0 && isSearchingNearby && nearbyPartners.length > 0) {
-            // We set nearbyPartners to empty when typing manually
             setNearbyPartners([]);
             setIsSearchingNearby(false);
         }
     }, [searchQuery, isSearchingNearby, nearbyPartners.length]);
 
-    // Handle Nominatim Geocoding Fallback if 0 results
     useEffect(() => {
         const timer = setTimeout(async () => {
-            // Only trigger Nominatim if we are NOT in the middle of a "Locate Me" action
             if (searchQuery.length > 2 && filteredPartners.length === 0 && !isLocating) {
                 setIsSearchingNearby(true);
                 try {
@@ -187,7 +170,7 @@ export default function StoreLocator({ subtitle = true }) {
                             distance: getDistance(lat, lon, p.lat, p.lng)
                         })).sort((a, b) => a.distance - b.distance);
 
-                        setNearbyPartners(withDistance.slice(0, 3));
+                        setNearbyPartners(withDistance.slice(0, 5));
                     }
                 } catch (err) {
                     console.error("Geocoding fallback failed", err);
@@ -200,128 +183,114 @@ export default function StoreLocator({ subtitle = true }) {
         return () => clearTimeout(timer);
     }, [searchQuery, filteredPartners.length, partners, isLocating]);
 
-    const handlePartnerClick = (partner) => {
-        setActivePartner(partner);
-        if (window.innerWidth < 1024) {
-            document.getElementById('map-wrapper')?.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
+    const displayList = searchQuery.trim().length > 0 ? (filteredPartners.length > 0 ? filteredPartners : nearbyPartners) : nearbyPartners;
 
-    const displayPartners = filteredPartners.length > 0 ? filteredPartners : nearbyPartners;
-    const hasInteracted = searchQuery.trim().length > 0 || nearbyPartners.length > 0 || activePartner !== null || isLocating;
     return (
         <section className={styles.locatorContainer}>
-            <header className={styles.header}>
-                <h1 className={styles.title}>Nos Partenaires</h1>
-                {subtitle && (
-                    <p className={styles.subtitle}>
-                        Retrouvez Les Amis du CBD chez nos partenaires professionnels.
-                    </p>
-                )}
-            </header>
-
-            <div className={styles.searchBox}>
-                <div className={styles.searchInputWrapper}>
-                    <Search className={styles.searchIcon} size={20} />
-                    <input
-                        type="text"
-                        placeholder="Ville, code postal..."
-                        className={styles.searchInput}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                if (filteredPartners.length > 0) {
-                                    handlePartnerClick(filteredPartners[0]);
-                                } else {
-                                    triggerNominatimSearch();
-                                }
-                                e.target.blur(); // Hide mobile keyboard
-                            }
-                        }}
-                    />
-                    <button
-                        className={styles.locateButton}
-                        onClick={handleLocateMe}
-                        title="Autour de moi"
-                        disabled={isLocating}
-                    >
-                        {isLocating ? <Loader2 className="animate-spin" size={20} /> : <MapPin size={20} />}
-                    </button>
-                </div>
+            {/* Map is always visible and covers 100% of the container */}
+            <div className={styles.mapLayer}>
+                <StoreMap
+                    partners={partners} // Always pass all partners for clustering
+                    activePartner={activePartner}
+                    onPartnerClick={setActivePartner}
+                />
             </div>
 
-            <div className={`${styles.layout} ${hasInteracted ? styles.hasInteracted : styles.noInteraction}`}>
-                <aside className={styles.sidebar}>
+            {/* Modern Floating Widget */}
+            <aside className={`${styles.floatingPanel} ${isPanelExpanded ? styles.expanded : ''}`}>
+                <div 
+                    className={styles.panelHeader} 
+                    onClick={() => {
+                        if (window.innerWidth <= 1024) setIsPanelExpanded(!isPanelExpanded);
+                    }}
+                    style={{ cursor: 'pointer' }}
+                >
+                    <h1 className={styles.title}>Nos Partenaires</h1>
+                    {subtitle && (
+                        <p className={styles.subtitle}>
+                            Trouvez une boutique CBD près de chez vous.
+                        </p>
+                    )}
+                    
+                    <div className={styles.searchBox}>
+                        <Search className={styles.searchIcon} size={20} />
+                        <input
+                            type="text"
+                            placeholder="Ville, code postal..."
+                            className={styles.searchInput}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    if (filteredPartners.length > 0) {
+                                        setActivePartner(filteredPartners[0]);
+                                    } else {
+                                        triggerNominatimSearch();
+                                    }
+                                    e.target.blur(); 
+                                }
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                        <button
+                            className={styles.locateButton}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleLocateMe();
+                            }}
+                            title="Me géolocaliser"
+                            disabled={isLocating}
+                        >
+                            {isLocating ? <Loader2 className="animate-spin" size={18} /> : <Navigation size={18} />}
+                        </button>
+                    </div>
+                </div>
+
+                <div className={styles.resultsScrollArea}>
                     <div className={styles.resultsCount}>
                         {isSearchingNearby ? (
-                            "Recherche des points les plus proches..."
-                        ) : filteredPartners.length > 0 ? (
-                            `${filteredPartners.length} point(s) de vente trouvé(s)`
+                            "Recherche en cours..."
+                        ) : searchQuery.length > 0 ? (
+                            displayList.length > 0 ? `${displayList.length} boutique(s) trouvée(s)` : "Aucune boutique trouvée"
                         ) : nearbyPartners.length > 0 ? (
-                            "Aucun résultat précis, voici les plus proches :"
+                            "Boutiques autour de vous"
                         ) : (
-                            "0 point de vente trouvé"
+                            "Explorez la carte ou lancez une recherche"
                         )}
                     </div>
 
                     <div className={styles.resultsList}>
                         {isLoading ? (
                             <div className={styles.loader}>
-                                <Loader2 className="animate-spin" size={30} />
+                                <Loader2 className="animate-spin" size={28} />
                             </div>
-                        ) : !hasInteracted && window.innerWidth < 1024 ? (
-                            <div className={styles.emptyState}>
-                                <p>Entrez une ville pour voir les points de vente.</p>
-                            </div>
-                        ) : displayPartners.length === 0 && !isSearchingNearby ? (
-                            <div className={styles.emptyState}>
-                                <p>Aucun partenaire trouvé pour cette recherche.</p>
-                            </div>
-                        ) : (
-                            displayPartners.map(partner => (
+                        ) : displayList.length > 0 ? (
+                            displayList.map(partner => (
                                 <div
                                     key={partner.id}
                                     className={`${styles.partnerCard} ${activePartner?.id === partner.id ? styles.active : ''}`}
-                                    onClick={() => handlePartnerClick(partner)}
+                                    onClick={() => setActivePartner(partner)}
                                 >
-                                    <h3>{partner.name}</h3>
-                                    <p>{partner.address}, {partner.zip} {partner.city}</p>
+                                    <div className={styles.partnerInfo}>
+                                        <h3>{partner.name}</h3>
+                                        <p>{partner.address}</p>
+                                        <p className={styles.cityLine}>{partner.zip} {partner.city}</p>
+                                    </div>
                                     {partner.distance && (
-                                        <div className={styles.distance}>À {partner.distance.toFixed(1)} km</div>
+                                        <div className={styles.distanceBadge}>{partner.distance.toFixed(1)} km</div>
                                     )}
                                 </div>
                             ))
-                        )}
-                    </div>
-                </aside>
-
-                <main id="map-wrapper" className={styles.mapWrapper}>
-                    {hasInteracted ? (
-                        <StoreMap
-                            partners={displayPartners}
-                            activePartner={activePartner}
-                            onPartnerClick={setActivePartner}
-                        />
-                    ) : (
-                        <div className={styles.mapPlaceholder}>
-                            <div className={styles.placeholderIconWrapper}>
-                                <MapPin size={48} className={styles.placeholderIcon} />
-                                <div className={styles.pulseRing}></div>
+                        ) : !searchQuery && nearbyPartners.length === 0 ? (
+                            <div className={styles.emptyState}>
+                                <Compass size={40} className={styles.emptyIcon} />
+                                <p>Recherchez une ville ou activez la géolocalisation.</p>
                             </div>
-                            <h2>Où êtes-vous ?</h2>
-                            <p>Entrez une ville ou utilisez la géolocalisation pour trouver le point de vente le plus proche.</p>
-                            <button
-                                className={styles.placeholderBtn}
-                                onClick={() => document.querySelector(`.${styles.searchInput}`).focus()}
-                            >
-                                Rechercher une boutique
-                            </button>
-                        </div>
-                    )}
-                </main>
-            </div>
+                        ) : null}
+                    </div>
+                </div>
+            </aside>
         </section>
     );
 }

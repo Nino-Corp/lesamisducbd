@@ -4,22 +4,59 @@ import { useRef, useEffect, useMemo, useCallback } from 'react';
 import Map, { Source, Layer, Marker, Popup, NavigationControl } from 'react-map-gl/maplibre';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import styles from './StoreLocator.module.css';
 
 const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
-const BRAND_ICON_URL = '/icon.png';
 
-// Cluster layer styles
+// --- Modern Apple-style SVG Pin Generator ---
+const createPinIcon = () => {
+    const svg = `<svg width="44" height="54" viewBox="0 0 44 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="6" stdDeviation="4" flood-color="#000" flood-opacity="0.15"/>
+        </filter>
+        <path filter="url(#shadow)" d="M22 6C11.5 6 3 14.5 3 25C3 39.25 22 50 22 50C22 50 41 39.25 41 25C41 14.5 32.5 6 22 6Z" fill="#112924" stroke="#ffffff" stroke-width="3"/>
+        <circle cx="22" cy="24" r="6" fill="#00FF94"/>
+    </svg>`;
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+};
+
+// --- Cluster Styles ---
+const clusterShadowLayer = {
+    id: 'cluster-shadow',
+    type: 'circle',
+    source: 'partners',
+    filter: ['has', 'point_count'],
+    paint: {
+        'circle-color': '#000000',
+        'circle-radius': ['step', ['get', 'point_count'], 22, 10, 26, 50, 32],
+        'circle-blur': 1,
+        'circle-opacity': 0.15,
+        'circle-translate': [0, 6]
+    }
+};
+
 const clusterLayer = {
     id: 'clusters',
     type: 'circle',
     source: 'partners',
     filter: ['has', 'point_count'],
     paint: {
-        'circle-color': ['step', ['get', 'point_count'], '#10B981', 10, '#059669', 50, '#047857'],
-        'circle-radius': ['step', ['get', 'point_count'], 22, 10, 28, 50, 35],
-        'circle-stroke-width': 3,
-        'circle-stroke-color': 'rgba(255, 255, 255, 0.4)',
-        'circle-opacity': 0.9
+        'circle-color': '#ffffff',
+        'circle-radius': ['step', ['get', 'point_count'], 22, 10, 26, 50, 32],
+        'circle-stroke-width': 4,
+        'circle-stroke-color': '#112924',
+    }
+};
+
+const clusterInnerLayer = {
+    id: 'clusters-inner',
+    type: 'circle',
+    source: 'partners',
+    filter: ['has', 'point_count'],
+    paint: {
+        'circle-color': '#00FF94',
+        'circle-radius': ['step', ['get', 'point_count'], 14, 10, 18, 50, 22],
+        'circle-opacity': 0.2
     }
 };
 
@@ -30,15 +67,15 @@ const clusterCountLayer = {
     filter: ['has', 'point_count'],
     layout: {
         'text-field': '{point_count_abbreviated}',
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
         'text-size': 14,
-        'text-allow-overlap': true
     },
     paint: {
-        'text-color': '#ffffff'
+        'text-color': '#112924'
     }
 };
 
-// INVISIBLE CLICK TARGET (Large hit area)
+// --- Single Pin Layer ---
 const unclusteredHitLayer = {
     id: 'unclustered-hit',
     type: 'circle',
@@ -46,22 +83,21 @@ const unclusteredHitLayer = {
     filter: ['!', ['has', 'point_count']],
     paint: {
         'circle-color': '#10B981',
-        'circle-radius': 18,
-        'circle-opacity': 0 // Keep it invisible but clickable
+        'circle-radius': 20,
+        'circle-opacity': 0 // Keep invisible but clickable
     }
 };
 
-// VISIBLE LOGO (The actual brand pin)
 const pinIconLayer = {
     id: 'pin-icon',
     type: 'symbol',
     source: 'partners',
     filter: ['!', ['has', 'point_count']],
     layout: {
-        'icon-image': 'brand-pin',
-        'icon-size': 0.9,
+        'icon-image': 'custom-pin',
+        'icon-size': 1,
         'icon-allow-overlap': true,
-        'icon-ignore-placement': true
+        'icon-anchor': 'bottom' // Anchor at the tip of the pin
     }
 };
 
@@ -94,7 +130,7 @@ export default function StoreMap({ partners, activePartner, onPartnerClick }) {
                 zoom: 14,
                 duration: 1500,
                 essential: true,
-                padding: { top: isMobile ? 80 : 0 }
+                padding: { bottom: isMobile ? window.innerHeight * 0.45 : 0 }
             });
         }
     }, [activePartner]);
@@ -103,11 +139,15 @@ export default function StoreMap({ partners, activePartner, onPartnerClick }) {
         const map = e.target;
         map.resize();
 
-        // Load brand icon
-        map.loadImage(BRAND_ICON_URL, (error, image) => {
-            if (error) return;
-            if (!map.hasImage('brand-pin')) map.addImage('brand-pin', image);
-        });
+        // Load custom SVG pin
+        const pinImage = new Image();
+        pinImage.crossOrigin = "anonymous";
+        pinImage.onload = () => {
+            if (!map.hasImage('custom-pin')) {
+                map.addImage('custom-pin', pinImage);
+            }
+        };
+        pinImage.src = createPinIcon();
     };
 
     const onMapClick = useCallback((event) => {
@@ -164,55 +204,49 @@ export default function StoreMap({ partners, activePartner, onPartnerClick }) {
                 clusterRadius={50}
             />
 
+            {/* Render layers in proper z-order */}
+            <Layer {...clusterShadowLayer} />
             <Layer {...clusterLayer} />
+            <Layer {...clusterInnerLayer} />
             <Layer {...clusterCountLayer} />
-            <Layer {...unclusteredHitLayer} />
-            <Layer {...pinIconLayer} />
+            <Layer {...unclusteredHitLayer} filter={
+                activePartner 
+                ? ['all', ['!', ['has', 'point_count']], ['!=', ['get', 'id'], activePartner.id]]
+                : ['!', ['has', 'point_count']]
+            } />
+            <Layer {...pinIconLayer} filter={
+                activePartner 
+                ? ['all', ['!', ['has', 'point_count']], ['!=', ['get', 'id'], activePartner.id]]
+                : ['!', ['has', 'point_count']]
+            } />
 
-            {/* Premium Active Marker - Elegant White & Green Design */}
+            {/* Premium Active Marker - Modern Pulsing Dot */}
             {activePartner && (
                 <>
                     <Marker
                         longitude={activePartner.lng}
                         latitude={activePartner.lat}
-                        anchor="bottom"
+                        anchor="center"
                         onClick={() => onPartnerClick(activePartner)}
                     >
-                        <div style={{
-                            width: '40px',
-                            height: '40px',
-                            backgroundImage: `url(${BRAND_ICON_URL})`,
-                            backgroundSize: '80%',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                            backgroundColor: 'white',
-                            border: '3px solid #10B981',
-                            borderRadius: '50%',
-                            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-                            cursor: 'pointer',
-                            transform: 'scale(1.2)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            zIndex: 20
-                        }} />
+                        <div className={styles.activeMarkerPulse} />
                     </Marker>
 
                     <Popup
                         longitude={activePartner.lng}
                         latitude={activePartner.lat}
                         anchor="bottom"
-                        offset={45}
+                        offset={24}
                         closeButton={true}
                         closeOnClick={false}
                         onClose={() => onPartnerClick(null)}
                         maxWidth="280px"
                         style={{ zIndex: 100 }}
                     >
-                        <div style={{ padding: '12px 15px', backgroundColor: 'white' }}>
-                            <h4 style={{ margin: '0 0 5px 0', color: '#1F4B40', fontSize: '14px', fontWeight: 700 }}>{activePartner.name}</h4>
-                            <p style={{ margin: '0 0 2px 0', fontSize: '12px', color: '#555' }}>{activePartner.address}</p>
-                            <p style={{ margin: 0, fontSize: '12px', color: '#777', fontWeight: 600 }}>{activePartner.zip} {activePartner.city}</p>
+                        <div style={{ padding: '16px', backgroundColor: 'white' }}>
+                            <h4 style={{ margin: '0 0 6px 0', color: '#112924', fontSize: '1.05rem', fontWeight: 800, textTransform: 'capitalize' }}>{activePartner.name}</h4>
+                            <p style={{ margin: '0 0 4px 0', fontSize: '0.9rem', color: '#64748b', textTransform: 'capitalize' }}>{activePartner.address}</p>
+                            <p style={{ margin: 0, fontSize: '0.9rem', color: '#334155', fontWeight: 700, textTransform: 'capitalize' }}>{activePartner.zip} {activePartner.city}</p>
                         </div>
                     </Popup>
                 </>

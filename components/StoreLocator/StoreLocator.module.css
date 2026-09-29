@@ -1,329 +1,340 @@
 .locatorContainer {
+    position: relative;
     width: 100%;
-    margin: 0 auto;
-    padding: 0;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    background: var(--primary-dark);
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: #f1f5f9;
 }
 
-.header {
-    text-align: center;
-    padding: 0px 0 20px 0;
-    max-width: 800px;
-    margin: 0 auto;
+.mapLayer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Floating Widget Panel */
+.floatingPanel {
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 255, 148, 0.05);
+}
+
+@media (min-width: 1025px) {
+    .floatingPanel {
+        top: 100px;
+        left: 24px;
+        width: 380px;
+        max-height: calc(100% - 124px);
+        border-radius: 24px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .floatingPanel {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        max-height: 45vh; /* Collapsed state by default */
+        border-radius: 28px 28px 0 0;
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.7);
+        box-shadow: 0 -10px 40px rgba(0, 255, 148, 0.08), 0 -4px 20px rgba(0, 0, 0, 0.1);
+        padding-top: 12px;
+        transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .floatingPanel.expanded {
+        max-height: 85vh; /* Expanded state */
+    }
+
+    /* "Tiroir" Handle */
+    .floatingPanel::before {
+        content: '';
+        display: block;
+        width: 48px;
+        height: 5px;
+        background: rgba(148, 163, 184, 0.4);
+        border-radius: 10px;
+        margin: 0 auto 8px;
+    }
+
+    .panelHeader {
+        padding: 4px 20px 20px;
+        gap: 12px;
+    }
+
+    .title {
+        font-size: 1.6rem;
+    }
+
+    .searchInput {
+        font-size: 1rem; /* Empêche le zoom auto sur iOS Safari */
+        padding: 12px 48px 12px 44px;
+    }
+
+    .resultsCount {
+        padding: 10px 20px;
+    }
+}
+
+.panelHeader {
+    padding: 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .title {
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
-    color: white;
-    margin: 0 0 10px 0;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #112924;
+    margin: 0;
+    letter-spacing: -0.03em;
 }
 
 .subtitle {
-    color: #666;
-    font-size: 1rem;
-    line-height: 1.5;
-    margin: 0;
+    font-size: 0.95rem;
+    color: #64748b;
+    margin: -8px 0 0 0;
+    line-height: 1.4;
 }
 
 .searchBox {
-    background: white;
-    padding: 12px;
-    border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    display: flex;
-    gap: 12px;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto 20px auto;
-    border: 1px solid #eeeff2;
-    z-index: 10;
-}
-
-.searchInputWrapper {
-    flex: 1;
     position: relative;
     display: flex;
     align-items: center;
+    background: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.searchBox:focus-within {
+    border-color: #00FF94;
+    box-shadow: 0 0 0 4px rgba(0, 255, 148, 0.15);
 }
 
 .searchIcon {
     position: absolute;
-    left: 15px;
-    color: #999;
+    left: 14px;
+    color: #94a3b8;
 }
 
 .searchInput {
     width: 100%;
-    padding: 10px 48px 10px 42px;
-    /* Extra padding on right for the button */
-    border: 2px solid #f3f4f6;
-    border-radius: 12px;
-    font-size: 1rem;
+    padding: 14px 48px 14px 44px;
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 500;
     outline: none;
-    transition: all 0.2s;
+    color: #1e293b;
 }
 
-.searchInput:focus {
-    border-color: var(--accent-neon);
-    background: #fdfdfd;
+.searchInput::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
 }
 
 .locateButton {
     position: absolute;
-    right: 8px;
-    background: #f3f4f6;
-    border: none;
-    border-radius: 8px;
-    width: 34px;
-    height: 34px;
+    right: 6px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-dark);
+    background: #f1f5f9;
+    border: none;
+    border-radius: 12px;
+    color: #475569;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.locateButton:hover {
-    background: var(--accent-neon);
-    color: white;
+.locateButton:hover:not(:disabled) {
+    background: #e3fff8;
+    color: #059669;
+    transform: scale(1.05);
 }
 
 .locateButton:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: wait;
 }
 
-.layout {
-    display: grid;
-    grid-template-columns: 350px 1fr;
+.resultsScrollArea {
     flex: 1;
-    min-height: 0;
-    overflow: hidden;
-    /* Prevent grid expansion */
-    background: white;
-    border-top: 1px solid #eee;
-}
-
-@media (max-width: 1024px) {
-    .header {
-        padding: 5px 20px 0px;
-        margin-top: -30px;
-        /* Offset the parent's padding-top to move the title up */
-    }
-
-    .title {
-        font-size: 1.5rem;
-        margin-bottom: 5px;
-    }
-
-    .subtitle {
-        display: none;
-    }
-
-    .searchBox {
-        margin: 5px 15px 5px;
-        /* Controlled margins */
-        width: calc(100% - 30px);
-        max-width: none;
-        padding: 8px;
-        border-radius: 12px;
-        position: relative;
-        z-index: 11;
-    }
-
-    .locatorContainer {
-        height: 100%;
-        padding-bottom: 0;
-    }
-
-    .layout {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        min-height: 0;
-        border-radius: 12px 12px 0 0;
-        overflow: hidden;
-        border-top: none;
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-        height: 100%;
-        margin-top: 0;
-        /* Remove overlap overlap gap */
-        position: relative;
-        z-index: 10;
-    }
-
-    .mapWrapper {
-        order: 1;
-        flex: 1 1 45%;
-        min-height: 0;
-        transition: flex 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        padding-top: 0 !important;
-        /* CRITICAL FIX: Kill the mystery 100px padding */
-    }
-
-    .sidebar {
-        order: 2;
-        flex: 1 1 55%;
-        height: auto;
-        border-right: none;
-        border-bottom: none;
-        background: #fdfdfd;
-        transition: flex 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .noInteraction .mapWrapper {
-        flex: 1 0 75%;
-        /* More space for placeholder when it's the main CTA */
-    }
-
-    .noInteraction .sidebar {
-        flex: 0 0 25%;
-        /* Less space for the redundant search prompt below */
-    }
-
-    .resultsList {
-        padding: 10px 15px;
-        gap: 8px;
-    }
-
-    .partnerCard {
-        padding: 12px;
-        border-radius: 12px;
-    }
-}
-
-.sidebar {
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #eee;
-    background: #fafafa;
-    height: 100%;
-    overflow: hidden;
-    /* Ensure it doesn't expand past flex container */
+}
+
+/* Elegant Scrollbar */
+.resultsScrollArea::-webkit-scrollbar {
+    width: 6px;
+}
+.resultsScrollArea::-webkit-scrollbar-track {
+    background: transparent;
+}
+.resultsScrollArea::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 10px;
+}
+.resultsScrollArea::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.6);
 }
 
 .resultsCount {
-    padding: 15px 20px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #777;
-    border-bottom: 1px solid #eee;
-    background: white;
+    padding: 12px 24px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #64748b;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.6);
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 2;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .resultsList {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px;
+    padding: 12px 16px 24px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-/* Scrollbar styling for a cleaner look */
-.resultsList::-webkit-scrollbar {
-    width: 6px;
-}
-
-.resultsList::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-.resultsList::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 10px;
+    gap: 8px;
 }
 
 .partnerCard {
-    background: white;
-    padding: 15px;
-    border-radius: 15px;
+    background: #ffffff;
     border: 2px solid transparent;
+    border-radius: 16px;
+    padding: 16px;
     cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
 }
 
 .partnerCard:hover {
-    background: #f0fdf9;
-    border-color: var(--accent-neon);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.08);
+    border-color: #e2e8f0;
 }
 
 .partnerCard.active {
-    background: #f0fdf9;
-    border-color: var(--accent-neon);
-    box-shadow: 0 4px 15px rgba(0, 255, 148, 0.1);
+    background: #f0fdf4;
+    border-color: #00FF94;
+    box-shadow: 0 8px 24px -6px rgba(0, 255, 148, 0.2);
 }
 
-.partnerCard h3 {
-    margin: 0;
-    font-size: 1rem;
-    color: var(--primary-dark);
+.partnerInfo h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #112924;
+    margin: 0 0 4px;
+    line-height: 1.2;
 }
 
-.partnerCard p {
-    margin: 5px 0;
-    color: #666;
+.partnerInfo p {
     font-size: 0.85rem;
+    color: #64748b;
+    margin: 0;
     line-height: 1.4;
+    text-transform: capitalize;
 }
 
-.distance {
-    display: inline-block;
-    margin-top: 5px;
-    font-size: 0.75rem;
+.partnerInfo .cityLine {
     font-weight: 700;
-    color: var(--primary-dark);
-    background: #e6fffa;
-    padding: 2px 8px;
-    border-radius: 4px;
+    color: #334155;
+    margin-top: 2px;
 }
 
-.mapWrapper {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-    /* Crucial to keep placeholder/map at 100% of viewport, not 100% of grid */
+.distanceBadge {
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 8px;
+    white-space: nowrap;
 }
 
-.loader {
+.partnerCard.active .distanceBadge {
+    background: #00FF94;
+    color: #064e3b;
+}
+
+.emptyState {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px;
-    gap: 15px;
-    color: var(--primary-dark);
-}
-
-.emptyState {
-    text-align: center;
     padding: 40px 20px;
-    color: #999;
-    font-size: 0.9rem;
+    color: #94a3b8;
+    text-align: center;
+    gap: 12px;
 }
 
-/* MapLibre Popup Overrides */
+.emptyIcon {
+    color: #cbd5e1;
+}
+
+.emptyState p {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.mapLoader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    color: #059669;
+    font-weight: 600;
+    z-index: 0;
+}
+
+/* MapLibre Popup Customization for Modern Look */
 :global(.maplibregl-popup-content) {
     padding: 0;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
 :global(.maplibregl-popup-close-button) {
     right: 8px;
     top: 8px;
-    font-size: 20px;
-    color: #999;
+    font-size: 18px;
+    color: #94a3b8;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -333,169 +344,50 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    transition: all 0.2s;
 }
 
 :global(.maplibregl-popup-close-button:hover) {
-    background: #f0f0f0;
-    color: #333;
+    background: #f1f5f9;
+    color: #334155;
 }
 
 :global(.maplibregl-popup-tip) {
     border-top-color: white;
 }
 
-/* =========================================
-   Écran d'attente (Placeholder) Hyper Moderne
-   ========================================= */
-
-.mapPlaceholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #f8fcfb 0%, #e6f5f0 100%);
-    text-align: center;
-    padding: 40px;
-    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    border-radius: 0 20px 20px 0;
-}
-
-.placeholderIconWrapper {
+/* Active Marker Pulsing Animation */
+.activeMarkerPulse {
     position: relative;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
+    width: 28px;
+    height: 28px;
+    background-color: #00FF94;
+    border: 3px solid #ffffff;
     border-radius: 50%;
-    margin-bottom: 30px;
-    box-shadow: 0 10px 30px rgba(31, 75, 64, 0.08);
-    z-index: 1;
-}
-
-.placeholderIcon {
-    color: var(--primary-dark);
-    z-index: 2;
-}
-
-/* Animation "Radar" autour de l'icône */
-.pulseRing {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    /* Base size */
-    height: 60px;
-    border-radius: 50%;
-    border: 2px solid #00FF94;
-    animation: pulse 2.5s infinite cubic-bezier(0.45, 0, 0.55, 1);
-    z-index: 0;
-    pointer-events: none;
-}
-
-.mapPlaceholder h2 {
-    color: var(--primary-dark);
-    font-size: 2.2rem;
-    font-weight: 800;
-    margin-bottom: 15px;
-    letter-spacing: -0.02em;
-}
-
-.mapPlaceholder p {
-    color: #6a7c76;
-    font-size: 1.1rem;
-    max-width: 400px;
-    margin-bottom: 35px;
-    line-height: 1.6;
-}
-
-.placeholderBtn {
-    background: var(--primary-dark);
-    color: #00FF94;
-    border: none;
-    padding: 16px 36px;
-    border-radius: 99px;
-    font-size: 1.05rem;
-    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(0, 255, 148, 0.4), 0 0 0 4px #112924;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 15px rgba(31, 75, 64, 0.15);
+    z-index: 20;
 }
 
-.placeholderBtn:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 25px rgba(31, 75, 64, 0.25);
-    background: #193e35;
+.activeMarkerPulse::after {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    right: -12px;
+    bottom: -12px;
+    border: 2px solid #00FF94;
+    border-radius: 50%;
+    animation: mapPulse 2s infinite cubic-bezier(0.45, 0, 0.55, 1);
 }
 
-/* Animations clés */
-@keyframes pulse {
+@keyframes mapPulse {
     0% {
-        transform: translate(-50%, -50%) scale(1);
+        transform: scale(0.6);
         opacity: 1;
     }
-
     100% {
-        transform: translate(-50%, -50%) scale(1.6);
+        transform: scale(1.4);
         opacity: 0;
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (max-width: 1024px) {
-    .mapPlaceholder {
-        border-radius: 20px;
-        padding: 20px;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .placeholderIconWrapper {
-        width: 60px;
-        height: 60px;
-        margin-bottom: 2px;
-    }
-
-    .placeholderIcon {
-        width: 28px;
-        height: 28px;
-    }
-
-    .pulseRing {
-        width: 40px;
-        height: 40px;
-    }
-
-    .mapPlaceholder h2 {
-        font-size: 1.4rem;
-        margin-bottom: 2px;
-    }
-
-    .mapPlaceholder p {
-        font-size: 0.9rem;
-        margin-bottom: 15px;
-        max-width: 260px;
-        line-height: 1.4;
-    }
-
-    .placeholderBtn {
-        padding: 10px 24px;
-        font-size: 0.9rem;
     }
 }

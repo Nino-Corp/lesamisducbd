@@ -418,14 +418,14 @@ export default function PartnersAdmin() {
                         <h2 className={styles.cardTitle} style={{ marginBottom: 0 }}>
                             Liste des Partenaires ({filteredPartners.length}/{partners.length})
                         </h2>
-                        <div style={{ display: 'flex', alignItems: 'center', background: '#f3f4f6', borderRadius: '8px', padding: '6px 12px', gap: '8px', width: '300px', maxWidth: '100%' }}>
-                            <Search size={16} color="#6b7280" />
+                        <div style={{ display: 'flex', alignItems: 'center', background: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: '12px', padding: '10px 16px', gap: '8px', width: '320px', maxWidth: '100%', transition: 'all 0.2s' }}>
+                            <Search size={18} color="#64748b" />
                             <input
                                 type="text"
                                 placeholder="Rechercher (nom, ville, CP)..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%', fontSize: '0.9rem' }}
+                                style={{ border: 'none', background: 'transparent', outline: 'none', width: '100%', fontSize: '0.95rem', color: '#1e293b', fontWeight: '500' }}
                             />
                         </div>
                     </div>

@@ -17,33 +17,89 @@ const STATIC_PAGES = {
     'legal/privacy': "Confidentialité"
 };
 
-// Helper SVG Line Chart
-const Sparkline = ({ data }) => {
+// Helper SVG Line Chart (Clean & Explicit)
+const LineChart = ({ data }) => {
     if (!data || data.length === 0) return null;
-    const maxVal = Math.max(...data.map(d => d.views), 1);
+    const maxVal = Math.max(...data.map(d => d.views), 10);
     const minVal = 0;
-    const padding = 10;
+    const paddingLeft = 45;
+    const paddingRight = 20;
+    const paddingTop = 30;
+    const paddingBottom = 30;
     const width = 800;
-    const height = 200;
-    const points = data.map((d, i) => {
-        const x = padding + (i / (data.length - 1)) * (width - 2 * padding);
-        const y = height - padding - ((d.views - minVal) / (maxVal - minVal)) * (height - 2 * padding);
-        return `${x},${y}`;
-    }).join(' ');
+    const height = 280;
+    
+    // Grid lines (Y axis)
+    const ySteps = 4;
+    const gridLines = Array.from({length: ySteps + 1}).map((_, i) => {
+        const val = Math.round(maxVal * (i / ySteps));
+        const y = height - paddingBottom - (i / ySteps) * (height - paddingTop - paddingBottom);
+        return { val, y };
+    });
+
+    // Generate path points
+    const pointsArray = data.map((d, i) => {
+        const x = paddingLeft + (i / (data.length - 1)) * (width - paddingLeft - paddingRight);
+        const y = height - paddingBottom - ((d.views - minVal) / (maxVal - minVal)) * (height - paddingTop - paddingBottom);
+        const dateObj = new Date(d.date);
+        const dateStr = !isNaN(dateObj) ? `${dateObj.getDate().toString().padStart(2, '0')}/${(dateObj.getMonth()+1).toString().padStart(2, '0')}` : d.date;
+        return {x, y, dateStr, ...d};
+    });
+    
+    const pathData = pointsArray.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`).join(' ');
+    const areaPath = `${pathData} L ${width-paddingRight},${height-paddingBottom} L ${paddingLeft},${height-paddingBottom} Z`;
 
     return (
         <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: '100%', overflow: 'visible' }}>
-            <polyline fill="none" stroke="#10b981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" points={points} />
-            {data.map((d, i) => {
-                const x = padding + (i / (data.length - 1)) * (width - 2 * padding);
-                const y = height - padding - ((d.views - minVal) / (maxVal - minVal)) * (height - 2 * padding);
-                return (
-                    <g key={i} className={styles.chartPoint}>
-                        <circle cx={x} cy={y} r="5" fill="#fff" stroke="#10b981" strokeWidth="2" />
-                        <title>{`${d.date}: ${d.views} vues`}</title>
-                    </g>
-                );
+            {/* Grid & Y-Axis */}
+            {gridLines.map((line, i) => (
+                <g key={`y-${i}`}>
+                    <line x1={paddingLeft} y1={line.y} x2={width-paddingRight} y2={line.y} stroke="#f1f5f9" strokeWidth="1.5" />
+                    <text x={paddingLeft - 10} y={line.y + 4} fill="#64748b" fontSize="12" fontWeight="600" textAnchor="end" fontFamily="sans-serif">{line.val.toLocaleString('fr-FR')}</text>
+                </g>
+            ))}
+
+            {/* X-Axis labels (show 1 every ~5 days if 30 days) */}
+            {pointsArray.map((p, i) => {
+                if (i % Math.ceil(data.length / 6) === 0 || i === data.length - 1) {
+                    return (
+                        <text key={`x-${i}`} x={p.x} y={height - 5} fill="#64748b" fontSize="12" fontWeight="600" textAnchor="middle" fontFamily="sans-serif">
+                            {p.dateStr}
+                        </text>
+                    );
+                }
+                return null;
             })}
+
+            <defs>
+                <linearGradient id="chartFill" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="rgba(5, 150, 105, 0.15)" />
+                    <stop offset="100%" stopColor="rgba(5, 150, 105, 0)" />
+                </linearGradient>
+            </defs>
+            
+            {/* Chart Area and Line */}
+            <path d={areaPath} fill="url(#chartFill)" />
+            <path d={pathData} fill="none" stroke="#059669" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+            
+            {/* Interactive Points */}
+            {pointsArray.map((p, i) => (
+                <g key={i} className={styles.chartPointGroup}>
+                    {/* Invisible hit area */}
+                    <circle cx={p.x} cy={p.y} r="15" fill="transparent" />
+                    {/* Visible circle */}
+                    <circle className={styles.chartCircle} cx={p.x} cy={p.y} r="4.5" fill="#ffffff" stroke="#059669" strokeWidth="2.5" />
+                    
+                    {/* Tooltip */}
+                    <g className={styles.chartTooltip}>
+                        <rect x={p.x - 45} y={p.y - 45} width="90" height="30" rx="6" fill="#1e293b" />
+                        <text x={p.x} y={p.y - 25} fill="#ffffff" fontSize="13" textAnchor="middle" fontFamily="sans-serif" fontWeight="bold">
+                            {p.views.toLocaleString('fr-FR')} vues
+                        </text>
+                        <polygon points={`${p.x-6},${p.y-15} ${p.x+6},${p.y-15} ${p.x},${p.y-9}`} fill="#1e293b" />
+                    </g>
+                </g>
+            ))}
         </svg>
     );
 };
@@ -197,8 +253,8 @@ export default function AnalyticsDashboard() {
             {/* 30 Days Trend */}
             <div className={styles.sectionBlock}>
                 <h2 className={styles.sectionTitle}>Évolution des vues (30 derniers jours)</h2>
-                <div className={styles.lineChartWrapper} style={{ height: '220px', padding: '20px', background: '#f8fafc', borderRadius: '12px' }}>
-                    <Sparkline data={dailyStats} />
+                <div style={{ height: '320px', padding: '10px 0', width: '100%' }}>
+                    <LineChart data={dailyStats} />
                 </div>
             </div>
 
