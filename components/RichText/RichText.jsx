@@ -15,7 +15,7 @@ export default function RichText({ content, title, textAlign = "left", maxWidth 
                 {title && <Tag className={styles.title} style={{ fontFamily: titleFontFamily, fontSize: titleFontSize || undefined, color: titleColor || undefined }}>{title}</Tag>}
                 <div
                     className={styles.content}
-                    style={{ columnCount: columnCount, columnGap: '40px' }}
+                    style={{ columnCount: columnCount, columnGap: '40px', textAlign: textAlign }}
                     dangerouslySetInnerHTML={{ __html: content.replace(/&nbsp;/g, ' ') }}
                 />
             </div>

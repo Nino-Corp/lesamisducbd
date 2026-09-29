@@ -247,6 +247,14 @@ export const TEMPLATES = [
         }
     },
     {
+        type: 'InteractiveMap',
+        label: 'Carte Interactive (Store Locator)',
+        icon: '🗺️',
+        description: 'Affiche la carte des partenaires / revendeurs',
+        category: 'special',
+        defaultProps: { subtitle: true }
+    },
+    {
         type: 'QualityBanner',
         label: 'Bandeau Qualité',
         icon: '🌟',

@@ -28,6 +28,7 @@ export default function PageEditor() {
     const [pageHistory, setPageHistory] = useState([]);
     const [savedBlocks, setSavedBlocks] = useState([]);
     const [templateTab, setTemplateTab] = useState('models'); // models | blocks
+    const [searchTerm, setSearchTerm] = useState('');
     const [undoStack, setUndoStack] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
     const [dragOver, setDragOver] = useState(null);
@@ -271,7 +272,11 @@ export default function PageEditor() {
 
     const currentSection = activeSection !== null ? page.sections[activeSection] : null;
     const EditorComponent = currentSection ? EDITORS[currentSection.type] : null;
-    const filteredTemplates = activeCategory === 'all' ? TEMPLATES : TEMPLATES.filter(t => t.category === activeCategory);
+    const filteredTemplates = TEMPLATES.filter(t => {
+        const matchesCat = activeCategory === 'all' || t.category === activeCategory;
+        const matchesSearch = !searchTerm || t.label.toLowerCase().includes(searchTerm.toLowerCase()) || t.description.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesCat && matchesSearch;
+    });
 
     return (
         <div 
@@ -656,6 +661,15 @@ export default function PageEditor() {
 
                         {templateTab === 'models' ? (
                             <>
+                                <div style={{ padding: '16px 24px', borderBottom: '1px solid #e5e7eb' }}>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Rechercher un bloc... (ex: texte, carte, partenaire)" 
+                                        value={searchTerm} 
+                                        onChange={e => setSearchTerm(e.target.value)} 
+                                        style={{ width: '100%', padding: '10px 16px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '0.95rem', background: '#f9fafb' }}
+                                    />
+                                </div>
                                 {/* Category tabs */}
                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '16px 24px', borderBottom: '1px solid #e5e7eb' }}>
                                     <button onClick={() => setActiveCategory('all')}

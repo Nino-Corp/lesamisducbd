@@ -18,7 +18,8 @@ export default function TitleBlock({
                 style={{ 
                     color, 
                     fontFamily: fontFamily !== 'inherit' ? fontFamily : undefined,
-                    fontSize
+                    fontSize,
+                    textAlign
                 }}
             >
                 {text}

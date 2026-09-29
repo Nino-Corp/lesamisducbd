@@ -1062,6 +1062,14 @@ export function IconSummaryEditor({ props, onChange, allSections = [] }) {
     </>;
 }
 
+export function InteractiveMapEditor() {
+    return (
+        <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '8px', color: '#64748b', fontSize: '0.85rem' }}>
+            Ce bloc affiche la carte interactive (Store Locator) pour trouver les points de vente. Il s'auto-configure avec les données des partenaires.
+        </div>
+    );
+}
+
 export const EDITORS = {
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
@@ -1083,6 +1091,7 @@ export const EDITORS = {
     FeaturedProducts: FeaturedProductsEditor,
     Marquee: MarqueeEditor,
     OfferComparator: OfferComparatorEditor,
+    InteractiveMap: InteractiveMapEditor,
     PartnersNetwork: PartnersNetworkEditor,
     QualityBanner: QualityBannerEditor,
     WhyChooseUs: WhyChooseUsEditor,
