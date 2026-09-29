@@ -101,7 +101,7 @@ const pinIconLayer = {
     }
 };
 
-export default function StoreMap({ partners, activePartner, onPartnerClick }) {
+export default function StoreMap({ partners, activePartner, onPartnerClick, onMapEmptyClick }) {
     const mapRef = useRef();
 
     // Convert partners to GeoJSON for clustering
@@ -152,9 +152,13 @@ export default function StoreMap({ partners, activePartner, onPartnerClick }) {
 
     const onMapClick = useCallback((event) => {
         const feature = event.features && event.features[0];
-        if (!feature) return;
+        if (!feature) {
+            if (onMapEmptyClick) onMapEmptyClick();
+            return;
+        }
 
         if (feature.layer.id === 'clusters') {
+            if (onMapEmptyClick) onMapEmptyClick();
             const clusterId = feature.properties.cluster_id;
             const source = mapRef.current.getMap().getSource('partners');
 
@@ -169,9 +173,12 @@ export default function StoreMap({ partners, activePartner, onPartnerClick }) {
         } else if (feature.layer.id === 'unclustered-hit') {
             const partnerId = feature.properties.id;
             const partner = partners.find(p => p.id == partnerId);
-            if (partner) onPartnerClick(partner);
+            if (partner) {
+                onPartnerClick(partner);
+                if (onMapEmptyClick) onMapEmptyClick();
+            }
         }
-    }, [partners, onPartnerClick]);
+    }, [partners, onPartnerClick, onMapEmptyClick]);
 
     return (
         <Map

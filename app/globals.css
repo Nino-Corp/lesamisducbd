@@ -148,3 +148,16 @@ ul:has(> li[style*="text-align:center"]),
 ol:has(> li[style*="text-align:center"]) {
   padding-left: 0;
 }
+
+/* Global hover effect for images inside modern cards */
+.hover-zoom-wrapper {
+    overflow: hidden;
+}
+
+.hover-zoom-wrapper img {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hover-zoom-wrapper:hover img {
+    transform: scale(1.05) !important;
+}

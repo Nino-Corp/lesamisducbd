@@ -30,7 +30,7 @@ export default function ImageCardsGrid({
                 {cards.map((card, i) => (
                     <div key={i} className={styles.card} style={{ backgroundColor: cardBgColor }}>
                         {card.heroImage && (
-                            <div className={styles.imageContainer}>
+                            <div className={`${styles.imageContainer} hover-zoom-wrapper`}>
                                 <Image 
                                     src={card.heroImage} 
                                     alt={card.title}

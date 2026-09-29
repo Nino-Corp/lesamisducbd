@@ -295,6 +295,7 @@
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.05);
+    height: 100%;
 }
 
 .card:hover {
@@ -400,7 +401,8 @@
     border-color: rgba(31, 75, 64, 0.3);
 }
 
-.variantPillActive {
+.variantPill.variantPillActive,
+.variantPill.variantPillActive:hover {
     background: #1F4B40;
     color: #00FF94;
     border-color: #1F4B40;
@@ -504,7 +506,7 @@
 .qtyDrawer {
     position: absolute;
     bottom: calc(100% + 12px);
-    right: 0;
+    right: -4px; /* Shift to perfectly center over the 38px button which has 2px right padding */
     display: flex;
     /* <-- LA LIGNE MAGIQUE EST ICI */
     flex-direction: column;
@@ -513,11 +515,11 @@
     background: #1F4B40;
     border-radius: 14px;
     width: 50px;
-    height: 0;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    padding: 0;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 12px 0;
+    transform: translateY(10px) scale(0.95);
     gap: 8px;
     z-index: 100;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
@@ -545,8 +547,8 @@
     content: '';
     position: absolute;
     bottom: -6px;
-    right: 15px;
-    /* Points precisely to the center of the cart icon */
+    right: 50%;
+    margin-right: -6px;
     width: 12px;
     height: 12px;
     background: #1F4B40;
@@ -557,11 +559,10 @@
 }
 
 .actionWrapper:hover .qtyDrawer {
-    height: auto;
     opacity: 1;
     visibility: visible;
-    padding: 12px 0;
     pointer-events: auto;
+    transform: translateY(0) scale(1);
 }
 
 .qtyBtn {
@@ -728,98 +729,52 @@
 
     /* Interactive Drawer Mobile */
     .actionWrapper {
-        background: transparent;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        justify-content: center;
-        display: flex;
-        align-items: center;
-        border-radius: 12px;
         flex-shrink: 0;
-        /* Interdit formellement au navigateur de rétrécir ton bouton */
-    }
-
-    .qtyDrawer {
-        position: absolute;
-        bottom: 100%;
-        right: 0;
-        width: 44px;
-        height: 0;
-        flex-direction: column;
-        background: #1F4B40;
-        border-radius: 12px;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 0;
-        gap: 8px;
-        z-index: 1000;
-        box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.2);
-        margin-bottom: 8px;
-        transform: translateY(10px);
-        pointer-events: none;
     }
 
     .actionWrapper.expanded .qtyDrawer {
-        height: 200px;
-        /* Fits 4 buttons + gaps + padding comfortably */
         opacity: 1;
         visibility: visible;
-        padding: 12px 0;
-        transform: translateY(0);
         pointer-events: auto;
+        transform: translateY(0) scale(1);
+    }
+
+    .qtyDrawer {
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Effet ressort fluide (spring) */
+        transform-origin: bottom center;
+        transform: translateY(20px) scale(0.7);
     }
 
     .actionWrapper:hover:not(.expanded) .qtyDrawer {
-        height: 0;
         opacity: 0;
         visibility: hidden;
-        padding: 0;
         pointer-events: none;
+        transform: translateY(20px) scale(0.7);
     }
 
-    .qtyBtn {
-        width: 36px;
-        height: 36px;
-        font-size: 0.8rem;
-        flex: none;
-        background: rgba(0, 255, 148, 0.1);
+    /* Reset sticky hover visual effects on mobile */
+    .actionWrapper:hover:not(.expanded) {
+        box-shadow: 0 4px 10px rgba(31, 75, 64, 0.08);
+        background: #1F4B40;
+    }
+
+    .actionWrapper:hover:not(.expanded) .addBtn {
+        background: transparent;
         color: #00FF94;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        transition: transform 0.2s ease;
+    }
+
+    .actionWrapper:hover:not(.expanded) .addBtn svg {
+        transform: none;
     }
 
     .qtyBtn:active {
-        background: #00FF94;
-        color: #1F4B40;
         transform: scale(0.9);
     }
 
-    .addBtn {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
-        background: #1F4B40 !important;
-        color: #00FF94 !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        box-shadow: 0 4px 10px rgba(31, 75, 64, 0.15);
-        z-index: 10;
-        transition: transform 0.3s ease;
-    }
-
     .actionWrapper.expanded .addBtn {
-        background: #00FF94 !important;
-        color: #1F4B40 !important;
-        transform: rotate(45deg);
-        /* Optional: turn into an X if needed */
+        background: #00FF94;
+        color: #1F4B40;
+        transform: scale(0.95);
     }
 
     .addBtn svg {

@@ -19,6 +19,8 @@ const STATIC_PAGES = {
 
 // Helper SVG Line Chart (Clean & Explicit)
 const LineChart = ({ data }) => {
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+
     if (!data || data.length === 0) return null;
     const maxVal = Math.max(...data.map(d => d.views), 10);
     const minVal = 0;
@@ -84,22 +86,29 @@ const LineChart = ({ data }) => {
             
             {/* Interactive Points */}
             {pointsArray.map((p, i) => (
-                <g key={i} className={styles.chartPointGroup}>
+                <g 
+                    key={i} 
+                    className={styles.chartPointGroup}
+                    onMouseEnter={() => setHoveredIndex(i)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                >
                     {/* Invisible hit area */}
-                    <circle cx={p.x} cy={p.y} r="15" fill="transparent" />
+                    <circle cx={p.x} cy={p.y} r="15" fill="transparent" style={{ cursor: 'pointer' }} />
                     {/* Visible circle */}
-                    <circle className={styles.chartCircle} cx={p.x} cy={p.y} r="4.5" fill="#ffffff" stroke="#059669" strokeWidth="2.5" />
-                    
-                    {/* Tooltip */}
-                    <g className={styles.chartTooltip}>
-                        <rect x={p.x - 45} y={p.y - 45} width="90" height="30" rx="6" fill="#1e293b" />
-                        <text x={p.x} y={p.y - 25} fill="#ffffff" fontSize="13" textAnchor="middle" fontFamily="sans-serif" fontWeight="bold">
-                            {p.views.toLocaleString('fr-FR')} vues
-                        </text>
-                        <polygon points={`${p.x-6},${p.y-15} ${p.x+6},${p.y-15} ${p.x},${p.y-9}`} fill="#1e293b" />
-                    </g>
+                    <circle className={styles.chartCircle} cx={p.x} cy={p.y} r="4.5" fill={hoveredIndex === i ? "#059669" : "#ffffff"} stroke="#059669" strokeWidth="2.5" />
                 </g>
             ))}
+
+            {/* Render Tooltip ON TOP of all points */}
+            {hoveredIndex !== null && (
+                <g style={{ pointerEvents: 'none' }}>
+                    <rect x={pointsArray[hoveredIndex].x - 45} y={pointsArray[hoveredIndex].y - 45} width="90" height="30" rx="6" fill="#1e293b" />
+                    <text x={pointsArray[hoveredIndex].x} y={pointsArray[hoveredIndex].y - 25} fill="#ffffff" fontSize="13" textAnchor="middle" fontFamily="sans-serif" fontWeight="bold">
+                        {pointsArray[hoveredIndex].views.toLocaleString('fr-FR')} vues
+                    </text>
+                    <polygon points={`${pointsArray[hoveredIndex].x-6},${pointsArray[hoveredIndex].y-15} ${pointsArray[hoveredIndex].x+6},${pointsArray[hoveredIndex].y-15} ${pointsArray[hoveredIndex].x},${pointsArray[hoveredIndex].y-9}`} fill="#1e293b" />
+                </g>
+            )}
         </svg>
     );
 };

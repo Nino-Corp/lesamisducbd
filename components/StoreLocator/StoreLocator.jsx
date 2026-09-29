@@ -188,11 +188,17 @@ export default function StoreLocator({ subtitle = true }) {
     return (
         <section className={styles.locatorContainer}>
             {/* Map is always visible and covers 100% of the container */}
-            <div className={styles.mapLayer}>
+            <div className={styles.mapLayer} onClick={() => { if (window.innerWidth <= 1024) setIsPanelExpanded(false); }}>
                 <StoreMap
                     partners={partners} // Always pass all partners for clustering
                     activePartner={activePartner}
-                    onPartnerClick={setActivePartner}
+                    onPartnerClick={(p) => {
+                        setActivePartner(p);
+                        if (window.innerWidth <= 1024) setIsPanelExpanded(false);
+                    }}
+                    onMapEmptyClick={() => {
+                        if (window.innerWidth <= 1024) setIsPanelExpanded(false);
+                    }}
                 />
             </div>
 
@@ -206,59 +212,65 @@ export default function StoreLocator({ subtitle = true }) {
                     style={{ cursor: 'pointer' }}
                 >
                     <h1 className={styles.title}>Nos Partenaires</h1>
-                    {subtitle && (
-                        <p className={styles.subtitle}>
-                            Trouvez une boutique CBD près de chez vous.
-                        </p>
-                    )}
-                    
-                    <div className={styles.searchBox}>
-                        <Search className={styles.searchIcon} size={20} />
-                        <input
-                            type="text"
-                            placeholder="Ville, code postal..."
-                            className={styles.searchInput}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    if (filteredPartners.length > 0) {
-                                        setActivePartner(filteredPartners[0]);
-                                    } else {
-                                        triggerNominatimSearch();
-                                    }
-                                    e.target.blur(); 
-                                }
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                        />
-                        <button
-                            className={styles.locateButton}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleLocateMe();
-                            }}
-                            title="Me géolocaliser"
-                            disabled={isLocating}
-                        >
-                            {isLocating ? <Loader2 className="animate-spin" size={18} /> : <Navigation size={18} />}
-                        </button>
-                    </div>
                 </div>
 
-                <div className={styles.resultsScrollArea}>
-                    <div className={styles.resultsCount}>
-                        {isSearchingNearby ? (
-                            "Recherche en cours..."
-                        ) : searchQuery.length > 0 ? (
-                            displayList.length > 0 ? `${displayList.length} boutique(s) trouvée(s)` : "Aucune boutique trouvée"
-                        ) : nearbyPartners.length > 0 ? (
-                            "Boutiques autour de vous"
-                        ) : (
-                            "Explorez la carte ou lancez une recherche"
-                        )}
-                    </div>
+                <div className={styles.panelBodyWrapper}>
+                    <div className={styles.panelBody}>
+                        <div className={styles.panelSearchSection}>
+                            {subtitle && (
+                                <p className={styles.subtitle}>
+                                    Trouvez une boutique CBD près de chez vous.
+                                </p>
+                            )}
+                            
+                            <div className={styles.searchBox}>
+                                <Search className={styles.searchIcon} size={20} />
+                                <input
+                                    type="text"
+                                    placeholder="Ville, code postal..."
+                                    className={styles.searchInput}
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            if (filteredPartners.length > 0) {
+                                                setActivePartner(filteredPartners[0]);
+                                                if (window.innerWidth <= 1024) setIsPanelExpanded(false);
+                                            } else {
+                                                triggerNominatimSearch();
+                                            }
+                                            e.target.blur(); 
+                                        }
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                />
+                                <button
+                                    className={styles.locateButton}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleLocateMe();
+                                    }}
+                                    title="Me géolocaliser"
+                                    disabled={isLocating}
+                                >
+                                    {isLocating ? <Loader2 className="animate-spin" size={18} /> : <Navigation size={18} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className={styles.resultsScrollArea}>
+                            <div className={styles.resultsCount}>
+                                {isSearchingNearby ? (
+                                    "Recherche en cours..."
+                                ) : searchQuery.length > 0 ? (
+                                    displayList.length > 0 ? `${displayList.length} boutique(s) trouvée(s)` : "Aucune boutique trouvée"
+                                ) : nearbyPartners.length > 0 ? (
+                                    "Boutiques autour de vous"
+                                ) : (
+                                    "Explorez la carte ou lancez une recherche"
+                                )}
+                            </div>
 
                     <div className={styles.resultsList}>
                         {isLoading ? (
@@ -270,7 +282,10 @@ export default function StoreLocator({ subtitle = true }) {
                                 <div
                                     key={partner.id}
                                     className={`${styles.partnerCard} ${activePartner?.id === partner.id ? styles.active : ''}`}
-                                    onClick={() => setActivePartner(partner)}
+                                    onClick={() => {
+                                        setActivePartner(partner);
+                                        if (window.innerWidth <= 1024) setIsPanelExpanded(false);
+                                    }}
                                 >
                                     <div className={styles.partnerInfo}>
                                         <h3>{partner.name}</h3>
@@ -290,6 +305,8 @@ export default function StoreLocator({ subtitle = true }) {
                         ) : null}
                     </div>
                 </div>
+            </div>
+            </div>
             </aside>
         </section>
     );

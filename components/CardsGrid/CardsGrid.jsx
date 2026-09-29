@@ -46,7 +46,7 @@ export default function CardsGrid({
                             }}
                         >
                             {card.imageSrc ? (
-                                <div className={styles.cardImageWrapper}>
+                                <div className={`${styles.cardImageWrapper} hover-zoom-wrapper`}>
                                     <Image src={card.imageSrc} alt={card.title || ''} width={80} height={80} style={{ objectFit: 'contain' }} />
                                 </div>
                             ) : (

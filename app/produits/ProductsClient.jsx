@@ -11,6 +11,7 @@ import styles from './Products.module.css';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
 import { trackCTA } from '@/utils/analytics';
+import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
 
 const HEADER_PROPS = {
     logoText: "LES AMIS DU CBD",
@@ -98,8 +99,8 @@ export default function ProductsClient({ initialProducts, globalContent, categor
         };
     }, []);
 
-    const nextSlide = () => setCurrentSlide((currentSlide + 1) % CAROUSEL_SLIDES.length);
-    const prevSlide = () => setCurrentSlide((currentSlide - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length);
+    const nextSlide = () => setCurrentSlide((currentSlide + 1) % config.carousel.length);
+    const prevSlide = () => setCurrentSlide((currentSlide - 1 + config.carousel.length) % config.carousel.length);
 
     // Helper to determine product type robustly 
     const getProductType = (product) => {
@@ -278,18 +279,19 @@ export default function ProductsClient({ initialProducts, globalContent, categor
 
                 {/* Grid */}
                 <div className={styles.grid}>
-                    {groupedProducts.map((product) => {
+                    {groupedProducts.map((product, index) => {
                         return (
-                            <ProductCard 
-                                key={product.id || product.slug}
-                                product={product}
-                                groupId={groupId}
-                                addItem={addItem}
-                                expandedId={expandedId}
-                                setExpandedId={setExpandedId}
-                                config={config}
-                                productOverrides={productOverrides}
-                            />
+                            <ScrollReveal key={product.id || product.slug} animation="fade-up" duration={600} delay={(index % 4) * 100}>
+                                <ProductCard 
+                                    product={product}
+                                    groupId={groupId}
+                                    addItem={addItem}
+                                    expandedId={expandedId}
+                                    setExpandedId={setExpandedId}
+                                    config={config}
+                                    productOverrides={productOverrides}
+                                />
+                            </ScrollReveal>
                         );
                     })}
                 </div>
