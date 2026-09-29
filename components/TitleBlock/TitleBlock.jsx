@@ -3,27 +3,16 @@ import styles from './TitleBlock.module.css';
 
 export default function TitleBlock({ 
     text = 'Votre titre', 
-    htmlTag = 'h2', 
-    textAlign = 'center', 
-    color = '#1F4B40', 
-    fontFamily = 'inherit',
-    fontSize = 'var(--text-3xl)'
+    htmlTag = 'h2'
 }) {
     const Tag = htmlTag;
     
     return (
-        <div className={styles.container} style={{ textAlign }}>
+        <div className={styles.container}>
             <Tag 
                 className={styles.title} 
-                style={{ 
-                    color, 
-                    fontFamily: fontFamily !== 'inherit' ? fontFamily : undefined,
-                    fontSize,
-                    textAlign
-                }}
-            >
-                {text}
-            </Tag>
+                dangerouslySetInnerHTML={{ __html: text }}
+            />
         </div>
     );
 }

@@ -16,7 +16,7 @@
 
 /* Fade Up (Classic) */
 .fade-up {
-    transform: translateY(0px);
+    transform: translateY(40px);
 }
 
 /* Blur In (Modern & Trendy) */
@@ -32,10 +32,23 @@
 
 /* Slide In Right */
 .slide-in-right {
-    transform: translateX(-50px);
+    transform: translateX(50px);
 }
 
 /* Slide In Left */
 .slide-in-left {
-    transform: translateX(50px);
+    transform: translateX(-50px);
+}
+
+/* Global hover effect for images inside modern cards */
+.hover-zoom-wrapper {
+    overflow: hidden;
+}
+
+.hover-zoom-wrapper img {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.hover-zoom-wrapper:hover img {
+    transform: scale(1.05) !important;
 }

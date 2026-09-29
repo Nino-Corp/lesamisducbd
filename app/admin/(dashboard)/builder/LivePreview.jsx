@@ -60,7 +60,7 @@ function IFramePreview({ children, style }) {
             // Add a base style to match the body
             const baseStyle = doc.createElement('style');
             baseStyle.innerHTML = `
-                body { margin: 0; background: #fff; overflow-x: hidden; }
+                body { margin: 0; background-color: var(--background-light, #e3fff8); overflow-x: hidden; }
                 * { box-sizing: border-box; }
             `;
             head.appendChild(baseStyle);
@@ -157,6 +157,51 @@ const LivePreview = memo(function LivePreview({
     }
 
     const [previewMode, setPreviewMode] = useState('desktop');
+    const [desktopSize, setDesktopSize] = useState({ width: 1280, height: 800, label: 'MacBook Air' });
+    const [mobileSize, setMobileSize] = useState({ width: 390, height: 844, label: 'iPhone 14' });
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const desktopOptions = [
+        { width: 1280, height: 800, label: 'MacBook Air' },
+        { width: 1440, height: 900, label: 'MacBook Pro 15"' },
+        { width: 1920, height: 1080, label: 'Écran 1080p' }
+    ];
+
+    const mobileOptions = [
+        { width: 375, height: 667, label: 'iPhone SE' },
+        { width: 390, height: 844, label: 'iPhone 14' },
+        { width: 430, height: 932, label: 'iPhone 14 Pro Max' },
+        { width: 768, height: 1024, label: 'iPad (Portrait)' }
+    ];
+
+    const hasHeader = sections.some(s => s.type === 'Header');
+    const hasFooter = sections.some(s => s.type === 'Footer');
+
+    const defaultHeaderProps = {
+        logoText: "LES AMIS DU CBD",
+        logoImage: "/images/logo.webp",
+        menuItems: [
+            { label: "PRODUITS", href: "#" },
+            { label: "L'ESSENTIEL", href: "#" },
+            { label: "CBD & USAGES", href: "#" },
+            { label: "PROFESSIONNEL", href: "#" }
+        ]
+    };
+
+    const defaultFooterProps = {
+        columnLinks: [
+            { label: "Livraison", href: "#" },
+            { label: "CGV", href: "#" },
+            { label: "Politique de confidentialité", href: "#" }
+        ],
+        contactInfo: {
+            title: "Les Amis du CBD France",
+            address: "25 rue principale 07120 Chauzon (FR)",
+            phone: "06 71 82 42 87",
+            email: "lesamisducbd@gmail.com"
+        },
+        newsletter: { placeholder: "Votre adresse e-mail", isVisible: true }
+    };
 
     // Calcul des styles de la frame de preview
     let frameStyles = { 
@@ -170,20 +215,162 @@ const LivePreview = memo(function LivePreview({
         transition: 'all 0.3s' 
     };
     
+    let scale = 1;
+    let scaledWidth = 0;
+    let scaledHeight = 0;
+
     if (previewMode === 'desktop') {
-        frameStyles = { ...frameStyles, transform: 'scale(0.75)', transformOrigin: 'top center', width: '133%', marginLeft: '-16.5%' };
+        const containerWidth = typeof window !== 'undefined' ? window.innerWidth - 500 : 1000;
+        const containerHeight = typeof window !== 'undefined' ? window.innerHeight - 320 : 800;
+        const scaleX = (containerWidth - 60) / (desktopSize.width + 24);
+        const scaleY = (containerHeight - 60) / (desktopSize.height + 36);
+        
+        scale = Math.min(1, scaleX, scaleY);
+        scaledWidth = (desktopSize.width + 24) * scale;
+        scaledHeight = (desktopSize.height + 36) * scale;
+        
+        frameStyles = { 
+            ...frameStyles, 
+            width: `${desktopSize.width}px`, 
+            height: `${desktopSize.height}px`,
+            border: '12px solid #222',
+            borderBottomWidth: '24px',
+            borderRadius: '12px',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+            overflow: 'hidden'
+        };
     } else if (previewMode === 'mobile') {
-        frameStyles = { ...frameStyles, width: '375px', height: '667px', overflowY: 'auto', marginTop: '40px', borderRadius: '24px', boxShadow: '0 10px 40px rgba(0,0,0,0.1)', border: '8px solid #333' };
+        const containerHeight = typeof window !== 'undefined' ? window.innerHeight - 320 : 800;
+        const scaleY = (containerHeight - 40) / (mobileSize.height + 28);
+        scale = Math.min(0.9, scaleY);
+        
+        scaledWidth = (mobileSize.width + 28) * scale;
+        scaledHeight = (mobileSize.height + 28) * scale;
+        
+        frameStyles = { 
+            ...frameStyles, 
+            width: `${mobileSize.width}px`, 
+            height: `${mobileSize.height}px`, 
+            borderRadius: '40px', 
+            boxShadow: '0 20px 50px rgba(0,0,0,0.2)', 
+            border: '14px solid #111',
+            position: 'relative',
+            overflow: 'hidden'
+        };
     }
 
     return (
         <div style={{ height: '100%', overflowY: 'auto', background: '#e5e7eb', position: 'relative' }}>
-            {/* Barre de sélection Responsive */}
-            <div style={{ position: 'sticky', top: '12px', left: '0', right: '0', display: 'flex', justifyContent: 'center', zIndex: 50, pointerEvents: 'none' }}>
-                <div style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(10px)', padding: '4px', borderRadius: '99px', display: 'flex', gap: '4px', pointerEvents: 'auto', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', alignItems: 'center' }}>
-                    <button onClick={() => setPreviewMode('desktop')} style={{ background: previewMode === 'desktop' ? '#fff' : 'transparent', color: previewMode === 'desktop' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>💻 PC</button>
-                    <button onClick={() => setPreviewMode('mobile')} style={{ background: previewMode === 'mobile' ? '#fff' : 'transparent', color: previewMode === 'mobile' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>📱 Mobile</button>
+            <div style={{ position: 'sticky', top: '12px', left: '0', right: '0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', zIndex: 50, pointerEvents: 'none' }}>
+                <div style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', padding: '6px', borderRadius: '99px', display: 'flex', gap: '6px', pointerEvents: 'auto', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', alignItems: 'center' }}>
+                    <button onClick={() => setPreviewMode('desktop')} style={{ background: previewMode === 'desktop' ? '#fff' : 'transparent', color: previewMode === 'desktop' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>💻 PC (Mac)</button>
+                    <button onClick={() => setPreviewMode('mobile')} style={{ background: previewMode === 'mobile' ? '#fff' : 'transparent', color: previewMode === 'mobile' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>📱 Mobile (iPhone)</button>
                     
+                    <div style={{ width: '1px', background: 'rgba(255,255,255,0.2)', height: '16px', margin: '0 4px' }}></div>
+                    
+                    <div style={{ position: 'relative' }}>
+                        <button 
+                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                            style={{ 
+                                background: 'rgba(255,255,255,0.1)', 
+                                color: '#fff', 
+                                border: 'none', 
+                                padding: '6px 16px', 
+                                borderRadius: '99px', 
+                                fontSize: '0.8rem', 
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                transition: 'background 0.2s'
+                            }}
+                            onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
+                            onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                        >
+                            {previewMode === 'desktop' 
+                                ? (desktopOptions.find(o => o.width === desktopSize.width && o.height === desktopSize.height)?.label || 'Personnalisé...') 
+                                : (mobileOptions.find(o => o.width === mobileSize.width && o.height === mobileSize.height)?.label || 'Personnalisé...')}
+                            <span style={{ fontSize: '0.6rem', transform: dropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
+                        </button>
+                        
+                        {dropdownOpen && (
+                            <>
+                                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 90 }} onClick={() => setDropdownOpen(false)}></div>
+                                <div style={{ 
+                                    position: 'absolute', 
+                                    top: '100%', 
+                                    left: '0',
+                                    marginTop: '8px', 
+                                    background: '#1a1a1a', 
+                                    borderRadius: '12px', 
+                                    padding: '6px',
+                                    boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                                    zIndex: 100,
+                                    width: '220px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '2px',
+                                    border: '1px solid rgba(255,255,255,0.1)'
+                                }}>
+                                    {(previewMode === 'desktop' ? desktopOptions : mobileOptions).map(o => (
+                                        <button 
+                                            key={o.width}
+                                            onClick={() => {
+                                                if (previewMode === 'desktop') setDesktopSize(o);
+                                                else setMobileSize(o);
+                                                setDropdownOpen(false);
+                                            }}
+                                            style={{
+                                                background: 'transparent',
+                                                border: 'none',
+                                                color: '#fff',
+                                                padding: '8px 12px',
+                                                textAlign: 'left',
+                                                borderRadius: '6px',
+                                                fontSize: '0.8rem',
+                                                cursor: 'pointer',
+                                                transition: 'background 0.2s',
+                                                display: 'flex',
+                                                flexDirection: 'column'
+                                            }}
+                                            onMouseOver={e => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'; }}
+                                            onMouseOut={e => { e.currentTarget.style.background = 'transparent'; }}
+                                        >
+                                            <span style={{ fontWeight: 600 }}>{o.label}</span>
+                                            <span style={{ opacity: 0.5, fontSize: '0.7rem', marginTop: '2px' }}>{o.width}x{o.height}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </>
+                        )}
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.1)', padding: '4px 10px', borderRadius: '99px' }}>
+                        <input 
+                            type="number" 
+                            title="Largeur"
+                            value={previewMode === 'desktop' ? desktopSize.width : mobileSize.width}
+                            onChange={e => {
+                                const val = +e.target.value || 0;
+                                if (previewMode === 'desktop') setDesktopSize({...desktopSize, width: val, label: 'Custom'});
+                                else setMobileSize({...mobileSize, width: val, label: 'Custom'});
+                            }}
+                            style={{ width: '45px', background: 'transparent', color: '#fff', border: 'none', fontSize: '0.8rem', textAlign: 'center', outline: 'none' }}
+                        />
+                        <span style={{ color: '#fff', fontSize: '0.8rem', opacity: 0.5 }}>x</span>
+                        <input 
+                            type="number" 
+                            title="Hauteur"
+                            value={previewMode === 'desktop' ? desktopSize.height : mobileSize.height}
+                            onChange={e => {
+                                const val = +e.target.value || 0;
+                                if (previewMode === 'desktop') setDesktopSize({...desktopSize, height: val, label: 'Custom'});
+                                else setMobileSize({...mobileSize, height: val, label: 'Custom'});
+                            }}
+                            style={{ width: '45px', background: 'transparent', color: '#fff', border: 'none', fontSize: '0.8rem', textAlign: 'center', outline: 'none' }}
+                        />
+                    </div>
+
                     <div style={{ width: '1px', background: 'rgba(255,255,255,0.2)', height: '16px', margin: '0 4px' }}></div>
                     
                     <button onClick={() => setIsFullscreen(!isFullscreen)} 
@@ -191,6 +378,9 @@ const LivePreview = memo(function LivePreview({
                         style={{ background: isFullscreen ? '#00FF94' : 'transparent', color: isFullscreen ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>
                         {isFullscreen ? '↙️ Quitter' : '↗️ Plein écran'}
                     </button>
+                </div>
+                <div style={{ background: 'rgba(255, 255, 255, 0.9)', padding: '4px 12px', borderRadius: '99px', fontSize: '0.7rem', color: '#333', fontWeight: 600, boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+                    ℹ️ Mobile / Tablette : jusqu'à 1024px (le menu devient un bouton ☰) — PC : à partir de 1025px
                 </div>
             </div>
 
@@ -320,6 +510,18 @@ const LivePreview = memo(function LivePreview({
                                         }
                                     }
 
+                                    if (section.type === 'Header') {
+                                        return (
+                                            <div 
+                                                onClickCapture={e => { e.preventDefault(); e.stopPropagation(); }} 
+                                                style={{ position: 'relative' }}
+                                            >
+                                                <Component {...finalProps} />
+                                                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 10000, cursor: 'not-allowed' }}></div>
+                                            </div>
+                                        );
+                                    }
+
                                     return <Component {...finalProps} />;
                                 })()
                             ) : (
@@ -331,13 +533,47 @@ const LivePreview = memo(function LivePreview({
                     );
                 };
 
-                return previewMode === 'mobile' ? (
-                    <IFramePreview style={frameStyles}>
+                const wrappedContent = (
+                    <div style={{ paddingTop: !hasHeader ? '80px' : '0' }}>
+                        {!hasHeader && (
+                            <div 
+                                onClickCapture={e => { e.preventDefault(); e.stopPropagation(); }} 
+                                style={{ opacity: 0.8, position: 'fixed', top: 0, left: 0, right: 0, zIndex: 999 }}
+                            >
+                                <Header {...defaultHeaderProps} />
+                                {/* Invisible overlay to aggressively block all clicks even native ones */}
+                                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 10000, cursor: 'not-allowed' }}></div>
+                            </div>
+                        )}
                         {sections.map((section, i) => renderSection(section, i))}
-                    </IFramePreview>
-                ) : (
-                    <div style={frameStyles}>
-                        {sections.map((section, i) => renderSection(section, i))}
+                        {!hasFooter && <div style={{ opacity: 0.8, pointerEvents: 'none', marginTop: '40px' }}><Footer {...defaultFooterProps} /></div>}
+                    </div>
+                );
+
+                return (
+                    <div style={{ display: 'flex', justifyContent: 'center', padding: '20px' }}>
+                        <div style={{ width: scaledWidth, height: scaledHeight, position: 'relative' }}>
+                            <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left', position: 'absolute', top: 0, left: 0 }}>
+                                {previewMode === 'mobile' ? (
+                                    <div style={frameStyles}>
+                                        {/* iPhone Notch */}
+                                        <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '40%', height: '25px', background: '#111', borderBottomLeftRadius: '16px', borderBottomRightRadius: '16px', zIndex: 9999 }}></div>
+                                        <IFramePreview style={{ width: '100%', height: '100%', border: 'none', borderRadius: '26px' }}>
+                                            {wrappedContent}
+                                        </IFramePreview>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <div style={frameStyles}>
+                                            <IFramePreview style={{ width: '100%', height: '100%', border: 'none' }}>
+                                                {wrappedContent}
+                                            </IFramePreview>
+                                        </div>
+                                        <div style={{ background: '#ddd', height: '12px', width: '20%', margin: '0 auto', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', boxShadow: 'inset 0 4px 6px rgba(0,0,0,0.1)' }}></div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 );
             })()}

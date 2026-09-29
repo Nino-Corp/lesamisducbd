@@ -144,7 +144,7 @@ function injectPickerStyles() {
    3. Component
    ───────────────────────────────────────────────────────── */
 
-export default function QuillEditorInner({ value, onChange, placeholder }) {
+export default function QuillEditorInner({ value, onChange, placeholder, titleMode }) {
     const quillRef = useRef(null);
     const boundsId = useMemo(() => 'quill-bounds-' + Math.random().toString(36).substr(2, 9), []);
 
@@ -173,7 +173,7 @@ export default function QuillEditorInner({ value, onChange, placeholder }) {
     const modules = useMemo(() => ({
         toolbar: {
             container: [
-                [{ header: [2, 3, false] }],
+                ...(titleMode ? [] : [[{ header: [2, 3, false] }]]),
                 [{ font: FontStyle.whitelist }, { size: SizeStyle.whitelist }],
                 ['bold', 'italic', 'underline', 'strike'],
                 [{ color: [false, ...PROJECT_COLORS] }, { background: [false, ...PROJECT_COLORS] }],

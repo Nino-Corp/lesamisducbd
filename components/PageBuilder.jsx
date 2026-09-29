@@ -144,13 +144,7 @@ export default function PageBuilder({ sections }) {
                 if (hideMobile) classNames += ' hide-mobile';
                 if (hideDesktop) classNames += ' hide-desktop';
 
-                const content = NO_ANIMATE.has(section.type) ? (
-                    <Component {...componentProps} />
-                ) : (
-                    <ScrollReveal animation="fade-up" duration={700} delay={100}>
-                        <Component {...componentProps} />
-                    </ScrollReveal>
-                );
+                const content = <Component {...componentProps} />;
 
                 return (
                     <div 

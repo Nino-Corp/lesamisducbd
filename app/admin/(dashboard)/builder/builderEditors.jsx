@@ -47,7 +47,7 @@ export function ImageUploader({ value, onChange, folder = 'pages' }) {
 export function HeroEditor({ props, onChange }) {
     return <>
         <Field label="Titre principal" hint="Supporte <strong>, <em>...">
-            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} />
+            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} titleMode={true} />
         </Field>
         <Field label="Sous-titre" hint="Texte affiché sous le titre principal (optionnel)">
             <input style={inputStyle} value={props.subtitle || ''} onChange={e => onChange({ subtitle: e.target.value })} />
@@ -301,9 +301,7 @@ export function ImageBlockEditor({ props, onChange }) {
                     style={{ width: '100%', accentColor: '#1F4B40', cursor: 'pointer' }}
                 />
             </Field>
-            <Field label="Pleine Largeur (100% écran)">
-                <input type="checkbox" checked={!!props.fullWidth} onChange={e => onChange({ fullWidth: e.target.checked })} />
-            </Field>
+
             <Field label="Alignement">
                 <select style={selectStyle} value={props.imageAlign || 'center'} onChange={e => onChange({ imageAlign: e.target.value })}>
                     <option value="left">Gauche</option>
@@ -1070,7 +1068,28 @@ export function InteractiveMapEditor() {
     );
 }
 
+export function TitleBlockEditor({ props, onChange }) {
+    return <>
+        <Field label="Texte du titre" hint="Texte de votre titre">
+            <WysiwygEditor value={props.text || ''} onChange={val => onChange({ text: val })} titleMode={true} />
+        </Field>
+        <Field label="Balise HTML">
+            <select style={selectStyle} value={props.htmlTag || 'h2'} onChange={e => onChange({ htmlTag: e.target.value })}>
+                <option value="h1">H1 (Titre principal)</option>
+                <option value="h2">H2 (Sous-titre)</option>
+                <option value="h3">H3</option>
+                <option value="p">Paragraphe</option>
+            </select>
+        </Field>
+    </>;
+}
+
+
+
+
+
 export const EDITORS = {
+    TitleBlock: TitleBlockEditor,
     ContentHero: HeroEditor,
     TwoColumns: TwoColumnsEditor,
     RichText: RichTextEditor,

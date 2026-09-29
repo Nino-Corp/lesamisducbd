@@ -74,7 +74,8 @@ export default function PageEditor() {
         } finally { setSaving(false); }
     };
 
-    // Auto-save logic
+    // Désactivation de la sauvegarde automatique (génère des rechargements/flickers gênants)
+    /*
     useEffect(() => {
         if (!page) return;
         if (initialLoadRef.current) {
@@ -92,6 +93,7 @@ export default function PageEditor() {
             if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
         };
     }, [page]);
+    */
 
     const duplicate = async () => {
         const newSlug = `${page.slug}-copie-${Date.now().toString(36)}`;
@@ -651,10 +653,10 @@ export default function PageEditor() {
 
                         {/* Template tabs switcher */}
                         <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb' }}>
-                            <button onClick={() => setTemplateTab('models')} style={{ flex: 1, padding: '12px', background: templateTab === 'models' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'models' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'models' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem' }}>
+                            <button onClick={() => setTemplateTab('models')} style={{ flex: 1, padding: '12px', background: templateTab === 'models' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'models' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'models' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px' }}>
                                 🧱 Modèles Standards
                             </button>
-                            <button onClick={() => setTemplateTab('blocks')} style={{ flex: 1, padding: '12px', background: templateTab === 'blocks' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'blocks' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'blocks' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem' }}>
+                            <button onClick={() => setTemplateTab('blocks')} style={{ flex: 1, padding: '12px', background: templateTab === 'blocks' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'blocks' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'blocks' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px' }}>
                                 💾 Mes Blocs Sauvegardés ({savedBlocks.length})
                             </button>
                         </div>
@@ -667,7 +669,7 @@ export default function PageEditor() {
                                         placeholder="Rechercher un bloc... (ex: texte, carte, partenaire)" 
                                         value={searchTerm} 
                                         onChange={e => setSearchTerm(e.target.value)} 
-                                        style={{ width: '100%', padding: '10px 16px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '0.95rem', background: '#f9fafb' }}
+                                        style={{ width: '100%', padding: '10px 16px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '0.95rem', background: '#f9fafb', boxSizing: 'border-box' }}
                                     />
                                 </div>
                                 {/* Category tabs */}
@@ -687,12 +689,12 @@ export default function PageEditor() {
                                 <div style={{ overflowY: 'auto', padding: '20px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' }}>
                                     {filteredTemplates.map(t => (
                                         <button key={t.type} onClick={() => addSection(t)}
-                                            style={{ padding: '20px 16px', borderRadius: '16px', border: '1.5px solid #e5e7eb', background: '#fff', cursor: 'pointer', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', transition: 'all 0.15s' }}
+                                            style={{ minWidth: 0, width: '100%', padding: '20px 16px', borderRadius: '16px', border: '1.5px solid #e5e7eb', background: '#fff', cursor: 'pointer', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', transition: 'all 0.15s', whiteSpace: 'normal' }}
                                             onMouseEnter={e => { e.currentTarget.style.border = '1.5px solid #1F4B40'; e.currentTarget.style.background = '#f0fdf4'; }}
                                             onMouseLeave={e => { e.currentTarget.style.border = '1.5px solid #e5e7eb'; e.currentTarget.style.background = '#fff'; }}>
                                             <span style={{ fontSize: '2rem' }}>{t.icon}</span>
-                                            <strong style={{ fontSize: '0.88rem', color: '#1F4B40' }}>{t.label}</strong>
-                                            <span style={{ fontSize: '0.75rem', color: '#888', lineHeight: 1.4 }}>{t.description}</span>
+                                            <strong style={{ fontSize: '0.88rem', color: '#1F4B40', wordBreak: 'break-word' }}>{t.label}</strong>
+                                            <span style={{ fontSize: '0.75rem', color: '#888', lineHeight: 1.4, wordBreak: 'break-word' }}>{t.description}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -703,10 +705,10 @@ export default function PageEditor() {
                                     <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#999', padding: '40px 0' }}>Aucun bloc sauvegardé pour le moment.</p>
                                 ) : (
                                     savedBlocks.map(block => (
-                                        <div key={block.id} style={{ position: 'relative', padding: '20px 16px', borderRadius: '16px', border: '1.5px solid #e5e7eb', background: '#fff', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                                        <div key={block.id} style={{ minWidth: 0, position: 'relative', padding: '20px 16px', borderRadius: '16px', border: '1.5px solid #e5e7eb', background: '#fff', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                                             <button onClick={() => deleteSavedBlock(block.id)} title="Supprimer" style={{ position: 'absolute', top: '8px', right: '8px', background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}>✕</button>
                                             <span style={{ fontSize: '2rem' }}>{TEMPLATES.find(t => t.type === block.type)?.icon || '🧩'}</span>
-                                            <strong style={{ fontSize: '0.88rem', color: '#1F4B40' }}>{block.savedName || block.type}</strong>
+                                            <strong style={{ fontSize: '0.88rem', color: '#1F4B40', wordBreak: 'break-word', whiteSpace: 'normal' }}>{block.savedName || block.type}</strong>
                                             <span style={{ fontSize: '0.7rem', color: '#aaa' }}>{new Date(block.savedAt).toLocaleDateString('fr-FR')}</span>
                                             <button onClick={() => addSection(block)} style={{ marginTop: '8px', width: '100%', padding: '6px', background: '#00FF94', color: '#1F4B40', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '0.8rem' }}>
                                                 Injecter

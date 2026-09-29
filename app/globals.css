@@ -145,7 +145,6 @@ li[style*="text-align:right"] {
    so the list block itself can be truly centered on the page. */
 ul:has(> li[style*="text-align: center"]),
 ul:has(> li[style*="text-align:center"]),
-ol:has(> li[style*="text-align: center"]),
 ol:has(> li[style*="text-align:center"]) {
   padding-left: 0;
 }

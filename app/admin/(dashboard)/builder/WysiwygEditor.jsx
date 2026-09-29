@@ -16,7 +16,7 @@ const QuillEditorInner = dynamic(() => import('./QuillEditorInner'), {
     ),
 });
 
-export default function WysiwygEditor({ value, onChange, placeholder = 'Tapez votre texte ici...' }) {
+export default function WysiwygEditor({ value, onChange, placeholder = 'Tapez votre texte ici...', titleMode = false }) {
     const [isFocused, setIsFocused] = useState(false);
 
     const handleChange = useCallback((html) => {
@@ -35,6 +35,7 @@ export default function WysiwygEditor({ value, onChange, placeholder = 'Tapez vo
                 value={value}
                 onChange={handleChange}
                 placeholder={placeholder}
+                titleMode={titleMode}
             />
         </div>
     );

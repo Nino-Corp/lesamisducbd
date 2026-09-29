@@ -455,6 +455,22 @@ export const TEMPLATES = [
         description: 'Schéma en 4 étapes de livraison (spécifique à la page)',
         category: 'special',
         defaultProps: {}
+    },
+    {
+        type: 'InteractiveMap',
+        label: 'Carte Interactive (Store Locator)',
+        icon: '🗺️',
+        description: 'Carte des points de vente',
+        category: 'special',
+        defaultProps: {}
+    },
+    {
+        type: 'PartnersNetwork',
+        label: 'Réseau de Partenaires',
+        icon: '🤝',
+        description: 'Bannière animée des partenaires',
+        category: 'special',
+        defaultProps: {}
     }
 ];
 
