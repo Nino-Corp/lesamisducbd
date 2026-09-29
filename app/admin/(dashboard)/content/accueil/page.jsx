@@ -186,6 +186,9 @@ export default function AccueilContentPage() {
     const [showAddModal, setShowAddModal] = useState(false);
     const [showSEOModal, setShowSEOModal] = useState(false);
     const [addCategory, setAddCategory] = useState('all');
+    const [savedBlocks, setSavedBlocks] = useState([]);
+    const [templateTab, setTemplateTab] = useState('models'); // models | blocks
+    const [searchTerm, setSearchTerm] = useState('');
     const [dragOver, setDragOver] = useState(null);
     const [dragging, setDragging] = useState(null);
     const initialLoadRef = useRef(true);
@@ -202,6 +205,13 @@ export default function AccueilContentPage() {
             }).catch(err => {
                 if (err.name !== 'AbortError') setLoaded(true);
             });
+            
+        // Fetch saved blocks for the modal
+        fetch(`/api/admin/builder?action=blocks`, { signal: controller.signal })
+            .then(r => r.json())
+            .then(blocks => setSavedBlocks(blocks))
+            .catch(() => {});
+            
         return () => controller.abort();
     }, []);
 
@@ -269,11 +279,28 @@ export default function AccueilContentPage() {
     };
 
     const addSection = (template) => {
-        const newSection = { id: `${template.type.toLowerCase()}-${Date.now()}`, type: template.type, props: { ...template.defaultProps } };
+        const newSection = { id: `${template.type.toLowerCase()}-${Date.now()}`, type: template.type, props: { ...(template.defaultProps || template.props) } };
         setSections(prev => [...prev, newSection]);
         setActiveSection(sections.length); // select the new one
         setShowAddModal(false);
     };
+
+    const deleteSavedBlock = async (blockId) => {
+        if (!confirm('Supprimer ce bloc sauvegardé ?')) return;
+        try {
+            await fetch(`/api/admin/builder?action=delete_block&blockId=${blockId}`, { method: 'DELETE' });
+            setSavedBlocks(prev => prev.filter(b => b.id !== blockId));
+        } catch (e) {
+            console.error('Delete block error', e);
+        }
+    };
+
+    const filteredTemplates = TEMPLATES.filter(t => {
+        const matchCategory = addCategory === 'all' || t.category === addCategory;
+        const matchSearch = t.label.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                            t.description?.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchCategory && matchSearch;
+    });
 
     /* Drag & drop */
     const onDragStart = (e, index) => { setDragging(index); e.dataTransfer.effectAllowed = 'move'; };
@@ -318,8 +345,6 @@ export default function AccueilContentPage() {
     const currentSection = activeSection !== null ? sections[activeSection] : null;
     const CurrentEditor = currentSection ? getEditor(currentSection.type) : null;
     const currentMeta = currentSection ? getMeta(currentSection.type) : null;
-
-    const filteredTemplates = addCategory === 'all' ? TEMPLATES : TEMPLATES.filter(t => t.category === addCategory);
 
     return (
         <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: '#f1f5f9', overflow: 'hidden' }}>
@@ -584,52 +609,82 @@ export default function AccueilContentPage() {
 
             {/* ── ADD BLOCK MODAL ─────────────────────────── */}
             {showAddModal && (
-                <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}
                     onClick={() => setShowAddModal(false)}>
-                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }} />
-                    <div style={{
-                        position: 'relative', background: '#fff', borderRadius: '20px', width: '640px', maxHeight: '80vh',
-                        display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
-                    }} onClick={e => e.stopPropagation()}>
-                        <div style={{ padding: '20px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <h2 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#0f172a' }}>Ajouter un bloc</h2>
-                            <button onClick={() => setShowAddModal(false)} style={{
-                                width: '32px', height: '32px', borderRadius: '8px', border: '1px solid #e2e8f0',
-                                background: '#fff', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            }}>✕</button>
+                    <div style={{ background: '#fff', borderRadius: '20px', width: '100%', maxWidth: '720px', maxHeight: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+                        onClick={e => e.stopPropagation()}>
+                        <div style={{ padding: '20px 24px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 800, color: '#1F4B40' }}>Ajouter un bloc</h2>
+                            <button onClick={() => setShowAddModal(false)} style={{ background: 'none', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#999' }}>✕</button>
                         </div>
-                        {/* Categories */}
-                        <div style={{ padding: '12px 24px', borderBottom: '1px solid #f1f5f9', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                            <button onClick={() => setAddCategory('all')} style={{
-                                padding: '5px 12px', borderRadius: '8px', border: 'none', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
-                                background: addCategory === 'all' ? '#1F4B40' : '#f1f5f9', color: addCategory === 'all' ? '#fff' : '#475569',
-                            }}>Tous</button>
-                            {CATEGORIES.map(cat => (
-                                <button key={cat.id} onClick={() => setAddCategory(cat.id)} style={{
-                                    padding: '5px 12px', borderRadius: '8px', border: 'none', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
-                                    background: addCategory === cat.id ? '#1F4B40' : '#f1f5f9', color: addCategory === cat.id ? '#fff' : '#475569',
-                                }}>{cat.label}</button>
-                            ))}
+
+                        {/* Template tabs switcher */}
+                        <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb' }}>
+                            <button onClick={() => setTemplateTab('models')} style={{ flex: 1, padding: '12px', background: templateTab === 'models' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'models' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'models' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px' }}>
+                                🧱 Modèles Standards
+                            </button>
+                            <button onClick={() => setTemplateTab('blocks')} style={{ flex: 1, padding: '12px', background: templateTab === 'blocks' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'blocks' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'blocks' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px' }}>
+                                💾 Mes Blocs Sauvegardés ({savedBlocks.length})
+                            </button>
                         </div>
-                        {/* Templates grid */}
-                        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 24px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                            {filteredTemplates.map(tpl => (
-                                <button key={tpl.type} onClick={() => addSection(tpl)} style={{
-                                    padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0',
-                                    background: '#fff', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s',
-                                    display: 'flex', gap: '12px', alignItems: 'flex-start',
-                                }}
-                                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#1F4B40'; e.currentTarget.style.background = '#f0fdf4'; }}
-                                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#fff'; }}
-                                >
-                                    <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>{tpl.icon}</span>
-                                    <div>
-                                        <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#0f172a' }}>{tpl.label}</div>
-                                        <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>{tpl.description}</div>
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
+
+                        {templateTab === 'models' ? (
+                            <>
+                                <div style={{ padding: '16px 24px', borderBottom: '1px solid #e5e7eb' }}>
+                                    <input 
+                                        type="text" 
+                                        placeholder="Rechercher un bloc... (ex: texte, carte, partenaire)" 
+                                        value={searchTerm} 
+                                        onChange={e => setSearchTerm(e.target.value)} 
+                                        style={{ width: '100%', padding: '10px 16px', borderRadius: '8px', border: '1px solid #d1d5db', fontSize: '0.95rem', background: '#f9fafb', boxSizing: 'border-box' }}
+                                    />
+                                </div>
+                                {/* Category tabs */}
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '16px 24px', borderBottom: '1px solid #e5e7eb' }}>
+                                    <button onClick={() => setAddCategory('all')}
+                                        style={{ flexShrink: 0, padding: '6px 16px', borderRadius: '99px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.82rem', background: addCategory === 'all' ? '#1F4B40' : '#f3f4f6', color: addCategory === 'all' ? '#00FF94' : '#555', whiteSpace: 'nowrap' }}>
+                                        Tous
+                                    </button>
+                                    {CATEGORIES.map(cat => (
+                                        <button key={cat.id} onClick={() => setAddCategory(cat.id)}
+                                            style={{ flexShrink: 0, padding: '6px 16px', borderRadius: '99px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.82rem', background: addCategory === cat.id ? '#1F4B40' : '#f3f4f6', color: addCategory === cat.id ? '#00FF94' : '#555', whiteSpace: 'nowrap' }}>
+                                            {cat.label}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <div style={{ overflowY: 'auto', padding: '20px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' }}>
+                                    {filteredTemplates.map(t => (
+                                        <button key={t.type} onClick={() => addSection(t)}
+                                            style={{ minWidth: 0, width: '100%', padding: '20px 16px', borderRadius: '16px', border: '1.5px solid #e5e7eb', background: '#fff', cursor: 'pointer', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', transition: 'all 0.15s', whiteSpace: 'normal' }}
+                                            onMouseEnter={e => { e.currentTarget.style.border = '1.5px solid #1F4B40'; e.currentTarget.style.background = '#f0fdf4'; }}
+                                            onMouseLeave={e => { e.currentTarget.style.border = '1.5px solid #e5e7eb'; e.currentTarget.style.background = '#fff'; }}>
+                                            <span style={{ fontSize: '2rem' }}>{t.icon}</span>
+                                            <strong style={{ fontSize: '0.88rem', color: '#1F4B40', wordBreak: 'break-word' }}>{t.label}</strong>
+                                            <span style={{ fontSize: '0.75rem', color: '#888', lineHeight: 1.4, wordBreak: 'break-word' }}>{t.description}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </>
+                        ) : (
+                            <div style={{ overflowY: 'auto', padding: '20px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '16px' }}>
+                                {savedBlocks.length === 0 ? (
+                                    <p style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#999', padding: '40px 0' }}>Aucun bloc sauvegardé pour le moment.</p>
+                                ) : (
+                                    savedBlocks.map(block => (
+                                        <div key={block.id} style={{ minWidth: 0, position: 'relative', padding: '20px 16px', borderRadius: '16px', border: '1.5px solid #e5e7eb', background: '#fff', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                                            <button onClick={() => deleteSavedBlock(block.id)} title="Supprimer" style={{ position: 'absolute', top: '8px', right: '8px', background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}>✕</button>
+                                            <span style={{ fontSize: '2rem' }}>{TEMPLATES.find(t => t.type === block.type)?.icon || '🧩'}</span>
+                                            <strong style={{ fontSize: '0.88rem', color: '#1F4B40', wordBreak: 'break-word', whiteSpace: 'normal' }}>{block.savedName || block.type}</strong>
+                                            <span style={{ fontSize: '0.7rem', color: '#aaa' }}>{new Date(block.savedAt).toLocaleDateString('fr-FR')}</span>
+                                            <button onClick={() => addSection(block)} style={{ marginTop: '8px', width: '100%', padding: '6px', background: '#00FF94', color: '#1F4B40', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '0.8rem' }}>
+                                                Injecter
+                                            </button>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}

@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Hero.module.css';
 import { trackCTA } from '@/utils/analytics';
-
 export default function Hero({ backgroundImage, title, description, ctaLabel, ctaLink, centered = false }) {
     return (
         <section className={styles.heroWrapper}>

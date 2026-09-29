@@ -14,6 +14,7 @@ import { calculateGroupPrice } from '@/lib/utils/groupPricing';
 import { SITE_URL } from '@/app/shared-metadata';
 import ProductSchema from '@/components/JsonLd/ProductSchema';
 import { trackCTA } from '@/utils/analytics';
+import { motion } from 'framer-motion';
 
 const HEADER_PROPS = {
     logoText: "LES AMIS DU CBD",
@@ -157,7 +158,13 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                 <div className={styles.productGrid}>
                     {/* Gallery Section */}
                     <div className={styles.gallery}>
-                        <div className={styles.mainImageWrapper}>
+                        <motion.div 
+                            className={styles.mainImageWrapper}
+                            layoutId={`product-image-${activeProduct.id}`}
+                            initial={{ opacity: 0, scale: 0.85, y: 30 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25, duration: 0.5 }}
+                        >
                             <Image
                                 src={activeProduct.imageLarge || activeProduct.image || '/images/placeholder.webp'}
                                 alt={activeProduct.name}
@@ -166,11 +173,16 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                 priority
                                 sizes="(max-width: 768px) 100vw, 50vw"
                             />
-                        </div>
+                        </motion.div>
                     </div>
 
                     {/* Details Section */}
-                    <div className={styles.details}>
+                    <motion.div 
+                        className={styles.details}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1, duration: 0.4, ease: "easeOut" }}
+                    >
                         <div className={styles.headerInfo}>
                             {activeProduct.tag && <span className={styles.tag}>{activeProduct.tag}</span>}
                             <h1 className={styles.title}>{activeProduct.name}</h1>
@@ -318,7 +330,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                 __html: (product.description || product.descriptionShort || defaultDescription).replace(/&nbsp;/g, ' ')
                             }}
                         />
-                    </div>
+                    </motion.div>
                 </div>
 
                 {/* Related Products */}

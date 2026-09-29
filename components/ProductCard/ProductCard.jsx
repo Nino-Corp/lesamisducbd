@@ -5,6 +5,7 @@ import Image from 'next/image';
 import styles from './ProductCard.module.css';
 import { Tag } from 'lucide-react';
 import { trackCTA } from '@/utils/analytics';
+import { motion } from 'framer-motion';
 
 /**
  * ProductCard — affiche un produit issu de l'API PrestaShop.
@@ -28,52 +29,62 @@ export default function ProductCard({ product }) {
     }
 
     return (
-        <Link href={`/produit/${product.slug}`} className={styles.card} onClick={() => trackCTA(`product_click_${product.slug}`)}>
-            {/* Badge Promo */}
-            {product.onSale && (
-                <span className={styles.badge}>
-                    <Tag size={11} /> Promo
-                </span>
-            )}
-
-            {/* Image Produit */}
-            <div className={styles.imageWrapper}>
-                <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className={styles.image}
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    unoptimized // Image vient d'un serveur externe PrestaShop
-                />
-            </div>
-
-            {/* Infos */}
-            <div className={styles.info}>
-                <h3 className={styles.name}>{product.name}</h3>
-
-                {/* Description courte (peut contenir du HTML) */}
-                {product.descriptionShort && (
-                    <div
-                        className={styles.desc}
-                        dangerouslySetInnerHTML={{ __html: product.descriptionShort }}
-                    />
+        <Link href={`/produit/${product.slug}`} style={{ textDecoration: 'none' }} onClick={() => trackCTA(`product_click_${product.slug}`)}>
+            <motion.div
+                className={styles.card}
+                whileHover={{ y: -8, scale: 1.015 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            >
+                {/* Badge Promo */}
+                {product.onSale && (
+                    <span className={styles.badge}>
+                        <Tag size={11} /> Promo
+                    </span>
                 )}
 
-                <div className={styles.footer}>
-                    <div className={styles.priceBlock}>
-                        <span className={styles.price}>
-                            {product.suggestShowHT ? `${product.formattedPriceHT} HT` : product.formattedPrice}
-                        </span>
-                        {perGramText && (
-                            <span className={styles.perGram}>
-                                dès {perGramText.replace(' TTC', '')}
-                            </span>
-                        )}
-                    </div>
-                    <button className={styles.cta}>Voir</button>
+                {/* Image Produit */}
+                <motion.div
+                    className={styles.imageWrapper}
+                    layoutId={`product-image-${product.id}`}
+                >
+                    <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        className={styles.image}
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        unoptimized // Image vient d'un serveur externe PrestaShop
+                    />
                 </div>
-            </div>
+
+                {/* Infos */}
+                <div className={styles.info}>
+                    <h3 className={styles.name}>{product.name}</h3>
+
+                    {/* Description courte (peut contenir du HTML) */}
+                    {product.descriptionShort && (
+                        <div
+                            className={styles.desc}
+                            dangerouslySetInnerHTML={{ __html: product.descriptionShort }}
+                        />
+                    )}
+
+                    <div className={styles.footer}>
+                        <div className={styles.priceBlock}>
+                            <span className={styles.price}>
+                                {product.suggestShowHT ? `${product.formattedPriceHT} HT` : product.formattedPrice}
+                            </span>
+                            {perGramText && (
+                                <span className={styles.perGram}>
+                                    dès {perGramText.replace(' TTC', '')}
+                                </span>
+                            )}
+                        </div>
+                        <button className={styles.cta}>Voir</button>
+                    </div>
+                </div>
+            </motion.div>
         </Link>
     );
 }

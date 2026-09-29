@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
 import styles from './ContentHero.module.css';
-
 export default function ContentHero({ title, subtitle, children, imageSrc, imageAlt, imagePosition = "center", textAlign = "center", overlayOpacity = 50 }) {
     return (
         <section className={styles.heroSection}>

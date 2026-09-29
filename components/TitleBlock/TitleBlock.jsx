@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './TitleBlock.module.css';
-
 export default function TitleBlock({ 
     text = 'Votre titre', 
     htmlTag = 'h2'
@@ -10,7 +9,7 @@ export default function TitleBlock({
     return (
         <div className={styles.container}>
             <Tag 
-                className={styles.title} 
+                className={styles.title}
                 dangerouslySetInnerHTML={{ __html: text }}
             />
         </div>

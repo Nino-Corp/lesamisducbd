@@ -194,7 +194,7 @@ export default function CartDrawer() {
                             </div>
                         ))
                     )}
-                    
+
                     {/* Upsell / Cross-Selling Section */}
                     {cart.length > 0 && upsellProducts.length > 0 && (
                         <div className={styles.upsellSection}>
@@ -222,7 +222,7 @@ export default function CartDrawer() {
 
                 {cart.length > 0 && (
                     <div className={styles.footer}>
-                        
+
                         {/* Gamification Loyalty Widget */}
                         {rewardSettings && !isPro && (
                             <div className={styles.loyaltyBox}>
@@ -231,8 +231,8 @@ export default function CartDrawer() {
                                     <span className={styles.loyaltyPoints}>+{Math.floor(cartTotalTTC / rewardSettings.ratio)} pts</span>
                                 </div>
                                 <div className={styles.loyaltyProgressTrack}>
-                                    <div 
-                                        className={styles.loyaltyProgressBar} 
+                                    <div
+                                        className={styles.loyaltyProgressBar}
                                         style={{ width: `${Math.min(100, (cartTotalTTC / 100) * 100)}%` }}
                                     ></div>
                                 </div>

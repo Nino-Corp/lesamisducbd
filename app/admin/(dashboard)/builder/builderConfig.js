@@ -456,22 +456,7 @@ export const TEMPLATES = [
         category: 'special',
         defaultProps: {}
     },
-    {
-        type: 'InteractiveMap',
-        label: 'Carte Interactive (Store Locator)',
-        icon: '🗺️',
-        description: 'Carte des points de vente',
-        category: 'special',
-        defaultProps: {}
-    },
-    {
-        type: 'PartnersNetwork',
-        label: 'Réseau de Partenaires',
-        icon: '🤝',
-        description: 'Bannière animée des partenaires',
-        category: 'special',
-        defaultProps: {}
-    }
+
 ];
 
 export const CATEGORIES = [

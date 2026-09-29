@@ -67,7 +67,7 @@ export function RecrutementJobs({ title, jobs }) {
                                 <span className={styles.jobBadge}>{job.type}</span>
                             </div>
                             <p className={styles.jobLocation}>📍 {job.location}</p>
-                                <div dangerouslySetInnerHTML={{ __html: job.description || '' }} />
+                            <div dangerouslySetInnerHTML={{ __html: job.description || '' }} />
                             <button onClick={() => { trackCTA('recrutement_postuler'); setIsModalOpen(true); }} className={styles.applyBtn}>
                                 Postuler
                             </button>

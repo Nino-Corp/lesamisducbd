@@ -44,6 +44,7 @@ import NewsletterBlock from '@/components/NewsletterBlock/NewsletterBlock';
 import TitleBlock from '@/components/TitleBlock/TitleBlock';
 import { useState, useRef, useEffect, memo } from 'react';
 import { createPortal } from 'react-dom';
+import { SessionProvider } from "next-auth/react";
 
 function IFramePreview({ children, style }) {
     const iframeRef = useRef();
@@ -74,7 +75,7 @@ function IFramePreview({ children, style }) {
 
     return (
         <iframe ref={iframeRef} style={style} frameBorder="0">
-            {mountNode && createPortal(children, mountNode)}
+            {mountNode && createPortal(<SessionProvider>{children}</SessionProvider>, mountNode)}
         </iframe>
     );
 }

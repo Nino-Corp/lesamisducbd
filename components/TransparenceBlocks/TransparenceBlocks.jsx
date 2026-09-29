@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { X, Star, BadgeEuro, ShieldCheck, FileText } from 'lucide-react';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
 import styles from './TransparenceBlocks.module.css';
-
 // Mini Markdown parser for Columns: line starting with "-" or "*" becomes <li>, else <p>
 function renderTextLines(textBlocks) {
     if (!textBlocks) return null;
