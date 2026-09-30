@@ -199,7 +199,8 @@ export default function ProductsClient({ initialProducts, globalContent, categor
             <Header {...HEADER_PROPS} menuItems={globalContent?.headerLinks || HEADER_PROPS.menuItems} />
 
             {/* Hero Carousel */}
-            <div className={styles.carouselContainer}>
+            <ScrollReveal animation="fade-up" duration={700} delay={100}>
+                <div className={styles.carouselContainer}>
                 {config.carousel.map((slide, index) => (
                     <div
                         key={slide.id}
@@ -238,44 +239,49 @@ export default function ProductsClient({ initialProducts, globalContent, categor
                     ))}
                 </div>
             </div>
+            </ScrollReveal>
 
             {/* Search Bar */}
-            <div className={styles.searchContainer}>
-                <div className={styles.searchWrapper}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.searchIcon}>
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input
-                        type="text"
-                        placeholder="Rechercher un produit (ex: Amnésia, Pollen...)"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className={styles.searchInput}
-                    />
-                    {searchQuery && (
-                        <button className={styles.clearSearchBtn} onClick={() => setSearchQuery('')} aria-label="Effacer la recherche">
-                            &times;
-                        </button>
-                    )}
+            <ScrollReveal animation="fade-up" duration={700} delay={100}>
+                <div className={styles.searchContainer}>
+                    <div className={styles.searchWrapper}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={styles.searchIcon}>
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input
+                            type="text"
+                            placeholder="Rechercher un produit (ex: Amnésia, Pollen...)"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className={styles.searchInput}
+                        />
+                        {searchQuery && (
+                            <button className={styles.clearSearchBtn} onClick={() => setSearchQuery('')} aria-label="Effacer la recherche">
+                                &times;
+                            </button>
+                        )}
+                    </div>
                 </div>
-            </div>
+            </ScrollReveal>
 
             <section className={styles.container}>
                 {/* Category Filters */}
-                <div className={styles.filtersWrapper}>
-                    <div className={styles.filtersScroll}>
-                        {categories.map(cat => (
-                            <button
-                                key={cat.id}
-                                className={`${styles.filterBtn} ${activeCategory === cat.id ? styles.active : ''}`}
-                                onClick={() => setActiveCategory(cat.id)}
-                            >
-                                {cat.label}
-                            </button>
-                        ))}
+                <ScrollReveal animation="fade-up" duration={700} delay={100}>
+                    <div className={styles.filtersWrapper}>
+                        <div className={styles.filtersScroll}>
+                            {categories.map(cat => (
+                                <button
+                                    key={cat.id}
+                                    className={`${styles.filterBtn} ${activeCategory === cat.id ? styles.active : ''}`}
+                                    onClick={() => setActiveCategory(cat.id)}
+                                >
+                                    {cat.label}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                </ScrollReveal>
 
                 {/* Grid */}
                 <div className={styles.grid}>
@@ -297,13 +303,17 @@ export default function ProductsClient({ initialProducts, globalContent, categor
                 </div>
 
                 {filteredProducts.length === 0 && (
-                    <div className={styles.emptyState}>
-                        <p>Aucun produit ne correspond à cette catégorie pour le moment.</p>
-                    </div>
+                    <ScrollReveal animation="fade-up" duration={700} delay={100}>
+                        <div className={styles.emptyState}>
+                            <p>Aucun produit ne correspond à cette catégorie pour le moment.</p>
+                        </div>
+                    </ScrollReveal>
                 )}
             </section>
 
-            <Footer {...footerProps} />
+            <ScrollReveal animation="fade-up" duration={700} delay={100}>
+                <Footer {...footerProps} />
+            </ScrollReveal>
         </main>
     );
 }
