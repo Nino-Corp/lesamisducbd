@@ -364,14 +364,14 @@
     width: 100%;
     aspect-ratio: 1.586;
     border-radius: 20px;
-    background: linear-gradient(135deg, #112924, #1F4B40);
+    background: linear-gradient(135deg, var(--bg1, #112924), var(--bg2, #1F4B40));
     border: 1px solid rgba(0, 255, 148, 0.3);
     position: relative;
     transform-style: preserve-3d;
     transition: transform 0.1s ease-out;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     overflow: hidden;
-    color: white;
+    color: var(--text-color, white);
     cursor: pointer;
 }
 

@@ -74,8 +74,7 @@ export default function PageEditor() {
         } finally { setSaving(false); }
     };
 
-    // Désactivation de la sauvegarde automatique (génère des rechargements/flickers gênants)
-    /*
+    // Réactivation de la sauvegarde automatique (à la demande de l'utilisateur)
     useEffect(() => {
         if (!page) return;
         if (initialLoadRef.current) {
@@ -87,13 +86,12 @@ export default function PageEditor() {
         
         autoSaveTimerRef.current = setTimeout(() => {
             save(null, page);
-        }, 3000);
+        }, 2000); // 2s de délai au lieu de 5 pour limiter la fréquence
 
         return () => {
             if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
         };
     }, [page]);
-    */
 
     const duplicate = async () => {
         const newSlug = `${page.slug}-copie-${Date.now().toString(36)}`;
@@ -417,7 +415,13 @@ export default function PageEditor() {
                                 <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
                                     {/* H1 Warning */}
                                     {(() => {
-                                        const h1Count = page.sections?.filter(s => s.type === 'ContentHero').length || 0;
+                                        const hasH1 = (s) => {
+                                            if (['ContentHero', 'Hero', 'ProHero'].includes(s.type)) return true;
+                                            if (s.type === 'TitleBlock' && s.props?.tag === 'h1') return true;
+                                            if (JSON.stringify(s.props || {}).toLowerCase().includes('<h1')) return true;
+                                            return false;
+                                        };
+                                        const h1Count = page.sections?.filter(hasH1).length || 0;
                                         if (h1Count === 0) return (
                                             <div style={{ margin: '4px 0 8px', padding: '10px 12px', background: '#fffbeb', borderRadius: '8px', border: '1px solid #fde68a', fontSize: '0.75rem', color: '#92400e', display: 'flex', gap: '6px' }}>
                                                 ⚠️ <span>Pas de <strong>H1</strong> — ajoutez un bloc Hero.</span>

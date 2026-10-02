@@ -1,0 +1,524 @@
+/* Admin Layout Overrides & Premium Styling */
+.container {
+    padding: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+    color: #111827;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.headerText {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    background: linear-gradient(to right, #111827, #374151);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: #6b7280;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.saveBtn {
+    background: #111827;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.saveBtn:hover:not(:disabled) {
+    background: #1f2937;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.saveBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(400px, 0.8fr);
+    gap: 40px;
+    align-items: start;
+}
+
+.columnLeft {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* Cards */
+.card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border: 1px solid #f3f4f6;
+}
+
+.cardHeaderArea {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.cardIconBox {
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cardTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.cardDesc {
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Tiers Row */
+.tiersList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tierRow {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 44px;
+    gap: 16px;
+    align-items: end;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.2s;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tierRow:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.tierRowActive {
+    border-color: #111827;
+    background: #f9fafb;
+    box-shadow: 0 0 0 1px #111827;
+}
+
+/* Forms */
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.formGroup label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.input, .select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #111827;
+    background: #ffffff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus, .select:focus {
+    border-color: #111827;
+    box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
+}
+
+.input::placeholder {
+    color: #9ca3af;
+}
+
+.iconUploadWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.hiddenFileInput {
+    display: none;
+}
+
+.uploadButton {
+    width: 100%;
+    height: 46px;
+    border: 1px dashed #d1d5db;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: #f9fafb;
+    transition: all 0.2s;
+    overflow: hidden;
+}
+
+.uploadButton:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.uploadedIcon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.uploadPlaceholder {
+    font-size: 1.25rem;
+    color: #9ca3af;
+    font-weight: 300;
+}
+
+.removeBtn {
+    background: #fee2e2;
+    color: #ef4444;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.removeBtn:hover {
+    background: #ef4444;
+    color: white;
+}
+
+.addBtn {
+    background: #f9fafb;
+    color: #111827;
+    border: 1px dashed #d1d5db;
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    margin-top: 8px;
+}
+
+.addBtn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+/* Colors Settings */
+.colorGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.colorInputWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.colorInputWrapper input[type="text"] {
+    flex: 1;
+}
+
+.colorPicker {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 2px;
+    cursor: pointer;
+    background: #ffffff;
+    flex-shrink: 0;
+}
+
+.colorPicker::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.colorPicker::-webkit-color-swatch {
+    border: none;
+    border-radius: 6px;
+}
+
+/* Right Column - Preview Box */
+.previewSticky {
+    position: sticky;
+    top: 32px;
+    background: #f9fafb;
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid #e5e7eb;
+}
+
+.previewHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #4b5563;
+    font-size: 0.95rem;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.previewHelper {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-top: 24px;
+}
+
+/* --- THE EXACT VIP CARD (From RewardsTab) --- */
+.previewContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.cardPerspective {
+    perspective: 1500px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.holoCard {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1.586;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 28px;
+    overflow: hidden;
+    transition: transform 0.1s ease-out;
+    transform-style: preserve-3d;
+    box-shadow: 
+        0 20px 40px -10px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+    cursor: crosshair;
+}
+
+.holoCard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, var(--bg1) 0%, var(--bg2) 100%);
+    z-index: 0;
+}
+
+.holoCard::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        circle at var(--mouseX) var(--mouseY),
+        rgba(255, 255, 255, 0.2) 0%,
+        transparent 50%
+    );
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.holoCard:hover::after {
+    opacity: 1;
+}
+
+.holoCardContent {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--text-color);
+    transform: translateZ(30px);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.cardTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.cardLogo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    opacity: 0.95;
+    text-transform: uppercase;
+}
+
+.cardEmoji {
+    font-size: 1.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px;
+    border-radius: 14px;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.3);
+}
+
+.cardBody {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+/* The exact chip style */
+.cardChip {
+    width: 48px;
+    height: 36px;
+    background: linear-gradient(135deg, #d4af37 0%, #aa7c11 100%);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cardChip::before, .cardChip::after {
+    content: "";
+    position: absolute;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.cardChip::before {
+    top: 50%; left: 0; right: 0;
+    transform: translateY(-50%);
+}
+
+.cardChip::after {
+    left: 50%; top: 0; bottom: 0;
+    transform: translateX(-50%);
+}
+
+.cardBottom {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.cardHolder {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    opacity: 0.9;
+    text-transform: uppercase;
+}
+
+.cardRankInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.cardRank {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.cardNext {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    text-align: right;
+    max-width: 50%;
+    line-height: 1.2;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+    .previewSticky {
+        position: static;
+        order: -1;
+    }
+    .tierRow {
+        grid-template-columns: 1fr 1fr;
+    }
+    .tierRow .removeBtn {
+        grid-column: span 2;
+        width: 100%;
+    }
+}

@@ -74,7 +74,12 @@ function SeoScore({ seo, sections = [] }) {
         { label: 'Meta Description ≤ 160 cars', ok: !!(seo?.metaDescription && seo.metaDescription.length <= 160) },
         { label: 'Image Open Graph', ok: !!(seo?.ogImage?.length > 0) },
         { label: 'Type de page défini', ok: !!(seo?.pageType && seo.pageType !== 'WebPage') },
-        { label: 'Un seul H1 dans la page', ok: sections.filter(s => s.type === 'ContentHero').length === 1 },
+        { label: 'Un seul H1 dans la page', ok: sections.filter(s => {
+            if (['ContentHero', 'Hero', 'ProHero'].includes(s.type)) return true;
+            if (s.type === 'TitleBlock' && s.props?.tag === 'h1') return true;
+            if (JSON.stringify(s.props || {}).toLowerCase().includes('<h1')) return true;
+            return false;
+        }).length === 1 },
     ];
 
     const score = Math.round((checks.filter(c => c.ok).length / checks.length) * 100);

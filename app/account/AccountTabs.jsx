@@ -114,7 +114,7 @@ export default function AccountTabs({ userSession, initialTab = 'profile' }) {
                 {activeTab === 'orders' && (
                     <OrdersList />
                 )}
-                {activeTab === 'rewards' && (
+                {activeTab === 'rewards' && userSession?.user?.id_default_group !== 4 && (
                     <RewardsTab />
                 )}
             </div>

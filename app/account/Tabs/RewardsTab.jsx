@@ -1,57 +1,35 @@
 import { useState, useEffect, useRef } from 'react';
 import { Gift, Coins, Copy, Check, Users, ArrowRight, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { Sparkles, Droplet, Star, Leaf, Award } from 'lucide-react';
 import styles from './RewardsTab.module.css';
 
-// -- CUSTOM VECTOR ICONS (D.A. Neo-Bank / Minimalist) --
-const IconGraine = ({ className }) => (
-    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <path d="M12 2c0 0-7 8-7 13a7 7 0 0 0 14 0c0-5-7-13-7-13z" />
-        <circle cx="12" cy="15" r="2" />
-    </svg>
-);
 
-const IconBourgeon = ({ className }) => (
-    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <path d="M12 22v-6" />
-        <path d="M12 16c0 0-4-2-4-8s4-6 4-6 4 0 4 6-4 8-4 8z" />
-        <path d="M12 16c0 0 6 1 6-5s-3-4-3-4" />
-        <path d="M12 16c0 0-6 1-6-5s3-4 3-4" />
-    </svg>
-);
-
-const IconFloraison = ({ className }) => (
-    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <path d="M12 22v-7" />
-        <path d="M12 15c0 0 0-13 0-13s4 3 4 8-4 5-4 5z" />
-        <path d="M12 15c0 0 0-13 0-13s-4 3-4 8 4 5 4 5z" />
-        <path d="M12 15c0 0 8-9 8-9s3 4-1 8-7 1-7 1z" />
-        <path d="M12 15c0 0-8-9-8-9s-3 4 1 8 7 1 7 1z" />
-        <path d="M12 15c0 0 8-2 8-2s1 5-4 5-4-3-4-3z" />
-        <path d="M12 15c0 0-8-2-8-2s-1 5 4 5 4-3 4-3z" />
-    </svg>
-);
-
-const IconRecolteur = ({ className }) => (
-    <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
-        <path d="M6 3h12l4 6-10 13L2 9l4-6z" />
-        <path d="M2 9h20" />
-        <path d="M12 22V9" />
-        <path d="M6 3l6 6" />
-        <path d="M18 3l-6 6" />
-    </svg>
-);
-// ---------------------------------------------------
 
 export default function RewardsTab() {
     const { data: session } = useSession();
     const userName = session?.user?.name || session?.user?.email?.split('@')[0] || 'MEMBRE VIP';
+    const userGroup = session?.user?.id_default_group || 3;
 
     const [data, setData] = useState(null);
+    const [settingsConfig, setSettingsConfig] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isConverting, setIsConverting] = useState(false);
     const [copied, setCopied] = useState(false);
     const [message, setMessage] = useState(null);
+
+    const renderUserName = (name) => {
+        const parts = name.split(' ');
+        if (parts.length > 1) {
+            return (
+                <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: '1.2' }}>
+                    <span>{parts[0]}</span>
+                    <span>{parts.slice(1).join(' ')}</span>
+                </div>
+            );
+        }
+        return <div style={{ textAlign: 'left' }}>{name}</div>;
+    };
 
     // VIP Card 3D Tilt Logic
     const cardRef = useRef(null);
@@ -63,13 +41,17 @@ export default function RewardsTab() {
 
     const loadData = async () => {
         try {
-            const [dashRes, settingsRes] = await Promise.all([
+            const [dashRes, settingsRes, loyaltyConfigRes] = await Promise.all([
                 fetch('/api/rewards?action=get_dashboard'),
-                fetch('/api/rewards?action=get_settings')
+                fetch('/api/rewards?action=get_settings'),
+                fetch('/api/admin/loyalty-settings')
             ]);
             
             const json = await dashRes.json();
             const settingsJson = await settingsRes.json();
+            const configJson = await loyaltyConfigRes.json();
+            
+            setSettingsConfig(configJson);
 
             // If it successfully loads but points is 0 and no vouchers, it's normal.
             if (json.success || typeof json.points_available !== 'undefined') {
@@ -147,6 +129,11 @@ export default function RewardsTab() {
         );
     }
 
+    // Enable/Disable logic
+    const isLoyaltyEnabled = settingsConfig?.enabledGroups 
+        ? settingsConfig.enabledGroups.includes(userGroup)
+        : userGroup !== 4;
+
     // VIP Logic Calculation (L'Arbre à CBD)
     const ratio = data?.ratio || 1;
     const lifetimePoints = data?.lifetime_points || 0;
@@ -155,32 +142,36 @@ export default function RewardsTab() {
     const lifetimeSpent = lifetimePoints * ratio;
 
     let tierName = "La Graine";
-    let Icon = IconGraine;
+    let Icon = null;
     let nextTier = "Le Bourgeon";
     let progress = 0;
     let euroToNext = 0;
 
-    if (lifetimeSpent >= 800) {
-        tierName = "Maître Récolteur";
-        Icon = IconRecolteur;
-        nextTier = "Max";
-        progress = 100;
-        euroToNext = 0;
-    } else if (lifetimeSpent >= 300) {
-        tierName = "La Floraison";
-        Icon = IconFloraison;
-        nextTier = "Maître Récolteur";
-        progress = ((lifetimeSpent - 300) / 500) * 100;
-        euroToNext = 800 - lifetimeSpent;
-    } else if (lifetimeSpent >= 100) {
-        tierName = "Le Bourgeon";
-        Icon = IconBourgeon;
-        nextTier = "La Floraison";
-        progress = ((lifetimeSpent - 100) / 200) * 100;
-        euroToNext = 300 - lifetimeSpent;
-    } else {
-        progress = (lifetimeSpent / 100) * 100;
-        euroToNext = 100 - lifetimeSpent;
+
+    if (settingsConfig && settingsConfig.tiers) {
+        // Tiers should be sorted by minSpent ascending, but let's reverse to check highest first
+        const sortedTiers = [...settingsConfig.tiers].sort((a, b) => b.minSpent - a.minSpent);
+        let currentTierIndex = sortedTiers.findIndex(t => lifetimeSpent >= t.minSpent);
+        if (currentTierIndex === -1) currentTierIndex = sortedTiers.length - 1;
+
+        const currentTier = sortedTiers[currentTierIndex] || sortedTiers[sortedTiers.length - 1];
+        const prevTierInSorted = sortedTiers[currentTierIndex - 1]; // which is actually the NEXT tier in progression
+
+        tierName = currentTier.name;
+        
+        Icon = currentTier.icon ? () => <img src={currentTier.icon} alt={currentTier.name} style={{ width: '24px', height: '24px', objectFit: 'contain' }} /> : null;
+
+        if (prevTierInSorted) {
+            nextTier = prevTierInSorted.name;
+            const diff = prevTierInSorted.minSpent - currentTier.minSpent;
+            const spentInTier = lifetimeSpent - currentTier.minSpent;
+            progress = (spentInTier / diff) * 100;
+            euroToNext = prevTierInSorted.minSpent - lifetimeSpent;
+        } else {
+            nextTier = "Max";
+            progress = 100;
+            euroToNext = 0;
+        }
     }
 
     const safeProgress = Math.min(100, Math.max(0, progress));
@@ -204,13 +195,15 @@ export default function RewardsTab() {
         setTilt({ x: 0, y: 0, mouseX: 50, mouseY: 50 });
     };
 
+    const cardStyleParams = settingsConfig?.cardStyle || {};
     const cardStyle = {
         transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
         '--mouseX': `${tilt.mouseX}%`,
-        '--mouseY': `${tilt.mouseY}%`
+        '--mouseY': `${tilt.mouseY}%`,
+        '--bg1': cardStyleParams.cardBackground1 || 'rgba(255, 255, 255, 0.22)',
+        '--bg2': cardStyleParams.cardBackground2 || 'rgba(255, 255, 255, 0.05)',
+        '--text-color': cardStyleParams.textColor || '#ffffff'
     };
-
-
 
     return (
         <div className={styles.container}>
@@ -220,79 +213,83 @@ export default function RewardsTab() {
             </div>
 
             {/* VIP Dashboard Card */}
-            <div className={styles.cardPerspective}>
-                <div
-                    ref={cardRef}
-                    className={styles.holoCard}
-                    style={cardStyle}
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
-                >
-                    <div className={styles.holoCardContent}>
-                        <div className={styles.cardHeader}>
-                            <span className={styles.cardLogo}>Les Amis du CBD Club</span>
-                            <span className={styles.cardEmoji}>
-                                <Icon />
-                            </span>
-                        </div>
-                        <div className={styles.cardBody}>
-                            <div className={styles.cardChip}></div>
-                        </div>
-                        <div className={styles.cardFooter}>
-                            <div className={styles.cardHolder}>
-                                {userName}
+            {isLoyaltyEnabled && (
+                <div className={styles.cardPerspective}>
+                    <div
+                        ref={cardRef}
+                        className={styles.holoCard}
+                        style={cardStyle}
+                        onMouseMove={handleMouseMove}
+                        onMouseLeave={handleMouseLeave}
+                    >
+                        <div className={styles.holoCardContent}>
+                            <div className={styles.cardHeader}>
+                                <span className={styles.cardLogo}>{settingsConfig?.cardStyle?.logoText || 'Les Amis du CBD Club'}</span>
+                                <span className={styles.cardEmoji}>
+                                    {Icon && <Icon />}
+                                </span>
                             </div>
-                            <div className={styles.cardRankInfo}>
-                                <div className={styles.cardRank}>{tierName}</div>
-                                {euroToNext > 0 ? (
-                                    <div className={styles.cardNext}>
-                                        Plus que {Math.ceil(euroToNext)}€ d'achats pour {nextTier}
-                                    </div>
-                                ) : (
-                                    <div className={styles.cardNext}>Rang Maximum</div>
-                                )}
+                            <div className={styles.cardBody}>
+                                <div className={styles.cardChip}></div>
+                            </div>
+                            <div className={styles.cardFooter}>
+                                <div className={styles.cardHolder}>
+                                    {renderUserName(userName)}
+                                </div>
+                                <div className={styles.cardRankInfo}>
+                                    <div className={styles.cardRank}>{tierName}</div>
+                                    {euroToNext > 0 ? (
+                                        <div className={styles.cardNext}>
+                                            Plus que {Math.ceil(euroToNext)}€ d'achats pour {nextTier}
+                                        </div>
+                                    ) : (
+                                        <div className={styles.cardNext}>Rang Maximum</div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div className={styles.vipProgressContainer}>
-                    <div className={styles.vipProgressTrack}>
-                        <div className={styles.vipProgressBar} style={{ width: `${safeProgress}%` }}></div>
+                    <div className={styles.vipProgressContainer}>
+                        <div className={styles.vipProgressTrack}>
+                            <div className={styles.vipProgressBar} style={{ width: `${safeProgress}%` }}></div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
-            <div className={styles.cardsGrid}>
-                {/* Points Card */}
-                <div className={styles.card}>
-                    <div className={styles.cardContent}>
-                        <div className={styles.cardHeader}>
-                            <div className={styles.iconWrapper}>
-                                <Coins size={20} />
+            {isLoyaltyEnabled && (
+                <div className={styles.cardsGrid}>
+                    {/* Points Card */}
+                    <div className={styles.card}>
+                        <div className={styles.cardContent}>
+                            <div className={styles.cardHeader}>
+                                <div className={styles.iconWrapper}>
+                                    <Coins size={20} />
+                                </div>
+                                Mes Points Fidélité
                             </div>
-                            Mes Points Fidélité
-                        </div>
-                        <div className={styles.valueArea}>
-                            <div className={styles.points}>
-                                {data?.points_available || 0} <span>pts</span>
+                            <div className={styles.valueArea}>
+                                <div className={styles.points}>
+                                    {data?.points_available || 0} <span>pts</span>
+                                </div>
+                                <div className={styles.money}>
+                                    Valeur : {data?.value_available?.toFixed(2) || '0.00'} €
+                                </div>
                             </div>
-                            <div className={styles.money}>
-                                Valeur : {data?.value_available?.toFixed(2) || '0.00'} €
-                            </div>
-                        </div>
-                        <button
-                            className={styles.actionButton}
-                            disabled={!data?.points_available || data.points_available <= 0 || isConverting}
-                            onClick={handleConvert}
-                        >
-                            {isConverting ? <Loader2 size={18} className={styles.spinner} /> : <Gift size={18} />}
-                            Convertir en bon de réduction
-                        </button>
+                            <button
+                                className={styles.actionButton}
+                                disabled={!data?.points_available || data.points_available <= 0 || isConverting}
+                                onClick={handleConvert}
+                            >
+                                {isConverting ? <Loader2 size={18} className={styles.spinner} /> : <Gift size={18} />}
+                                Convertir en bon de réduction
+                            </button>
 
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {message && (
                 <div className={`${styles.message} ${styles[message.type]}`}>
@@ -332,11 +329,12 @@ export default function RewardsTab() {
                 <div className={styles.sponsorshipContent}>
                     <h3>
                         <Users size={20} color="#10b981" />
-                        Parrainez un ami
+                        {session?.user?.id_default_group === 4 ? "Parrainez un confrère PRO" : "Parrainez un ami"}
                     </h3>
                     <p>
-                        Partagez votre lien de parrainage. Votre ami recevra un bon de réduction de 5€ sur sa première commande,
-                        et vous recevrez également 5€ une fois sa commande livrée !
+                        {session?.user?.id_default_group === 4 
+                            ? "Partagez votre lien de parrainage. Vous et votre filleul recevrez chacun 200€ de produits offerts en valeur marchande une fois sa première commande validée !" 
+                            : "Partagez votre lien de parrainage. Votre ami recevra un bon de réduction de 5€ sur sa première commande, et vous recevrez également 5€ une fois sa commande livrée !"}
                     </p>
                     <div className={styles.linkContainer}>
                         <input

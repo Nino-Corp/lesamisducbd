@@ -18,6 +18,7 @@ export default async function DashboardLayout({ children }) {
                     <Link href="/admin/builder" className={styles.link}>Page Builder</Link>
                     <Link href="/admin/products" className={styles.link}>Produits</Link>
                     <Link href="/admin/partners" className={styles.link}>Professionnels</Link>
+                    <Link href="/admin/loyalty" className={styles.link}>Fidélité & VIP</Link>
                     <Link href="/admin/analytics" className={styles.link}>Statistiques</Link>
                     {session?.role === 'superadmin' && (
                         <Link href="/admin/users" className={styles.link}>Accès & Sécurité</Link>
