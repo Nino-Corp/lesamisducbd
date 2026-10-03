@@ -135,7 +135,8 @@ export default function RewardsTab() {
         : userGroup !== 4;
 
     // VIP Logic Calculation (L'Arbre à CBD)
-    const ratio = data?.ratio || 1;
+    // Override the ratio from PrestaShop API with our Dashboard setting to decouple it
+    const ratio = settingsConfig?.ratio || data?.ratio || 1;
     const lifetimePoints = data?.lifetime_points || 0;
 
     // Valeur théorique dépensée à vie (pour atteindre ces points)

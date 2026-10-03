@@ -20,7 +20,12 @@ const DEFAULT_SETTINGS = {
         cardBackground2: "#1F4B40",
         textColor: "#ffffff"
     },
-    enabledGroups: [3]
+    enabledGroups: [3],
+    ratio: 10 // 1 point = 10 euros spent by default if 10% ? No, wait. 
+    // If they get 10% of their order, spending 100€ gives them 10€.
+    // If 1 point = 0.10€ value, then they got 100 points.
+    // So 100€ spent = 100 points. The ratio of points to euros spent is 1 point = 1 euro.
+    // Let's just set ratio to 1 by default, but let the user change it.
 };
 
 export async function GET() {

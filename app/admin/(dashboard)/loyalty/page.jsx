@@ -363,6 +363,22 @@ export default function LoyaltySettings() {
                         </div>
 
                         <div className={styles.formGroup} style={{ marginBottom: '20px' }}>
+                            <label>Ratio de calcul des paliers VIP (Combien d'euros dépensés = 1 point ?)</label>
+                            <input 
+                                className={styles.input} 
+                                type="number"
+                                min="0.01"
+                                step="0.01"
+                                value={settings.ratio || 1}
+                                onChange={(e) => updateSetting('ratio', parseFloat(e.target.value))}
+                            />
+                            <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '4px' }}>
+                                Par exemple : Si vos clients gagnent 10% en points, et que 1 point = 0.10€, alors ils gagnent 1 point par euro dépensé. Mettez "1".
+                                Si 1 point = 10 euros dépensés, mettez "10".
+                            </p>
+                        </div>
+
+                        <div className={styles.formGroup} style={{ marginBottom: '20px' }}>
                             <label>Texte du logo</label>
                             <input 
                                 className={styles.input} 
