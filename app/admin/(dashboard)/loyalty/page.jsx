@@ -372,9 +372,10 @@ export default function LoyaltySettings() {
                                 value={settings.ratio || 1}
                                 onChange={(e) => updateSetting('ratio', parseFloat(e.target.value))}
                             />
-                            <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '4px' }}>
-                                Par exemple : Si vos clients gagnent 10% en points, et que 1 point = 0.10€, alors ils gagnent 1 point par euro dépensé. Mettez "1".
-                                Si 1 point = 10 euros dépensés, mettez "10".
+                            <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '4px', lineHeight: '1.4' }}>
+                                💡 <strong>Exemple simple :</strong><br/>
+                                • Si un client gagne <strong>1 point</strong> pour chaque <strong>1 euro</strong> dépensé, tapez <strong>1</strong>.<br/>
+                                • Si un client gagne <strong>1 point</strong> seulement tous les <strong>10 euros</strong> dépensés, tapez <strong>10</strong>.
                             </p>
                         </div>
 
