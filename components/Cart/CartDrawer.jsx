@@ -28,12 +28,19 @@ export default function CartDrawer() {
     // Fetch reward settings for loyalty progress
     useEffect(() => {
         if (isCartOpen && !rewardSettings) {
-            fetch('/api/rewards?action=get_settings')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success && data.ratio) setRewardSettings(data);
-                })
-                .catch(err => console.error(err));
+            Promise.all([
+                fetch('/api/rewards?action=get_settings').then(r => r.json()),
+                fetch('/api/admin/loyalty-settings').then(r => r.json())
+            ])
+            .then(([psData, nextData]) => {
+                if (psData.success) {
+                    setRewardSettings({
+                        ...psData,
+                        ratio: nextData.ratio || psData.ratio || 1
+                    });
+                }
+            })
+            .catch(err => console.error(err));
         }
     }, [isCartOpen, rewardSettings]);
 
@@ -152,7 +159,12 @@ export default function CartDrawer() {
                     ) : (
                         cart.map((item) => (
                             <div key={`${item.id}-${JSON.stringify(item.variant)}`} className={styles.item}>
-                                <div className={styles.imageConfig}>
+                                <Link 
+                                    href={`/produit/${item.slug}`} 
+                                    className={styles.imageConfig}
+                                    onClick={() => setIsCartOpen(false)}
+                                    style={{ cursor: 'pointer' }}
+                                >
                                     {item.image && (
                                         <div className={styles.imgWrapper}>
                                             <Image
@@ -163,9 +175,20 @@ export default function CartDrawer() {
                                             />
                                         </div>
                                     )}
-                                </div>
+                                </Link>
                                 <div className={styles.itemDetails}>
-                                    <h3>{item.name}</h3>
+                                    <Link 
+                                        href={`/produit/${item.slug}`} 
+                                        onClick={() => setIsCartOpen(false)}
+                                        style={{ textDecoration: 'none', color: 'inherit' }}
+                                    >
+                                        <h3 style={{ cursor: 'pointer', transition: 'color 0.2s' }} 
+                                            onMouseOver={(e) => e.target.style.color = '#10b981'}
+                                            onMouseOut={(e) => e.target.style.color = 'inherit'}
+                                        >
+                                            {item.name}
+                                        </h3>
+                                    </Link>
                                     {item.variant && <span className={styles.variant}>{item.variant.label || item.variant.name}</span>}
                                     <div className={styles.price}>
                                         {isPro ? (

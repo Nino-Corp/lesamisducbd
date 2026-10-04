@@ -12,6 +12,8 @@ import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
 import { trackCTA } from '@/utils/analytics';
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
+import { Sparkles } from 'lucide-react';
+import { useLoyaltyRatio } from '@/hooks/useLoyaltyRatio';
 
 const HEADER_PROPS = {
     logoText: "LES AMIS DU CBD",
@@ -360,6 +362,11 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId, con
     })();
 
     const groupPrice = calculateGroupPrice(activeProduct, groupId);
+    const isPro = String(groupId) === "4";
+    const ratio = useLoyaltyRatio();
+
+    // Points de fidélité pour ce produit
+    const loyaltyPoints = ratio > 0 ? Math.floor((groupPrice.suggestShowHT ? groupPrice.priceHT : groupPrice.priceTTC) / ratio) : 0;
 
     // Calcul du grammage & Prix au gramme
     const searchString = `${activeProduct.name || ''} ${activeProduct.reference || ''} ${selectedVariant?.label || ''}`.toLowerCase();
@@ -490,6 +497,12 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId, con
                         </span>
                         {perGramText && (
                             <span className={styles.perGramText}>{perGramText}</span>
+                        )}
+                        {!isPro && loyaltyPoints > 0 && (
+                            <div className={styles.loyaltyBadge}>
+                                <Sparkles size={12} />
+                                <span>+{loyaltyPoints} pts fidélité</span>
+                            </div>
                         )}
                     </div>
                     <div className={`${styles.actionWrapper} ${expandedId === product.id ? styles.expanded : ''}`}>

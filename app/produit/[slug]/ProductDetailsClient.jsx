@@ -8,7 +8,7 @@ import { useCart } from '@/context/CartContext';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import styles from './ProductDetails.module.css';
-import { ArrowLeft, Star, Truck, ShieldCheck, Heart, Gift } from 'lucide-react';
+import { ArrowLeft, Star, Truck, ShieldCheck, Heart, Sparkles } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
 import { SITE_URL } from '@/app/shared-metadata';
@@ -72,10 +72,17 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
     useEffect(() => {
         const fetchRewardSettings = async () => {
             try {
-                const res = await fetch('/api/rewards?action=get_settings');
-                const data = await res.json();
-                if (data.success && data.ratio) {
-                    setRewardSettings(data);
+                const [psRes, dashRes] = await Promise.all([
+                    fetch('/api/rewards?action=get_settings'),
+                    fetch('/api/admin/loyalty-settings')
+                ]);
+                const psData = await psRes.json();
+                const dashData = await dashRes.json();
+                if (psData.success) {
+                    setRewardSettings({
+                        ...psData,
+                        ratio: dashData.ratio || psData.ratio || 1
+                    });
                 }
             } catch (err) {
                 console.error("Failed to load reward settings", err);
@@ -264,7 +271,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                 return <div className={styles.perGramInfo}>{perGramText}</div>;
                             })()}
 
-                            {false /* TEMPORARILY DISABLED */ && rewardSettings && rewardSettings.ratio > 0 && (
+                            {rewardSettings && rewardSettings.ratio > 0 && String(groupId) !== "4" && (
                                 <div style={{
                                     marginTop: '1rem',
                                     padding: '0.75rem',
@@ -277,11 +284,11 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                                     alignItems: 'center',
                                     gap: '8px'
                                 }}>
-                                    <Gift size={16} color="#10B981" />
+                                    <Sparkles size={16} color="#10B981" />
                                     <span>
-                                        En achetant ce produit, vous pouvez gagner jusqu'à <strong>
-                                            {Math.floor((groupPrice.suggestShowHT ? groupPrice.priceHT : (groupPrice?.priceTTC || activeProduct.priceTTC || 0)) / rewardSettings.ratio)} points de fidélité
-                                        </strong> !
+                                        Ce produit vous rapporte <strong>
+                                            +{Math.floor((groupPrice.suggestShowHT ? groupPrice.priceHT : (groupPrice?.priceTTC || activeProduct.priceTTC || 0)) / rewardSettings.ratio)} pts fidélité
+                                        </strong>
                                     </span>
                                 </div>
                             )}

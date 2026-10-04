@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './ProductCard.module.css';
-import { Tag } from 'lucide-react';
+import { Tag, Sparkles } from 'lucide-react';
 import { trackCTA } from '@/utils/analytics';
 import { motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import { useLoyaltyRatio } from '@/hooks/useLoyaltyRatio';
 
 /**
  * ProductCard — affiche un produit issu de l'API PrestaShop.
@@ -14,6 +16,10 @@ import { motion } from 'framer-motion';
  *  - id, name, slug, formattedPrice (ex: "18,96 €"), image, descriptionShort (HTML), onSale
  */
 export default function ProductCard({ product }) {
+    const { data: session } = useSession();
+    const isPro = String(session?.user?.id_default_group) === "4";
+    const ratio = useLoyaltyRatio();
+
     // Calcul du grammage & Prix au gramme
     const searchString = `${product.name || ''} ${product.reference || ''}`.toLowerCase();
     const weightMatch = searchString.match(/(?:^|\s|-)(\d+(?:[.,]\d+)?)\s*g\b/);
@@ -27,6 +33,9 @@ export default function ProductCard({ product }) {
             perGramText = `${newPerGram}€/g TTC`;
         }
     }
+
+    // Points de fidélité pour ce produit
+    const loyaltyPoints = ratio > 0 ? Math.floor(product.priceTTC / ratio) : 0;
 
     return (
         <Link href={`/produit/${product.slug}`} style={{ textDecoration: 'none' }} onClick={() => trackCTA(`product_click_${product.slug}`)}>
@@ -83,6 +92,14 @@ export default function ProductCard({ product }) {
                         </div>
                         <button className={styles.cta}>Voir</button>
                     </div>
+
+                    {/* Badge fidélité */}
+                    {!isPro && loyaltyPoints > 0 && (
+                        <div className={styles.loyaltyBadge}>
+                            <Sparkles size={12} />
+                            <span>+{loyaltyPoints} pts fidélité</span>
+                        </div>
+                    )}
                 </div>
             </motion.div>
         </Link>

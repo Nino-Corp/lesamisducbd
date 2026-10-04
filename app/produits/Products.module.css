@@ -781,3 +781,16 @@
         transition: transform 0.2s ease;
     }
 }
+.loyaltyBadge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #10b981;
+    background: #ecfdf5;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-top: 5px;
+    width: fit-content;
+}
