@@ -57,6 +57,9 @@ export default function NotFound() {
           transform: translateY(-3px);
           box-shadow: 0 8px 25px rgba(31, 75, 64, 0.3);
         }
+        #global-breadcrumb {
+          display: none !important;
+        }
       `}</style>
       
       <div style={{

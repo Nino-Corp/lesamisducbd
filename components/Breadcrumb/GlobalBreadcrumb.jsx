@@ -51,7 +51,7 @@ export default function GlobalBreadcrumb() {
     });
 
     return (
-        <div style={{
+        <div id="global-breadcrumb" style={{
             position: 'absolute',
             top: '90px', 
             left: 0,

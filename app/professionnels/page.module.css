@@ -1,78 +1,55 @@
 .main {
     height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    background-color: var(--primary-dark);
+    width: 100%;
+    background-color: var(--background-light);
     display: flex;
     flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    padding-top: 0 !important;
+}
+
+.backLinkWrapper {
+    position: absolute;
+    top: 145px; /* Centered precisely between breadcrumb (bottom ~126px) and floating panel (top 200px) */
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0;
+    z-index: 50;
+    pointer-events: none; /* Let map clicks through where there's no link */
+}
+
+.backLink {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #4B5563;
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 24px;
+    transition: color 0.2s ease, transform 0.2s ease;
+    
+    /* Add a subtle background glow so it's readable over the map */
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 6px 12px 6px 8px;
+    border-radius: 99px;
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+.backLink:hover {
+    color: var(--primary-dark);
+    transform: translateX(-4px);
+    background: rgba(255,255,255,0.95);
 }
 
 @media (max-width: 1024px) {
     .main {
         height: 100dvh;
-        overflow: hidden;
-    }
-}
-
-.logo {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.logo:hover {
-    transform: translateY(-2px);
-    opacity: 0.8;
-}
-
-@media (max-width: 1024px) {
-    .logo {
-        top: 16px;
-        left: 16px;
-    }
-    .logo img {
-        width: 120px !important;
-        height: auto !important;
-    }
-}
-
-.backButton {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    color: var(--primary-dark);
-    text-decoration: none;
-    border-radius: 99px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.backButton:hover {
-    transform: translateY(-2px);
-    background: #ffffff;
-    box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
-}
-
-@media (max-width: 1024px) {
-    .backButton {
-        top: 30px;
-        right: 16px;
-        padding: 10px 16px;
-        font-size: 0.85rem;
     }
 }

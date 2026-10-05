@@ -3,19 +3,14 @@
     top: 20px;
     left: 0;
     width: 100%;
-    /* Full viewport width */
     height: 60px;
     display: flex;
     justify-content: center;
-    /* Center the inner container */
     z-index: 1000;
-    pointer-events: none;
-    /* Let clicks pass through the full width wrapper.. wait no, buttons need clicks */
-    pointer-events: auto;
+    pointer-events: none; /* Let clicks pass through the full width transparent wrapper */
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     animation: slideDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
     padding: 0;
-    /* Gap from edges managed by child container */
     box-sizing: border-box;
 }
 
@@ -25,7 +20,6 @@
     border-radius: var(--radius-pill);
     width: 100%;
     max-width: var(--container-width);
-    /* Uniform clamp width */
     height: 100%;
     display: flex;
     align-items: center;
@@ -33,6 +27,7 @@
     padding: 0 40px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     position: relative;
+    pointer-events: auto; /* Re-enable clicks only on the actual visible pill */
 }
 
 .mobileToggle {
@@ -42,6 +37,7 @@
     color: inherit;
     cursor: pointer;
     z-index: 1001;
+    pointer-events: auto; /* Re-enable clicks for mobile toggle */
 }
 
 @media (max-width: 1024px) {

@@ -30,6 +30,7 @@
 
 html {
   overscroll-behavior-x: none;
+  scrollbar-gutter: stable;
 }
 
 body {

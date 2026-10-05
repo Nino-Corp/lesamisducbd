@@ -200,7 +200,7 @@ export default function StoreMap({ partners, activePartner, onPartnerClick, onMa
             maxZoom={18}
             minZoom={4}
         >
-            <NavigationControl position="top-right" showCompass={false} />
+            <NavigationControl position="bottom-right" showCompass={false} />
 
             <Source
                 id="partners"
@@ -217,14 +217,14 @@ export default function StoreMap({ partners, activePartner, onPartnerClick, onMa
             <Layer {...clusterInnerLayer} />
             <Layer {...clusterCountLayer} />
             <Layer {...unclusteredHitLayer} filter={
-                activePartner 
-                ? ['all', ['!', ['has', 'point_count']], ['!=', ['get', 'id'], activePartner.id]]
-                : ['!', ['has', 'point_count']]
+                activePartner
+                    ? ['all', ['!', ['has', 'point_count']], ['!=', ['get', 'id'], activePartner.id]]
+                    : ['!', ['has', 'point_count']]
             } />
             <Layer {...pinIconLayer} filter={
-                activePartner 
-                ? ['all', ['!', ['has', 'point_count']], ['!=', ['get', 'id'], activePartner.id]]
-                : ['!', ['has', 'point_count']]
+                activePartner
+                    ? ['all', ['!', ['has', 'point_count']], ['!=', ['get', 'id'], activePartner.id]]
+                    : ['!', ['has', 'point_count']]
             } />
 
             {/* Premium Active Marker - Modern Pulsing Dot */}
