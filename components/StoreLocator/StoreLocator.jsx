@@ -29,10 +29,10 @@ function getDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-export default function StoreLocator({ subtitle = true }) {
-    const [partners, setPartners] = useState([]);
+export default function StoreLocator({ subtitle = true, initialPartners = [] }) {
+    const [partners, setPartners] = useState(initialPartners);
     const [searchQuery, setSearchQuery] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(initialPartners.length === 0);
     const [activePartner, setActivePartner] = useState(null);
     const [nearbyPartners, setNearbyPartners] = useState([]);
     const [isSearchingNearby, setIsSearchingNearby] = useState(false);
@@ -40,6 +40,8 @@ export default function StoreLocator({ subtitle = true }) {
     const [isPanelExpanded, setIsPanelExpanded] = useState(false);
 
     useEffect(() => {
+        if (initialPartners.length > 0) return; // Skip fetch if SSR provided the data
+        
         const fetchPartners = async () => {
             try {
                 const res = await fetch('/api/admin/partners');
@@ -52,7 +54,7 @@ export default function StoreLocator({ subtitle = true }) {
             }
         };
         fetchPartners();
-    }, []);
+    }, [initialPartners]);
 
     const handleLocateMe = () => {
         if (!navigator.geolocation) {

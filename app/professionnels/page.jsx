@@ -24,10 +24,12 @@ const HEADER_PROPS = {
 
 export default async function BuralistesPage() {
     let globalContent = null;
+    let initialPartners = [];
     try {
         globalContent = await kv.get('global_content');
+        initialPartners = await kv.get('partners_locations') || [];
     } catch (e) {
-        console.error('Error fetching global content for professionnels page:', e);
+        console.error('Error fetching data for professionnels page:', e);
     }
 
     return (
@@ -38,7 +40,18 @@ export default async function BuralistesPage() {
                     <ArrowLeft size={20} /> Retour à l'accueil
                 </Link>
             </div>
-            <StoreLocator subtitle={false} />
+            
+            {/* Hidden list for SEO experts and crawlers to retrieve the partners easily */}
+            <div style={{ display: 'none' }} aria-hidden="true">
+                <h2>Nos boutiques partenaires</h2>
+                <ul>
+                    {initialPartners.map(p => (
+                        <li key={p.id}>{p.name} - {p.address}, {p.zip} {p.city}</li>
+                    ))}
+                </ul>
+            </div>
+
+            <StoreLocator subtitle={false} initialPartners={initialPartners} />
         </main>
     );
 }
