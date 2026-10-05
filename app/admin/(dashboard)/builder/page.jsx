@@ -46,7 +46,12 @@ function seoScore(page) {
         !!(seo.metaDescription && seo.metaDescription.length <= 160),
         !!(seo.ogImage?.length > 0),
         !!(seo.pageType && seo.pageType !== 'WebPage'),
-        (page.sections?.filter(s => s.type === 'ContentHero').length === 1),
+        (page.sections?.filter(s => {
+            if (['ContentHero', 'Hero', 'ProHero'].includes(s.type)) return true;
+            if (s.type === 'TitleBlock' && s.props?.tag === 'h1') return true;
+            if (JSON.stringify(s.props || {}).toLowerCase().includes('<h1')) return true;
+            return false;
+        }).length === 1),
     ];
     return Math.round((checks.filter(Boolean).length / checks.length) * 100);
 }

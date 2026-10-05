@@ -10,12 +10,19 @@
     padding: 20px;
 }
 
+.backLinkWrapper {
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 55px 0 0; /* Clear the absolute breadcrumb, align with header edge */
+}
+
 .backLink {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     color: #6a7c76;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     font-weight: 600;
     transition: color 0.2s;
 }

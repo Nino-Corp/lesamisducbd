@@ -1,46 +1,96 @@
 .wrapper {
-    background: #e3fff8;
-    border-bottom: 1px solid #e5e7eb;
+    background: transparent;
     padding: 0;
+    pointer-events: auto;
+    animation: slideInFromTop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .list {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 12px 24px;
-    display: flex;
+    margin: 0;
+    padding: 8px 16px;
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     list-style: none;
     flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 99px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+}
+
+.list:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(255,255,255,0.4);
+    background: rgba(255, 255, 255, 0.85);
 }
 
 .item {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
 }
 
 .link {
-    font-size: 0.82rem;
-    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4b5563;
     text-decoration: none;
-    transition: color 0.15s;
+    padding: 4px 10px;
+    border-radius: 99px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.link:hover { color: #1F4B40; text-decoration: underline; }
+.link:hover {
+    color: #1F4B40;
+    background: rgba(0, 255, 194, 0.15);
+    transform: translateY(-1px);
+}
+
+.homeIcon {
+    opacity: 0.8;
+}
 
 .sep {
-    font-size: 0.85rem;
-    color: #d1d5db;
+    color: #9ca3af;
+    opacity: 0.5;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+}
+
+.currentWrapper {
+    background: #1F4B40;
+    padding: 4px 12px;
+    border-radius: 99px;
+    box-shadow: 0 2px 8px rgba(31, 75, 64, 0.3);
 }
 
 .current {
-    font-size: 0.82rem;
-    color: #1F4B40;
-    font-weight: 600;
-    max-width: 300px;
+    font-size: 0.75rem;
+    color: #00FFC2;
+    font-weight: 700;
+    max-width: 200px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: block;
 }

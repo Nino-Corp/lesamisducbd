@@ -15,6 +15,7 @@ import { SITE_URL } from '@/app/shared-metadata';
 import ProductSchema from '@/components/JsonLd/ProductSchema';
 import { trackCTA } from '@/utils/analytics';
 import { motion } from 'framer-motion';
+import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 
 const HEADER_PROPS = {
     logoText: "LES AMIS DU CBD",
@@ -152,16 +153,38 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
 
     const productUrl = `${SITE_URL}/produit/${product.slug}`;
 
+    const breadcrumbItems = [
+        { label: 'Accueil', href: '/' },
+        { label: 'Produits', href: '/produits' },
+        { label: activeProduct.name, href: `/produit/${product.slug}` }
+    ];
+
     return (
         <main className={styles.main}>
             <ProductSchema product={product} productUrl={productUrl} />
             <Header {...HEADER_PROPS} menuItems={globalContent?.headerLinks || HEADER_PROPS.menuItems} bannerVisible={globalContent?.visibility?.headerBanner !== false} />
 
-            <div className={styles.container}>
+            <div style={{
+                position: 'absolute',
+                top: '90px', 
+                left: 0,
+                right: 0,
+                width: '100%',
+                maxWidth: 'var(--container-width)',
+                margin: '0 auto',
+                padding: '0',
+                zIndex: 50,
+            }}>
+                <Breadcrumb items={breadcrumbItems} />
+            </div>
+
+            <div className={styles.backLinkWrapper}>
                 <Link href="/produits" className={styles.backLink}>
                     <ArrowLeft size={20} /> Retour aux produits
                 </Link>
+            </div>
 
+            <div className={styles.container}>
                 <div className={styles.productGrid}>
                     {/* Gallery Section */}
                     <div className={styles.gallery}>

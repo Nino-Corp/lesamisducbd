@@ -10,6 +10,19 @@ export const metadata = {
     description: 'Gérez vos informations personnelles et adresses.',
 };
 
+import Header from '@/components/Header/Header';
+
+const HEADER_PROPS = {
+    logoText: "LES AMIS DU CBD",
+    logoImage: "/images/logo.webp",
+    menuItems: [
+        { label: "PRODUITS", href: "/produits" },
+        { label: "L'ESSENTIEL", href: "/essentiel" },
+        { label: "CBD & USAGES", href: "/usages" },
+        { label: "PROFESSIONNEL", href: "/professionnel" }
+    ]
+};
+
 export default async function AccountPage({ searchParams }) {
     const session = await getServerSession();
     const resolvedSearchParams = await searchParams;
@@ -20,10 +33,14 @@ export default async function AccountPage({ searchParams }) {
     }
 
     return (
-        <div className={styles.container}>
-            <Link href="/" className={styles.backLink}>
-                <ArrowLeft size={20} /> Retour à la boutique
-            </Link>
+        <main>
+            <Header {...HEADER_PROPS} />
+            <div className={styles.backLinkWrapper}>
+                <Link href="/" className={styles.backLink}>
+                    <ArrowLeft size={20} /> Retour à la boutique
+                </Link>
+            </div>
+            <div className={styles.container}>
 
             <div className={styles.header}>
                 <h1 className={styles.title}>Mon Compte</h1>
@@ -41,5 +58,6 @@ export default async function AccountPage({ searchParams }) {
                 <AccountTabs userSession={session.user} initialTab={initialTab} />
             </div>
         </div>
+        </main>
     );
 }
