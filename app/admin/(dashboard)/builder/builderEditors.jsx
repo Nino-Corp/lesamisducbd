@@ -1063,9 +1063,20 @@ export function IconSummaryEditor({ props, onChange, allSections = [] }) {
 export function InteractiveMapEditor() {
     return (
         <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '8px', color: '#64748b', fontSize: '0.85rem' }}>
-            Ce bloc affiche la carte interactive (Store Locator) pour trouver les points de vente. Il s'auto-configure avec les données des partenaires.
+            Ce bloc affiche la carte de France miniature. Aucune configuration requise.
         </div>
     );
+}
+
+export function StoreLocatorWidgetEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre">
+            <input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} />
+        </Field>
+        <Field label="Description">
+            <WysiwygEditor value={props.description || ''} onChange={val => onChange({ description: val })} />
+        </Field>
+    </>;
 }
 
 export function TitleBlockEditor({ props, onChange }) {
@@ -1111,6 +1122,7 @@ export const EDITORS = {
     Marquee: MarqueeEditor,
     OfferComparator: OfferComparatorEditor,
     InteractiveMap: InteractiveMapEditor,
+    StoreLocatorWidget: StoreLocatorWidgetEditor,
     PartnersNetwork: PartnersNetworkEditor,
     QualityBanner: QualityBannerEditor,
     WhyChooseUs: WhyChooseUsEditor,

@@ -143,8 +143,16 @@ export default function StoreMap({ partners, activePartner, onPartnerClick, onMa
         const pinImage = new Image();
         pinImage.crossOrigin = "anonymous";
         pinImage.onload = () => {
-            if (!map.hasImage('custom-pin')) {
-                map.addImage('custom-pin', pinImage);
+            if (mapRef.current) {
+                const currentMap = mapRef.current.getMap();
+                if (currentMap && currentMap.hasImage && !currentMap.hasImage('custom-pin')) {
+                    // Try/catch to be absolutely safe against Mapbox internal destroyed state
+                    try {
+                        currentMap.addImage('custom-pin', pinImage);
+                    } catch (err) {
+                        console.warn("Could not add pin image to map:", err);
+                    }
+                }
             }
         };
         pinImage.src = createPinIcon();

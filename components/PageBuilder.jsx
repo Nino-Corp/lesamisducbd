@@ -11,6 +11,7 @@ import Quote from './Quote/Quote';
 import QualityBanner from './QualityBanner/QualityBanner';
 import PartnersNetwork from './PartnersNetwork/PartnersNetwork';
 import InteractiveMapWrapper from './InteractiveMap/InteractiveMapWrapper';
+import StoreLocatorWidget from './StoreLocator/StoreLocatorWidget';
 import JoinUs from './JoinUs/JoinUs';
 import ScrollReveal from './ScrollReveal/ScrollReveal';
 import RichText from './RichText/RichText';
@@ -54,7 +55,7 @@ const componentMap = {
     WhyChooseUs,
     PartnersNetwork,
     InteractiveMap: InteractiveMapWrapper,
-    InteractiveMapWrapper,
+    StoreLocatorWidget,
     Partners,
     FAQ,
     JoinUs,

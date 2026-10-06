@@ -248,11 +248,19 @@ export const TEMPLATES = [
     },
     {
         type: 'InteractiveMap',
-        label: 'Carte Interactive (Store Locator)',
+        label: 'Carte de France (Mini)',
         icon: '🗺️',
-        description: 'Affiche la carte des partenaires / revendeurs',
+        description: 'Petite carte statique de France avec points',
         category: 'special',
-        defaultProps: { subtitle: true }
+        defaultProps: {}
+    },
+    {
+        type: 'StoreLocatorWidget',
+        label: 'Carte Interactive (Store Locator)',
+        icon: '🌍',
+        description: 'Affiche la vraie carte interactive des partenaires',
+        category: 'special',
+        defaultProps: { subtitle: false, title: 'Où nous retrouver ?', description: 'Découvrez nos points de vente partenaires.' }
     },
     {
         type: 'QualityBanner',

@@ -113,6 +113,7 @@ const PREVIEW_COMPONENTS = {
     ProductList,
     Partners,
     InteractiveMap: InteractiveMapWrapper,
+    StoreLocatorWidget: dynamic(() => import('@/components/StoreLocator/StoreLocatorWidget'), { ssr: false }),
     JoinUs,
     Header,
     Footer,

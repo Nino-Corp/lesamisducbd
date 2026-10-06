@@ -8,11 +8,15 @@ export default function PartnersNetwork({ title, partners }) {
                 <div className={styles.pillContainer}>
                     {partners.map((partner, index) => (
                         <div key={index} className={styles.card}>
-                            <img
-                                src={partner.image}
-                                alt={partner.name || "Partenaire"}
-                                className={styles.logo}
-                            />
+                            {partner.image ? (
+                                <img
+                                    src={partner.image}
+                                    alt={partner.name || "Partenaire"}
+                                    className={styles.logo}
+                                />
+                            ) : (
+                                <span className={styles.logoText}>{partner.name}</span>
+                            )}
                         </div>
                     ))}
                 </div>
