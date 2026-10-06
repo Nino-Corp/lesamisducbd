@@ -1,9 +1,18 @@
 'use client';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
 import styles from './success.module.css';
 
 export default function CheckoutSuccessPage() {
+    const { clearCart } = useCart();
+
+    useEffect(() => {
+        clearCart(true); // silent = true
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <div className={styles.container}>
             <div className={styles.card}>

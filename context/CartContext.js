@@ -65,6 +65,23 @@ export function CartProvider({ children }) {
         setIsLoaded(true);
     }, []);
 
+    // Sync cart across multiple tabs
+    useEffect(() => {
+        const handleStorageChange = (e) => {
+            if (e.key === 'cart') {
+                try {
+                    const newCart = e.newValue ? JSON.parse(e.newValue) : [];
+                    setCart(newCart);
+                } catch (err) {
+                    console.error('Error syncing cart from other tab:', err);
+                }
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, []);
+
     // Save to LocalStorage whenever cart changes
     useEffect(() => {
         if (isLoaded) {
@@ -203,9 +220,11 @@ export function CartProvider({ children }) {
     };
 
     // Clear Cart
-    const clearCart = () => {
+    const clearCart = (silent = false) => {
         setCart([]);
-        showToast('Le panier a été vidé', 'success');
+        if (!silent) {
+            showToast('Le panier a été vidé', 'success');
+        }
     };
 
     // Calculate Totals
