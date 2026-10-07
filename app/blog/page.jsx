@@ -17,7 +17,7 @@ export const metadata = {
     },
 };
 
-const ARTICLE_TYPES = ['Article', 'BlogPosting'];
+const ARTICLE_TYPES = ['Article', 'BlogPosting', 'LandingPage'];
 
 async function getArticles() {
     try {

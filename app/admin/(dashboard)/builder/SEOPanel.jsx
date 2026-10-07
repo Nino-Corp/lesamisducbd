@@ -137,7 +137,7 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
     const update = (patch) => onUpdate({ seo: { ...seo, ...patch } });
     const updatePage = (patch) => onUpdate(patch); // Direct page-level updates (slug, status, scheduledAt)
 
-    const isArticle = seo.pageType === 'Article' || seo.pageType === 'BlogPosting';
+    const isArticle = seo.pageType === 'Article' || seo.pageType === 'BlogPosting' || seo.pageType === 'LandingPage';
 
     const tabs = [
         { id: 'serp', label: '🔍 Google' },

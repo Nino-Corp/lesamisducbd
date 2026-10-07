@@ -1,6 +1,7 @@
 'use client';
 
 // All per-block editor forms for the Page Builder
+import { useState, useEffect } from 'react';
 import WysiwygEditor from './WysiwygEditor';
 
 function Field({ label, hint, children }) {
@@ -1109,6 +1110,100 @@ export function TitleBlockEditor({ props, onChange }) {
 
 
 
+export function LatestArticlesBlockEditor({ props, onChange }) {
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        fetch('/api/admin/builder')
+            .then(res => res.json())
+            .then(data => {
+                const cats = new Set();
+                Object.values(data).forEach(p => {
+                    if (['Article', 'BlogPosting', 'LandingPage'].includes(p.seo?.pageType) && p.seo?.category) {
+                        cats.add(p.seo.category);
+                    }
+                });
+                setCategories(Array.from(cats).sort());
+            })
+            .catch(console.error);
+    }, []);
+
+    return <>
+        <Field label="Titre">
+            <WysiwygEditor value={props.title || ''} onChange={val => onChange({ title: val })} titleMode={true} />
+        </Field>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <Field label="Nombre d'articles">
+                <input type="number" min="1" max="12" style={inputStyle} value={props.count || 3} onChange={e => onChange({ count: parseInt(e.target.value) || 3 })} />
+            </Field>
+            <Field label="Colonnes (Desktop)">
+                <select style={selectStyle} value={props.columns || 3} onChange={e => onChange({ columns: parseInt(e.target.value) || 3 })}>
+                    <option value={2}>2 colonnes</option>
+                    <option value={3}>3 colonnes</option>
+                    <option value={4}>4 colonnes</option>
+                </select>
+            </Field>
+        </div>
+
+        <Field label="Catégorie (optionnel)" hint="Laissez vide pour afficher toutes les catégories">
+            <select style={selectStyle} value={props.category || ''} onChange={e => onChange({ category: e.target.value })}>
+                <option value="">-- Toutes les catégories --</option>
+                {categories.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                ))}
+            </select>
+        </Field>
+
+        <hr style={{ margin: '20px 0', border: 'none', borderTop: '1px dashed #ccc' }} />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <Field label="Couleur de Fond">
+                <div style={{ display: 'flex', gap: '8px' }}>
+                    <input type="color" value={props.backgroundColor || '#e3fff8'} onChange={e => onChange({ backgroundColor: e.target.value })} style={{ width: '38px', height: '38px', padding: 0, border: 'none', cursor: 'pointer', borderRadius: '6px' }} />
+                    <input style={{...inputStyle, flex: 1}} value={props.backgroundColor || '#e3fff8'} onChange={e => onChange({ backgroundColor: e.target.value })} />
+                </div>
+            </Field>
+            <Field label="Couleur du Titre">
+                <div style={{ display: 'flex', gap: '8px' }}>
+                    <input type="color" value={props.titleColor || '#1F4B40'} onChange={e => onChange({ titleColor: e.target.value })} style={{ width: '38px', height: '38px', padding: 0, border: 'none', cursor: 'pointer', borderRadius: '6px' }} />
+                    <input style={{...inputStyle, flex: 1}} value={props.titleColor || '#1F4B40'} onChange={e => onChange({ titleColor: e.target.value })} />
+                </div>
+            </Field>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <Field label="Alignement du Titre">
+                <select style={selectStyle} value={props.titleAlign || 'left'} onChange={e => onChange({ titleAlign: e.target.value })}>
+                    <option value="left">Gauche</option>
+                    <option value="center">Centré</option>
+                    <option value="right">Droite</option>
+                </select>
+            </Field>
+            <Field label="Style des Cartes">
+                <select style={selectStyle} value={props.cardStyle || 'border'} onChange={e => onChange({ cardStyle: e.target.value })}>
+                    <option value="border">Bordure Simple</option>
+                    <option value="shadow">Ombre Portée</option>
+                    <option value="minimal">Minimaliste</option>
+                </select>
+            </Field>
+        </div>
+
+        <Field label="Éléments de la Carte">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                    <input type="checkbox" checked={props.showImage !== false} onChange={e => onChange({ showImage: e.target.checked })} /> Afficher l'image
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                    <input type="checkbox" checked={props.showCategory !== false} onChange={e => onChange({ showCategory: e.target.checked })} /> Afficher la catégorie
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                    <input type="checkbox" checked={props.showExcerpt !== false} onChange={e => onChange({ showExcerpt: e.target.checked })} /> Afficher l'extrait
+                </label>
+            </div>
+        </Field>
+    </>;
+}
 
 export const EDITORS = {
     TitleBlock: TitleBlockEditor,
@@ -1128,6 +1223,7 @@ export const EDITORS = {
     AuthorCard: AuthorCardEditor,
     CalloutBox: CalloutBoxEditor,
     RelatedArticles: RelatedArticlesEditor,
+    LatestArticlesBlock: LatestArticlesBlockEditor,
     TableOfContents: TableOfContentsEditor,
     FeaturedProducts: FeaturedProductsEditor,
     Marquee: MarqueeEditor,

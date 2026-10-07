@@ -18,6 +18,7 @@ import Divider from '@/components/Divider/Divider';
 import AuthorCard from '@/components/AuthorCard/AuthorCard';
 import CalloutBox from '@/components/CalloutBox/CalloutBox';
 import RelatedArticles from '@/components/RelatedArticles/RelatedArticles';
+import LatestArticlesPreview from '@/components/LatestArticles/LatestArticlesPreview';
 import TableOfContents from '@/components/TableOfContents/TableOfContents';
 import FeaturedProductsPreview from '@/components/FeaturedProducts/FeaturedProductsPreview';
 import Marquee from '@/components/Marquee/Marquee';
@@ -121,6 +122,7 @@ const PREVIEW_COMPONENTS = {
     AuthorCard,
     CalloutBox,
     RelatedArticles,
+    LatestArticlesBlock: LatestArticlesPreview,
     TableOfContents,
     FeaturedProducts: FeaturedProductsPreview,
     Marquee,

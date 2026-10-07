@@ -187,6 +187,26 @@ export const TEMPLATES = [
         },
     },
     {
+        type: 'LatestArticlesBlock',
+        label: 'Derniers Articles (Auto)',
+        icon: '📰',
+        description: 'Affiche automatiquement les derniers articles publiés du blog',
+        category: 'blog',
+        defaultProps: {
+            title: 'Nos derniers articles',
+            count: 3,
+            category: '',
+            titleAlign: 'left',
+            titleColor: '#1F4B40',
+            backgroundColor: '#e3fff8',
+            cardStyle: 'border',
+            showImage: true,
+            showExcerpt: true,
+            showCategory: true,
+            columns: 3
+        },
+    },
+    {
         type: 'TableOfContents',
         label: 'Sommaire',
         icon: '📋',
