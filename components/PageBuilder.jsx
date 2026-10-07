@@ -30,6 +30,7 @@ import AuthorCard from './AuthorCard/AuthorCard';
 import CalloutBox from './CalloutBox/CalloutBox';
 import RelatedArticles from './RelatedArticles/RelatedArticles';
 import LatestArticlesBlock from './LatestArticles/LatestArticlesBlock';
+import MostReadArticlesBlock from './LatestArticles/MostReadArticlesBlock';
 import TableOfContents from './TableOfContents/TableOfContents';
 import FeaturedProducts from './FeaturedProducts/FeaturedProducts';
 import OfferComparator from './OfferComparator/OfferComparator';
@@ -78,6 +79,7 @@ const componentMap = {
     CalloutBox,
     RelatedArticles,
     LatestArticlesBlock,
+    MostReadArticlesBlock,
     TableOfContents,
     IconSummary,
     FeaturedProducts,

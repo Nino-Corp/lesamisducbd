@@ -1110,6 +1110,8 @@ export function TitleBlockEditor({ props, onChange }) {
 
 
 
+export const MostReadArticlesBlockEditor = LatestArticlesBlockEditor;
+
 export function LatestArticlesBlockEditor({ props, onChange }) {
     const [categories, setCategories] = useState([]);
 
@@ -1224,6 +1226,7 @@ export const EDITORS = {
     CalloutBox: CalloutBoxEditor,
     RelatedArticles: RelatedArticlesEditor,
     LatestArticlesBlock: LatestArticlesBlockEditor,
+    MostReadArticlesBlock: MostReadArticlesBlockEditor,
     TableOfContents: TableOfContentsEditor,
     FeaturedProducts: FeaturedProductsEditor,
     Marquee: MarqueeEditor,
