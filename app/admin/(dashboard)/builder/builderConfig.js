@@ -255,6 +255,14 @@ export const TEMPLATES = [
         defaultProps: {}
     },
     {
+        type: 'SearchBarBlock',
+        label: 'Barre de Recherche',
+        icon: '🔍',
+        description: 'Moteur de recherche complet',
+        category: 'conversion',
+        defaultProps: { title: '', placeholder: 'Rechercher un produit ou une information…' }
+    },
+    {
         type: 'StoreLocatorWidget',
         label: 'Carte Interactive (Store Locator)',
         icon: '🌍',

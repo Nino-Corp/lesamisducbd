@@ -200,6 +200,7 @@ export default async function DynamicPage(props) {
         finalSections.push({
             type: 'Footer',
             props: {
+                marginTop: 'medium',
                 columnLinks: globalConfig?.footerLinks || [
                     { label: "Livraison", href: "/livraison" },
                     { label: "CGV", href: "/cgv" },

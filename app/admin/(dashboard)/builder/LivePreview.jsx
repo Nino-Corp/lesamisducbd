@@ -54,10 +54,30 @@ function IFramePreview({ children, style }) {
         const doc = iframeRef.current?.contentDocument;
         if (doc) {
             const head = doc.head;
-            // Clone all style and link tags from parent head
-            document.head.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => {
-                head.appendChild(el.cloneNode(true));
+            
+            const copyNodes = (nodes) => {
+                nodes.forEach(el => {
+                    if (el.tagName === 'STYLE' || (el.tagName === 'LINK' && el.rel === 'stylesheet')) {
+                        const clone = el.cloneNode(true);
+                        head.appendChild(clone);
+                    }
+                });
+            };
+
+            // 1. Initial copy
+            copyNodes(document.head.querySelectorAll('style, link[rel="stylesheet"]'));
+
+            // 2. Observe future additions (for dynamic imports CSS)
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach(mutation => {
+                    if (mutation.addedNodes.length) {
+                        copyNodes(Array.from(mutation.addedNodes));
+                    }
+                });
             });
+
+            observer.observe(document.head, { childList: true });
+
             // Add a base style to match the body
             const baseStyle = doc.createElement('style');
             baseStyle.innerHTML = `
@@ -70,6 +90,8 @@ function IFramePreview({ children, style }) {
             doc.body.className = document.body.className;
             
             setMountNode(doc.body);
+
+            return () => observer.disconnect();
         }
     }, []);
 
@@ -113,6 +135,7 @@ const PREVIEW_COMPONENTS = {
     ProductList,
     Partners,
     InteractiveMap: InteractiveMapWrapper,
+    SearchBarBlock: dynamic(() => import('@/components/SearchBar/SearchBarBlock')),
     StoreLocatorWidget: dynamic(() => import('@/components/StoreLocator/StoreLocatorWidget'), { ssr: false }),
     JoinUs,
     Header,

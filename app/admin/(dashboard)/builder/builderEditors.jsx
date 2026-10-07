@@ -1079,6 +1079,17 @@ export function StoreLocatorWidgetEditor({ props, onChange }) {
     </>;
 }
 
+export function SearchBarBlockEditor({ props, onChange }) {
+    return <>
+        <Field label="Titre du bloc (optionnel)">
+            <input style={inputStyle} value={props.title || ''} onChange={e => onChange({ title: e.target.value })} placeholder="Ex: Rechercher sur le site" />
+        </Field>
+        <Field label="Texte indicatif (placeholder)">
+            <input style={inputStyle} value={props.placeholder || ''} onChange={e => onChange({ placeholder: e.target.value })} placeholder="Rechercher un produit..." />
+        </Field>
+    </>;
+}
+
 export function TitleBlockEditor({ props, onChange }) {
     return <>
         <Field label="Texte du titre" hint="Texte de votre titre">
@@ -1122,6 +1133,7 @@ export const EDITORS = {
     Marquee: MarqueeEditor,
     OfferComparator: OfferComparatorEditor,
     InteractiveMap: InteractiveMapEditor,
+    SearchBarBlock: SearchBarBlockEditor,
     StoreLocatorWidget: StoreLocatorWidgetEditor,
     PartnersNetwork: PartnersNetworkEditor,
     QualityBanner: QualityBannerEditor,

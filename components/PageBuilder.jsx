@@ -11,6 +11,7 @@ import Quote from './Quote/Quote';
 import QualityBanner from './QualityBanner/QualityBanner';
 import PartnersNetwork from './PartnersNetwork/PartnersNetwork';
 import InteractiveMapWrapper from './InteractiveMap/InteractiveMapWrapper';
+import SearchBarBlock from './SearchBar/SearchBarBlock';
 import StoreLocatorWidget from './StoreLocator/StoreLocatorWidget';
 import JoinUs from './JoinUs/JoinUs';
 import ScrollReveal from './ScrollReveal/ScrollReveal';
@@ -55,6 +56,7 @@ const componentMap = {
     WhyChooseUs,
     PartnersNetwork,
     InteractiveMap: InteractiveMapWrapper,
+    SearchBarBlock,
     StoreLocatorWidget,
     Partners,
     FAQ,
@@ -131,9 +133,9 @@ export default function PageBuilder({ sections }) {
                 const componentProps = cleanHtmlStrings(rawProps);
 
                 // Map padding values to px/rem
-                const paddingMap = { none: '0px', small: '15px', medium: '30px', large: '50px', xl: '80px' };
+                const paddingMap = { none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };
                 // Map margin values to px/rem (including negative for pulling blocks together)
-                const marginMap = { 'negative-large': '-50px', 'negative-medium': '-30px', 'negative-small': '-15px', none: '0px', small: '15px', medium: '30px', large: '50px', xl: '80px' };
+                const marginMap = { 'negative-large': '-80px', 'negative-medium': '-40px', 'negative-small': '-20px', none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };
 
                 const wrapperStyle = {};
                 if (paddingTop && paddingMap[paddingTop]) wrapperStyle.paddingTop = paddingMap[paddingTop];
