@@ -1,0 +1,161 @@
+.sidebar {
+    position: sticky;
+    top: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* More spaced out */
+    height: calc(100vh - 160px); /* Fill window height minus header and padding */
+}
+
+.widget {
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+}
+
+.widgetTitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #1F4B40;
+    opacity: 0.5;
+    margin: 0 0 24px 0;
+    flex-shrink: 0;
+}
+
+/* TOC Container */
+.tocContainer {
+    position: relative;
+    box-shadow: inset 2px 0 0 rgba(31, 75, 64, 0.1); /* Replaces border-left to avoid overflow clipping */
+    max-height: calc(100vh - 250px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 8px; /* Room for scrollbar */
+}
+
+/* Custom scrollbar for TOC */
+.tocContainer::-webkit-scrollbar {
+    width: 4px;
+}
+.tocContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+.tocContainer::-webkit-scrollbar-thumb {
+    background: rgba(31, 75, 64, 0.2);
+    border-radius: 4px;
+}
+
+/* TOC List */
+.tocList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sliderIndicator {
+    position: absolute;
+    left: 0;
+    width: 3px;
+    background: #1F4B40;
+    border-radius: 4px;
+    transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.tocList li {
+    padding: 0;
+    margin: 0;
+    flex-shrink: 0; /* Don't squash items */
+}
+
+.tocList li a {
+    color: #475569;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+    padding: 8px 0 8px 16px; /* Better click area */
+    display: block;
+    transition: color 0.2s;
+}
+
+.tocList li a:hover {
+    color: #1F4B40;
+}
+
+.activeToc a {
+    color: #1F4B40 !important;
+    font-weight: 700;
+}
+
+/* Related */
+.relatedList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.relatedCard {
+    display: flex;
+    gap: 12px;
+    text-decoration: none;
+    align-items: center;
+    transition: opacity 0.2s;
+}
+
+.relatedCard:hover {
+    opacity: 0.7;
+}
+
+.relatedImgWrapper {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.relatedImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.relatedTitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1F4B40;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Categories */
+.categoryTags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.catTag {
+    background: transparent;
+    color: #1F4B40;
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid rgba(31, 75, 64, 0.2);
+}
+
+.catTag:hover {
+    background: #1F4B40;
+    color: #fff;
+    border-color: #1F4B40;
+}

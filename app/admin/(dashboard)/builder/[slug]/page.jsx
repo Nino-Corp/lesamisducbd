@@ -363,11 +363,14 @@ export default function PageEditor() {
                             title="Dupliquer la page">
                             📋
                         </button>
-                        <a href={`/p/${page.slug}?preview=true`} target="_blank" rel="noopener noreferrer"
-                            style={{ padding: '8px 16px', borderRadius: '8px', background: '#e0f2fe', color: '#0369a1', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}
-                            title="Voir l'aperçu privé">
+                        <button onClick={async () => {
+                            await save();
+                            window.open(`/p/${page.slug}?preview=true`, '_blank');
+                        }}
+                            style={{ padding: '8px 16px', borderRadius: '8px', background: '#e0f2fe', color: '#0369a1', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem' }}
+                            title="Sauvegarder et voir l'aperçu">
                             👁 Aperçu
-                        </a>
+                        </button>
                         <a href={`https://www.lesamisducbd.fr/p/${page.slug}`} target="_blank" rel="noopener noreferrer"
                             style={{ padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>
                             🔗 Voir
@@ -640,6 +643,7 @@ export default function PageEditor() {
                         onReorder={handleReorder}
                         isFullscreen={isFullscreen}
                         setIsFullscreen={setIsFullscreen}
+                        pageType={page.seo?.pageType}
                     />
                 </div>
             </div>

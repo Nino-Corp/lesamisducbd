@@ -44,6 +44,7 @@ import DeliverySteps from '@/components/LivraisonBlocks/DeliverySteps';
 import ContactFormBlock from '@/components/ContactFormBlock/ContactFormBlock';
 import NewsletterBlock from '@/components/NewsletterBlock/NewsletterBlock';
 import TitleBlock from '@/components/TitleBlock/TitleBlock';
+import ArticleSidebar from '@/components/ArticleSidebar/ArticleSidebar';
 import { useState, useRef, useEffect, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { SessionProvider } from "next-auth/react";
@@ -99,7 +100,7 @@ function IFramePreview({ children, style }) {
 
     return (
         <iframe ref={iframeRef} style={style} frameBorder="0">
-            {mountNode && createPortal(<SessionProvider>{children}</SessionProvider>, mountNode)}
+            {mountNode && createPortal(<SessionProvider>{children(mountNode)}</SessionProvider>, mountNode)}
         </iframe>
     );
 }
@@ -174,7 +175,8 @@ const LivePreview = memo(function LivePreview({
     onReorder,
     isFullscreen,
     setIsFullscreen,
-    pageKey
+    pageKey,
+    pageType
 }) {
     if (!sections.length) {
         return (
@@ -562,7 +564,9 @@ const LivePreview = memo(function LivePreview({
                     );
                 };
 
-                const wrappedContent = (
+                const isArticleLayout = ['Article', 'BlogPosting', 'LandingPage'].includes(pageType);
+
+                const wrappedContent = (iframeNode) => (
                     <div style={{ paddingTop: !hasHeader ? '80px' : '0' }}>
                         {!hasHeader && (
                             <div 
@@ -574,7 +578,37 @@ const LivePreview = memo(function LivePreview({
                                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 10000, cursor: 'not-allowed' }}></div>
                             </div>
                         )}
-                        {sections.map((section, i) => renderSection(section, i))}
+                        
+                        {isArticleLayout ? (
+                            <div style={{ 
+                                maxWidth: '100%', 
+                                margin: '60px auto', 
+                                padding: '0 40px', 
+                                display: 'flex', 
+                                alignItems: 'flex-start' 
+                            }}>
+                                {/* Espace à gauche */}
+                                <div style={{ flex: 1 }}></div>
+                                
+                                {/* Contenu principal */}
+                                <div className="article-content" style={{ maxWidth: '800px', width: '100%' }}>
+                                    {sections.map((section, i) => renderSection(section, i))}
+                                </div>
+                                
+                                {/* Espace entre le contenu et le sommaire (égal à l'espace de gauche) */}
+                                <div style={{ flex: 1 }}></div>
+                                
+                                {/* Sommaire collé à droite */}
+                                {previewMode === 'desktop' && (
+                                    <div style={{ width: '260px', flexShrink: 0, position: 'sticky', top: '120px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
+                                        <ArticleSidebar containerNode={iframeNode} categories={['Catégorie Test']} relatedArticles={[]} />
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            sections.map((section, i) => renderSection(section, i))
+                        )}
+                        
                         {!hasFooter && <div style={{ opacity: 0.8, pointerEvents: 'none', marginTop: '40px' }}><Footer {...defaultFooterProps} /></div>}
                     </div>
                 );
@@ -588,14 +622,14 @@ const LivePreview = memo(function LivePreview({
                                         {/* iPhone Notch */}
                                         <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '40%', height: '25px', background: '#111', borderBottomLeftRadius: '16px', borderBottomRightRadius: '16px', zIndex: 9999 }}></div>
                                         <IFramePreview style={{ width: '100%', height: '100%', border: 'none', borderRadius: '26px' }}>
-                                            {wrappedContent}
+                                            {(iframeNode) => wrappedContent(iframeNode)}
                                         </IFramePreview>
                                     </div>
                                 ) : (
                                     <div>
                                         <div style={frameStyles}>
                                             <IFramePreview style={{ width: '100%', height: '100%', border: 'none' }}>
-                                                {wrappedContent}
+                                                {(iframeNode) => wrappedContent(iframeNode)}
                                             </IFramePreview>
                                         </div>
                                         <div style={{ background: '#ddd', height: '12px', width: '20%', margin: '0 auto', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px', boxShadow: 'inset 0 4px 6px rgba(0,0,0,0.1)' }}></div>

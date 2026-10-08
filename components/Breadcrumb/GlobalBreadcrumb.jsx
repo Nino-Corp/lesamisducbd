@@ -21,7 +21,7 @@ const routeNames = {
 
 export default function GlobalBreadcrumb() {
     const pathname = usePathname();
-    if (!pathname || pathname === '/' || pathname.startsWith('/admin') || pathname.startsWith('/produit/')) {
+    if (!pathname || pathname === '/' || pathname.startsWith('/admin') || pathname.startsWith('/produit/') || pathname.startsWith('/p/')) {
         return null;
     }
 

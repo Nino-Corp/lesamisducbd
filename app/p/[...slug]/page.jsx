@@ -4,6 +4,7 @@ import PageBuilder from '@/components/PageBuilder';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
+import ArticleSidebar from '@/components/ArticleSidebar/ArticleSidebar';
 
 export const revalidate = 60; // Cache for 1 minute
 
@@ -14,28 +15,26 @@ async function getPageData(slug, isPreview = false) {
             const page = pages[slug];
 
             if (!isPreview) {
-                // Block draft pages from public access
-                const status = page.status || 'published'; // Legacy pages without status are considered published
-                if (status === 'draft') return null;
+                const status = page.status || 'published';
+                if (status === 'draft') return { page: null, allPages: null };
 
-                // Block scheduled pages that haven't reached their publish date
                 if (status === 'scheduled' && page.scheduledAt) {
-                    if (new Date(page.scheduledAt) > new Date()) return null;
+                    if (new Date(page.scheduledAt) > new Date()) return { page: null, allPages: null };
                 }
             }
 
-            return page;
+            return { page, allPages: pages };
         }
     } catch (error) {
         console.error('Error fetching dynamic page:', error);
     }
-    return null;
+    return { page: null, allPages: null };
 }
 
 export async function generateMetadata({ params }) {
     const { slug } = await params;
     const pageSlug = Array.isArray(slug) ? slug.join('/') : slug;
-    const page = await getPageData(pageSlug);
+    const { page } = await getPageData(pageSlug);
 
     if (!page) return {};
 
@@ -134,7 +133,7 @@ export default async function DynamicPage(props) {
     const isPreview = searchParams.preview === 'true';
     const pageSlug = Array.isArray(slug) ? slug.join('/') : slug;
 
-    const [page, globalConfig] = await Promise.all([
+    const [{ page, allPages }, globalConfig] = await Promise.all([
         getPageData(pageSlug, isPreview),
         kv.get('global_content').catch(() => null)
     ]);
@@ -224,7 +223,7 @@ export default async function DynamicPage(props) {
     }
 
     const jsonLd = buildJsonLd(page, pageSlug);
-    const isArticle = ['Article', 'BlogPosting'].includes(page.seo?.pageType);
+    const isArticle = ['Article', 'BlogPosting', 'LandingPage'].includes(page.seo?.pageType);
 
     // Build breadcrumb items for articles
     const breadcrumbItems = isArticle ? [
@@ -246,16 +245,132 @@ export default async function DynamicPage(props) {
         }))
     } : null;
 
+    // Calculate categories and related articles for sidebar
+    let categories = [];
+    let relatedArticles = [];
+    if (isArticle && allPages) {
+        const publishedPages = Object.values(allPages).filter(p => !p.status || p.status === 'published');
+        categories = [...new Set(publishedPages.map(p => p.seo?.category).filter(Boolean))].sort();
+        relatedArticles = publishedPages
+            .filter(p => ['Article', 'BlogPosting', 'LandingPage'].includes(p.seo?.pageType) && p.slug !== pageSlug && p.seo?.category === page.seo?.category)
+            .slice(0, 3)
+            .map(p => ({ title: p.title, slug: p.slug, image: p.seo?.ogImage || p.seo?.featuredImage || '/images/og-image.jpg' }));
+    }
+
+    let contentNode;
+    
+    if (isArticle) {
+        const headerIndex = finalSections.findIndex(s => s.type === 'Header');
+        let headerSection = null;
+        let contentSections = [...finalSections];
+        
+        if (headerIndex !== -1) {
+            headerSection = contentSections[headerIndex];
+            contentSections.splice(headerIndex, 1);
+        }
+        
+        const footerIndex = contentSections.findIndex(s => s.type === 'Footer');
+        let footerSection = null;
+        if (footerIndex !== -1) {
+            footerSection = contentSections[footerIndex];
+            contentSections.splice(footerIndex, 1);
+        }
+
+        contentNode = (
+            <>
+                {headerSection && <PageBuilder sections={[headerSection]} />}
+                
+                {breadcrumbItems.length > 0 && (
+                    <div style={{
+                        position: 'absolute',
+                        top: '100px', 
+                        left: 0,
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        zIndex: 50,
+                    }} className="breadcrumb-wrapper">
+                        <div className="breadcrumb-container" style={{
+                            width: '100%',
+                            maxWidth: 'var(--container-width, 1400px)',
+                        }}>
+                            <Breadcrumb items={breadcrumbItems} />
+                        </div>
+                        <style dangerouslySetInnerHTML={{ __html: `
+                            .breadcrumb-wrapper { padding: 0; }
+                            @media (max-width: 1024px) {
+                                .breadcrumb-wrapper { padding: 0 5px; }
+                            }
+                        `}} />
+                    </div>
+                )}
+                
+                <div style={{ 
+                    maxWidth: '100%', 
+                    margin: '60px auto', 
+                    padding: '0 40px', 
+                    display: 'flex', 
+                    alignItems: 'flex-start' 
+                }} className="article-layout">
+                    {/* Espace à gauche */}
+                    <div style={{ flex: 1 }}></div>
+                    
+                    {/* Contenu principal */}
+                    <div className="article-content" style={{ maxWidth: '800px', width: '100%' }}>
+                        <PageBuilder sections={contentSections} />
+                        <PageBuilder sections={[
+                            {
+                                id: 'latest-related',
+                                type: 'LatestArticlesBlock',
+                                props: {
+                                    title: 'Nos derniers articles sur le même thème',
+                                    category: page.seo?.category || '',
+                                    count: 3
+                                }
+                            }
+                        ]} />
+                    </div>
+                    
+                    {/* Espace entre le contenu et le sommaire (égal à l'espace de gauche) */}
+                    <div style={{ flex: 1 }}></div>
+                    
+                    {/* Sommaire collé à droite */}
+                    <div style={{ width: '260px', flexShrink: 0, display: 'none', position: 'sticky', top: '120px' }} className="article-sidebar-container">
+                        <ArticleSidebar categories={categories} relatedArticles={relatedArticles} />
+                    </div>
+                </div>
+
+                <style dangerouslySetInnerHTML={{ __html: `
+                    @media (min-width: 1024px) {
+                        .article-sidebar-container { display: block !important; }
+                    }
+                `}} />
+
+                <style dangerouslySetInnerHTML={{ __html: `
+                    @media (min-width: 1024px) {
+                        .article-sidebar-container { display: block !important; }
+                    }
+                `}} />
+
+                {footerSection && <PageBuilder sections={[footerSection]} />}
+            </>
+        );
+    } else {
+        contentNode = (
+            <>
+                {breadcrumbItems.length > 0 && <Breadcrumb items={breadcrumbItems} />}
+                <PageBuilder sections={finalSections} />
+            </>
+        );
+    }
+
     return (
         <main>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             {breadcrumbJsonLd && (
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
             )}
-            {isArticle && breadcrumbItems.length > 0 && (
-                <Breadcrumb items={breadcrumbItems} />
-            )}
-            <PageBuilder sections={finalSections} />
+            {contentNode}
         </main>
     );
 }
