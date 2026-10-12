@@ -644,6 +644,7 @@ export default function PageEditor() {
                         isFullscreen={isFullscreen}
                         setIsFullscreen={setIsFullscreen}
                         pageType={page.seo?.pageType}
+                        showSidebar={page.seo?.showSidebar}
                     />
                 </div>
             </div>

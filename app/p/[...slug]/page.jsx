@@ -213,10 +213,28 @@ export default async function DynamicPage(props) {
     }
 
     const jsonLd = buildJsonLd(page, pageSlug);
-    const isArticle = ['Article', 'BlogPosting', 'LandingPage'].includes(page.seo?.pageType);
 
-    // Build breadcrumb items for articles
-    const breadcrumbItems = isArticle ? [
+    // Détection des pages piliers, catégories ou hubs
+    const hasCategoryFilter = pageSections.some(s => s.type === 'BlogCategoryFilter');
+    const isCategoryOrPillar = ['CategoryPage', 'PillarPage'].includes(page.seo?.pageType) ||
+                               page.seo?.isCategoryPage === true ||
+                               page.seo?.isPillarPage === true ||
+                               hasCategoryFilter;
+
+    // Vrai article de blog : Article ou BlogPosting uniquement (jamais LandingPage, WebPage, FAQ ou hub)
+    const isBlogArticleType = (page.seo?.pageType === 'Article' || page.seo?.pageType === 'BlogPosting') && !isCategoryOrPillar;
+
+    // Affichage du sommaire et de la colonne latérale :
+    // - Si désactivé explicitement via seo.showSidebar === false -> pas de sommaire
+    // - Si activé explicitement via seo.showSidebar === true -> oui (sauf si bloc filtre catégorie)
+    // - Par défaut -> uniquement sur les vrais articles de blog
+    const isArticle = page.seo?.showSidebar !== undefined
+        ? (page.seo.showSidebar === true && !hasCategoryFilter)
+        : isBlogArticleType;
+
+    // Fil d'Ariane : articles et pages catégories de blog
+    const isBlogRelated = isBlogArticleType || page.seo?.pageType === 'CategoryPage' || page.seo?.pageType === 'PillarPage' || hasCategoryFilter;
+    const breadcrumbItems = isBlogRelated ? [
         { label: 'Accueil', href: '/' },
         { label: 'Blog', href: '/blog' },
         ...(page.seo?.category ? [{ label: page.seo.category, href: `/blog?cat=${encodeURIComponent(page.seo.category)}` }] : []),
@@ -224,7 +242,7 @@ export default async function DynamicPage(props) {
     ] : [];
 
     // BreadcrumbList JSON-LD
-    const breadcrumbJsonLd = isArticle ? {
+    const breadcrumbJsonLd = isBlogRelated ? {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: breadcrumbItems.map((item, i) => ({
@@ -244,10 +262,11 @@ export default async function DynamicPage(props) {
         // Catégories réelles des pages publiées
         categories = [...new Set(publishedPages.map(p => p.seo?.category).filter(Boolean))].sort();
 
-        // Articles similaires réels (priorité à la même catégorie si elle est définie, sinon autres articles)
+        // Articles similaires réels (uniquement les vrais articles, jamais les hubs/landing)
         const currentCategory = page.seo?.category;
         const otherArticles = publishedPages.filter(p => 
-            ['Article', 'BlogPosting', 'LandingPage'].includes(p.seo?.pageType) && 
+            ['Article', 'BlogPosting'].includes(p.seo?.pageType) && 
+            !p.sections?.some(s => s.type === 'BlogCategoryFilter') &&
             p.slug !== pageSlug
         );
 

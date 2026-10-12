@@ -5,11 +5,13 @@ import Link from 'next/link';
 import styles from './Builder.module.css';
 
 const PAGE_TYPES = [
-    { value: 'WebPage',     label: 'Page',          icon: '📄', color: '#6b7280' },
-    { value: 'BlogPosting', label: 'Article Blog',   icon: '📝', color: '#2563eb' },
-    { value: 'Article',     label: 'Article',        icon: '📰', color: '#7c3aed' },
-    { value: 'LandingPage', label: 'Landing SEA',    icon: '🎯', color: '#dc2626' },
-    { value: 'FAQPage',     label: 'FAQ',            icon: '❓', color: '#d97706' },
+    { value: 'WebPage',      label: 'Page Web',       icon: '📄', color: '#6b7280' },
+    { value: 'BlogPosting',  label: 'Article Blog',   icon: '📝', color: '#2563eb' },
+    { value: 'Article',      label: 'Article',        icon: '📰', color: '#7c3aed' },
+    { value: 'CategoryPage', label: 'Catégorie Blog', icon: '🏷️', color: '#0891b2' },
+    { value: 'PillarPage',   label: 'Page Pilier',    icon: '🏛️', color: '#059669' },
+    { value: 'LandingPage',  label: 'Landing SEA',    icon: '🎯', color: '#dc2626' },
+    { value: 'FAQPage',      label: 'FAQ',            icon: '❓', color: '#d97706' },
 ];
 
 const PAGE_TEMPLATES = {
@@ -23,6 +25,14 @@ const PAGE_TEMPLATES = {
             { id: `rt-${Date.now()}`, type: 'RichText', props: { content: '<h2>Introduction</h2><p>Commencez à écrire ici...</p>' } },
             { id: `auth-${Date.now()}`, type: 'AuthorCard', props: { name: 'Auteur', role: 'Rédacteur CBD' } },
             { id: `rel-${Date.now()}`, type: 'RelatedArticles', props: { title: 'À lire aussi', articles: [] } }
+        ]
+    },
+    category: {
+        label: 'Hub Catégorie Blog',
+        icon: '🏷️',
+        sections: [
+            { id: `hero-${Date.now()}`, type: 'ContentHero', props: { title: 'Guide & Articles CBD', textAlign: 'center' } },
+            { id: `filter-${Date.now()}`, type: 'BlogCategoryFilter', props: { activeCategory: 'Tous' } }
         ]
     },
     landing: {
@@ -208,7 +218,7 @@ export default function BuilderIndex() {
                     <h2 style={{ margin: '0 0 20px', fontSize: '1.1rem', fontWeight: 800, color: '#1F4B40' }}>Nouvelle création</h2>
 
                     {/* Type selector */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px', marginBottom: '16px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(95px, 1fr))', gap: '8px', marginBottom: '16px' }}>
                         {PAGE_TYPES.map(t => (
                             <button key={t.value} type="button"
                                 onClick={() => setNewPage({ ...newPage, seo: { pageType: t.value } })}

@@ -180,7 +180,8 @@ const LivePreview = memo(function LivePreview({
     isFullscreen,
     setIsFullscreen,
     pageKey,
-    pageType
+    pageType,
+    showSidebar
 }) {
     if (!sections.length) {
         return (
@@ -568,7 +569,13 @@ const LivePreview = memo(function LivePreview({
                     );
                 };
 
-                const isArticleLayout = ['Article', 'BlogPosting', 'LandingPage'].includes(pageType);
+                const hasCategoryFilter = sections.some(s => s.type === 'BlogCategoryFilter');
+                const isCategoryOrPillar = ['CategoryPage', 'PillarPage'].includes(pageType) || hasCategoryFilter;
+                const isBlogArticleType = (pageType === 'Article' || pageType === 'BlogPosting') && !isCategoryOrPillar;
+
+                const isArticleLayout = showSidebar !== undefined
+                    ? (showSidebar === true && !hasCategoryFilter)
+                    : isBlogArticleType;
 
                 const wrappedContent = (iframeNode) => (
                     <div>
