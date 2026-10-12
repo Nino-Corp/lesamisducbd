@@ -1,4 +1,4 @@
-import { kv } from '@vercel/kv';
+import { safeKvGet } from '@/lib/kvCache';
 import { Suspense } from 'react';
 import ProfessionnelClient from './ProfessionnelClient';
 import { SHARED_TITLE } from '@/app/shared-metadata';
@@ -39,16 +39,12 @@ const DEFAULTS = {
 export default async function ProfessionnelPage() {
     let content = DEFAULTS;
     let globalContent = null;
-    try {
-        const [kvData, globalData] = await Promise.all([
-            kv.get('professionnel_content'),
-            kv.get('global_content')
-        ]);
-        if (kvData) content = { ...DEFAULTS, ...kvData };
-        if (globalData) globalContent = globalData;
-    } catch (e) {
-        console.error('KV error (professionnel/global):', e);
-    }
+    const [kvData, globalData] = await Promise.all([
+        safeKvGet('professionnel_content', null),
+        safeKvGet('global_content', null)
+    ]);
+    if (kvData) content = { ...DEFAULTS, ...kvData };
+    if (globalData) globalContent = globalData;
 
     // Convert legacy data to sections if needed
     let sections = content.sections;
@@ -86,14 +82,6 @@ export default async function ProfessionnelPage() {
         ];
     }
 
-    // Analytics: increment view counter
-    try {
-    if (process.env.NODE_ENV !== 'development') {
-        await kv.incr(`builder_views:professionnel`);
-    }
-    } catch (e) {
-        console.error('Failed to increment view counter', e);
-    }
 
     return (
         <Suspense fallback={null}>

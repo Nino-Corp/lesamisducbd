@@ -1,6 +1,6 @@
 import UsagesClient from './UsagesClient';
 import { SHARED_TITLE } from '@/app/shared-metadata';
-import { kv } from '@vercel/kv';
+import { safeKvGet } from '@/lib/kvCache';
 
 
 export const metadata = {
@@ -12,16 +12,10 @@ export const metadata = {
 };
 
 export default async function UsagesPage() {
-    let globalContent = null;
-    let content = null;
-    try {
-        const globalData = await kv.get('global_content');
-        if (globalData) globalContent = globalData;
-        const pageData = await kv.get('content:usages');
-        if (pageData) content = pageData;
-    } catch (e) {
-        console.error('KV error (usages/global):', e);
-    }
+    const [globalContent, content] = await Promise.all([
+        safeKvGet('global_content', null),
+        safeKvGet('content:usages', null)
+    ]);
 
     if (content && !content.sections) {
         const visibility = content.visibility || {};
@@ -93,14 +87,6 @@ export default async function UsagesPage() {
         ];
     }
 
-    // Analytics: increment view counter
-    try {
-    if (process.env.NODE_ENV !== 'development') {
-        await kv.incr(`builder_views:usages`);
-    }
-    } catch (e) {
-        console.error('Failed to increment view counter', e);
-    }
 
     return <UsagesClient globalContent={globalContent} content={content} />;
 }

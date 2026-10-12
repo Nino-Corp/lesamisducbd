@@ -1,4 +1,4 @@
-import { kv } from '@vercel/kv';
+import { safeKvGet } from '@/lib/kvCache';
 import EssentielClient from './EssentielClient';
 import { SHARED_TITLE } from '../shared-metadata';
 
@@ -41,16 +41,12 @@ const DEFAULTS = {
 export default async function EssentielPage() {
     let content = DEFAULTS;
     let globalContent = null;
-    try {
-        const [kvData, globalData] = await Promise.all([
-            kv.get('essentiel_content'),
-            kv.get('global_content')
-        ]);
-        if (kvData) content = { ...DEFAULTS, ...kvData };
-        if (globalData) globalContent = globalData;
-    } catch (e) {
-        console.error('KV error (essentiel/global):', e);
-    }
+    const [kvData, globalData] = await Promise.all([
+        safeKvGet('essentiel_content', null),
+        safeKvGet('global_content', null)
+    ]);
+    if (kvData) content = { ...DEFAULTS, ...kvData };
+    if (globalData) globalContent = globalData;
 
     // Convert legacy data to sections if needed
     let sections = content.sections;
@@ -67,14 +63,6 @@ export default async function EssentielPage() {
         ];
     }
 
-    // Analytics: increment view counter
-    try {
-    if (process.env.NODE_ENV !== 'development') {
-        await kv.incr(`builder_views:essentiel`);
-    }
-    } catch (e) {
-        console.error('Failed to increment view counter', e);
-    }
 
     return <EssentielClient content={{ ...content, sections }} globalContent={globalContent} />;
 }

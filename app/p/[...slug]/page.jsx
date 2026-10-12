@@ -1,4 +1,4 @@
-import { kv } from '@vercel/kv';
+import { safeKvGet } from '@/lib/kvCache';
 import { notFound } from 'next/navigation';
 import PageBuilder from '@/components/PageBuilder';
 import Header from '@/components/Header/Header';
@@ -7,19 +7,6 @@ import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 import ArticleSidebar from '@/components/ArticleSidebar/ArticleSidebar';
 
 export const revalidate = 60; // Cache for 1 minute
-
-async function safeKvGet(key, fallback = null) {
-    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
-        return fallback;
-    }
-    try {
-        const res = await kv.get(key);
-        return res !== null && res !== undefined ? res : fallback;
-    } catch (error) {
-        console.error(`[Vercel KV] Error reading key "${key}":`, error.message);
-        return fallback;
-    }
-}
 
 async function getPageData(slug, isPreview = false) {
     try {
@@ -155,16 +142,6 @@ export default async function DynamicPage(props) {
         notFound();
     }
 
-    // Analytics: increment view counter on the server side (only if not previewing)
-    if (!isPreview) {
-        try {
-        if (process.env.NODE_ENV !== 'development') {
-            await kv.incr(`builder_views:${pageSlug}`);
-        }
-        } catch (e) {
-            console.error('Failed to increment view counter', e);
-        }
-    }
 
     // Prepare sections, injecting global header/footer if needed
     // The PageBuilder already handles most things, but we might want to wrap it

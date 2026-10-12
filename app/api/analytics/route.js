@@ -2,6 +2,10 @@ import { kv } from '@vercel/kv';
 import { NextResponse } from 'next/server';
 
 export async function POST(req) {
+    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+        return NextResponse.json({ success: true, skipped: true });
+    }
+
     try {
         const body = await req.json();
         const { type, page, device, referrer, duration, ctaId } = body;
@@ -51,7 +55,7 @@ export async function POST(req) {
         
         return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Analytics endpoint error:', error);
-        return NextResponse.json({ success: false }, { status: 500 });
+        // Silently skip if KV quota reached so visitor experience is unaffected
+        return NextResponse.json({ success: false, skipped: true });
     }
 }

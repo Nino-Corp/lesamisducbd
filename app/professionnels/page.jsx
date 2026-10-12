@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header/Header';
 
-import { kv } from '@vercel/kv';
+import { safeKvGet } from '@/lib/kvCache';
 
 export const metadata = {
     title: 'Professionnels - Les Amis du CBD',
@@ -23,14 +23,10 @@ const HEADER_PROPS = {
 };
 
 export default async function BuralistesPage() {
-    let globalContent = null;
-    let initialPartners = [];
-    try {
-        globalContent = await kv.get('global_content');
-        initialPartners = await kv.get('partners_locations') || [];
-    } catch (e) {
-        console.error('Error fetching data for professionnels page:', e);
-    }
+    const [globalContent, initialPartners] = await Promise.all([
+        safeKvGet('global_content', null),
+        safeKvGet('partners_locations', [])
+    ]);
 
     return (
         <main className={styles.main}>

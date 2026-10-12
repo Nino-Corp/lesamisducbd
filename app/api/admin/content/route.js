@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { kv } from '@vercel/kv';
+import { safeKvGet, safeKvSet } from '@/lib/kvCache';
 import homeData from '@/data/home.json';
 
 // Force dynamic execution to prevent caching content
@@ -20,27 +20,20 @@ async function getInitialData() {
 // GET: Retrieve the full home content
 export async function GET() {
     try {
-        // Try to get data from KV first
-        let data = await kv.get(KV_KEY);
+        let data = await safeKvGet(KV_KEY, null);
 
-        // If KV is empty (first time) or malformed, load from local file and populate KV
+        // If KV is empty or malformed, load from local file and populate KV
         if (!data || !data.sections || data.sections.length === 0) {
-            console.log('KV empty or malformed, loading initial data from local file');
             const initialData = await getInitialData();
-
-            // Fix: If for some reason KV had an array instead of { sections: [] }
             data = initialData.sections ? initialData : { sections: Array.isArray(initialData) ? initialData : [] };
-
-            await kv.set(KV_KEY, data);
+            await safeKvSet(KV_KEY, data);
         }
 
         return NextResponse.json(data);
     } catch (error) {
         console.error('Error reading content:', error);
-        return NextResponse.json(
-            { error: 'Failed to load content', details: error.message, stack: error.stack },
-            { status: 500 }
-        );
+        const fallback = await getInitialData();
+        return NextResponse.json(fallback);
     }
 }
 
@@ -48,14 +41,14 @@ export async function GET() {
 export async function POST(request) {
     try {
         const body = await request.json();
-        let data = await kv.get(KV_KEY);
+        let data = await safeKvGet(KV_KEY, null);
         if (!data) data = await getInitialData();
 
         // Check if we are doing a bulk update (from the new unified Accueil layout)
         if (body.sections && Array.isArray(body.sections)) {
             data.sections = body.sections;
             if (body.meta) data.meta = { ...data.meta, ...body.meta };
-            await kv.set(KV_KEY, data);
+            await safeKvSet(KV_KEY, data);
             return NextResponse.json({ success: true, updatedSections: data.sections.length });
         }
 
@@ -75,7 +68,7 @@ export async function POST(request) {
             ...newProps
         };
 
-        await kv.set(KV_KEY, data);
+        await safeKvSet(KV_KEY, data);
 
         return NextResponse.json({
             success: true,

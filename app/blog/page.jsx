@@ -1,4 +1,4 @@
-import { kv } from '@vercel/kv';
+import { safeKvGet } from '@/lib/kvCache';
 import Link from 'next/link';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
@@ -18,19 +18,6 @@ export const metadata = {
 };
 
 const ARTICLE_TYPES = ['Article', 'BlogPosting', 'LandingPage'];
-
-async function safeKvGet(key, fallback = null) {
-    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
-        return fallback;
-    }
-    try {
-        const res = await kv.get(key);
-        return res !== null && res !== undefined ? res : fallback;
-    } catch (error) {
-        console.error(`[Vercel KV] Error reading key "${key}":`, error.message);
-        return fallback;
-    }
-}
 
 async function getArticles() {
     try {

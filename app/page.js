@@ -1,5 +1,5 @@
 import PageBuilder from '@/components/PageBuilder';
-import { kv } from '@vercel/kv';
+import { safeKvGet } from '@/lib/kvCache';
 import homeData from '@/data/home.json';
 import { productService } from '@/lib/services/productService';
 import { SHARED_TITLE, SHARED_DESCRIPTION } from './shared-metadata';
@@ -13,19 +13,6 @@ export const metadata = {
     canonical: '/',
   },
 };
-
-async function safeKvGet(key, fallback = null) {
-  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
-    return fallback;
-  }
-  try {
-    const res = await kv.get(key);
-    return res !== null && res !== undefined ? res : fallback;
-  } catch (error) {
-    console.error(`[Vercel KV] Error reading key "${key}":`, error.message);
-    return fallback;
-  }
-}
 
 async function getData() {
   const data = await safeKvGet('home_content', null);
@@ -247,14 +234,6 @@ export default async function Home() {
     return section;
   }).filter(Boolean); // filter out null = hidden sections
 
-  // Analytics: increment view counter
-  try {
-    if (process.env.NODE_ENV !== 'development') {
-      await kv.incr(`builder_views:accueil`);
-    }
-  } catch (e) {
-    console.error('Failed to increment view counter', e);
-  }
 
   return (
     <main>

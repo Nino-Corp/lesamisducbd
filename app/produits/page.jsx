@@ -1,6 +1,6 @@
 
 import { productService } from '@/lib/services/productService';
-import { kv } from '@vercel/kv';
+import { safeKvGet } from '@/lib/kvCache';
 import ProductsClient from './ProductsClient';
 
 import { SITE_URL } from '@/app/shared-metadata';
@@ -17,14 +17,14 @@ export const revalidate = 60; // ISR cache every minute
 
 export default async function ProductsPage() {
     const [products, hiddenIds, globalContent, productOrder, categoryOverrides, pageConfigData, productOverrides, productCategories] = await Promise.all([
-        productService.getProducts(),
-        kv.get('hidden_products').catch(() => []),
-        kv.get('global_content').catch(() => null),
-        kv.get('product_order').catch(() => []),
-        kv.get('category_overrides').catch(() => ({})),
-        kv.get('products_page_config').catch(() => null),
-        kv.get('product_overrides').catch(() => ({})),
-        kv.get('product_categories').catch(() => null)
+        productService.getProducts().catch(() => []),
+        safeKvGet('hidden_products', []),
+        safeKvGet('global_content', null),
+        safeKvGet('product_order', []),
+        safeKvGet('category_overrides', {}),
+        safeKvGet('products_page_config', null),
+        safeKvGet('product_overrides', {}),
+        safeKvGet('product_categories', null)
     ]);
 
     const pageConfig = pageConfigData || {
@@ -52,14 +52,6 @@ export default async function ProductsPage() {
         });
     }
 
-    // Analytics: increment view counter
-    try {
-    if (process.env.NODE_ENV !== 'development') {
-        await kv.incr(`builder_views:produits`);
-    }
-    } catch (e) {
-        console.error('Failed to increment view counter', e);
-    }
 
     return <ProductsClient initialProducts={visibleProducts} globalContent={globalContent} categoryOverrides={categoryOverrides || {}} pageConfig={pageConfig} productOverrides={productOverrides || {}} productCategories={productCategories} />;
 }

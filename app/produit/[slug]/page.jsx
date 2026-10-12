@@ -1,6 +1,6 @@
 
 
-import { kv } from '@vercel/kv';
+import { safeKvGet } from '@/lib/kvCache';
 import { productService } from '@/lib/services/productService';
 import ProductDetailsClient from './ProductDetailsClient';
 import { notFound } from 'next/navigation';
@@ -50,11 +50,11 @@ export default async function ProductPage({ params }) {
     const { slug } = await params;
 
     const [products, globalContent, overrides, hiddenIds, categoryOverrides] = await Promise.all([
-        productService.getProducts(),
-        kv.get('global_content').catch(() => null),
-        kv.get('product_overrides').catch(() => null),
-        kv.get('hidden_products').catch(() => []),
-        kv.get('category_overrides').catch(() => ({}))
+        productService.getProducts().catch(() => []),
+        safeKvGet('global_content', null),
+        safeKvGet('product_overrides', null),
+        safeKvGet('hidden_products', []),
+        safeKvGet('category_overrides', {})
     ]);
 
     const hidden = Array.isArray(hiddenIds) ? hiddenIds : [];

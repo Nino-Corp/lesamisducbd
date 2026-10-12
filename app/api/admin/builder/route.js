@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { kv } from '@vercel/kv';
+import { safeKvGet, safeKvSet } from '@/lib/kvCache';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,11 +16,11 @@ export async function GET(request) {
 
         // Return saved blocks
         if (action === 'blocks') {
-            const blocks = await kv.get(BLOCKS_KEY) || [];
+            const blocks = await safeKvGet(BLOCKS_KEY, []);
             return NextResponse.json(blocks);
         }
 
-        const pages = await kv.get(PAGES_KEY) || {};
+        const pages = await safeKvGet(PAGES_KEY, {});
 
         if (slug) {
             if (!pages[slug]) {
@@ -64,10 +64,10 @@ export async function POST(request) {
         if (action === 'save_block') {
             const { block } = body;
             if (!block) return NextResponse.json({ error: 'Block data is required' }, { status: 400 });
-            const blocks = await kv.get(BLOCKS_KEY) || [];
+            const blocks = await safeKvGet(BLOCKS_KEY, []);
             // prepend new block
             blocks.unshift(block);
-            await kv.set(BLOCKS_KEY, blocks);
+            await safeKvSet(BLOCKS_KEY, blocks);
             return NextResponse.json({ success: true, blocks });
         }
 
@@ -75,7 +75,7 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Slug and Title are required' }, { status: 400 });
         }
 
-        const pages = await kv.get(PAGES_KEY) || {};
+        const pages = await safeKvGet(PAGES_KEY, {});
 
         // ── DUPLICATE ACTION ──
         if (action === 'duplicate') {
@@ -95,7 +95,7 @@ export async function POST(request) {
                 updatedAt: new Date().toISOString(),
             };
 
-            await kv.set(PAGES_KEY, pages);
+            await safeKvSet(PAGES_KEY, pages);
             return NextResponse.json({ success: true, page: pages[slug] });
         }
 
@@ -109,12 +109,12 @@ export async function POST(request) {
             const oldHistory = pages[originalSlug].history || [];
             delete pages[originalSlug];
             try {
-                const globalContent = await kv.get('global_content') || {};
-                if (globalContent.footerLinks) {
+                const globalContent = await safeKvGet('global_content', {});
+                if (globalContent && globalContent.footerLinks) {
                     globalContent.footerLinks = globalContent.footerLinks.map(link =>
                         link.href === `/p/${originalSlug}` ? { ...link, href: `/p/${slug}` } : link
                     );
-                    await kv.set('global_content', globalContent);
+                    await safeKvSet('global_content', globalContent);
                 }
             } catch (e) { /* non-blocking */ }
         }
@@ -157,12 +157,12 @@ export async function POST(request) {
             updatedAt: new Date().toISOString(),
         };
 
-        await kv.set(PAGES_KEY, pages);
+        await safeKvSet(PAGES_KEY, pages);
 
         // ── Update global footer links (only for published pages) ──
         try {
-            const globalContent = await kv.get('global_content') || {};
-            const footerLinks = globalContent.footerLinks || [];
+            const globalContent = await safeKvGet('global_content', {});
+            const footerLinks = globalContent?.footerLinks || [];
             const pageHref = `/p/${slug}`;
 
             if (resolvedStatus === 'published') {
@@ -170,14 +170,14 @@ export async function POST(request) {
                 if (!linkExists) {
                     footerLinks.push({ label: title, href: pageHref });
                     globalContent.footerLinks = footerLinks;
-                    await kv.set('global_content', globalContent);
+                    await safeKvSet('global_content', globalContent);
                 }
             } else {
                 // Remove from footer if unpublished
                 const filtered = footerLinks.filter(link => link.href !== pageHref);
                 if (filtered.length !== footerLinks.length) {
                     globalContent.footerLinks = filtered;
-                    await kv.set('global_content', globalContent);
+                    await safeKvSet('global_content', globalContent);
                 }
             }
         } catch (footerError) {
@@ -203,9 +203,9 @@ export async function DELETE(request) {
 
         // ── DELETE SAVED BLOCK ──
         if (action === 'delete_block' && blockId) {
-            let blocks = await kv.get(BLOCKS_KEY) || [];
+            let blocks = await safeKvGet(BLOCKS_KEY, []);
             blocks = blocks.filter(b => b.id !== blockId);
-            await kv.set(BLOCKS_KEY, blocks);
+            await safeKvSet(BLOCKS_KEY, blocks);
             return NextResponse.json({ success: true });
         }
 
@@ -213,18 +213,18 @@ export async function DELETE(request) {
             return NextResponse.json({ error: 'Slug is required' }, { status: 400 });
         }
 
-        const pages = await kv.get(PAGES_KEY) || {};
+        const pages = await safeKvGet(PAGES_KEY, {});
 
         if (!pages[slug]) {
             return NextResponse.json({ error: 'Page not found' }, { status: 404 });
         }
 
         delete pages[slug];
-        await kv.set(PAGES_KEY, pages);
+        await safeKvSet(PAGES_KEY, pages);
 
         // Remove from global footer links and header links
         try {
-            const globalContent = await kv.get('global_content');
+            const globalContent = await safeKvGet('global_content', null);
             if (globalContent) {
                 let modified = false;
                 const pageHref = `/p/${slug}`;
@@ -253,7 +253,7 @@ export async function DELETE(request) {
                 }
 
                 if (modified) {
-                    await kv.set('global_content', globalContent);
+                    await safeKvSet('global_content', globalContent);
                 }
             }
         } catch (cleanupError) {

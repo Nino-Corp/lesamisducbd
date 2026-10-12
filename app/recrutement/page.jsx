@@ -1,6 +1,6 @@
 
 import RecruitmentClient from './RecruitmentClient';
-import { kv } from '@vercel/kv';
+import { safeKvGet } from '@/lib/kvCache';
 
 export const metadata = {
     title: "Rejoignez l'équipe",
@@ -14,19 +14,10 @@ export const revalidate = 60;
 
 export default async function RecrutementPage() {
 
-    let globalContent = null;
-    let content = null;
-
-    try {
-        const [gData, cData] = await Promise.all([
-            kv.get('global_content'),
-            kv.get('recrutement_content')
-        ]);
-        if (gData) globalContent = gData;
-        if (cData) content = cData;
-    } catch (e) {
-        console.error('KV error (recrutement):', e);
-    }
+    const [globalContent, content] = await Promise.all([
+        safeKvGet('global_content', null),
+        safeKvGet('recrutement_content', null)
+    ]);
 
     if (content && !content.sections) {
         const visibility = content.visibility || {};
@@ -53,14 +44,6 @@ export default async function RecrutementPage() {
         ];
     }
 
-    // Analytics: increment view counter
-    try {
-    if (process.env.NODE_ENV !== 'development') {
-        await kv.incr(`builder_views:recrutement`);
-    }
-    } catch (e) {
-        console.error('Failed to increment view counter', e);
-    }
 
     return <RecruitmentClient globalContent={globalContent} content={content} />;
 }
