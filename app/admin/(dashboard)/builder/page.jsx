@@ -87,16 +87,6 @@ export default function BuilderIndex() {
 
     useEffect(() => { 
         fetchPages(); 
-        
-        // Actualisation automatique des vues toutes les 15 secondes
-        const interval = setInterval(() => {
-            fetch('/api/admin/builder/analytics')
-                .then(res => res.json())
-                .then(data => setAnalytics(data))
-                .catch(err => console.error('Erreur actualisation vues:', err));
-        }, 15000);
-
-        return () => clearInterval(interval);
     }, []);
 
     const fetchPages = async () => {

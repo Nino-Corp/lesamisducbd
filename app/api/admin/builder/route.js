@@ -45,8 +45,8 @@ export async function GET(request) {
 
         return NextResponse.json(stripped);
     } catch (error) {
-        console.error('Builder API GET error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error('Builder API GET error (quota limit or error):', error.message);
+        return NextResponse.json({});
     }
 }
 

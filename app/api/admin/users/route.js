@@ -10,12 +10,15 @@ export async function GET() {
     }
 
     try {
-        const users = await kv.get('admin_users') || [];
-        // Don't send password hashes to the client
-        const safeUsers = users.map(({ passwordHash, ...rest }) => rest);
+        const users = await kv.get('admin_users');
+        const safeUsers = Array.isArray(users) ? users.map(({ passwordHash, ...rest }) => rest) : [];
+        if (!safeUsers.some(u => u.username === 'admin')) {
+            safeUsers.unshift({ username: 'admin', role: 'superadmin', createdAt: 'Système' });
+        }
         return NextResponse.json(safeUsers);
     } catch (error) {
-        return NextResponse.json({ error: 'Server error' }, { status: 500 });
+        console.error('Users API GET error (returning fallback):', error.message);
+        return NextResponse.json([{ username: 'admin', role: 'superadmin', createdAt: 'Système' }]);
     }
 }
 

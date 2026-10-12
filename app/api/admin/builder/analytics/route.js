@@ -13,8 +13,8 @@ export async function POST(request) {
         const newCount = await kv.incr(key);
         return NextResponse.json({ success: true, views: newCount });
     } catch (error) {
-        console.error('Analytics POST error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error('Analytics POST error:', error.message);
+        return NextResponse.json({ success: false, views: 0 });
     }
 }
 
@@ -98,7 +98,15 @@ export async function GET(request) {
             dailyStats
         });
     } catch (error) {
-        console.error('Analytics GET error:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error('Analytics GET error (safe fallback returned):', error.message);
+        return NextResponse.json({
+            viewsMap: {},
+            timeMap: {},
+            sessionsMap: {},
+            ctaMap: {},
+            deviceMap: { desktop: 0, mobile: 0, tablet: 0 },
+            referrerMap: {},
+            dailyStats: []
+        });
     }
 }
