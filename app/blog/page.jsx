@@ -19,11 +19,24 @@ export const metadata = {
 
 const ARTICLE_TYPES = ['Article', 'BlogPosting', 'LandingPage'];
 
+async function safeKvGet(key, fallback = null) {
+    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+        return fallback;
+    }
+    try {
+        const res = await kv.get(key);
+        return res !== null && res !== undefined ? res : fallback;
+    } catch (error) {
+        console.error(`[Vercel KV] Error reading key "${key}":`, error.message);
+        return fallback;
+    }
+}
+
 async function getArticles() {
     try {
-        const pages = await kv.get('builder_pages') || {};
+        const pages = await safeKvGet('builder_pages', {}) || {};
         return Object.values(pages)
-            .filter(p => ARTICLE_TYPES.includes(p.seo?.pageType))
+            .filter(p => ARTICLE_TYPES.includes(p.seo?.pageType) && (!p.status || p.status === 'published'))
             .sort((a, b) => {
                 const dateA = a.seo?.publishedAt || a.updatedAt;
                 const dateB = b.seo?.publishedAt || b.updatedAt;
@@ -35,10 +48,13 @@ async function getArticles() {
     }
 }
 
-export default async function BlogPage() {
+export default async function BlogPage(props) {
+    const searchParams = await props?.searchParams || {};
+    const selectedCat = searchParams.cat || null;
+
     const [articles, globalConfig] = await Promise.all([
         getArticles(),
-        kv.get('global_content').catch(() => null),
+        safeKvGet('global_content', null),
     ]);
 
     const headerProps = {
@@ -52,8 +68,13 @@ export default async function BlogPage() {
         ],
     };
 
-    // Get unique categories
-    const categories = [...new Set(articles.map(a => a.seo?.category).filter(Boolean))];
+    // Get unique categories (including default ones if available)
+    const dynamicCats = articles.map(a => a.seo?.category).filter(Boolean);
+    const categories = [...new Set(dynamicCats)].sort();
+
+    const filteredArticles = selectedCat
+        ? articles.filter(a => (a.seo?.category || '').toLowerCase() === selectedCat.toLowerCase())
+        : articles;
 
     return (
         <>
@@ -71,25 +92,42 @@ export default async function BlogPage() {
                 </section>
 
                 <div className={styles.pageBody}>
-
                     {/* Category pills */}
                     {categories.length > 0 && (
                         <div className={styles.categories}>
                             <span className={styles.catLabel}>Catégories :</span>
+                            <Link 
+                                href="/blog"
+                                className={`${styles.catPill} ${!selectedCat ? styles.catPillActive : ''}`}
+                            >
+                                Tous les articles
+                            </Link>
                             {categories.map(cat => (
-                                <span key={cat} className={styles.catPill}>{cat}</span>
+                                <Link 
+                                    key={cat} 
+                                    href={`/blog?cat=${encodeURIComponent(cat)}`}
+                                    className={`${styles.catPill} ${selectedCat?.toLowerCase() === cat.toLowerCase() ? styles.catPillActive : ''}`}
+                                >
+                                    {cat}
+                                </Link>
                             ))}
                         </div>
                     )}
 
-                    {articles.length === 0 ? (
+                    {filteredArticles.length === 0 ? (
                         <div className={styles.empty}>
-                            <p>Aucun article publié pour le moment.</p>
-                            <p>Revenez bientôt !</p>
+                            <p>{selectedCat ? `Aucun article trouvé dans la catégorie "${selectedCat}".` : 'Aucun article publié pour le moment.'}</p>
+                            {selectedCat ? (
+                                <Link href="/blog" className={styles.catPill} style={{ marginTop: '16px', display: 'inline-flex' }}>
+                                    ← Voir tous les articles
+                                </Link>
+                            ) : (
+                                <p>Revenez bientôt !</p>
+                            )}
                         </div>
                     ) : (
                         <div className={styles.grid}>
-                            {articles.map((article, i) => {
+                            {filteredArticles.map((article, i) => {
                                 const seo = article.seo || {};
                                 const image = seo.featuredImage || seo.ogImage || '/images/og-image.jpg';
                                 const pubDate = seo.publishedAt
@@ -101,7 +139,7 @@ export default async function BlogPage() {
                                 const readTime = Math.max(1, Math.round(wordCount / 200));
 
                                 return (
-                                    <article key={article.slug} className={`${styles.card} ${i === 0 ? styles.cardFeatured : ''}`}>
+                                    <article key={article.slug} className={`${styles.card} ${i === 0 && !selectedCat ? styles.cardFeatured : ''}`}>
                                         <Link href={`/p/${article.slug}`} className={styles.cardLink}>
                                             <div className={styles.cardImg}>
                                                 <img src={image} alt={article.title} />

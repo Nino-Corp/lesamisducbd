@@ -5,6 +5,22 @@
     flex-direction: column;
     gap: 40px; /* More spaced out */
     height: calc(100vh - 160px); /* Fill window height minus header and padding */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(31, 75, 64, 0.2) transparent;
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(31, 75, 64, 0.2);
+    border-radius: 4px;
 }
 
 .widget {
@@ -85,6 +101,12 @@
     transition: color 0.2s;
 }
 
+.tocH3 a {
+    padding-left: 28px !important;
+    font-size: 0.9rem !important;
+    color: #64748b;
+}
+
 .tocList li a:hover {
     color: #1F4B40;
 }
@@ -92,6 +114,11 @@
 .activeToc a {
     color: #1F4B40 !important;
     font-weight: 700;
+}
+
+.tocH3.activeToc a {
+    color: #1F4B40 !important;
+    font-weight: 600;
 }
 
 /* Related */

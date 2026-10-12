@@ -1,0 +1,673 @@
+/* =====================================================
+   BLOG CATEGORY FILTER & ARTICLES GRID (PREMIUM STYLING)
+===================================================== */
+
+.container {
+    width: 100%;
+    max-width: 1440px;
+    margin: 32px auto 60px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+/* =====================================================
+   1. BARRE DE FILTRES + RECHERCHE
+===================================================== */
+.filterBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.buttonGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.filterBtn {
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid rgba(18, 63, 50, 0.1);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    color: #123F32;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(18, 63, 50, 0.04);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    user-select: none;
+}
+
+.filterBtn:focus-visible {
+    outline: 2px solid #077B5A;
+    outline-offset: 2px;
+}
+
+.filterBtn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: #123F32;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.22s ease, stroke 0.22s ease;
+    flex-shrink: 0;
+}
+
+/* Onglet actif */
+.filterBtnActive {
+    padding-left: 20px;
+    padding-right: 20px;
+    background: #077B5A !important;
+    color: #FFFFFF !important;
+    border-color: #077B5A !important;
+    box-shadow: 0 4px 14px rgba(7, 123, 90, 0.28) !important;
+}
+
+.filterBtnActive svg {
+    stroke: #FFFFFF !important;
+    transform: scale(1.05);
+}
+
+/* Survol onglet inactif */
+.filterBtn:not(.filterBtnActive):hover {
+    background: #D4F3C8;
+    color: #0C4E3A;
+    border-color: #B2E39F;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(18, 63, 50, 0.08);
+}
+
+.filterBtn:not(.filterBtnActive):hover svg {
+    transform: rotate(-5deg) scale(1.08);
+    stroke: #0C4E3A;
+}
+
+/* Léger effet tactile sur l'actif */
+.filterBtnActive:hover {
+    background: #066d4f !important;
+    transform: translateY(-1px);
+}
+
+/* Badge de compteur sur l'onglet */
+.tabCountBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: rgba(18, 63, 50, 0.08);
+    color: inherit;
+    margin-left: 2px;
+    line-height: 1.4;
+}
+
+.filterBtnActive .tabCountBadge {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+
+/* =====================================================
+   ZONE RECHERCHE
+===================================================== */
+.searchBox {
+    position: relative;
+    width: 250px;
+    min-width: 180px;
+    flex-shrink: 0;
+}
+
+.searchInput {
+    width: 100%;
+    height: 44px;
+    box-sizing: border-box;
+    padding: 0 42px 0 16px;
+    border: 1px solid rgba(18, 63, 50, 0.15);
+    border-radius: 12px;
+    outline: none;
+    background: #FFFFFF;
+    color: #123F32;
+    font-family: inherit;
+    font-size: 13px;
+    box-shadow: 0 2px 6px rgba(18, 63, 50, 0.03);
+    transition: all 0.2s ease;
+}
+
+.searchInput::placeholder {
+    color: #74877F;
+}
+
+.searchInput:focus {
+    border-color: #077B5A;
+    box-shadow: 0 0 0 3px rgba(7, 123, 90, 0.12);
+    background: #ffffff;
+}
+
+.searchIcon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: #123F32;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+.clearSearchBtn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    border: none;
+    border-radius: 50%;
+    color: #475569;
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1;
+    transition: all 0.2s;
+}
+
+.clearSearchBtn:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* =====================================================
+   2. EN-TÊTE DYNAMIQUE (H2 + INTRO + TRIER PAR)
+===================================================== */
+.headerRow {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.headerTextSide {
+    flex: 1;
+}
+
+.h2Title {
+    margin: 0 0 8px 0;
+    color: #123F32;
+    font-family: inherit;
+    font-size: clamp(24px, 2.6vw, 34px);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.5px;
+    animation: fadeInTitle 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Effet soulignement vert tracé */
+.highlight {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 6px;
+    color: #123F32;
+}
+
+.highlightUnderline {
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    width: 100%;
+    height: 12px;
+    overflow: visible;
+    pointer-events: none;
+    display: block;
+}
+
+.highlightUnderline path {
+    fill: none;
+    stroke: #087D45;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 450;
+    stroke-dashoffset: 0;
+    animation: drawUnderline 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawUnderline {
+    from {
+        stroke-dashoffset: 450;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fadeInTitle {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.introText {
+    margin: 0;
+    color: #40574F;
+    font-size: 14.5px;
+    font-weight: 400;
+    line-height: 1.58;
+    max-width: 780px;
+    animation: fadeInIntro 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInIntro {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Tri & Métadonnées */
+.sortSide {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.sortControls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sortLabel {
+    font-size: 13px;
+    font-weight: 700;
+    color: #123F32;
+    white-space: nowrap;
+}
+
+.sortSelect {
+    height: 40px;
+    padding: 0 32px 0 14px;
+    border: 1px solid rgba(18, 63, 50, 0.18);
+    border-radius: 10px;
+    background: #FFFFFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23123F32' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+    color: #123F32;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sortSelect:focus {
+    border-color: #077B5A;
+    box-shadow: 0 0 0 3px rgba(7, 123, 90, 0.12);
+}
+
+/* =====================================================
+   3. GRILLE D'ARTICLES
+===================================================== */
+.grid {
+    display: grid;
+    gap: 20px;
+}
+
+.cols4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.cols3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cols2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(18, 63, 50, 0.08);
+    box-shadow: 0 3px 14px rgba(18, 63, 50, 0.04);
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.2s ease;
+    animation: cardAppear 0.35s ease-out;
+    position: relative;
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 30px rgba(18, 63, 50, 0.1);
+    border-color: rgba(7, 123, 90, 0.3);
+}
+
+.cardImageWrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1.6 / 1;
+    overflow: hidden;
+    background: #e2e8f0;
+}
+
+.cardImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover .cardImage {
+    transform: scale(1.05);
+}
+
+/* Badge sur l'image */
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    color: #123F32;
+    font-size: 10.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(18, 63, 50, 0.08);
+}
+
+/* Corps de la carte */
+.cardBody {
+    padding: 16px 18px 14px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.cardTitle {
+    margin: 0 0 6px 0;
+    color: #123F32;
+    font-size: 15.5px;
+    font-weight: 700;
+    line-height: 1.32;
+    letter-spacing: -0.2px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s ease;
+}
+
+.card:hover .cardTitle {
+    color: #077B5A;
+}
+
+.cardExcerpt {
+    margin: 0 0 12px 0;
+    color: #526b62;
+    font-size: 13px;
+    line-height: 1.5;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Métadonnées bas de carte */
+.cardMeta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid rgba(18, 63, 50, 0.06);
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.metaItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.metaIcon {
+    width: 14px;
+    height: 14px;
+    stroke: #64748b;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* État de chargement automatique */
+.loadingState {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 20px;
+    color: #123F32;
+    font-size: 14px;
+    font-weight: 600;
+    gap: 12px;
+}
+
+.spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(18, 63, 50, 0.15);
+    border-top-color: #077B5A;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* État vide */
+.emptyState {
+    grid-column: 1 / -1;
+    padding: 48px 24px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(4px);
+    border: 1.5px dashed rgba(18, 63, 50, 0.18);
+    border-radius: 20px;
+}
+
+.emptyStateTitle {
+    font-size: 18px;
+    font-weight: 800;
+    color: #123F32;
+    margin: 0 0 8px;
+}
+
+.emptyStateSub {
+    font-size: 13.5px;
+    color: #64748b;
+    margin: 0 0 18px;
+}
+
+.resetBtn {
+    padding: 10px 22px;
+    border-radius: 999px;
+    background: #123F32;
+    color: #ffffff;
+    border: none;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(18, 63, 50, 0.2);
+    transition: all 0.2s ease;
+}
+
+.resetBtn:hover {
+    background: #077B5A;
+    transform: translateY(-1px);
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 1024px) {
+    .filterBar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .searchBox {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .headerRow {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .sortSide {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 20px auto 40px;
+    }
+
+    .cols4,
+    .cols3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .filterBtn {
+        min-height: 40px;
+        padding: 0 14px;
+        font-size: 12.5px;
+    }
+
+    .filterBtn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .h2Title {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 520px) {
+    .cols4,
+    .cols3,
+    .cols2 {
+        grid-template-columns: 1fr;
+    }
+
+    .buttonGroup {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+    }
+
+    .filterBtn {
+        flex-shrink: 0;
+    }
+
+    .sortSide {
+        justify-content: space-between;
+    }
+
+    .sortSelect {
+        flex: 1;
+    }
+}
+
+/* =====================================================
+   ACCESSIBILITÉ (RÉDUCTION DES ANIMATIONS)
+===================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .filterBtn,
+    .filterBtn svg,
+    .card,
+    .cardImage,
+    .h2Title,
+    .introText,
+    .highlightUnderline path {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .highlightUnderline path {
+        stroke-dashoffset: 0 !important;
+    }
+
+    .filterBtn:hover,
+    .card:hover {
+        transform: none !important;
+    }
+}

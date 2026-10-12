@@ -342,6 +342,555 @@ export function VideoEmbedEditor({ props, onChange }) {
     </>;
 }
 
+function formatDuration(sec) {
+    if (!sec || isNaN(sec)) return '';
+    const total = Math.round(Number(sec));
+    const hrs = Math.floor(total / 3600);
+    const mins = Math.floor((total % 3600) / 60);
+    const secs = total % 60;
+    const pad = (n) => String(n).padStart(2, '0');
+    if (hrs > 0) return `${hrs}:${pad(mins)}:${pad(secs)}`;
+    return `${pad(mins)}:${pad(secs)}`;
+}
+
+export function VideoCardEditor({ props, onChange }) {
+    const [loadingInfo, setLoadingInfo] = useState(false);
+    const [uploadingVideo, setUploadingVideo] = useState(false);
+    const [uploadError, setUploadError] = useState(null);
+
+    // Auto-fetch real video duration when videoUrl is YouTube or Vimeo
+    useEffect(() => {
+        if (!props.videoUrl) {
+            if (props.duration) onChange({ duration: '' });
+            return;
+        }
+
+        const isDirect = props.videoUrl.endsWith('.mp4') || props.videoUrl.endsWith('.webm') || props.videoUrl.includes('/video/upload/');
+        if (isDirect) return;
+
+        let isCancelled = false;
+        const timer = setTimeout(async () => {
+            setLoadingInfo(true);
+            try {
+                const res = await fetch(`/api/video-info?url=${encodeURIComponent(props.videoUrl)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (!isCancelled && data.duration && data.duration !== props.duration) {
+                        onChange({ duration: data.duration });
+                    }
+                }
+            } catch (err) {
+                console.warn('Video info auto-fetch error:', err);
+            } finally {
+                if (!isCancelled) setLoadingInfo(false);
+            }
+        }, 400);
+
+        return () => {
+            isCancelled = true;
+            clearTimeout(timer);
+        };
+    }, [props.videoUrl]);
+
+    // Handle direct video file upload
+    const handleVideoFileUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploadError(null);
+        const MAX_SIZE_MB = 25;
+        const sizeMB = file.size / (1024 * 1024);
+
+        if (sizeMB > MAX_SIZE_MB) {
+            setUploadError(`Fichier trop volumineux (${sizeMB.toFixed(1)} Mo). La limite pour un dépôt direct est de ${MAX_SIZE_MB} Mo. Pour préserver les performances et le SEO de votre site, privilégiez l'hébergement sur YouTube ou Vimeo.`);
+            e.target.value = '';
+            return;
+        }
+
+        setUploadingVideo(true);
+
+        try {
+            // Measure video duration locally via in-memory element
+            const tempVideo = document.createElement('video');
+            tempVideo.preload = 'metadata';
+            const objectUrl = URL.createObjectURL(file);
+            tempVideo.src = objectUrl;
+
+            let detectedDur = '';
+            await new Promise((resolve) => {
+                tempVideo.onloadedmetadata = () => {
+                    detectedDur = formatDuration(tempVideo.duration);
+                    URL.revokeObjectURL(objectUrl);
+                    resolve();
+                };
+                tempVideo.onerror = () => {
+                    URL.revokeObjectURL(objectUrl);
+                    resolve();
+                };
+                setTimeout(resolve, 2000);
+            });
+
+            // Upload file to server/Cloudinary
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('folder', 'pages/videos');
+
+            const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Erreur lors du téléversement');
+            }
+
+            const finalDuration = detectedDur || (data.duration ? formatDuration(data.duration) : '');
+            onChange({ 
+                videoUrl: data.url,
+                ...(finalDuration ? { duration: finalDuration } : {})
+            });
+        } catch (err) {
+            setUploadError(err.message || 'Échec du téléversement de la vidéo');
+        } finally {
+            setUploadingVideo(false);
+            e.target.value = '';
+        }
+    };
+
+    const embedType = props.embedType || 'video';
+
+    return <>
+        {/* Choix du mode d'affichage : Lecteur Stylisé (par défaut) vs Code / Iframe */}
+        <div style={{ padding: '12px 14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
+            <label style={{ display: 'block', fontWeight: 700, fontSize: '0.8rem', color: '#1F4B40', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Format du lecteur / Intégration
+            </label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                <button
+                    type="button"
+                    onClick={() => onChange({ embedType: 'video' })}
+                    style={{
+                        padding: '10px 8px',
+                        borderRadius: '8px',
+                        border: embedType === 'video' ? '2px solid #1F4B40' : '1px solid #cbd5e1',
+                        background: embedType === 'video' ? '#1F4B40' : '#ffffff',
+                        color: embedType === 'video' ? '#ffffff' : '#334155',
+                        fontWeight: 700,
+                        fontSize: '0.84rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '4px',
+                        transition: 'all 0.15s ease'
+                    }}
+                >
+                    <span>🎬 Lecteur Stylisé</span>
+                    <span style={{ 
+                        fontSize: '0.65rem', 
+                        padding: '1px 6px', 
+                        borderRadius: '4px', 
+                        background: embedType === 'video' ? '#00FFC2' : '#f1f5f9', 
+                        color: embedType === 'video' ? '#064e3b' : '#64748b',
+                        fontWeight: 800 
+                    }}>
+                        PAR DÉFAUT
+                    </span>
+                </button>
+
+                <button
+                    type="button"
+                    onClick={() => onChange({ embedType: 'iframe' })}
+                    style={{
+                        padding: '10px 8px',
+                        borderRadius: '8px',
+                        border: embedType === 'iframe' ? '2px solid #1F4B40' : '1px solid #cbd5e1',
+                        background: embedType === 'iframe' ? '#1F4B40' : '#ffffff',
+                        color: embedType === 'iframe' ? '#ffffff' : '#334155',
+                        fontWeight: 700,
+                        fontSize: '0.84rem',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '4px',
+                        transition: 'all 0.15s ease'
+                    }}
+                >
+                    <span>💻 Code / Iframe</span>
+                    <span style={{ 
+                        fontSize: '0.65rem', 
+                        padding: '1px 6px', 
+                        borderRadius: '4px', 
+                        background: embedType === 'iframe' ? '#00FFC2' : '#f1f5f9', 
+                        color: embedType === 'iframe' ? '#064e3b' : '#64748b',
+                        fontWeight: 800 
+                    }}>
+                        AVANCÉ
+                    </span>
+                </button>
+            </div>
+            <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '8px', lineHeight: 1.35 }}>
+                {embedType === 'video' 
+                    ? '✨ Lecteur recommandé : miniature personnalisée, badge de durée automatique et streaming fluide.'
+                    : '💻 Intégrez n\'importe quel code <iframe> (TikTok, YouTube, Vimeo, Wistia...) ou du code HTML.'
+                }
+            </div>
+        </div>
+
+        {/* Section 1 : Iframe personnalisé OU Lecteur stylisé */}
+        {embedType === 'iframe' ? (
+            <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
+                <span style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '12px' }}>💻 CODE D'INTÉGRATION (IFRAME / HTML)</span>
+                
+                <Field 
+                    label="Code Iframe ou HTML d'intégration" 
+                    hint="Collez ici votre balise <iframe> complète ou une URL d'embed. Le lecteur s'adapte automatiquement à l'encadré."
+                >
+                    <textarea 
+                        style={{ ...textareaStyle, minHeight: '110px', fontFamily: 'monospace', fontSize: '0.82rem', lineHeight: 1.4 }} 
+                        value={props.embedCode || ''} 
+                        onChange={e => onChange({ embedCode: e.target.value })} 
+                        placeholder="<iframe src=&quot;https://www.youtube.com/embed/...&quot; width=&quot;100%&quot; height=&quot;315&quot; frameborder=&quot;0&quot; allowfullscreen></iframe>" 
+                    />
+                </Field>
+
+                <Field label="Format d'affichage (Ratio de l'écran)">
+                    <select 
+                        style={selectStyle} 
+                        value={props.aspectRatio || '16/9'} 
+                        onChange={e => onChange({ aspectRatio: e.target.value })}
+                    >
+                        <option value="16/9">16:9 Paysage (YouTube, Vimeo classique)</option>
+                        <option value="9/16">9:16 Vertical (TikTok, Reels, Shorts)</option>
+                        <option value="4/3">4:3 Rétro</option>
+                        <option value="1/1">1:1 Carré</option>
+                    </select>
+                </Field>
+
+                <Field label="Image de couverture (Optionnel)" hint="Si renseignée, affiche cette miniature avec un bouton lecture au clic. Si laissée vide, l'iframe s'affiche directement.">
+                    <ImageUploader 
+                        value={props.thumbnail || ''} 
+                        onChange={url => onChange({ thumbnail: url })} 
+                        folder="pages/videos" 
+                    />
+                </Field>
+            </div>
+        ) : (
+            <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
+                <span style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '12px' }}>🎬 VIDÉO & MÉDIA</span>
+                
+                <Field label="URL Vidéo (YouTube, Vimeo ou lien externe)">
+                    <input 
+                        style={inputStyle} 
+                        value={props.videoUrl || ''} 
+                        onChange={e => onChange({ videoUrl: e.target.value })} 
+                        placeholder="https://www.youtube.com/watch?v=..." 
+                    />
+                </Field>
+
+                <div style={{ marginBottom: '16px' }}>
+                    <label style={{ display: 'block', fontWeight: 600, fontSize: '0.82rem', color: '#444', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        OU Déposer un fichier vidéo (MP4, WebM)
+                    </label>
+                    
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <label style={{ 
+                            flex: 1, 
+                            padding: '10px 14px', 
+                            background: uploadingVideo ? '#f1f5f9' : '#ffffff', 
+                            borderRadius: '8px', 
+                            textAlign: 'center', 
+                            cursor: uploadingVideo ? 'wait' : 'pointer', 
+                            fontSize: '0.85rem', 
+                            border: '1.5px dashed #1F4B40',
+                            color: '#1F4B40',
+                            fontWeight: 600,
+                            transition: 'all 0.2s'
+                        }}>
+                            {uploadingVideo ? '⏳ Téléversement de la vidéo en cours...' : '📁 Choisir ou déposer une vidéo (max 25 Mo)'}
+                            <input 
+                                type="file" 
+                                accept="video/mp4,video/webm,video/quicktime,video/*" 
+                                style={{ display: 'none' }} 
+                                onChange={handleVideoFileUpload}
+                                disabled={uploadingVideo}
+                            />
+                        </label>
+                        
+                        {props.videoUrl && (props.videoUrl.endsWith('.mp4') || props.videoUrl.endsWith('.webm') || props.videoUrl.includes('/video/upload/')) && (
+                            <button 
+                                type="button" 
+                                onClick={() => onChange({ videoUrl: '', duration: '' })} 
+                                style={{ padding: '10px 14px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '0.82rem', fontWeight: 600 }}
+                                title="Supprimer la vidéo déposée"
+                            >
+                                ✕ Retirer
+                            </button>
+                        )}
+                    </div>
+
+                    {uploadError && (
+                        <div style={{ marginTop: '8px', padding: '8px 12px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '6px', color: '#b91c1c', fontSize: '0.8rem', lineHeight: 1.4 }}>
+                            ⚠️ {uploadError}
+                        </div>
+                    )}
+                </div>
+
+                {/* Disclaimer encadré pédagogique */}
+                <div style={{
+                    background: '#FFFBEB',
+                    border: '1px solid #FDE68A',
+                    borderRadius: '10px',
+                    padding: '12px 14px',
+                    marginBottom: '16px',
+                    fontSize: '0.82rem',
+                    color: '#92400E',
+                    lineHeight: 1.45
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, marginBottom: '6px', color: '#B45309' }}>
+                        <span style={{ fontSize: '1.1rem' }}>💡</span>
+                        <span>Performance & SEO : Pourquoi privilégier YouTube ?</span>
+                    </div>
+                    <p style={{ margin: '0 0 6px 0' }}>
+                        Vous pouvez déposer directement un fichier vidéo (limité à <strong>25 Mo</strong> max pour préserver le serveur), mais <strong>l'hébergement sur YouTube ou Vimeo reste la méthode recommandée</strong> :
+                    </p>
+                    <ul style={{ margin: '0 0 8px 0', paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <li><strong>Vitesse de chargement & SEO :</strong> Les vidéos directes augmentent le temps de chargement de la page et pénalisent votre score Google PageSpeed (Core Web Vitals).</li>
+                        <li><strong>Streaming adaptatif :</strong> YouTube ajuste automatiquement la résolution (480p, 720p, 1080p) selon la connexion (4G/5G/Wifi) de l'internaute sans saccades.</li>
+                        <li><strong>Bande passante :</strong> La diffusion est prise en charge par l'infrastructure mondiale de Google plutôt que de consommer les ressources d'hébergement de votre boutique.</li>
+                    </ul>
+                    <div style={{ fontSize: '0.78rem', background: '#FEF3C7', padding: '6px 10px', borderRadius: '6px', border: '1px dashed #F59E0B', color: '#78350F' }}>
+                        🔒 <strong>Astuce discrétion :</strong> Sur YouTube, publiez votre vidéo en <strong>« Non répertoriée »</strong>. Elle sera invisible sur votre chaîne publique, mais sera parfaitement lisible ici dans l'article !
+                    </div>
+                </div>
+
+                <Field label="Image de couverture (Miniature)" hint="Laissez vide pour utiliser la miniature YouTube automatique">
+                    <ImageUploader 
+                        value={props.thumbnail || ''} 
+                        onChange={url => onChange({ thumbnail: url })} 
+                        folder="pages/videos" 
+                    />
+                </Field>
+
+                <Field label="Badge Durée (Récupération automatique)">
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        padding: '10px 14px',
+                        background: '#f1f5f9',
+                        border: '1px solid #cbd5e1',
+                        borderRadius: '8px',
+                        fontSize: '0.88rem'
+                    }}>
+                        <span style={{ fontSize: '1.1rem' }}>⏱️</span>
+                        <div style={{ flex: 1 }}>
+                            {loadingInfo || uploadingVideo ? (
+                                <span style={{ color: '#0284c7', fontWeight: 600 }}>Détection de la durée réelle en cours...</span>
+                            ) : props.duration ? (
+                                <span style={{ fontWeight: 700, color: '#166534' }}>
+                                    Durée réelle détectée : <span style={{ background: '#123F32', color: '#fff', padding: '2px 8px', borderRadius: '4px', marginLeft: '6px' }}>{props.duration}</span>
+                                </span>
+                            ) : props.videoUrl ? (
+                                <span style={{ color: '#64748b' }}>Calcul de la durée de la vidéo...</span>
+                            ) : (
+                                <span style={{ color: '#94a3b8' }}>Renseignez ou déposez une vidéo pour calculer la durée</span>
+                            )}
+                        </div>
+                    </div>
+                    <span style={{ display: 'block', fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>
+                        🔒 La durée est extraite automatiquement de la vidéo et ne peut pas être modifiée manuellement.
+                    </span>
+                </Field>
+            </div>
+        )}
+
+        {/* Section 2: En-tête & Bouton */}
+        <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
+            <span style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '10px' }}>🏷️ TITRE & BOUTON</span>
+            <Field label="Titre du bloc">
+                <input 
+                    style={inputStyle} 
+                    value={props.title || ''} 
+                    onChange={e => onChange({ title: e.target.value })} 
+                    placeholder="On vous montre ?" 
+                />
+            </Field>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <Field label="Soulignement">
+                    <select 
+                        style={selectStyle} 
+                        value={props.showUnderline !== false ? 'true' : 'false'} 
+                        onChange={e => onChange({ showUnderline: e.target.value === 'true' })}
+                    >
+                        <option value="true">Afficher</option>
+                        <option value="false">Masquer</option>
+                    </select>
+                </Field>
+                <Field label="Icône de titre">
+                    <select 
+                        style={selectStyle} 
+                        value={props.badgeIcon || 'camera'} 
+                        onChange={e => onChange({ badgeIcon: e.target.value })}
+                    >
+                        <option value="camera">📹 Caméra rétro</option>
+                        <option value="none">Aucune</option>
+                    </select>
+                </Field>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '12px' }}>
+                <Field label="Texte du bouton">
+                    <input 
+                        style={inputStyle} 
+                        value={props.buttonText || ''} 
+                        onChange={e => onChange({ buttonText: e.target.value })} 
+                        placeholder="Voir la vidéo →" 
+                    />
+                </Field>
+                <Field label="Couleur bouton">
+                    <input 
+                        type="color" 
+                        value={props.buttonColor || '#185A48'} 
+                        onChange={e => onChange({ buttonColor: e.target.value })} 
+                        style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} 
+                    />
+                </Field>
+            </div>
+        </div>
+
+        {/* Section 3: Personnalisation de l'encadré */}
+        <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
+            <span style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '10px' }}>🖼️ TRAVAILLER L'ENCADRÉ (CADRE & STYLE)</span>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <Field label="Style de cadre">
+                    <select 
+                        style={selectStyle} 
+                        value={props.cardStyle || 'sticker'} 
+                        onChange={e => onChange({ cardStyle: e.target.value })}
+                    >
+                        <option value="sticker">🏷️ Sticker / Papier rétro</option>
+                        <option value="modern">⬜ Moderne épuré</option>
+                        <option value="dark">⬛ Sombre élégant</option>
+                        <option value="transparent">🔲 Transparent</option>
+                    </select>
+                </Field>
+                <Field label="Décoration en coin">
+                    <select 
+                        style={selectStyle} 
+                        value={props.cornerDecoration || 'candy'} 
+                        onChange={e => onChange({ cornerDecoration: e.target.value })}
+                    >
+                        <option value="candy">🍬 Bonbon vert (maquette)</option>
+                        <option value="tape">🩹 Scotch adhésif</option>
+                        <option value="pin">📌 Épingle</option>
+                        <option value="none">Aucune</option>
+                    </select>
+                </Field>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <Field label="Fond du cadre">
+                    <input 
+                        type="color" 
+                        value={props.cardBgColor || '#FAF6EB'} 
+                        onChange={e => onChange({ cardBgColor: e.target.value })} 
+                        style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} 
+                    />
+                </Field>
+                <Field label="Bordure (optionnel)">
+                    <input 
+                        type="color" 
+                        value={props.borderColor || '#E7DDBF'} 
+                        onChange={e => onChange({ borderColor: e.target.value })} 
+                        style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} 
+                    />
+                </Field>
+            </div>
+
+            <Field label={`Largeur max — ${props.cardWidth || 520}px`}>
+                <input
+                    type="range" min={320} max={850} step={10}
+                    value={props.cardWidth || 520}
+                    onChange={e => onChange({ cardWidth: +e.target.value })}
+                    style={{ width: '100%', accentColor: '#1F4B40', cursor: 'pointer' }}
+                />
+            </Field>
+
+            <Field label={`Inclinaison / Rotation — ${props.rotation !== undefined ? props.rotation : -1.5}°`}>
+                <input
+                    type="range" min={-6} max={6} step={0.5}
+                    value={props.rotation !== undefined ? props.rotation : -1.5}
+                    onChange={e => onChange({ rotation: +e.target.value })}
+                    style={{ width: '100%', accentColor: '#1F4B40', cursor: 'pointer' }}
+                />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#888', marginTop: '2px' }}>
+                    <span>-6° (gauche)</span>
+                    <span>0° (droit)</span>
+                    <span>+6° (droite)</span>
+                </div>
+            </Field>
+        </div>
+
+        {/* Section 4: Annotation latérale & Flèches */}
+        <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
+            <span style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '10px' }}>✍️ ANNOTATION LATÉRALE & FLÈCHES</span>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <Field label="Afficher l'annotation">
+                    <select 
+                        style={selectStyle} 
+                        value={props.showAnnotation !== false ? 'true' : 'false'} 
+                        onChange={e => onChange({ showAnnotation: e.target.value === 'true' })}
+                    >
+                        <option value="true">Oui</option>
+                        <option value="false">Non</option>
+                    </select>
+                </Field>
+                <Field label="Position">
+                    <select 
+                        style={selectStyle} 
+                        value={props.annotationPosition || 'right'} 
+                        onChange={e => onChange({ annotationPosition: e.target.value })}
+                    >
+                        <option value="right">À droite de la vidéo</option>
+                        <option value="left">À gauche de la vidéo</option>
+                        <option value="bottom">En dessous</option>
+                    </select>
+                </Field>
+            </div>
+
+            <Field label="Flèches dessinées vers la carte">
+                <select 
+                    style={selectStyle} 
+                    value={props.showArrows !== false ? 'true' : 'false'} 
+                    onChange={e => onChange({ showArrows: e.target.value === 'true' })}
+                >
+                    <option value="true">Afficher les doubles flèches</option>
+                    <option value="false">Masquer</option>
+                </select>
+            </Field>
+
+            <Field label="Texte de l'annotation">
+                <textarea 
+                    style={textareaStyle} 
+                    value={props.annotationText || ''} 
+                    onChange={e => onChange({ annotationText: e.target.value })} 
+                    placeholder="Poppy vous montre comment doser le CBD dans vos recettes sans se tromper !" 
+                />
+            </Field>
+
+            <Field label="Couleur de l'annotation">
+                <input 
+                    type="color" 
+                    value={props.annotationColor || '#123F32'} 
+                    onChange={e => onChange({ annotationColor: e.target.value })} 
+                    style={{ width: '100%', height: '38px', border: 'none', padding: 0, borderRadius: '8px', cursor: 'pointer' }} 
+                />
+            </Field>
+        </div>
+    </>;
+}
+
 export function FAQEditor({ props, onChange }) {
     const items = props.items || [];
     const updateItem = (i, field, val) => onChange({ items: items.map((item, idx) => idx === i ? { ...item, [field]: val } : item) });
@@ -1207,6 +1756,544 @@ export function LatestArticlesBlockEditor({ props, onChange }) {
     </>;
 }
 
+export function BlogCategoryFilterEditor({ props, onChange }) {
+    const filters = props.filters || [];
+    const articles = props.articles || [];
+    const [activeTab, setActiveTab] = useState(filters[0]?.id || 'all');
+    const [subSection, setSubSection] = useState('filters');
+
+    const currentFilterIndex = filters.findIndex(f => f.id === activeTab);
+    const currentFilter = currentFilterIndex !== -1 ? filters[currentFilterIndex] : filters[0];
+
+    // Update filter property
+    const updateFilterField = (field, value) => {
+        const nextFilters = [...filters];
+        if (currentFilterIndex !== -1) {
+            nextFilters[currentFilterIndex] = { ...nextFilters[currentFilterIndex], [field]: value };
+            onChange({ filters: nextFilters });
+        }
+    };
+
+    // Add a new tab / filter
+    const addFilter = () => {
+        const newId = `filter-${Date.now().toString(36)}`;
+        const newF = {
+            id: newId,
+            label: 'Nouveau filtre',
+            icon: 'star',
+            h2Prefix: 'Découvrez nos articles',
+            h2Highlight: 'sur ce thème',
+            introText: 'Conseils, informations et guides rédigés par Les Amis du CBD.'
+        };
+        const nextFilters = [...filters, newF];
+        onChange({ filters: nextFilters });
+        setActiveTab(newId);
+    };
+
+    // Remove current filter
+    const removeCurrentFilter = () => {
+        if (filters.length <= 1) return;
+        const nextFilters = filters.filter((_, i) => i !== currentFilterIndex);
+        onChange({ filters: nextFilters });
+        setActiveTab(nextFilters[0]?.id || 'all');
+    };
+
+    // Article helpers
+    const updateArticle = (index, field, value) => {
+        const nextArticles = [...articles];
+        nextArticles[index] = { ...nextArticles[index], [field]: value };
+        onChange({ articles: nextArticles });
+    };
+
+    const addArticle = () => {
+        const newArt = {
+            id: `art-${Date.now()}`,
+            title: 'Nouvel article',
+            badge: 'RECETTE',
+            filterId: activeTab !== 'all' ? activeTab : (filters[1]?.id || 'recettes'),
+            excerpt: 'Une courte description claire et attractive pour inviter à la lecture.',
+            image: '/images/og-image.jpg',
+            readTime: '6 min',
+            date: new Date().toLocaleDateString('fr-FR'),
+            href: '#'
+        };
+        onChange({ articles: [...articles, newArt] });
+    };
+
+    const removeArticle = (index) => {
+        const nextArticles = articles.filter((_, i) => i !== index);
+        onChange({ articles: nextArticles });
+    };
+
+    return <>
+        {/* Navigation intuitive des 3 sections */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', marginBottom: '18px', background: '#e2e8f0', padding: '4px', borderRadius: '12px' }}>
+            <button
+                type="button"
+                onClick={() => setSubSection('filters')}
+                style={{
+                    padding: '8px 4px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    background: subSection === 'filters' ? '#1F4B40' : 'transparent',
+                    color: subSection === 'filters' ? '#fff' : '#475569',
+                    whiteSpace: 'nowrap'
+                }}
+            >
+                🎯 Onglets
+            </button>
+            <button
+                type="button"
+                onClick={() => setSubSection('articles')}
+                style={{
+                    padding: '8px 4px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    background: subSection === 'articles' ? '#1F4B40' : 'transparent',
+                    color: subSection === 'articles' ? '#fff' : '#475569',
+                    whiteSpace: 'nowrap'
+                }}
+            >
+                📰 Articles
+            </button>
+            <button
+                type="button"
+                onClick={() => setSubSection('settings')}
+                style={{
+                    padding: '8px 4px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: 700,
+                    fontSize: '0.78rem',
+                    cursor: 'pointer',
+                    background: subSection === 'settings' ? '#1F4B40' : 'transparent',
+                    color: subSection === 'settings' ? '#fff' : '#475569',
+                    whiteSpace: 'nowrap'
+                }}
+            >
+                ⚙️ Style
+            </button>
+        </div>
+
+        {/* SECTION 1: ONGLETS, TITRES H2 & INTROS */}
+        {subSection === 'filters' && (
+            <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <label style={{ fontWeight: 700, fontSize: '0.8rem', color: '#1F4B40', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        Sélectionner l'onglet à configurer
+                    </label>
+                    <button
+                        type="button"
+                        onClick={addFilter}
+                        style={{
+                            padding: '4px 10px',
+                            background: '#079D79',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '6px',
+                            fontSize: '0.75rem',
+                            fontWeight: 700,
+                            cursor: 'pointer'
+                        }}
+                    >
+                        + Ajouter un onglet
+                    </button>
+                </div>
+
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                    {filters.map(f => (
+                        <button
+                            key={f.id}
+                            type="button"
+                            onClick={() => setActiveTab(f.id)}
+                            style={{
+                                padding: '6px 13px',
+                                borderRadius: '999px',
+                                border: activeTab === f.id ? '2px solid #079D79' : '1px solid #cbd5e1',
+                                background: activeTab === f.id ? '#079D79' : '#ffffff',
+                                color: activeTab === f.id ? '#ffffff' : '#123F32',
+                                fontWeight: 700,
+                                fontSize: '0.8rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.15s ease'
+                            }}
+                        >
+                            {f.label}
+                        </button>
+                    ))}
+                </div>
+
+                {currentFilter && (() => {
+                    let prefixValue = currentFilter.h2Prefix !== undefined ? currentFilter.h2Prefix : '';
+                    let highlightValue = currentFilter.h2Highlight !== undefined ? currentFilter.h2Highlight : '';
+
+                    if (!prefixValue && !highlightValue && currentFilter.h2Title) {
+                        const match = currentFilter.h2Title.match(/<span[^>]*class=["']highlight["'][^>]*>([\s\S]*?)<\/span>/i);
+                        if (match) {
+                            prefixValue = currentFilter.h2Title.substring(0, match.index).replace(/<[^>]*>/g, '').trim();
+                            highlightValue = match[1].replace(/<[^>]*>/g, '').trim();
+                        } else {
+                            prefixValue = currentFilter.h2Title.replace(/<[^>]*>/g, '').trim();
+                        }
+                    }
+
+                    return (
+                        <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px' }}>
+                                <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#123F32' }}>
+                                    ⚙️ Configuration : « {currentFilter.label} »
+                                </span>
+                                {filters.length > 1 && (
+                                    <button
+                                        type="button"
+                                        onClick={removeCurrentFilter}
+                                        style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer' }}
+                                    >
+                                        ✕ Supprimer
+                                    </button>
+                                )}
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: '10px' }}>
+                                <Field label="Libellé du bouton">
+                                    <input
+                                        style={inputStyle}
+                                        value={currentFilter.label || ''}
+                                        onChange={e => updateFilterField('label', e.target.value)}
+                                        placeholder="Ex: Nos recettes"
+                                    />
+                                </Field>
+
+                                <Field label="Icône">
+                                    <select
+                                        style={selectStyle}
+                                        value={currentFilter.icon || 'all'}
+                                        onChange={e => updateFilterField('icon', e.target.value)}
+                                    >
+                                        <option value="all">Grille (Tous)</option>
+                                        <option value="chef">👨‍🍳 Recettes</option>
+                                        <option value="lightbulb">💡 Conseils</option>
+                                        <option value="flower">🌿 Fleurs</option>
+                                        <option value="book">📖 Guides</option>
+                                        <option value="oil">💧 Huile</option>
+                                        <option value="heart">❤️ Cœur</option>
+                                        <option value="star">⭐ Étoile</option>
+                                        <option value="shield">🛡️ Bouclier</option>
+                                    </select>
+                                </Field>
+                            </div>
+
+                            <Field label="Identifiant / Tag d'association" hint="Articles portant ce tag (sauf 'all' qui affiche tout).">
+                                <input
+                                    style={inputStyle}
+                                    value={currentFilter.id || ''}
+                                    onChange={e => updateFilterField('id', e.target.value.toLowerCase().trim())}
+                                    placeholder="ex: recettes, astuces, fleurs..."
+                                />
+                            </Field>
+
+                            {/* Titre H2 découpé intuitivement */}
+                            <div style={{ marginTop: '12px', padding: '12px', background: '#ffffff', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
+                                <span style={{ display: 'block', fontWeight: 700, fontSize: '0.8rem', color: '#123F32', marginBottom: '8px' }}>
+                                    🏷️ TITRE H2 DYNAMIQUE (AFFICHÉ SUR CET ONGLET)
+                                </span>
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                    <Field label="1. Début du titre (texte normal)">
+                                        <input
+                                            style={inputStyle}
+                                            value={prefixValue}
+                                            onChange={e => updateFilterField('h2Prefix', e.target.value)}
+                                            placeholder="Ex: À vos tabliers,"
+                                        />
+                                    </Field>
+
+                                    <Field label="2. Fin du titre (souligné vert animé ✨)">
+                                        <input
+                                            style={inputStyle}
+                                            value={highlightValue}
+                                            onChange={e => updateFilterField('h2Highlight', e.target.value)}
+                                            placeholder="Ex: on passe en cuisine !"
+                                        />
+                                    </Field>
+                                </div>
+
+                                <span style={{ display: 'block', fontSize: '0.73rem', color: '#64748b', marginTop: '6px' }}>
+                                    💡 Le texte du champ 2 bénéficiera automatiquement du soulignement vert tracé au feutre.
+                                </span>
+                            </div>
+
+                            <Field label="Texte d'introduction sous le H2">
+                                <textarea
+                                    style={{ ...textareaStyle, minHeight: '75px' }}
+                                    value={currentFilter.introText || ''}
+                                    onChange={e => updateFilterField('introText', e.target.value)}
+                                    placeholder="Ex: Du salé, du sucré, des classiques revisités..."
+                                />
+                            </Field>
+                        </div>
+                    );
+                })()}
+            </div>
+        )}
+
+        {/* SECTION 2: ARTICLES & SOURCE AUTOMATIQUE */}
+        {subSection === 'articles' && (
+            <div>
+                {/* Choix de la source des articles */}
+                <div style={{ padding: '12px 14px', background: '#f1f5f9', borderRadius: '10px', border: '1px solid #cbd5e1', marginBottom: '16px' }}>
+                    <label style={{ display: 'block', fontWeight: 700, fontSize: '0.8rem', color: '#1F4B40', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        Source des articles
+                    </label>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                        <button
+                            type="button"
+                            onClick={() => onChange({ sourceMode: 'auto' })}
+                            style={{
+                                padding: '9px 10px',
+                                borderRadius: '8px',
+                                border: (props.sourceMode || 'auto') === 'auto' ? '2px solid #1F4B40' : '1px solid #cbd5e1',
+                                background: (props.sourceMode || 'auto') === 'auto' ? '#1F4B40' : '#ffffff',
+                                color: (props.sourceMode || 'auto') === 'auto' ? '#ffffff' : '#334155',
+                                fontWeight: 700,
+                                fontSize: '0.82rem',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '6px'
+                            }}
+                        >
+                            <span>🔄 Automatique (Blog)</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => onChange({ sourceMode: 'manual' })}
+                            style={{
+                                padding: '9px 10px',
+                                borderRadius: '8px',
+                                border: props.sourceMode === 'manual' ? '2px solid #1F4B40' : '1px solid #cbd5e1',
+                                background: props.sourceMode === 'manual' ? '#1F4B40' : '#ffffff',
+                                color: props.sourceMode === 'manual' ? '#ffffff' : '#334155',
+                                fontWeight: 700,
+                                fontSize: '0.82rem',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '6px'
+                            }}
+                        >
+                            <span>✍️ Manuel (Cartes fixes)</span>
+                        </button>
+                    </div>
+
+                    <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '8px', lineHeight: 1.35 }}>
+                        {(props.sourceMode || 'auto') === 'auto'
+                            ? '✨ Mode Automatique : Les articles publiés dans le blog sont chargés automatiquement avec leurs vraies données. Les cartes ci-dessous servent de complément / démonstration.'
+                            : '✍️ Mode Manuel : Seules les cartes personnalisées ci-dessous s\'affichent.'}
+                    </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                    <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40' }}>
+                        Cartes d'articles ({articles.length})
+                    </span>
+                    <button
+                        type="button"
+                        onClick={addArticle}
+                        style={{
+                            padding: '6px 12px',
+                            background: '#1F4B40',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            fontSize: '0.8rem',
+                            fontWeight: 700
+                        }}
+                    >
+                        + Ajouter un article
+                    </button>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                    {articles.map((art, idx) => (
+                        <div key={art.id || idx} style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                <span style={{ fontWeight: 800, fontSize: '0.82rem', color: '#123F32' }}>
+                                    Article #{idx + 1} : {art.title || 'Sans titre'}
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={() => removeArticle(idx)}
+                                    style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.78rem', fontWeight: 700 }}
+                                >
+                                    Supprimer
+                                </button>
+                            </div>
+
+                            <Field label="Titre de l'article">
+                                <input
+                                    style={inputStyle}
+                                    value={art.title || ''}
+                                    onChange={e => updateArticle(idx, 'title', e.target.value)}
+                                    placeholder="Ex: Pâtes crémeuses au CBD"
+                                />
+                            </Field>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                <Field label="Catégorie / Filtre associé">
+                                    <select
+                                        style={selectStyle}
+                                        value={art.filterId || 'recettes'}
+                                        onChange={e => updateArticle(idx, 'filterId', e.target.value)}
+                                    >
+                                        {filters.filter(f => f.id !== 'all').map(f => (
+                                            <option key={f.id} value={f.id}>{f.label} ({f.id})</option>
+                                        ))}
+                                    </select>
+                                </Field>
+                                <Field label="Badge sur l'image">
+                                    <input
+                                        style={inputStyle}
+                                        value={art.badge || ''}
+                                        onChange={e => updateArticle(idx, 'badge', e.target.value)}
+                                        placeholder="RECETTE, CONSEIL..."
+                                    />
+                                </Field>
+                            </div>
+
+                            <Field label="Image de couverture">
+                                <ImageUploader
+                                    value={art.image || ''}
+                                    onChange={url => updateArticle(idx, 'image', url)}
+                                    folder="blog/articles"
+                                />
+                            </Field>
+
+                            <Field label="Extrait / Description">
+                                <textarea
+                                    style={{ ...textareaStyle, minHeight: '60px' }}
+                                    value={art.excerpt || ''}
+                                    onChange={e => updateArticle(idx, 'excerpt', e.target.value)}
+                                />
+                            </Field>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                <Field label="Temps de lecture">
+                                    <input
+                                        style={inputStyle}
+                                        value={art.readTime || ''}
+                                        onChange={e => updateArticle(idx, 'readTime', e.target.value)}
+                                        placeholder="8 min"
+                                    />
+                                </Field>
+                                <Field label="Date de publication">
+                                    <input
+                                        style={inputStyle}
+                                        value={art.date || ''}
+                                        onChange={e => updateArticle(idx, 'date', e.target.value)}
+                                        placeholder="12/08/2024"
+                                    />
+                                </Field>
+                            </div>
+
+                            <Field label="Lien vers l'article">
+                                <input
+                                    style={inputStyle}
+                                    value={art.href || ''}
+                                    onChange={e => updateArticle(idx, 'href', e.target.value)}
+                                    placeholder="/p/mon-article-cbd"
+                                />
+                            </Field>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )}
+
+        {/* SECTION 3: OPTIONS & STYLE */}
+        {subSection === 'settings' && (
+            <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                <Field label="Nombre de colonnes (Desktop)">
+                    <select
+                        style={selectStyle}
+                        value={props.columns || 4}
+                        onChange={e => onChange({ columns: parseInt(e.target.value, 10) || 4 })}
+                    >
+                        <option value={4}>4 colonnes (Standard élégant)</option>
+                        <option value={3}>3 colonnes (Cartes plus larges)</option>
+                        <option value={2}>2 colonnes</option>
+                    </select>
+                </Field>
+
+                <Field label="Filtre affiché par défaut au chargement">
+                    <select
+                        style={selectStyle}
+                        value={props.defaultFilter || 'all'}
+                        onChange={e => onChange({ defaultFilter: e.target.value })}
+                    >
+                        {filters.map(f => (
+                            <option key={f.id} value={f.id}>{f.label} ({f.id})</option>
+                        ))}
+                    </select>
+                </Field>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                    <Field label="Barre de recherche">
+                        <select
+                            style={selectStyle}
+                            value={props.showSearch !== false ? 'true' : 'false'}
+                            onChange={e => onChange({ showSearch: e.target.value === 'true' })}
+                        >
+                            <option value="true">Afficher</option>
+                            <option value="false">Masquer</option>
+                        </select>
+                    </Field>
+
+                    <Field label="Menu de tri">
+                        <select
+                            style={selectStyle}
+                            value={props.showSort !== false ? 'true' : 'false'}
+                            onChange={e => onChange({ showSort: e.target.value === 'true' })}
+                        >
+                            <option value="true">Afficher</option>
+                            <option value="false">Masquer</option>
+                        </select>
+                    </Field>
+                </div>
+
+                <Field label="Placeholder de la barre de recherche">
+                    <input
+                        style={inputStyle}
+                        value={props.searchPlaceholder || ''}
+                        onChange={e => onChange({ searchPlaceholder: e.target.value })}
+                        placeholder="Rechercher un article..."
+                    />
+                </Field>
+
+                <Field label="Badges de compteur d'articles sur les onglets">
+                    <select
+                        style={selectStyle}
+                        value={props.showCountBadges !== false ? 'true' : 'false'}
+                        onChange={e => onChange({ showCountBadges: e.target.value === 'true' })}
+                    >
+                        <option value="true">Afficher (ex: Recettes 2)</option>
+                        <option value="false">Masquer</option>
+                    </select>
+                </Field>
+            </div>
+        )}
+    </>;
+}
+
 export const EDITORS = {
     TitleBlock: TitleBlockEditor,
     ContentHero: HeroEditor,
@@ -1220,6 +2307,8 @@ export const EDITORS = {
     Quote: QuoteEditor,
     ImageBlock: ImageBlockEditor,
     VideoEmbed: VideoEmbedEditor,
+    VideoCard: VideoCardEditor,
+    BlogCategoryFilter: BlogCategoryFilterEditor,
     FAQ: FAQEditor,
     Divider: DividerEditor,
     AuthorCard: AuthorCardEditor,

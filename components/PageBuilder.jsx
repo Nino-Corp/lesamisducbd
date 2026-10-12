@@ -25,6 +25,8 @@ import CardsGrid from './CardsGrid/CardsGrid';
 import ImageCardsGrid from './ImageCardsGrid/ImageCardsGrid';
 import StatsBanner from './StatsBanner/StatsBanner';
 import VideoEmbed from './VideoEmbed/VideoEmbed';
+import VideoCard from './VideoCard/VideoCard';
+import BlogCategoryFilter from './BlogCategoryFilter/BlogCategoryFilter';
 import Divider from './Divider/Divider';
 import AuthorCard from './AuthorCard/AuthorCard';
 import CalloutBox from './CalloutBox/CalloutBox';
@@ -74,6 +76,8 @@ const componentMap = {
     ImageCardsGrid,
     StatsBanner,
     VideoEmbed,
+    VideoCard,
+    BlogCategoryFilter,
     Divider,
     AuthorCard,
     CalloutBox,
@@ -106,7 +110,7 @@ const componentMap = {
     DeliverySteps
 };
 
-const NO_ANIMATE = new Set(['Header', 'Hero', 'ProHero', 'TransparenceHeader']);
+const NO_ANIMATE = new Set(['Header', 'Hero', 'ProHero', 'TransparenceHeader', 'BlogCategoryFilter']);
 
 const cleanHtmlStrings = (obj) => {
     if (typeof obj === 'string') return obj.replace(/&nbsp;/g, ' ');

@@ -13,16 +13,17 @@ export default function ArticleSidebar({ categories = [], relatedArticles = [], 
     useEffect(() => {
         // Extract H2s and H3s from the article content
         const root = containerNode || document;
-        const headings = Array.from(root.querySelectorAll('.article-content h2')).filter(h => {
+        const headings = Array.from(root.querySelectorAll('.article-content h2, .article-content h3')).filter(h => {
             const text = (h.textContent || '').replace(/[\s\u200B-\u200D\uFEFF]/g, '');
             return text.length > 0;
         });
+
         const tocItems = headings.map((h, index) => {
             if (!h.id) h.id = `heading-${index}`;
             return {
                 id: h.id,
-                text: h.innerText,
-                level: 2
+                text: (h.innerText || h.textContent || '').trim(),
+                level: h.tagName.toLowerCase() === 'h3' ? 3 : 2
             };
         });
         setToc(tocItems);
@@ -38,7 +39,7 @@ export default function ArticleSidebar({ categories = [], relatedArticles = [], 
 
         headings.forEach(h => observer.observe(h));
         return () => observer.disconnect();
-    }, []);
+    }, [containerNode]);
 
     useEffect(() => {
         if (!activeId || !listRef.current) return;
@@ -60,28 +61,35 @@ export default function ArticleSidebar({ categories = [], relatedArticles = [], 
                     <div className={styles.tocContainer}>
                         <div className={styles.sliderIndicator} style={indicatorStyle} />
                         <ul className={styles.tocList} ref={listRef}>
-                        {toc.map(item => (
-                            <li key={item.id} data-id={item.id} className={activeId === item.id ? styles.activeToc : ''}>
-                                <a href={`#${item.id}`} onClick={(e) => {
-                                    e.preventDefault();
-                                    const rootDoc = containerNode ? (containerNode.ownerDocument || document) : document;
-                                    rootDoc.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
-                                }}>
-                                    {item.text}
-                                </a>
-                            </li>
-                        ))}
+                            {toc.map(item => (
+                                <li 
+                                    key={item.id} 
+                                    data-id={item.id} 
+                                    className={`${activeId === item.id ? styles.activeToc : ''} ${item.level === 3 ? styles.tocH3 : ''}`}
+                                >
+                                    <a 
+                                        href={`#${item.id}`} 
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            const rootDoc = containerNode ? (containerNode.ownerDocument || document) : document;
+                                            rootDoc.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' });
+                                        }}
+                                    >
+                                        {item.text}
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
             )}
 
-            {relatedArticles.length > 0 && (
+            {relatedArticles && relatedArticles.length > 0 && (
                 <div className={styles.widget}>
                     <h3 className={styles.widgetTitle}>Articles similaires</h3>
                     <div className={styles.relatedList}>
                         {relatedArticles.map((article, i) => (
-                            <Link key={i} href={`/p/${article.slug}`} className={styles.relatedCard}>
+                            <Link key={article.slug || i} href={`/p/${article.slug}`} className={styles.relatedCard}>
                                 {article.image && (
                                     <div className={styles.relatedImgWrapper}>
                                         <img src={article.image} alt={article.title} className={styles.relatedImg} />
@@ -96,7 +104,7 @@ export default function ArticleSidebar({ categories = [], relatedArticles = [], 
                 </div>
             )}
 
-            {categories.length > 0 && (
+            {categories && categories.length > 0 && (
                 <div className={styles.widget}>
                     <h3 className={styles.widgetTitle}>Nos catégories</h3>
                     <div className={styles.categoryTags}>

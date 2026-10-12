@@ -14,6 +14,8 @@ import ImageCardsGrid from '@/components/ImageCardsGrid/ImageCardsGrid';
 import IconSummary from '@/components/IconSummary/IconSummary';
 import StatsBanner from '@/components/StatsBanner/StatsBanner';
 import VideoEmbed from '@/components/VideoEmbed/VideoEmbed';
+import VideoCard from '@/components/VideoCard/VideoCard';
+import BlogCategoryFilter from '@/components/BlogCategoryFilter/BlogCategoryFilter';
 import Divider from '@/components/Divider/Divider';
 import AuthorCard from '@/components/AuthorCard/AuthorCard';
 import CalloutBox from '@/components/CalloutBox/CalloutBox';
@@ -120,6 +122,8 @@ const PREVIEW_COMPONENTS = {
     IconSummary,
     StatsBanner,
     VideoEmbed,
+    VideoCard,
+    BlogCategoryFilter,
     Divider,
     AuthorCard,
     CalloutBox,
@@ -567,11 +571,11 @@ const LivePreview = memo(function LivePreview({
                 const isArticleLayout = ['Article', 'BlogPosting', 'LandingPage'].includes(pageType);
 
                 const wrappedContent = (iframeNode) => (
-                    <div style={{ paddingTop: !hasHeader ? '80px' : '0' }}>
+                    <div>
                         {!hasHeader && (
                             <div 
                                 onClickCapture={e => { e.preventDefault(); e.stopPropagation(); }} 
-                                style={{ opacity: 0.8, position: 'fixed', top: 0, left: 0, right: 0, zIndex: 999 }}
+                                style={{ opacity: 0.95, position: 'relative', width: '100%', zIndex: 999 }}
                             >
                                 <Header {...defaultHeaderProps} />
                                 {/* Invisible overlay to aggressively block all clicks even native ones */}
@@ -601,7 +605,7 @@ const LivePreview = memo(function LivePreview({
                                 {/* Sommaire collé à droite */}
                                 {previewMode === 'desktop' && (
                                     <div style={{ width: '260px', flexShrink: 0, position: 'sticky', top: '120px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
-                                        <ArticleSidebar containerNode={iframeNode} categories={['Catégorie Test']} relatedArticles={[]} />
+                                        <ArticleSidebar containerNode={iframeNode} categories={[]} relatedArticles={[]} />
                                     </div>
                                 )}
                             </div>

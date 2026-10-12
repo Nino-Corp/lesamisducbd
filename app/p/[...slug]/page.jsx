@@ -8,9 +8,22 @@ import ArticleSidebar from '@/components/ArticleSidebar/ArticleSidebar';
 
 export const revalidate = 60; // Cache for 1 minute
 
+async function safeKvGet(key, fallback = null) {
+    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+        return fallback;
+    }
+    try {
+        const res = await kv.get(key);
+        return res !== null && res !== undefined ? res : fallback;
+    } catch (error) {
+        console.error(`[Vercel KV] Error reading key "${key}":`, error.message);
+        return fallback;
+    }
+}
+
 async function getPageData(slug, isPreview = false) {
     try {
-        const pages = await kv.get('builder_pages');
+        const pages = await safeKvGet('builder_pages', {});
         if (pages && pages[slug]) {
             const page = pages[slug];
 
@@ -135,7 +148,7 @@ export default async function DynamicPage(props) {
 
     const [{ page, allPages }, globalConfig] = await Promise.all([
         getPageData(pageSlug, isPreview),
-        kv.get('global_content').catch(() => null)
+        safeKvGet('global_content', null)
     ]);
 
     if (!page) {
@@ -245,16 +258,35 @@ export default async function DynamicPage(props) {
         }))
     } : null;
 
-    // Calculate categories and related articles for sidebar
+    // Calculate categories and related articles for sidebar from genuine published pages
     let categories = [];
     let relatedArticles = [];
     if (isArticle && allPages) {
         const publishedPages = Object.values(allPages).filter(p => !p.status || p.status === 'published');
+        
+        // Catégories réelles des pages publiées
         categories = [...new Set(publishedPages.map(p => p.seo?.category).filter(Boolean))].sort();
-        relatedArticles = publishedPages
-            .filter(p => ['Article', 'BlogPosting', 'LandingPage'].includes(p.seo?.pageType) && p.slug !== pageSlug && p.seo?.category === page.seo?.category)
-            .slice(0, 3)
-            .map(p => ({ title: p.title, slug: p.slug, image: p.seo?.ogImage || p.seo?.featuredImage || '/images/og-image.jpg' }));
+
+        // Articles similaires réels (priorité à la même catégorie si elle est définie, sinon autres articles)
+        const currentCategory = page.seo?.category;
+        const otherArticles = publishedPages.filter(p => 
+            ['Article', 'BlogPosting', 'LandingPage'].includes(p.seo?.pageType) && 
+            p.slug !== pageSlug
+        );
+
+        if (currentCategory) {
+            const sameCat = otherArticles.filter(p => p.seo?.category === currentCategory);
+            const diffCat = otherArticles.filter(p => p.seo?.category !== currentCategory);
+            relatedArticles = [...sameCat, ...diffCat].slice(0, 3);
+        } else {
+            relatedArticles = otherArticles.slice(0, 3);
+        }
+
+        relatedArticles = relatedArticles.map(p => ({
+            title: p.title,
+            slug: p.slug,
+            image: p.seo?.ogImage || p.seo?.featuredImage || ''
+        }));
     }
 
     let contentNode;
@@ -318,17 +350,19 @@ export default async function DynamicPage(props) {
                     {/* Contenu principal */}
                     <div className="article-content" style={{ maxWidth: '800px', width: '100%' }}>
                         <PageBuilder sections={contentSections} />
-                        <PageBuilder sections={[
-                            {
-                                id: 'latest-related',
-                                type: 'LatestArticlesBlock',
-                                props: {
-                                    title: 'Nos derniers articles sur le même thème',
-                                    category: page.seo?.category || '',
-                                    count: 3
+                        {!contentSections.some(s => s.type === 'LatestArticlesBlock' || s.type === 'RelatedArticles') && (
+                            <PageBuilder sections={[
+                                {
+                                    id: 'latest-related',
+                                    type: 'LatestArticlesBlock',
+                                    props: {
+                                        title: 'Nos derniers articles sur le même thème',
+                                        category: page.seo?.category || '',
+                                        count: 3
+                                    }
                                 }
-                            }
-                        ]} />
+                            ]} />
+                        )}
                     </div>
                     
                     {/* Espace entre le contenu et le sommaire (égal à l'espace de gauche) */}
@@ -344,11 +378,9 @@ export default async function DynamicPage(props) {
                     @media (min-width: 1024px) {
                         .article-sidebar-container { display: block !important; }
                     }
-                `}} />
-
-                <style dangerouslySetInnerHTML={{ __html: `
-                    @media (min-width: 1024px) {
-                        .article-sidebar-container { display: block !important; }
+                    .article-content h2,
+                    .article-content h3 {
+                        scroll-margin-top: 120px;
                     }
                 `}} />
 

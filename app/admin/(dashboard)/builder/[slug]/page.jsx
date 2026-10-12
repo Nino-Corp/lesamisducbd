@@ -528,7 +528,7 @@ export default function PageEditor() {
                                                         <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '4px' }}>Padding Haut</label>
                                                         <select 
                                                             style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.85rem' }}
-                                                            value={currentSection.props?.paddingTop || 'medium'}
+                                                            value={currentSection.props?.paddingTop || 'none'}
                                                             onChange={e => updateProps(activeSection, { paddingTop: e.target.value })}
                                                         >
                                                             <option value="none">Aucune</option>
@@ -542,7 +542,7 @@ export default function PageEditor() {
                                                         <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, marginBottom: '4px' }}>Padding Bas</label>
                                                         <select 
                                                             style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '0.85rem' }}
-                                                            value={currentSection.props?.paddingBottom || 'medium'}
+                                                            value={currentSection.props?.paddingBottom || 'none'}
                                                             onChange={e => updateProps(activeSection, { paddingBottom: e.target.value })}
                                                         >
                                                             <option value="none">Aucune</option>

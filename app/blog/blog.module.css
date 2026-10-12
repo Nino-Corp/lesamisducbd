@@ -73,14 +73,28 @@
     color: #1F4B40;
     border: 1px solid #d1fae5;
     border-radius: 99px;
-    padding: 5px 14px;
+    padding: 6px 16px;
     font-size: 0.82rem;
     font-weight: 600;
-    cursor: default;
-    transition: background 0.15s;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
 }
 
-.catPill:hover { background: #dcfce7; }
+.catPill:hover {
+    background: #1F4B40;
+    color: #fff;
+    border-color: #1F4B40;
+}
+
+.catPillActive {
+    background: #1F4B40 !important;
+    color: #fff !important;
+    border-color: #1F4B40 !important;
+    box-shadow: 0 2px 8px rgba(31, 75, 64, 0.2);
+}
 
 /* Grid */
 .grid {

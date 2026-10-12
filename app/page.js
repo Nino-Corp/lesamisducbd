@@ -14,13 +14,22 @@ export const metadata = {
   },
 };
 
-async function getData() {
-  try {
-    const data = await kv.get('home_content');
-    if (data && data.sections && data.sections.length > 0) return data;
-  } catch (error) {
-    console.error('Error reading from Vercel KV:', error);
+async function safeKvGet(key, fallback = null) {
+  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+    return fallback;
   }
+  try {
+    const res = await kv.get(key);
+    return res !== null && res !== undefined ? res : fallback;
+  } catch (error) {
+    console.error(`[Vercel KV] Error reading key "${key}":`, error.message);
+    return fallback;
+  }
+}
+
+async function getData() {
+  const data = await safeKvGet('home_content', null);
+  if (data && data.sections && data.sections.length > 0) return data;
   return homeData;
 }
 
@@ -86,9 +95,9 @@ export default async function Home() {
   const [data, allProducts, vitrineConfig, globalConfig, categoryOverrides] = await Promise.all([
     getData(),
     productService.getProducts().catch(() => []),
-    kv.get('vitrine_config').catch(() => null),
-    kv.get('global_content').catch(() => null),
-    kv.get('category_overrides').catch(() => ({}))
+    safeKvGet('vitrine_config', null),
+    safeKvGet('global_content', null),
+    safeKvGet('category_overrides', {})
   ]);
 
   const catOverrides = categoryOverrides || {};

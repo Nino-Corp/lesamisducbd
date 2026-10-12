@@ -142,6 +142,37 @@ export const TEMPLATES = [
         defaultProps: { url: '', title: '', caption: '', backgroundColor: '#1F4B40', videoWidth: 100, videoAlign: 'center' },
     },
     {
+        type: 'VideoCard',
+        label: 'Encadré Vidéo',
+        icon: '🎬',
+        description: 'Vidéo stylisée avec cadre, durée et annotation',
+        category: 'media',
+        defaultProps: {
+            embedType: 'video',
+            embedCode: '',
+            aspectRatio: '16/9',
+            videoUrl: '',
+            thumbnail: '',
+            duration: '',
+            title: 'On vous montre ?',
+            showUnderline: true,
+            badgeIcon: 'camera',
+            buttonText: 'Voir la vidéo →',
+            buttonColor: '#185A48',
+            cardStyle: 'sticker',
+            cardBgColor: '#FAF6EB',
+            cardWidth: 520,
+            rotation: -1.5,
+            cornerDecoration: 'candy',
+            showAnnotation: true,
+            annotationText: 'Poppy vous montre comment doser le CBD dans vos recettes sans se tromper !',
+            annotationPosition: 'right',
+            showArrows: true,
+            marginTop: 'none',
+            marginBottom: 'medium'
+        },
+    },
+    {
         type: 'FAQ',
         label: 'FAQ',
         icon: '❓',
@@ -225,6 +256,121 @@ export const TEMPLATES = [
             showCategory: true,
             columns: 3
         },
+    },
+    {
+        type: 'BlogCategoryFilter',
+        label: 'Filtres & Grille Blog',
+        icon: '📑',
+        description: 'Barre de filtres avec H2 dynamique, recherche et grille d\'articles',
+        category: 'blog',
+        defaultProps: {
+            defaultFilter: 'all',
+            sourceMode: 'auto',
+            columns: 4,
+            showSearch: true,
+            showSort: true,
+            showCountBadges: true,
+            searchPlaceholder: 'Rechercher un article...',
+            filters: [
+                {
+                    id: 'all',
+                    label: 'Tout voir',
+                    icon: 'all',
+                    h2Prefix: 'Tous nos articles',
+                    h2Highlight: 'Cuisine & CBD',
+                    introText: 'Plats salés, desserts, boissons... faites le plein d\'inspiration avec nos recettes gourmandes au CBD.'
+                },
+                {
+                    id: 'recettes',
+                    label: 'Nos recettes',
+                    icon: 'chef',
+                    h2Prefix: 'À vos tabliers,',
+                    h2Highlight: 'on passe en cuisine !',
+                    introText: 'Du salé, du sucré, des classiques revisités et quelques expériences maison pour inviter le CBD dans vos assiettes et dans vos verres.'
+                },
+                {
+                    id: 'astuces',
+                    label: 'Trucs & astuces',
+                    icon: 'lightbulb',
+                    h2Prefix: 'Nos trucs & astuces,',
+                    h2Highlight: 'les secrets des chefs',
+                    introText: 'Dosage, décarboxylation, matières grasses : les techniques indispensables pour cuisiner le CBD sans fausse note.'
+                },
+                {
+                    id: 'fleurs',
+                    label: 'Fleurs & saveurs',
+                    icon: 'flower',
+                    h2Prefix: 'Fleurs & saveurs,',
+                    h2Highlight: 'l’art des terpènes',
+                    introText: 'Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations.'
+                },
+                {
+                    id: 'debuter',
+                    label: 'Bien débuter',
+                    icon: 'book',
+                    h2Prefix: 'Bien débuter,',
+                    h2Highlight: 'votre première recette',
+                    introText: 'Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité.'
+                }
+            ],
+            articles: [
+                {
+                    id: 'art-1',
+                    title: 'Pâtes crémeuses au CBD et parmesan',
+                    badge: 'RECETTE',
+                    filterId: 'recettes',
+                    excerpt: 'Une recette simple et savoureuse pour un dîner tout en douceur !',
+                    image: 'https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png',
+                    readTime: '8 min',
+                    date: '12/08/2024',
+                    href: '/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes'
+                },
+                {
+                    id: 'art-2',
+                    title: 'Comment faire une huile infusée au CBD ?',
+                    badge: 'CONSEIL',
+                    filterId: 'astuces',
+                    excerpt: 'Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.',
+                    image: 'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80',
+                    readTime: '7 min',
+                    date: '15/07/2024',
+                    href: '/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes'
+                },
+                {
+                    id: 'art-3',
+                    title: 'Brownies au CBD : le duo parfait ?',
+                    badge: 'RECETTE',
+                    filterId: 'recettes',
+                    excerpt: 'Un grand classique gourmand à partager (ou pas !).',
+                    image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80',
+                    readTime: '6 min',
+                    date: '28/07/2024',
+                    href: '/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes'
+                },
+                {
+                    id: 'art-4',
+                    title: 'Quelle fleur de CBD choisir pour cuisiner ?',
+                    badge: 'CONSEIL',
+                    filterId: 'fleurs',
+                    excerpt: 'Nos variétés coups de cœur selon vos recettes.',
+                    image: 'https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png',
+                    readTime: '6 min',
+                    date: '01/07/2024',
+                    href: '/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes'
+                },
+                {
+                    id: 'art-5',
+                    title: 'Bien débuter avec le CBD en cuisine : guide débutant',
+                    badge: 'DÉBUTER',
+                    filterId: 'debuter',
+                    excerpt: 'Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.',
+                    image: '/images/usages/cuisine.webp',
+                    readTime: '5 min',
+                    date: '20/06/2024',
+                    href: '/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes'
+                }
+            ]
+        }
     },
     {
         type: 'TableOfContents',
