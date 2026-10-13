@@ -1,0 +1,1427 @@
+[
+  {
+    "savedAt": "2026-10-12T13:31:08.311Z",
+    "title": "Conseils & guides",
+    "sections": [
+      {
+        "id": "codeembed-1791464927062",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 CONSEILS & GUIDES -->\n\n<section class=\"adc-blog-title\">\n  <h1 class=\"adc-blog-title__h1\">\n    Conseils\n    <span class=\"adc-blog-title__highlight\">&amp; guides</span>\n  </h1>\n</section>\n\n<style>\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n  padding: 30px 20px 35px;\n  text-align: center;\n}\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n  color: #123F32;\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n  text-align: center;\n}\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n  white-space: nowrap;\n  z-index: 1;\n}\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n  position: absolute;\n  left: -3%;\n  bottom: 3px;\n  width: 106%;\n  height: 13px;\n  background: #B8D98C;\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n  transform: rotate(-0.8deg);\n  opacity: .85;\n  z-index: -1;\n}\n\n@media (max-width: 700px) {\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n}\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791464958009",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong style=\"font-size: 22px;\">Les&nbsp;bons&nbsp;conseils,&nbsp;c&#39;est&nbsp;encore&nbsp;mieux&nbsp;quand&nbsp;on&nbsp;les&nbsp;partage&nbsp;!</strong></h3><p style=\"text-align: justify;\">Fleurs,&nbsp;résines,&nbsp;variétés,&nbsp;conservation…&nbsp;<strong>Comment&nbsp;bien&nbsp;choisir&nbsp;son&nbsp;CBD&nbsp;?</strong>&nbsp;Comment&nbsp;reconnaître&nbsp;un&nbsp;produit&nbsp;de&nbsp;qualité&nbsp;et&nbsp;éviter&nbsp;les&nbsp;mauvaises&nbsp;surprises&nbsp;?&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver,&nbsp;surtout&nbsp;quand&nbsp;on&nbsp;débute&nbsp;!&nbsp;Heureusement,&nbsp;quelques&nbsp;bons&nbsp;réflexes&nbsp;peuvent&nbsp;faire&nbsp;toute&nbsp;la&nbsp;différence.</p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;tester,&nbsp;comparer&nbsp;et&nbsp;partager&nbsp;nos&nbsp;découvertes.&nbsp;Alors,&nbsp;on&nbsp;a&nbsp;réuni&nbsp;ici&nbsp;nos&nbsp;<strong>guides&nbsp;CBD,&nbsp;astuces&nbsp;et&nbsp;conseils&nbsp;pratiques</strong>&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;faire&nbsp;les&nbsp;bons&nbsp;choix,&nbsp;sans&nbsp;vous&nbsp;compliquer&nbsp;la&nbsp;vie.&nbsp;<strong>Des&nbsp;infos&nbsp;utiles,&nbsp;du&nbsp;bon&nbsp;sens&nbsp;et&nbsp;quelques&nbsp;tuyaux&nbsp;entre&nbsp;potes…&nbsp;c&#39;est&nbsp;aussi&nbsp;simple&nbsp;que&nbsp;ça&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791465091/lesamisducbd/partners/ee2f2vzu5dfddt4j5tqc.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791809091297",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Les bons conseils",
+              "h2Highlight": ", ça se partage !",
+              "introText": "Choisir ses fleurs de CBD, comparer les résines, décrypter les étiquettes, conserver ses produits… Pas toujours facile de s'y retrouver ! Chez Les Amis du CBD, on partage nos conseils pratiques et guides d'achat CBD pour vous aider à faire des choix éclairés, éviter les pièges et profiter au mieux de vos produits. Parce qu'entre potes, les bons tuyaux, ça se partage !"
+            },
+            {
+              "id": "recettes",
+              "label": "Bien choisir son CBD",
+              "icon": "lightbulb",
+              "h2Prefix": "Le bon CBD, ",
+              "h2Highlight": "ça ne se choisit pas au hasard !",
+              "introText": "Fleurs ou résines ? Petites fleurs ou variétés premium ? Quels critères regarder avant d'acheter ? On vous aide à choisir votre CBD, comparer les produits, comprendre les différences de prix et reconnaître les signes de qualité. De quoi dénicher la bonne pépite, sans se faire raconter de salades !"
+            },
+            {
+              "id": "astuces",
+              "label": "Qualité & conservation",
+              "icon": "flower",
+              "h2Prefix": "Un bon CBD, ça se reconnaît… ",
+              "h2Highlight": "et ça se conserve !",
+              "introText": "Analyses de laboratoire, traçabilité, fraîcheur, humidité, emballage… Comment reconnaître un CBD de qualité et bien conserver ses fleurs ou résines ? On partage nos astuces pour décrypter les informations des produits, repérer les signes de dégradation et préserver leurs caractéristiques. Quelques bons réflexes, et le tour est joué !"
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      },
+      {
+        "id": "codeembed-1791811842172",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "<!-- =====================================================\n     AUTRES UNIVERS — LES AMIS DU CBD\n     SANS H2 : LE TITRE EST GÉRÉ SÉPARÉMENT\n===================================================== -->\n\n<section class=\"adc-univers\">\n\n  <div class=\"adc-univers__grid\">\n\n\n    <!-- 1. COMPRENDRE LE CBD -->\n    <a href=\"/p/comprendre-le-cbd\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790679941/lesamisducbd/partners/awpda3n4j3iwaxgxhcky.png\"\n          alt=\"Comprendre le CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Comprendre le CBD\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 2. CBD & USAGES -->\n    <a href=\"/p/cbd-usages\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680745/lesamisducbd/partners/idrls6aokyqq7bx7cmkq.png\"\n          alt=\"CBD et usages\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          CBD &amp; usages\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 3. CUISINE & CBD -->\n    <a href=\"/p/cuisine-cbd\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680623/lesamisducbd/partners/eotyqdyqoi9hzfntiy6t.png\"\n          alt=\"Cuisine et CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n        <span class=\"adc-univers__name\">\n          Cuisine &amp; CBD\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n      </div>\n\n    </a>\n\n\n    <!-- 4. COULISSES DES AMIS -->\n    <a href=\"/p/coulisses-des-amis\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680851/lesamisducbd/partners/wiqquiwlphufen57p71r.png\"\n          alt=\"Les coulisses des Amis du CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Coulisses des Amis\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 5. CULTURE DU CHANVRE & CBD -->\n    <a href=\"/p/culture-du-chanvre\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680921/lesamisducbd/partners/rjijcvlodah8guzczdpi.png\"\n          alt=\"Culture du Chanvre\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Culture du Chanvre\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n  </div>\n\n</section>\n\n\n<style>\n\n/* =====================================================\n   SECTION\n===================================================== */\n\n.adc-univers {\n  width: calc(100% - 50px);\n  max-width: 1450px;\n\n  margin: 30px auto 70px;\n\n  font-family: inherit;\n\n  background: transparent;\n}\n\n\n/* =====================================================\n   GRILLE — 5 CARTES SUR UNE LIGNE\n===================================================== */\n\n.adc-univers__grid {\n  display: grid;\n\n  grid-template-columns: repeat(5, minmax(0, 1fr));\n\n  gap: 16px;\n}\n\n\n/* =====================================================\n   CARTE\n===================================================== */\n\n.adc-univers__card {\n  position: relative;\n\n  min-width: 0;\n\n  display: block;\n\n  overflow: hidden;\n\n  background: transparent;\n\n  border: 1px solid rgba(18, 63, 50, .07);\n\n  border-radius: 20px;\n\n  color: #123F32;\n\n  text-decoration: none;\n\n  box-shadow:\n    0 7px 20px rgba(18, 63, 50, .07),\n    0 2px 6px rgba(18, 63, 50, .03);\n\n  transition:\n    transform .32s cubic-bezier(.2,.8,.2,1),\n    box-shadow .32s ease,\n    border-color .32s ease;\n}\n\n\n/* =====================================================\n   IMAGE\n===================================================== */\n\n.adc-univers__image {\n  position: relative;\n\n  width: 100%;\n\n  overflow: hidden;\n\n  margin: 0;\n\n  aspect-ratio: 1.65 / 1;\n\n  border-radius: 19px 19px 0 0;\n}\n\n\n.adc-univers__image img {\n  display: block;\n\n  width: 100%;\n  height: 100%;\n\n  object-fit: cover;\n\n  transition:\n    transform .6s cubic-bezier(.2,.8,.2,1);\n}\n\n\n/* =====================================================\n   BAS DE CARTE\n===================================================== */\n\n.adc-univers__bottom {\n  min-height: 68px;\n\n  padding: 15px 16px;\n\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n\n  gap: 10px;\n\n  box-sizing: border-box;\n\n  background: transparent;\n}\n\n\n/* =====================================================\n   NOM DE L'UNIVERS\n===================================================== */\n\n.adc-univers__name {\n  min-width: 0;\n\n  display: flex;\n  align-items: center;\n\n  gap: 9px;\n\n  color: #123F32;\n\n  font-family: inherit;\n\n  font-size: 15px;\n  font-weight: 800;\n\n  line-height: 1.25;\n}\n\n\n/* =====================================================\n   FLÈCHE\n===================================================== */\n\n.adc-univers__arrow {\n  flex: 0 0 auto;\n\n  display: flex;\n  align-items: center;\n  justify-content: center;\n\n  width: 30px;\n  height: 30px;\n\n  border-radius: 0;\n\n  background: transparent;\n\n  color: #123F32;\n\n  font-size: 18px;\n  font-weight: 800;\n\n  line-height: 1;\n\n  box-shadow: none;\n\n  transition:\n    transform .3s ease,\n    background .3s ease,\n    color .3s ease;\n}\n\n\n/* =====================================================\n   SURVOL — OMBRE + LÉGÈRE MONTÉE\n===================================================== */\n\n.adc-univers__card:hover {\n  transform: translateY(-7px);\n\n  border-color: rgba(18, 63, 50, .14);\n\n  box-shadow:\n    0 22px 40px rgba(18, 63, 50, .15),\n    0 7px 15px rgba(18, 63, 50, .07);\n}\n\n\n/* =====================================================\n   ZOOM PHOTO AU SURVOL\n===================================================== */\n\n.adc-univers__card:hover\n.adc-univers__image img {\n  transform: scale(1.055);\n}\n\n\n/* =====================================================\n   FLÈCHE AU SURVOL\n===================================================== */\n\n.adc-univers__card:hover\n.adc-univers__arrow {\n  transform: translateX(3px);\n\n  background: transparent;\n\n  color: #123F32;\n}\n\n\n/* =====================================================\n   REFLET TRÈS LÉGER AU SURVOL\n===================================================== */\n\n.adc-univers__card::after {\n  content: \"\";\n\n  position: absolute;\n\n  inset: 0;\n\n  pointer-events: none;\n\n  background:\n    linear-gradient(\n      120deg,\n      transparent 20%,\n      rgba(255, 255, 255, .18) 45%,\n      transparent 70%\n    );\n\n  transform: translateX(-120%);\n\n  transition:\n    transform .65s ease;\n}\n\n\n.adc-univers__card:hover::after {\n  transform: translateX(120%);\n}\n\n\n/* =====================================================\n   ÉCRANS INTERMÉDIAIRES\n===================================================== */\n\n@media (max-width: 1100px) {\n\n  .adc-univers__grid {\n    grid-template-columns: repeat(3, 1fr);\n  }\n\n}\n\n\n/* =====================================================\n   TABLETTE\n===================================================== */\n\n@media (max-width: 760px) {\n\n  .adc-univers {\n    width: calc(100% - 36px);\n\n    margin: 25px auto 55px;\n  }\n\n\n  .adc-univers__grid {\n    grid-template-columns: repeat(2, 1fr);\n\n    gap: 14px;\n  }\n\n\n  .adc-univers__card:hover {\n    transform: none;\n  }\n\n}\n\n\n/* =====================================================\n   MOBILE\n===================================================== */\n\n@media (max-width: 480px) {\n\n  .adc-univers {\n    width: calc(100% - 30px);\n\n    margin: 20px auto 50px;\n  }\n\n\n  .adc-univers__grid {\n    grid-template-columns: 1fr;\n\n    gap: 16px;\n  }\n\n\n  .adc-univers__image {\n    aspect-ratio: 1.9 / 1;\n  }\n\n\n  .adc-univers__bottom {\n    min-height: 65px;\n\n    padding: 14px 15px;\n  }\n\n\n  .adc-univers__name {\n    font-size: 15px;\n  }\n\n}\n\n\n/* =====================================================\n   ACCESSIBILITÉ\n===================================================== */\n\n@media (prefers-reduced-motion: reduce) {\n\n  .adc-univers__card,\n  .adc-univers__image img,\n  .adc-univers__arrow,\n  .adc-univers__card::after {\n    transition: none;\n  }\n\n\n  .adc-univers__card:hover {\n    transform: none;\n  }\n\n\n  .adc-univers__card:hover\n  .adc-univers__image img {\n    transform: none;\n  }\n\n}\n\n</style>"
+        }
+      },
+      {
+        "id": "codeembed-1791811857746",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<h2 class=\"adc-univers-heading\">\n  Nos autres\n  <span class=\"adc-univers-highlight\">\n    univers d’articles\n    <svg viewBox=\"0 0 330 22\"\n         preserveAspectRatio=\"none\"\n         aria-hidden=\"true\">\n      <path d=\"M6 15 C90 5, 235 5, 324 13\" />\n    </svg>\n  </span>\n</h2>\n\n<style>\n.adc-univers-heading {\n  margin: 0;\n  margin-left: 30px;\n  color: #123F32;\n  font-family: inherit;\n  font-size: 42px;\n  font-weight: 800;\n  line-height: 1.2;\n  letter-spacing: -0.8px;\n}\n\n/* TEXTE SOULIGNÉ */\n.adc-univers-highlight {\n  position: relative;\n  display: inline-block;\n  padding-bottom: 9px;\n}\n\n/* TRAIT VERT MANUSCRIT */\n.adc-univers-highlight svg {\n  position: absolute;\n  left: 0;\n  bottom: -1px;\n  width: 100%;\n  height: 10px;\n  overflow: visible;\n}\n\n.adc-univers-highlight path {\n  fill: none;\n  stroke: #087D45;\n  stroke-width: 4;\n  stroke-linecap: round;\n  stroke-dasharray: 380;\n  stroke-dashoffset: 0;\n}\n\n/* ANIMATION AU SURVOL */\n.adc-univers-heading:hover path {\n  animation: adc-univers-draw 1s ease forwards;\n}\n\n@keyframes adc-univers-draw {\n  from {\n    stroke-dashoffset: 380;\n  }\n  to {\n    stroke-dashoffset: 0;\n  }\n}\n\n/* MOBILE */\n@media (max-width: 700px) {\n  .adc-univers-heading {\n    margin-left: 15px;\n    font-size: 32px;\n    line-height: 1.2;\n    letter-spacing: -0.5px;\n  }\n\n  .adc-univers-highlight {\n    padding-bottom: 8px;\n  }\n\n  .adc-univers-highlight svg {\n    height: 8px;\n  }\n}\n</style>\n"
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaTitle": "Conseils CBD : guides pour bien choisir | Les Amis du CBD",
+      "metaDescription": "Comment choisir son CBD ? Qualité, fleurs, résines, conservation et astuces : découvrez nos guides et conseils CBD pour faire les bons choix.",
+      "focusKeyword": "conseils CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791464897/lesamisducbd/partners/b5btvee9idf7gr4nxtn8.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T13:31:01.708Z",
+    "title": "Conseils & guides",
+    "sections": [
+      {
+        "id": "codeembed-1791464927062",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 CONSEILS & GUIDES -->\n\n<section class=\"adc-blog-title\">\n  <h1 class=\"adc-blog-title__h1\">\n    Conseils\n    <span class=\"adc-blog-title__highlight\">&amp; guides</span>\n  </h1>\n</section>\n\n<style>\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n  padding: 30px 20px 35px;\n  text-align: center;\n}\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n  color: #123F32;\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n  text-align: center;\n}\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n  white-space: nowrap;\n  z-index: 1;\n}\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n  position: absolute;\n  left: -3%;\n  bottom: 3px;\n  width: 106%;\n  height: 13px;\n  background: #B8D98C;\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n  transform: rotate(-0.8deg);\n  opacity: .85;\n  z-index: -1;\n}\n\n@media (max-width: 700px) {\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n}\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791464958009",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong style=\"font-size: 22px;\">Les&nbsp;bons&nbsp;conseils,&nbsp;c&#39;est&nbsp;encore&nbsp;mieux&nbsp;quand&nbsp;on&nbsp;les&nbsp;partage&nbsp;!</strong></h3><p style=\"text-align: justify;\">Fleurs,&nbsp;résines,&nbsp;variétés,&nbsp;conservation…&nbsp;<strong>Comment&nbsp;bien&nbsp;choisir&nbsp;son&nbsp;CBD&nbsp;?</strong>&nbsp;Comment&nbsp;reconnaître&nbsp;un&nbsp;produit&nbsp;de&nbsp;qualité&nbsp;et&nbsp;éviter&nbsp;les&nbsp;mauvaises&nbsp;surprises&nbsp;?&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver,&nbsp;surtout&nbsp;quand&nbsp;on&nbsp;débute&nbsp;!&nbsp;Heureusement,&nbsp;quelques&nbsp;bons&nbsp;réflexes&nbsp;peuvent&nbsp;faire&nbsp;toute&nbsp;la&nbsp;différence.</p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;tester,&nbsp;comparer&nbsp;et&nbsp;partager&nbsp;nos&nbsp;découvertes.&nbsp;Alors,&nbsp;on&nbsp;a&nbsp;réuni&nbsp;ici&nbsp;nos&nbsp;<strong>guides&nbsp;CBD,&nbsp;astuces&nbsp;et&nbsp;conseils&nbsp;pratiques</strong>&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;faire&nbsp;les&nbsp;bons&nbsp;choix,&nbsp;sans&nbsp;vous&nbsp;compliquer&nbsp;la&nbsp;vie.&nbsp;<strong>Des&nbsp;infos&nbsp;utiles,&nbsp;du&nbsp;bon&nbsp;sens&nbsp;et&nbsp;quelques&nbsp;tuyaux&nbsp;entre&nbsp;potes…&nbsp;c&#39;est&nbsp;aussi&nbsp;simple&nbsp;que&nbsp;ça&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791465091/lesamisducbd/partners/ee2f2vzu5dfddt4j5tqc.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791809091297",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Les bons conseils",
+              "h2Highlight": ", ça se partage !",
+              "introText": "Choisir ses fleurs de CBD, comparer les résines, décrypter les étiquettes, conserver ses produits… Pas toujours facile de s'y retrouver ! Chez Les Amis du CBD, on partage nos conseils pratiques et guides d'achat CBD pour vous aider à faire des choix éclairés, éviter les pièges et profiter au mieux de vos produits. Parce qu'entre potes, les bons tuyaux, ça se partage !"
+            },
+            {
+              "id": "recettes",
+              "label": "Bien choisir son CBD",
+              "icon": "lightbulb",
+              "h2Prefix": "Le bon CBD, ",
+              "h2Highlight": "ça ne se choisit pas au hasard !",
+              "introText": "Fleurs ou résines ? Petites fleurs ou variétés premium ? Quels critères regarder avant d'acheter ? On vous aide à choisir votre CBD, comparer les produits, comprendre les différences de prix et reconnaître les signes de qualité. De quoi dénicher la bonne pépite, sans se faire raconter de salades !"
+            },
+            {
+              "id": "astuces",
+              "label": "Qualité & conservation",
+              "icon": "flower",
+              "h2Prefix": "Un bon CBD, ça se reconnaît… ",
+              "h2Highlight": "et ça se conserve !",
+              "introText": "Analyses de laboratoire, traçabilité, fraîcheur, humidité, emballage… Comment reconnaître un CBD de qualité et bien conserver ses fleurs ou résines ? On partage nos astuces pour décrypter les informations des produits, repérer les signes de dégradation et préserver leurs caractéristiques. Quelques bons réflexes, et le tour est joué !"
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      },
+      {
+        "id": "codeembed-1791811842172",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "<!-- =====================================================\n     AUTRES UNIVERS — LES AMIS DU CBD\n     SANS H2 : LE TITRE EST GÉRÉ SÉPARÉMENT\n===================================================== -->\n\n<section class=\"adc-univers\">\n\n  <div class=\"adc-univers__grid\">\n\n\n    <!-- 1. COMPRENDRE LE CBD -->\n    <a href=\"/p/comprendre-le-cbd\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790679941/lesamisducbd/partners/awpda3n4j3iwaxgxhcky.png\"\n          alt=\"Comprendre le CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Comprendre le CBD\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 2. CBD & USAGES -->\n    <a href=\"/p/cbd-usages\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680745/lesamisducbd/partners/idrls6aokyqq7bx7cmkq.png\"\n          alt=\"CBD et usages\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          CBD &amp; usages\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 3. CUISINE & CBD -->\n    <a href=\"/p/cuisine-cbd\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680623/lesamisducbd/partners/eotyqdyqoi9hzfntiy6t.png\"\n          alt=\"Cuisine et CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n        <span class=\"adc-univers__name\">\n          Cuisine &amp; CBD\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n      </div>\n\n    </a>\n\n\n    <!-- 4. COULISSES DES AMIS -->\n    <a href=\"/p/coulisses-des-amis\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680851/lesamisducbd/partners/wiqquiwlphufen57p71r.png\"\n          alt=\"Les coulisses des Amis du CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Coulisses des Amis\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 5. CULTURE DU CHANVRE & CBD -->\n    <a href=\"/p/culture-du-chanvre\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680921/lesamisducbd/partners/rjijcvlodah8guzczdpi.png\"\n          alt=\"Culture du Chanvre\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Culture du Chanvre\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n  </div>\n\n</section>\n\n\n<style>\n\n/* =====================================================\n   SECTION\n===================================================== */\n\n.adc-univers {\n  width: calc(100% - 50px);\n  max-width: 1450px;\n\n  margin: 30px auto 70px;\n\n  font-family: inherit;\n\n  background: transparent;\n}\n\n\n/* =====================================================\n   GRILLE — 5 CARTES SUR UNE LIGNE\n===================================================== */\n\n.adc-univers__grid {\n  display: grid;\n\n  grid-template-columns: repeat(5, minmax(0, 1fr));\n\n  gap: 16px;\n}\n\n\n/* =====================================================\n   CARTE\n===================================================== */\n\n.adc-univers__card {\n  position: relative;\n\n  min-width: 0;\n\n  display: block;\n\n  overflow: hidden;\n\n  background: transparent;\n\n  border: 1px solid rgba(18, 63, 50, .07);\n\n  border-radius: 20px;\n\n  color: #123F32;\n\n  text-decoration: none;\n\n  box-shadow:\n    0 7px 20px rgba(18, 63, 50, .07),\n    0 2px 6px rgba(18, 63, 50, .03);\n\n  transition:\n    transform .32s cubic-bezier(.2,.8,.2,1),\n    box-shadow .32s ease,\n    border-color .32s ease;\n}\n\n\n/* =====================================================\n   IMAGE\n===================================================== */\n\n.adc-univers__image {\n  position: relative;\n\n  width: 100%;\n\n  overflow: hidden;\n\n  margin: 0;\n\n  aspect-ratio: 1.65 / 1;\n\n  border-radius: 19px 19px 0 0;\n}\n\n\n.adc-univers__image img {\n  display: block;\n\n  width: 100%;\n  height: 100%;\n\n  object-fit: cover;\n\n  transition:\n    transform .6s cubic-bezier(.2,.8,.2,1);\n}\n\n\n/* =====================================================\n   BAS DE CARTE\n===================================================== */\n\n.adc-univers__bottom {\n  min-height: 68px;\n\n  padding: 15px 16px;\n\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n\n  gap: 10px;\n\n  box-sizing: border-box;\n\n  background: transparent;\n}\n\n\n/* =====================================================\n   NOM DE L'UNIVERS\n===================================================== */\n\n.adc-univers__name {\n  min-width: 0;\n\n  display: flex;\n  align-items: center;\n\n  gap: 9px;\n\n  color: #123F32;\n\n  font-family: inherit;\n\n  font-size: 15px;\n  font-weight: 800;\n\n  line-height: 1.25;\n}\n\n\n/* =====================================================\n   FLÈCHE\n===================================================== */\n\n.adc-univers__arrow {\n  flex: 0 0 auto;\n\n  display: flex;\n  align-items: center;\n  justify-content: center;\n\n  width: 30px;\n  height: 30px;\n\n  border-radius: 0;\n\n  background: transparent;\n\n  color: #123F32;\n\n  font-size: 18px;\n  font-weight: 800;\n\n  line-height: 1;\n\n  box-shadow: none;\n\n  transition:\n    transform .3s ease,\n    background .3s ease,\n    color .3s ease;\n}\n\n\n/* =====================================================\n   SURVOL — OMBRE + LÉGÈRE MONTÉE\n===================================================== */\n\n.adc-univers__card:hover {\n  transform: translateY(-7px);\n\n  border-color: rgba(18, 63, 50, .14);\n\n  box-shadow:\n    0 22px 40px rgba(18, 63, 50, .15),\n    0 7px 15px rgba(18, 63, 50, .07);\n}\n\n\n/* =====================================================\n   ZOOM PHOTO AU SURVOL\n===================================================== */\n\n.adc-univers__card:hover\n.adc-univers__image img {\n  transform: scale(1.055);\n}\n\n\n/* =====================================================\n   FLÈCHE AU SURVOL\n===================================================== */\n\n.adc-univers__card:hover\n.adc-univers__arrow {\n  transform: translateX(3px);\n\n  background: transparent;\n\n  color: #123F32;\n}\n\n\n/* =====================================================\n   REFLET TRÈS LÉGER AU SURVOL\n===================================================== */\n\n.adc-univers__card::after {\n  content: \"\";\n\n  position: absolute;\n\n  inset: 0;\n\n  pointer-events: none;\n\n  background:\n    linear-gradient(\n      120deg,\n      transparent 20%,\n      rgba(255, 255, 255, .18) 45%,\n      transparent 70%\n    );\n\n  transform: translateX(-120%);\n\n  transition:\n    transform .65s ease;\n}\n\n\n.adc-univers__card:hover::after {\n  transform: translateX(120%);\n}\n\n\n/* =====================================================\n   ÉCRANS INTERMÉDIAIRES\n===================================================== */\n\n@media (max-width: 1100px) {\n\n  .adc-univers__grid {\n    grid-template-columns: repeat(3, 1fr);\n  }\n\n}\n\n\n/* =====================================================\n   TABLETTE\n===================================================== */\n\n@media (max-width: 760px) {\n\n  .adc-univers {\n    width: calc(100% - 36px);\n\n    margin: 25px auto 55px;\n  }\n\n\n  .adc-univers__grid {\n    grid-template-columns: repeat(2, 1fr);\n\n    gap: 14px;\n  }\n\n\n  .adc-univers__card:hover {\n    transform: none;\n  }\n\n}\n\n\n/* =====================================================\n   MOBILE\n===================================================== */\n\n@media (max-width: 480px) {\n\n  .adc-univers {\n    width: calc(100% - 30px);\n\n    margin: 20px auto 50px;\n  }\n\n\n  .adc-univers__grid {\n    grid-template-columns: 1fr;\n\n    gap: 16px;\n  }\n\n\n  .adc-univers__image {\n    aspect-ratio: 1.9 / 1;\n  }\n\n\n  .adc-univers__bottom {\n    min-height: 65px;\n\n    padding: 14px 15px;\n  }\n\n\n  .adc-univers__name {\n    font-size: 15px;\n  }\n\n}\n\n\n/* =====================================================\n   ACCESSIBILITÉ\n===================================================== */\n\n@media (prefers-reduced-motion: reduce) {\n\n  .adc-univers__card,\n  .adc-univers__image img,\n  .adc-univers__arrow,\n  .adc-univers__card::after {\n    transition: none;\n  }\n\n\n  .adc-univers__card:hover {\n    transform: none;\n  }\n\n\n  .adc-univers__card:hover\n  .adc-univers__image img {\n    transform: none;\n  }\n\n}\n\n</style>"
+        }
+      },
+      {
+        "id": "codeembed-1791811857746",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "<div style=\"padding:20px; background:#f0f0f0; text-align:center;\">Code HTML personnalisé ici</div>"
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaTitle": "Conseils CBD : guides pour bien choisir | Les Amis du CBD",
+      "metaDescription": "Comment choisir son CBD ? Qualité, fleurs, résines, conservation et astuces : découvrez nos guides et conseils CBD pour faire les bons choix.",
+      "focusKeyword": "conseils CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791464897/lesamisducbd/partners/b5btvee9idf7gr4nxtn8.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T13:30:47.989Z",
+    "title": "Conseils & guides",
+    "sections": [
+      {
+        "id": "codeembed-1791464927062",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 CONSEILS & GUIDES -->\n\n<section class=\"adc-blog-title\">\n  <h1 class=\"adc-blog-title__h1\">\n    Conseils\n    <span class=\"adc-blog-title__highlight\">&amp; guides</span>\n  </h1>\n</section>\n\n<style>\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n  padding: 30px 20px 35px;\n  text-align: center;\n}\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n  color: #123F32;\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n  text-align: center;\n}\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n  white-space: nowrap;\n  z-index: 1;\n}\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n  position: absolute;\n  left: -3%;\n  bottom: 3px;\n  width: 106%;\n  height: 13px;\n  background: #B8D98C;\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n  transform: rotate(-0.8deg);\n  opacity: .85;\n  z-index: -1;\n}\n\n@media (max-width: 700px) {\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n}\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791464958009",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong style=\"font-size: 22px;\">Les&nbsp;bons&nbsp;conseils,&nbsp;c&#39;est&nbsp;encore&nbsp;mieux&nbsp;quand&nbsp;on&nbsp;les&nbsp;partage&nbsp;!</strong></h3><p style=\"text-align: justify;\">Fleurs,&nbsp;résines,&nbsp;variétés,&nbsp;conservation…&nbsp;<strong>Comment&nbsp;bien&nbsp;choisir&nbsp;son&nbsp;CBD&nbsp;?</strong>&nbsp;Comment&nbsp;reconnaître&nbsp;un&nbsp;produit&nbsp;de&nbsp;qualité&nbsp;et&nbsp;éviter&nbsp;les&nbsp;mauvaises&nbsp;surprises&nbsp;?&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver,&nbsp;surtout&nbsp;quand&nbsp;on&nbsp;débute&nbsp;!&nbsp;Heureusement,&nbsp;quelques&nbsp;bons&nbsp;réflexes&nbsp;peuvent&nbsp;faire&nbsp;toute&nbsp;la&nbsp;différence.</p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;tester,&nbsp;comparer&nbsp;et&nbsp;partager&nbsp;nos&nbsp;découvertes.&nbsp;Alors,&nbsp;on&nbsp;a&nbsp;réuni&nbsp;ici&nbsp;nos&nbsp;<strong>guides&nbsp;CBD,&nbsp;astuces&nbsp;et&nbsp;conseils&nbsp;pratiques</strong>&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;faire&nbsp;les&nbsp;bons&nbsp;choix,&nbsp;sans&nbsp;vous&nbsp;compliquer&nbsp;la&nbsp;vie.&nbsp;<strong>Des&nbsp;infos&nbsp;utiles,&nbsp;du&nbsp;bon&nbsp;sens&nbsp;et&nbsp;quelques&nbsp;tuyaux&nbsp;entre&nbsp;potes…&nbsp;c&#39;est&nbsp;aussi&nbsp;simple&nbsp;que&nbsp;ça&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791465091/lesamisducbd/partners/ee2f2vzu5dfddt4j5tqc.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791809091297",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Les bons conseils",
+              "h2Highlight": ", ça se partage !",
+              "introText": "Choisir ses fleurs de CBD, comparer les résines, décrypter les étiquettes, conserver ses produits… Pas toujours facile de s'y retrouver ! Chez Les Amis du CBD, on partage nos conseils pratiques et guides d'achat CBD pour vous aider à faire des choix éclairés, éviter les pièges et profiter au mieux de vos produits. Parce qu'entre potes, les bons tuyaux, ça se partage !"
+            },
+            {
+              "id": "recettes",
+              "label": "Bien choisir son CBD",
+              "icon": "lightbulb",
+              "h2Prefix": "Le bon CBD, ",
+              "h2Highlight": "ça ne se choisit pas au hasard !",
+              "introText": "Fleurs ou résines ? Petites fleurs ou variétés premium ? Quels critères regarder avant d'acheter ? On vous aide à choisir votre CBD, comparer les produits, comprendre les différences de prix et reconnaître les signes de qualité. De quoi dénicher la bonne pépite, sans se faire raconter de salades !"
+            },
+            {
+              "id": "astuces",
+              "label": "Qualité & conservation",
+              "icon": "flower",
+              "h2Prefix": "Un bon CBD, ça se reconnaît… ",
+              "h2Highlight": "et ça se conserve !",
+              "introText": "Analyses de laboratoire, traçabilité, fraîcheur, humidité, emballage… Comment reconnaître un CBD de qualité et bien conserver ses fleurs ou résines ? On partage nos astuces pour décrypter les informations des produits, repérer les signes de dégradation et préserver leurs caractéristiques. Quelques bons réflexes, et le tour est joué !"
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      },
+      {
+        "id": "codeembed-1791811842172",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "<!-- =====================================================\n     AUTRES UNIVERS — LES AMIS DU CBD\n     SANS H2 : LE TITRE EST GÉRÉ SÉPARÉMENT\n===================================================== -->\n\n<section class=\"adc-univers\">\n\n  <div class=\"adc-univers__grid\">\n\n\n    <!-- 1. COMPRENDRE LE CBD -->\n    <a href=\"/p/comprendre-le-cbd\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790679941/lesamisducbd/partners/awpda3n4j3iwaxgxhcky.png\"\n          alt=\"Comprendre le CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Comprendre le CBD\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 2. CBD & USAGES -->\n    <a href=\"/p/cbd-usages\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680745/lesamisducbd/partners/idrls6aokyqq7bx7cmkq.png\"\n          alt=\"CBD et usages\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          CBD &amp; usages\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 3. CUISINE & CBD -->\n    <a href=\"/p/cuisine-cbd\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680623/lesamisducbd/partners/eotyqdyqoi9hzfntiy6t.png\"\n          alt=\"Cuisine et CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n        <span class=\"adc-univers__name\">\n          Cuisine &amp; CBD\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n      </div>\n\n    </a>\n\n\n    <!-- 4. COULISSES DES AMIS -->\n    <a href=\"/p/coulisses-des-amis\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680851/lesamisducbd/partners/wiqquiwlphufen57p71r.png\"\n          alt=\"Les coulisses des Amis du CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Coulisses des Amis\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 5. CULTURE DU CHANVRE & CBD -->\n    <a href=\"/p/culture-du-chanvre\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680921/lesamisducbd/partners/rjijcvlodah8guzczdpi.png\"\n          alt=\"Culture du Chanvre\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Culture du Chanvre\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n  </div>\n\n</section>\n\n\n<style>\n\n/* =====================================================\n   SECTION\n===================================================== */\n\n.adc-univers {\n  width: calc(100% - 50px);\n  max-width: 1450px;\n\n  margin: 30px auto 70px;\n\n  font-family: inherit;\n\n  background: transparent;\n}\n\n\n/* =====================================================\n   GRILLE — 5 CARTES SUR UNE LIGNE\n===================================================== */\n\n.adc-univers__grid {\n  display: grid;\n\n  grid-template-columns: repeat(5, minmax(0, 1fr));\n\n  gap: 16px;\n}\n\n\n/* =====================================================\n   CARTE\n===================================================== */\n\n.adc-univers__card {\n  position: relative;\n\n  min-width: 0;\n\n  display: block;\n\n  overflow: hidden;\n\n  background: transparent;\n\n  border: 1px solid rgba(18, 63, 50, .07);\n\n  border-radius: 20px;\n\n  color: #123F32;\n\n  text-decoration: none;\n\n  box-shadow:\n    0 7px 20px rgba(18, 63, 50, .07),\n    0 2px 6px rgba(18, 63, 50, .03);\n\n  transition:\n    transform .32s cubic-bezier(.2,.8,.2,1),\n    box-shadow .32s ease,\n    border-color .32s ease;\n}\n\n\n/* =====================================================\n   IMAGE\n===================================================== */\n\n.adc-univers__image {\n  position: relative;\n\n  width: 100%;\n\n  overflow: hidden;\n\n  margin: 0;\n\n  aspect-ratio: 1.65 / 1;\n\n  border-radius: 19px 19px 0 0;\n}\n\n\n.adc-univers__image img {\n  display: block;\n\n  width: 100%;\n  height: 100%;\n\n  object-fit: cover;\n\n  transition:\n    transform .6s cubic-bezier(.2,.8,.2,1);\n}\n\n\n/* =====================================================\n   BAS DE CARTE\n===================================================== */\n\n.adc-univers__bottom {\n  min-height: 68px;\n\n  padding: 15px 16px;\n\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n\n  gap: 10px;\n\n  box-sizing: border-box;\n\n  background: transparent;\n}\n\n\n/* =====================================================\n   NOM DE L'UNIVERS\n===================================================== */\n\n.adc-univers__name {\n  min-width: 0;\n\n  display: flex;\n  align-items: center;\n\n  gap: 9px;\n\n  color: #123F32;\n\n  font-family: inherit;\n\n  font-size: 15px;\n  font-weight: 800;\n\n  line-height: 1.25;\n}\n\n\n/* =====================================================\n   FLÈCHE\n===================================================== */\n\n.adc-univers__arrow {\n  flex: 0 0 auto;\n\n  display: flex;\n  align-items: center;\n  justify-content: center;\n\n  width: 30px;\n  height: 30px;\n\n  border-radius: 0;\n\n  background: transparent;\n\n  color: #123F32;\n\n  font-size: 18px;\n  font-weight: 800;\n\n  line-height: 1;\n\n  box-shadow: none;\n\n  transition:\n    transform .3s ease,\n    background .3s ease,\n    color .3s ease;\n}\n\n\n/* =====================================================\n   SURVOL — OMBRE + LÉGÈRE MONTÉE\n===================================================== */\n\n.adc-univers__card:hover {\n  transform: translateY(-7px);\n\n  border-color: rgba(18, 63, 50, .14);\n\n  box-shadow:\n    0 22px 40px rgba(18, 63, 50, .15),\n    0 7px 15px rgba(18, 63, 50, .07);\n}\n\n\n/* =====================================================\n   ZOOM PHOTO AU SURVOL\n===================================================== */\n\n.adc-univers__card:hover\n.adc-univers__image img {\n  transform: scale(1.055);\n}\n\n\n/* =====================================================\n   FLÈCHE AU SURVOL\n===================================================== */\n\n.adc-univers__card:hover\n.adc-univers__arrow {\n  transform: translateX(3px);\n\n  background: transparent;\n\n  color: #123F32;\n}\n\n\n/* =====================================================\n   REFLET TRÈS LÉGER AU SURVOL\n===================================================== */\n\n.adc-univers__card::after {\n  content: \"\";\n\n  position: absolute;\n\n  inset: 0;\n\n  pointer-events: none;\n\n  background:\n    linear-gradient(\n      120deg,\n      transparent 20%,\n      rgba(255, 255, 255, .18) 45%,\n      transparent 70%\n    );\n\n  transform: translateX(-120%);\n\n  transition:\n    transform .65s ease;\n}\n\n\n.adc-univers__card:hover::after {\n  transform: translateX(120%);\n}\n\n\n/* =====================================================\n   ÉCRANS INTERMÉDIAIRES\n===================================================== */\n\n@media (max-width: 1100px) {\n\n  .adc-univers__grid {\n    grid-template-columns: repeat(3, 1fr);\n  }\n\n}\n\n\n/* =====================================================\n   TABLETTE\n===================================================== */\n\n@media (max-width: 760px) {\n\n  .adc-univers {\n    width: calc(100% - 36px);\n\n    margin: 25px auto 55px;\n  }\n\n\n  .adc-univers__grid {\n    grid-template-columns: repeat(2, 1fr);\n\n    gap: 14px;\n  }\n\n\n  .adc-univers__card:hover {\n    transform: none;\n  }\n\n}\n\n\n/* =====================================================\n   MOBILE\n===================================================== */\n\n@media (max-width: 480px) {\n\n  .adc-univers {\n    width: calc(100% - 30px);\n\n    margin: 20px auto 50px;\n  }\n\n\n  .adc-univers__grid {\n    grid-template-columns: 1fr;\n\n    gap: 16px;\n  }\n\n\n  .adc-univers__image {\n    aspect-ratio: 1.9 / 1;\n  }\n\n\n  .adc-univers__bottom {\n    min-height: 65px;\n\n    padding: 14px 15px;\n  }\n\n\n  .adc-univers__name {\n    font-size: 15px;\n  }\n\n}\n\n\n/* =====================================================\n   ACCESSIBILITÉ\n===================================================== */\n\n@media (prefers-reduced-motion: reduce) {\n\n  .adc-univers__card,\n  .adc-univers__image img,\n  .adc-univers__arrow,\n  .adc-univers__card::after {\n    transition: none;\n  }\n\n\n  .adc-univers__card:hover {\n    transform: none;\n  }\n\n\n  .adc-univers__card:hover\n  .adc-univers__image img {\n    transform: none;\n  }\n\n}\n\n</style>"
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaTitle": "Conseils CBD : guides pour bien choisir | Les Amis du CBD",
+      "metaDescription": "Comment choisir son CBD ? Qualité, fleurs, résines, conservation et astuces : découvrez nos guides et conseils CBD pour faire les bons choix.",
+      "focusKeyword": "conseils CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791464897/lesamisducbd/partners/b5btvee9idf7gr4nxtn8.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T13:06:33.805Z",
+    "title": "Conseils & guides",
+    "sections": [
+      {
+        "id": "codeembed-1791464927062",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 CONSEILS & GUIDES -->\n\n<section class=\"adc-blog-title\">\n  <h1 class=\"adc-blog-title__h1\">\n    Conseils\n    <span class=\"adc-blog-title__highlight\">&amp; guides</span>\n  </h1>\n</section>\n\n<style>\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n  padding: 30px 20px 35px;\n  text-align: center;\n}\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n  color: #123F32;\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n  text-align: center;\n}\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n  white-space: nowrap;\n  z-index: 1;\n}\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n  position: absolute;\n  left: -3%;\n  bottom: 3px;\n  width: 106%;\n  height: 13px;\n  background: #B8D98C;\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n  transform: rotate(-0.8deg);\n  opacity: .85;\n  z-index: -1;\n}\n\n@media (max-width: 700px) {\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n}\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791464958009",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong style=\"font-size: 22px;\">Les&nbsp;bons&nbsp;conseils,&nbsp;c&#39;est&nbsp;encore&nbsp;mieux&nbsp;quand&nbsp;on&nbsp;les&nbsp;partage&nbsp;!</strong></h3><p style=\"text-align: justify;\">Fleurs,&nbsp;résines,&nbsp;variétés,&nbsp;conservation…&nbsp;<strong>Comment&nbsp;bien&nbsp;choisir&nbsp;son&nbsp;CBD&nbsp;?</strong>&nbsp;Comment&nbsp;reconnaître&nbsp;un&nbsp;produit&nbsp;de&nbsp;qualité&nbsp;et&nbsp;éviter&nbsp;les&nbsp;mauvaises&nbsp;surprises&nbsp;?&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver,&nbsp;surtout&nbsp;quand&nbsp;on&nbsp;débute&nbsp;!&nbsp;Heureusement,&nbsp;quelques&nbsp;bons&nbsp;réflexes&nbsp;peuvent&nbsp;faire&nbsp;toute&nbsp;la&nbsp;différence.</p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;tester,&nbsp;comparer&nbsp;et&nbsp;partager&nbsp;nos&nbsp;découvertes.&nbsp;Alors,&nbsp;on&nbsp;a&nbsp;réuni&nbsp;ici&nbsp;nos&nbsp;<strong>guides&nbsp;CBD,&nbsp;astuces&nbsp;et&nbsp;conseils&nbsp;pratiques</strong>&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;faire&nbsp;les&nbsp;bons&nbsp;choix,&nbsp;sans&nbsp;vous&nbsp;compliquer&nbsp;la&nbsp;vie.&nbsp;<strong>Des&nbsp;infos&nbsp;utiles,&nbsp;du&nbsp;bon&nbsp;sens&nbsp;et&nbsp;quelques&nbsp;tuyaux&nbsp;entre&nbsp;potes…&nbsp;c&#39;est&nbsp;aussi&nbsp;simple&nbsp;que&nbsp;ça&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791465091/lesamisducbd/partners/ee2f2vzu5dfddt4j5tqc.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791809091297",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Les bons conseils",
+              "h2Highlight": ", ça se partage !",
+              "introText": "Choisir ses fleurs de CBD, comparer les résines, décrypter les étiquettes, conserver ses produits… Pas toujours facile de s'y retrouver ! Chez Les Amis du CBD, on partage nos conseils pratiques et guides d'achat CBD pour vous aider à faire des choix éclairés, éviter les pièges et profiter au mieux de vos produits. Parce qu'entre potes, les bons tuyaux, ça se partage !"
+            },
+            {
+              "id": "recettes",
+              "label": "Bien choisir son CBD",
+              "icon": "lightbulb",
+              "h2Prefix": "Le bon CBD, ",
+              "h2Highlight": "ça ne se choisit pas au hasard !",
+              "introText": "Fleurs ou résines ? Petites fleurs ou variétés premium ? Quels critères regarder avant d'acheter ? On vous aide à choisir votre CBD, comparer les produits, comprendre les différences de prix et reconnaître les signes de qualité. De quoi dénicher la bonne pépite, sans se faire raconter de salades !"
+            },
+            {
+              "id": "astuces",
+              "label": "Qualité & conservation",
+              "icon": "flower",
+              "h2Prefix": "Un bon CBD, ça se reconnaît… ",
+              "h2Highlight": "et ça se conserve !",
+              "introText": "Analyses de laboratoire, traçabilité, fraîcheur, humidité, emballage… Comment reconnaître un CBD de qualité et bien conserver ses fleurs ou résines ? On partage nos astuces pour décrypter les informations des produits, repérer les signes de dégradation et préserver leurs caractéristiques. Quelques bons réflexes, et le tour est joué !"
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaTitle": "Conseils CBD : guides pour bien choisir | Les Amis du CBD",
+      "metaDescription": "Comment choisir son CBD ? Qualité, fleurs, résines, conservation et astuces : découvrez nos guides et conseils CBD pour faire les bons choix.",
+      "focusKeyword": "conseils CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791464897/lesamisducbd/partners/b5btvee9idf7gr4nxtn8.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:47:13.478Z",
+    "title": "Conseils & guides",
+    "sections": [
+      {
+        "id": "codeembed-1791464927062",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 CONSEILS & GUIDES -->\n\n<section class=\"adc-blog-title\">\n  <h1 class=\"adc-blog-title__h1\">\n    Conseils\n    <span class=\"adc-blog-title__highlight\">&amp; guides</span>\n  </h1>\n</section>\n\n<style>\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n  padding: 30px 20px 35px;\n  text-align: center;\n}\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n  color: #123F32;\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n  text-align: center;\n}\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n  white-space: nowrap;\n  z-index: 1;\n}\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n  position: absolute;\n  left: -3%;\n  bottom: 3px;\n  width: 106%;\n  height: 13px;\n  background: #B8D98C;\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n  transform: rotate(-0.8deg);\n  opacity: .85;\n  z-index: -1;\n}\n\n@media (max-width: 700px) {\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n}\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791464958009",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong style=\"font-size: 22px;\">Les&nbsp;bons&nbsp;conseils,&nbsp;c&#39;est&nbsp;encore&nbsp;mieux&nbsp;quand&nbsp;on&nbsp;les&nbsp;partage&nbsp;!</strong></h3><p style=\"text-align: justify;\">Fleurs,&nbsp;résines,&nbsp;variétés,&nbsp;conservation…&nbsp;<strong>Comment&nbsp;bien&nbsp;choisir&nbsp;son&nbsp;CBD&nbsp;?</strong>&nbsp;Comment&nbsp;reconnaître&nbsp;un&nbsp;produit&nbsp;de&nbsp;qualité&nbsp;et&nbsp;éviter&nbsp;les&nbsp;mauvaises&nbsp;surprises&nbsp;?&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver,&nbsp;surtout&nbsp;quand&nbsp;on&nbsp;débute&nbsp;!&nbsp;Heureusement,&nbsp;quelques&nbsp;bons&nbsp;réflexes&nbsp;peuvent&nbsp;faire&nbsp;toute&nbsp;la&nbsp;différence.</p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;tester,&nbsp;comparer&nbsp;et&nbsp;partager&nbsp;nos&nbsp;découvertes.&nbsp;Alors,&nbsp;on&nbsp;a&nbsp;réuni&nbsp;ici&nbsp;nos&nbsp;<strong>guides&nbsp;CBD,&nbsp;astuces&nbsp;et&nbsp;conseils&nbsp;pratiques</strong>&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;faire&nbsp;les&nbsp;bons&nbsp;choix,&nbsp;sans&nbsp;vous&nbsp;compliquer&nbsp;la&nbsp;vie.&nbsp;<strong>Des&nbsp;infos&nbsp;utiles,&nbsp;du&nbsp;bon&nbsp;sens&nbsp;et&nbsp;quelques&nbsp;tuyaux&nbsp;entre&nbsp;potes…&nbsp;c&#39;est&nbsp;aussi&nbsp;simple&nbsp;que&nbsp;ça&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791465091/lesamisducbd/partners/ee2f2vzu5dfddt4j5tqc.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791809091297",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Les bons conseils",
+              "h2Highlight": ", ça se partage !",
+              "introText": "Choisir ses fleurs de CBD, comparer les résines, décrypter les étiquettes, conserver ses produits… Pas toujours facile de s'y retrouver ! Chez Les Amis du CBD, on partage nos conseils pratiques et guides d'achat CBD pour vous aider à faire des choix éclairés, éviter les pièges et profiter au mieux de vos produits. Parce qu'entre potes, les bons tuyaux, ça se partage !"
+            },
+            {
+              "id": "recettes",
+              "label": "Bien choisir son CBD",
+              "icon": "lightbulb",
+              "h2Prefix": "Le bon CBD, ",
+              "h2Highlight": "ça ne se choisit pas au hasard !",
+              "introText": "Fleurs ou résines ? Petites fleurs ou variétés premium ? Quels critères regarder avant d'acheter ? On vous aide à choisir votre CBD, comparer les produits, comprendre les différences de prix et reconnaître les signes de qualité. De quoi dénicher la bonne pépite, sans se faire raconter de salades !"
+            },
+            {
+              "id": "astuces",
+              "label": "Qualité & conservation",
+              "icon": "flower",
+              "h2Prefix": "Un bon CBD, ça se reconnaît… ",
+              "h2Highlight": "et ça se conserve !",
+              "introText": "Analyses de laboratoire, traçabilité, fraîcheur, humidité, emballage… Comment reconnaître un CBD de qualité et bien conserver ses fleurs ou résines ? On partage nos astuces pour décrypter les informations des produits, repérer les signes de dégradation et préserver leurs caractéristiques. Quelques bons réflexes, et le tour est joué !"
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaTitle": "Conseils CBD : guides pour bien choisir | Les Amis du CBD",
+      "metaDescription": "Comment choisir son CBD ? Qualité, fleurs, résines, conservation et astuces : découvrez nos guides et conseils CBD pour faire les bons choix.",
+      "focusKeyword": "conseils CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791464897/lesamisducbd/partners/b5btvee9idf7gr4nxtn8.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:47:00.619Z",
+    "title": "Conseils & guides",
+    "sections": [
+      {
+        "id": "codeembed-1791464927062",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 CONSEILS & GUIDES -->\n\n<section class=\"adc-blog-title\">\n  <h1 class=\"adc-blog-title__h1\">\n    Conseils\n    <span class=\"adc-blog-title__highlight\">&amp; guides</span>\n  </h1>\n</section>\n\n<style>\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n  padding: 30px 20px 35px;\n  text-align: center;\n}\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n  color: #123F32;\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n  text-align: center;\n}\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n  white-space: nowrap;\n  z-index: 1;\n}\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n  position: absolute;\n  left: -3%;\n  bottom: 3px;\n  width: 106%;\n  height: 13px;\n  background: #B8D98C;\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n  transform: rotate(-0.8deg);\n  opacity: .85;\n  z-index: -1;\n}\n\n@media (max-width: 700px) {\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n}\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791464958009",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong style=\"font-size: 22px;\">Les&nbsp;bons&nbsp;conseils,&nbsp;c&#39;est&nbsp;encore&nbsp;mieux&nbsp;quand&nbsp;on&nbsp;les&nbsp;partage&nbsp;!</strong></h3><p style=\"text-align: justify;\">Fleurs,&nbsp;résines,&nbsp;variétés,&nbsp;conservation…&nbsp;<strong>Comment&nbsp;bien&nbsp;choisir&nbsp;son&nbsp;CBD&nbsp;?</strong>&nbsp;Comment&nbsp;reconnaître&nbsp;un&nbsp;produit&nbsp;de&nbsp;qualité&nbsp;et&nbsp;éviter&nbsp;les&nbsp;mauvaises&nbsp;surprises&nbsp;?&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver,&nbsp;surtout&nbsp;quand&nbsp;on&nbsp;débute&nbsp;!&nbsp;Heureusement,&nbsp;quelques&nbsp;bons&nbsp;réflexes&nbsp;peuvent&nbsp;faire&nbsp;toute&nbsp;la&nbsp;différence.</p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;tester,&nbsp;comparer&nbsp;et&nbsp;partager&nbsp;nos&nbsp;découvertes.&nbsp;Alors,&nbsp;on&nbsp;a&nbsp;réuni&nbsp;ici&nbsp;nos&nbsp;<strong>guides&nbsp;CBD,&nbsp;astuces&nbsp;et&nbsp;conseils&nbsp;pratiques</strong>&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;faire&nbsp;les&nbsp;bons&nbsp;choix,&nbsp;sans&nbsp;vous&nbsp;compliquer&nbsp;la&nbsp;vie.&nbsp;<strong>Des&nbsp;infos&nbsp;utiles,&nbsp;du&nbsp;bon&nbsp;sens&nbsp;et&nbsp;quelques&nbsp;tuyaux&nbsp;entre&nbsp;potes…&nbsp;c&#39;est&nbsp;aussi&nbsp;simple&nbsp;que&nbsp;ça&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791465091/lesamisducbd/partners/ee2f2vzu5dfddt4j5tqc.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791809091297",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Les bons conseils",
+              "h2Highlight": ", ça se partage !",
+              "introText": "Choisir ses fleurs de CBD, comparer les résines, décrypter les étiquettes, conserver ses produits… Pas toujours facile de s'y retrouver ! Chez Les Amis du CBD, on partage nos conseils pratiques et guides d'achat CBD pour vous aider à faire des choix éclairés, éviter les pièges et profiter au mieux de vos produits. Parce qu'entre potes, les bons tuyaux, ça se partage !"
+            },
+            {
+              "id": "recettes",
+              "label": "Bien choisir son CBD",
+              "icon": "lightbulb",
+              "h2Prefix": "Le bon CBD, ",
+              "h2Highlight": "ça ne se choisit pas au hasard !",
+              "introText": "Fleurs ou résines ? Petites fleurs ou variétés premium ? Quels critères regarder avant d'acheter ? On vous aide à choisir votre CBD, comparer les produits, comprendre les différences de prix et reconnaître les signes de qualité. De quoi dénicher la bonne pépite, sans se faire raconter de salades !"
+            },
+            {
+              "id": "astuces",
+              "label": "Qualité & conservation",
+              "icon": "flower",
+              "h2Prefix": "Un bon CBD, ça se reconnaît… ",
+              "h2Highlight": "et ça se conserve !",
+              "introText": "Analyses de laboratoire, traçabilité, fraîcheur, humidité, emballage… Comment reconnaître un CBD de qualité et bien conserver ses fleurs ou résines ? On partage nos astuces pour décrypter les informations des produits, repérer les signes de dégradation et préserver leurs caractéristiques. Quelques bons réflexes, et le tour est joué !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Fleurs & saveurs",
+              "icon": "flower",
+              "h2Prefix": "Fleurs & saveurs,",
+              "h2Highlight": "l’art des terpènes",
+              "introText": "Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations."
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaTitle": "Conseils CBD : guides pour bien choisir | Les Amis du CBD",
+      "metaDescription": "Comment choisir son CBD ? Qualité, fleurs, résines, conservation et astuces : découvrez nos guides et conseils CBD pour faire les bons choix.",
+      "focusKeyword": "conseils CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791464897/lesamisducbd/partners/b5btvee9idf7gr4nxtn8.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:46:51.440Z",
+    "title": "Conseils & guides",
+    "sections": [
+      {
+        "id": "codeembed-1791464927062",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 CONSEILS & GUIDES -->\n\n<section class=\"adc-blog-title\">\n  <h1 class=\"adc-blog-title__h1\">\n    Conseils\n    <span class=\"adc-blog-title__highlight\">&amp; guides</span>\n  </h1>\n</section>\n\n<style>\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n  padding: 30px 20px 35px;\n  text-align: center;\n}\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n  color: #123F32;\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n  text-align: center;\n}\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n  white-space: nowrap;\n  z-index: 1;\n}\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n  position: absolute;\n  left: -3%;\n  bottom: 3px;\n  width: 106%;\n  height: 13px;\n  background: #B8D98C;\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n  transform: rotate(-0.8deg);\n  opacity: .85;\n  z-index: -1;\n}\n\n@media (max-width: 700px) {\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n}\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791464958009",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong style=\"font-size: 22px;\">Les&nbsp;bons&nbsp;conseils,&nbsp;c&#39;est&nbsp;encore&nbsp;mieux&nbsp;quand&nbsp;on&nbsp;les&nbsp;partage&nbsp;!</strong></h3><p style=\"text-align: justify;\">Fleurs,&nbsp;résines,&nbsp;variétés,&nbsp;conservation…&nbsp;<strong>Comment&nbsp;bien&nbsp;choisir&nbsp;son&nbsp;CBD&nbsp;?</strong>&nbsp;Comment&nbsp;reconnaître&nbsp;un&nbsp;produit&nbsp;de&nbsp;qualité&nbsp;et&nbsp;éviter&nbsp;les&nbsp;mauvaises&nbsp;surprises&nbsp;?&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver,&nbsp;surtout&nbsp;quand&nbsp;on&nbsp;débute&nbsp;!&nbsp;Heureusement,&nbsp;quelques&nbsp;bons&nbsp;réflexes&nbsp;peuvent&nbsp;faire&nbsp;toute&nbsp;la&nbsp;différence.</p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;tester,&nbsp;comparer&nbsp;et&nbsp;partager&nbsp;nos&nbsp;découvertes.&nbsp;Alors,&nbsp;on&nbsp;a&nbsp;réuni&nbsp;ici&nbsp;nos&nbsp;<strong>guides&nbsp;CBD,&nbsp;astuces&nbsp;et&nbsp;conseils&nbsp;pratiques</strong>&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;faire&nbsp;les&nbsp;bons&nbsp;choix,&nbsp;sans&nbsp;vous&nbsp;compliquer&nbsp;la&nbsp;vie.&nbsp;<strong>Des&nbsp;infos&nbsp;utiles,&nbsp;du&nbsp;bon&nbsp;sens&nbsp;et&nbsp;quelques&nbsp;tuyaux&nbsp;entre&nbsp;potes…&nbsp;c&#39;est&nbsp;aussi&nbsp;simple&nbsp;que&nbsp;ça&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791465091/lesamisducbd/partners/ee2f2vzu5dfddt4j5tqc.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791809091297",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Les bons conseils",
+              "h2Highlight": ", ça se partage !",
+              "introText": "Choisir ses fleurs de CBD, comparer les résines, décrypter les étiquettes, conserver ses produits… Pas toujours facile de s'y retrouver ! Chez Les Amis du CBD, on partage nos conseils pratiques et guides d'achat CBD pour vous aider à faire des choix éclairés, éviter les pièges et profiter au mieux de vos produits. Parce qu'entre potes, les bons tuyaux, ça se partage !"
+            },
+            {
+              "id": "recettes",
+              "label": "Bien choisir son CBD",
+              "icon": "lightbulb",
+              "h2Prefix": "Le bon CBD, ",
+              "h2Highlight": "ça ne se choisit pas au hasard !",
+              "introText": "Fleurs ou résines ? Petites fleurs ou variétés premium ? Quels critères regarder avant d'acheter ? On vous aide à choisir votre CBD, comparer les produits, comprendre les différences de prix et reconnaître les signes de qualité. De quoi dénicher la bonne pépite, sans se faire raconter de salades !"
+            },
+            {
+              "id": "astuces",
+              "label": "Qualité & conservation",
+              "icon": "flower",
+              "h2Prefix": "Un bon CBD, ça se reconnaît… ",
+              "h2Highlight": "et ça se conserve !",
+              "introText": "Dosage, décarboxylation, matières grasses : les techniques indispensables pour cuisiner le CBD sans fausse note."
+            },
+            {
+              "id": "fleurs",
+              "label": "Fleurs & saveurs",
+              "icon": "flower",
+              "h2Prefix": "Fleurs & saveurs,",
+              "h2Highlight": "l’art des terpènes",
+              "introText": "Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations."
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaTitle": "Conseils CBD : guides pour bien choisir | Les Amis du CBD",
+      "metaDescription": "Comment choisir son CBD ? Qualité, fleurs, résines, conservation et astuces : découvrez nos guides et conseils CBD pour faire les bons choix.",
+      "focusKeyword": "conseils CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791464897/lesamisducbd/partners/b5btvee9idf7gr4nxtn8.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:46:42.084Z",
+    "title": "Conseils & guides",
+    "sections": [
+      {
+        "id": "codeembed-1791464927062",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 CONSEILS & GUIDES -->\n\n<section class=\"adc-blog-title\">\n  <h1 class=\"adc-blog-title__h1\">\n    Conseils\n    <span class=\"adc-blog-title__highlight\">&amp; guides</span>\n  </h1>\n</section>\n\n<style>\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n  padding: 30px 20px 35px;\n  text-align: center;\n}\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n  color: #123F32;\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n  text-align: center;\n}\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n  white-space: nowrap;\n  z-index: 1;\n}\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n  position: absolute;\n  left: -3%;\n  bottom: 3px;\n  width: 106%;\n  height: 13px;\n  background: #B8D98C;\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n  transform: rotate(-0.8deg);\n  opacity: .85;\n  z-index: -1;\n}\n\n@media (max-width: 700px) {\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n}\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791464958009",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong style=\"font-size: 22px;\">Les&nbsp;bons&nbsp;conseils,&nbsp;c&#39;est&nbsp;encore&nbsp;mieux&nbsp;quand&nbsp;on&nbsp;les&nbsp;partage&nbsp;!</strong></h3><p style=\"text-align: justify;\">Fleurs,&nbsp;résines,&nbsp;variétés,&nbsp;conservation…&nbsp;<strong>Comment&nbsp;bien&nbsp;choisir&nbsp;son&nbsp;CBD&nbsp;?</strong>&nbsp;Comment&nbsp;reconnaître&nbsp;un&nbsp;produit&nbsp;de&nbsp;qualité&nbsp;et&nbsp;éviter&nbsp;les&nbsp;mauvaises&nbsp;surprises&nbsp;?&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver,&nbsp;surtout&nbsp;quand&nbsp;on&nbsp;débute&nbsp;!&nbsp;Heureusement,&nbsp;quelques&nbsp;bons&nbsp;réflexes&nbsp;peuvent&nbsp;faire&nbsp;toute&nbsp;la&nbsp;différence.</p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;tester,&nbsp;comparer&nbsp;et&nbsp;partager&nbsp;nos&nbsp;découvertes.&nbsp;Alors,&nbsp;on&nbsp;a&nbsp;réuni&nbsp;ici&nbsp;nos&nbsp;<strong>guides&nbsp;CBD,&nbsp;astuces&nbsp;et&nbsp;conseils&nbsp;pratiques</strong>&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;faire&nbsp;les&nbsp;bons&nbsp;choix,&nbsp;sans&nbsp;vous&nbsp;compliquer&nbsp;la&nbsp;vie.&nbsp;<strong>Des&nbsp;infos&nbsp;utiles,&nbsp;du&nbsp;bon&nbsp;sens&nbsp;et&nbsp;quelques&nbsp;tuyaux&nbsp;entre&nbsp;potes…&nbsp;c&#39;est&nbsp;aussi&nbsp;simple&nbsp;que&nbsp;ça&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791465091/lesamisducbd/partners/ee2f2vzu5dfddt4j5tqc.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791809091297",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Les bons conseils",
+              "h2Highlight": ", ça se partage !",
+              "introText": "Choisir ses fleurs de CBD, comparer les résines, décrypter les étiquettes, conserver ses produits… Pas toujours facile de s'y retrouver ! Chez Les Amis du CBD, on partage nos conseils pratiques et guides d'achat CBD pour vous aider à faire des choix éclairés, éviter les pièges et profiter au mieux de vos produits. Parce qu'entre potes, les bons tuyaux, ça se partage !"
+            },
+            {
+              "id": "recettes",
+              "label": "Bien choisir son CBD",
+              "icon": "lightbulb",
+              "h2Prefix": "Le bon CBD, ",
+              "h2Highlight": "ça ne se choisit pas au hasard !",
+              "introText": "Fleurs ou résines ? Petites fleurs ou variétés premium ? Quels critères regarder avant d'acheter ? On vous aide à choisir votre CBD, comparer les produits, comprendre les différences de prix et reconnaître les signes de qualité. De quoi dénicher la bonne pépite, sans se faire raconter de salades !"
+            },
+            {
+              "id": "astuces",
+              "label": "Qualité & conservation",
+              "icon": "flower",
+              "h2Prefix": "Un bon CBD, ça se reconnaît… et ça se conserve !",
+              "h2Highlight": "les secrets des chefs",
+              "introText": "Dosage, décarboxylation, matières grasses : les techniques indispensables pour cuisiner le CBD sans fausse note."
+            },
+            {
+              "id": "fleurs",
+              "label": "Fleurs & saveurs",
+              "icon": "flower",
+              "h2Prefix": "Fleurs & saveurs,",
+              "h2Highlight": "l’art des terpènes",
+              "introText": "Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations."
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaTitle": "Conseils CBD : guides pour bien choisir | Les Amis du CBD",
+      "metaDescription": "Comment choisir son CBD ? Qualité, fleurs, résines, conservation et astuces : découvrez nos guides et conseils CBD pour faire les bons choix.",
+      "focusKeyword": "conseils CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791464897/lesamisducbd/partners/b5btvee9idf7gr4nxtn8.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:46:31.884Z",
+    "title": "Conseils & guides",
+    "sections": [
+      {
+        "id": "codeembed-1791464927062",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 CONSEILS & GUIDES -->\n\n<section class=\"adc-blog-title\">\n  <h1 class=\"adc-blog-title__h1\">\n    Conseils\n    <span class=\"adc-blog-title__highlight\">&amp; guides</span>\n  </h1>\n</section>\n\n<style>\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n  padding: 30px 20px 35px;\n  text-align: center;\n}\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n  color: #123F32;\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n  text-align: center;\n}\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n  white-space: nowrap;\n  z-index: 1;\n}\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n  position: absolute;\n  left: -3%;\n  bottom: 3px;\n  width: 106%;\n  height: 13px;\n  background: #B8D98C;\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n  transform: rotate(-0.8deg);\n  opacity: .85;\n  z-index: -1;\n}\n\n@media (max-width: 700px) {\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n}\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791464958009",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong style=\"font-size: 22px;\">Les&nbsp;bons&nbsp;conseils,&nbsp;c&#39;est&nbsp;encore&nbsp;mieux&nbsp;quand&nbsp;on&nbsp;les&nbsp;partage&nbsp;!</strong></h3><p style=\"text-align: justify;\">Fleurs,&nbsp;résines,&nbsp;variétés,&nbsp;conservation…&nbsp;<strong>Comment&nbsp;bien&nbsp;choisir&nbsp;son&nbsp;CBD&nbsp;?</strong>&nbsp;Comment&nbsp;reconnaître&nbsp;un&nbsp;produit&nbsp;de&nbsp;qualité&nbsp;et&nbsp;éviter&nbsp;les&nbsp;mauvaises&nbsp;surprises&nbsp;?&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver,&nbsp;surtout&nbsp;quand&nbsp;on&nbsp;débute&nbsp;!&nbsp;Heureusement,&nbsp;quelques&nbsp;bons&nbsp;réflexes&nbsp;peuvent&nbsp;faire&nbsp;toute&nbsp;la&nbsp;différence.</p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;tester,&nbsp;comparer&nbsp;et&nbsp;partager&nbsp;nos&nbsp;découvertes.&nbsp;Alors,&nbsp;on&nbsp;a&nbsp;réuni&nbsp;ici&nbsp;nos&nbsp;<strong>guides&nbsp;CBD,&nbsp;astuces&nbsp;et&nbsp;conseils&nbsp;pratiques</strong>&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;faire&nbsp;les&nbsp;bons&nbsp;choix,&nbsp;sans&nbsp;vous&nbsp;compliquer&nbsp;la&nbsp;vie.&nbsp;<strong>Des&nbsp;infos&nbsp;utiles,&nbsp;du&nbsp;bon&nbsp;sens&nbsp;et&nbsp;quelques&nbsp;tuyaux&nbsp;entre&nbsp;potes…&nbsp;c&#39;est&nbsp;aussi&nbsp;simple&nbsp;que&nbsp;ça&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791465091/lesamisducbd/partners/ee2f2vzu5dfddt4j5tqc.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791809091297",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Les bons conseils",
+              "h2Highlight": ", ça se partage !",
+              "introText": "Choisir ses fleurs de CBD, comparer les résines, décrypter les étiquettes, conserver ses produits… Pas toujours facile de s'y retrouver ! Chez Les Amis du CBD, on partage nos conseils pratiques et guides d'achat CBD pour vous aider à faire des choix éclairés, éviter les pièges et profiter au mieux de vos produits. Parce qu'entre potes, les bons tuyaux, ça se partage !"
+            },
+            {
+              "id": "recettes",
+              "label": "Bien choisir son CBD",
+              "icon": "lightbulb",
+              "h2Prefix": "Le bon CBD, ",
+              "h2Highlight": "ça ne se choisit pas au hasard !",
+              "introText": "Fleurs ou résines ? Petites fleurs ou variétés premium ? Quels critères regarder avant d'acheter ? On vous aide à choisir votre CBD, comparer les produits, comprendre les différences de prix et reconnaître les signes de qualité. De quoi dénicher la bonne pépite, sans se faire raconter de salades !"
+            },
+            {
+              "id": "astuces",
+              "label": "Qualité & conservation",
+              "icon": "flower",
+              "h2Prefix": "Nos trucs & astuces,",
+              "h2Highlight": "les secrets des chefs",
+              "introText": "Dosage, décarboxylation, matières grasses : les techniques indispensables pour cuisiner le CBD sans fausse note."
+            },
+            {
+              "id": "fleurs",
+              "label": "Fleurs & saveurs",
+              "icon": "flower",
+              "h2Prefix": "Fleurs & saveurs,",
+              "h2Highlight": "l’art des terpènes",
+              "introText": "Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations."
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaTitle": "Conseils CBD : guides pour bien choisir | Les Amis du CBD",
+      "metaDescription": "Comment choisir son CBD ? Qualité, fleurs, résines, conservation et astuces : découvrez nos guides et conseils CBD pour faire les bons choix.",
+      "focusKeyword": "conseils CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791464897/lesamisducbd/partners/b5btvee9idf7gr4nxtn8.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:46:27.361Z",
+    "title": "Conseils & guides",
+    "sections": [
+      {
+        "id": "codeembed-1791464927062",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 CONSEILS & GUIDES -->\n\n<section class=\"adc-blog-title\">\n  <h1 class=\"adc-blog-title__h1\">\n    Conseils\n    <span class=\"adc-blog-title__highlight\">&amp; guides</span>\n  </h1>\n</section>\n\n<style>\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n  padding: 30px 20px 35px;\n  text-align: center;\n}\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n  color: #123F32;\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n  text-align: center;\n}\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n  white-space: nowrap;\n  z-index: 1;\n}\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n  position: absolute;\n  left: -3%;\n  bottom: 3px;\n  width: 106%;\n  height: 13px;\n  background: #B8D98C;\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n  transform: rotate(-0.8deg);\n  opacity: .85;\n  z-index: -1;\n}\n\n@media (max-width: 700px) {\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n}\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791464958009",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong style=\"font-size: 22px;\">Les&nbsp;bons&nbsp;conseils,&nbsp;c&#39;est&nbsp;encore&nbsp;mieux&nbsp;quand&nbsp;on&nbsp;les&nbsp;partage&nbsp;!</strong></h3><p style=\"text-align: justify;\">Fleurs,&nbsp;résines,&nbsp;variétés,&nbsp;conservation…&nbsp;<strong>Comment&nbsp;bien&nbsp;choisir&nbsp;son&nbsp;CBD&nbsp;?</strong>&nbsp;Comment&nbsp;reconnaître&nbsp;un&nbsp;produit&nbsp;de&nbsp;qualité&nbsp;et&nbsp;éviter&nbsp;les&nbsp;mauvaises&nbsp;surprises&nbsp;?&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver,&nbsp;surtout&nbsp;quand&nbsp;on&nbsp;débute&nbsp;!&nbsp;Heureusement,&nbsp;quelques&nbsp;bons&nbsp;réflexes&nbsp;peuvent&nbsp;faire&nbsp;toute&nbsp;la&nbsp;différence.</p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;tester,&nbsp;comparer&nbsp;et&nbsp;partager&nbsp;nos&nbsp;découvertes.&nbsp;Alors,&nbsp;on&nbsp;a&nbsp;réuni&nbsp;ici&nbsp;nos&nbsp;<strong>guides&nbsp;CBD,&nbsp;astuces&nbsp;et&nbsp;conseils&nbsp;pratiques</strong>&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;faire&nbsp;les&nbsp;bons&nbsp;choix,&nbsp;sans&nbsp;vous&nbsp;compliquer&nbsp;la&nbsp;vie.&nbsp;<strong>Des&nbsp;infos&nbsp;utiles,&nbsp;du&nbsp;bon&nbsp;sens&nbsp;et&nbsp;quelques&nbsp;tuyaux&nbsp;entre&nbsp;potes…&nbsp;c&#39;est&nbsp;aussi&nbsp;simple&nbsp;que&nbsp;ça&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791465091/lesamisducbd/partners/ee2f2vzu5dfddt4j5tqc.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791809091297",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Les bons conseils",
+              "h2Highlight": ", ça se partage !",
+              "introText": "Choisir ses fleurs de CBD, comparer les résines, décrypter les étiquettes, conserver ses produits… Pas toujours facile de s'y retrouver ! Chez Les Amis du CBD, on partage nos conseils pratiques et guides d'achat CBD pour vous aider à faire des choix éclairés, éviter les pièges et profiter au mieux de vos produits. Parce qu'entre potes, les bons tuyaux, ça se partage !"
+            },
+            {
+              "id": "recettes",
+              "label": "Bien choisir son CBD",
+              "icon": "lightbulb",
+              "h2Prefix": "Le bon CBD, ",
+              "h2Highlight": "ça ne se choisit pas au hasard !",
+              "introText": "Fleurs ou résines ? Petites fleurs ou variétés premium ? Quels critères regarder avant d'acheter ? On vous aide à choisir votre CBD, comparer les produits, comprendre les différences de prix et reconnaître les signes de qualité. De quoi dénicher la bonne pépite, sans se faire raconter de salades !"
+            },
+            {
+              "id": "astuces",
+              "label": "Qualité & conservation",
+              "icon": "lightbulb",
+              "h2Prefix": "Nos trucs & astuces,",
+              "h2Highlight": "les secrets des chefs",
+              "introText": "Dosage, décarboxylation, matières grasses : les techniques indispensables pour cuisiner le CBD sans fausse note."
+            },
+            {
+              "id": "fleurs",
+              "label": "Fleurs & saveurs",
+              "icon": "flower",
+              "h2Prefix": "Fleurs & saveurs,",
+              "h2Highlight": "l’art des terpènes",
+              "introText": "Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations."
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaTitle": "Conseils CBD : guides pour bien choisir | Les Amis du CBD",
+      "metaDescription": "Comment choisir son CBD ? Qualité, fleurs, résines, conservation et astuces : découvrez nos guides et conseils CBD pour faire les bons choix.",
+      "focusKeyword": "conseils CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791464897/lesamisducbd/partners/b5btvee9idf7gr4nxtn8.png"
+    },
+    "status": "draft"
+  }
+]

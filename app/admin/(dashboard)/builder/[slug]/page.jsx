@@ -36,6 +36,7 @@ export default function PageEditor() {
     const originalSlugRef = useRef(null); // Track original slug to handle renames
     const initialLoadRef = useRef(true); // Track initial load for auto-save
     const autoSaveTimerRef = useRef(null); // Track auto-save timer
+    const lastSavedStateRef = useRef(null);
 
     useEffect(() => { if (slug) fetchPage(); }, [slug]);
 
@@ -59,11 +60,16 @@ export default function PageEditor() {
         }
     };
 
-    const save = async (overrideStatus, pageStateToSave = null) => {
+    const save = async (overrideStatus, pageStateToSave = null, isManual = true) => {
         setSaving(true);
         try {
             const stateToSave = pageStateToSave || page;
-            const payload = { ...stateToSave, originalSlug: originalSlugRef.current, status: overrideStatus || stateToSave.status || 'draft' };
+            const payload = { 
+                ...stateToSave, 
+                originalSlug: originalSlugRef.current, 
+                status: overrideStatus || stateToSave.status || 'draft',
+                isManualSave: isManual
+            };
             const res = await fetch('/api/admin/builder', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
             if (res.ok) {
                 setSaved(true);
@@ -74,19 +80,26 @@ export default function PageEditor() {
         } finally { setSaving(false); }
     };
 
-    // Réactivation de la sauvegarde automatique (à la demande de l'utilisateur)
+    // Sauvegarde automatique intelligente avec debounce
     useEffect(() => {
         if (!page) return;
         if (initialLoadRef.current) {
             initialLoadRef.current = false;
+            lastSavedStateRef.current = JSON.stringify(page);
+            return;
+        }
+
+        const currentState = JSON.stringify(page);
+        if (lastSavedStateRef.current === currentState) {
             return;
         }
 
         if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
         
         autoSaveTimerRef.current = setTimeout(() => {
-            save(null, page);
-        }, 2000); // 2s de délai au lieu de 5 pour limiter la fréquence
+            lastSavedStateRef.current = currentState;
+            save(null, page, false);
+        }, 3500); // 3.5s de délai pour regrouper les frappes
 
         return () => {
             if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);

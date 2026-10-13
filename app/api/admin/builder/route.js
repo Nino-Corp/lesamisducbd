@@ -29,10 +29,12 @@ export async function GET(request) {
 
             // Return history only
             if (action === 'history') {
-                return NextResponse.json(pages[slug].history || []);
+                const history = await safeKvGet(`builder_history:${slug}`, pages[slug].history || []);
+                return NextResponse.json(history);
             }
 
-            return NextResponse.json(pages[slug]);
+            const { history: _h, ...pageData } = pages[slug];
+            return NextResponse.json(pageData);
         }
 
         // Strip history from listing to keep payload small
@@ -84,13 +86,12 @@ export async function POST(request) {
                 return NextResponse.json({ error: 'Source page not found' }, { status: 404 });
             }
 
-            const { history, ...sourceData } = source;
+            const { history: _h, ...sourceData } = source;
             pages[slug] = {
                 ...sourceData,
                 slug,
                 title,
                 status: 'draft',
-                history: [],
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
             };
@@ -106,7 +107,6 @@ export async function POST(request) {
 
         // ── Handle slug rename: delete old key ──
         if (originalSlug !== slug && pages[originalSlug]) {
-            const oldHistory = pages[originalSlug].history || [];
             delete pages[originalSlug];
             try {
                 const globalContent = await safeKvGet('global_content', {});
@@ -119,20 +119,33 @@ export async function POST(request) {
             } catch (e) { /* non-blocking */ }
         }
 
-        // ── Snapshot for history (keep last MAX_HISTORY) ──
+        // ── Snapshot for history (saved in dedicated builder_history:<slug> key) ──
         const existing = pages[slug] || {};
-        const history = existing.history || [];
+        const isManualSave = body.isManualSave === true;
 
-        if (existing.sections) {
-            // Push the current state as a history snapshot
-            history.unshift({
-                savedAt: existing.updatedAt || new Date().toISOString(),
-                title: existing.title,
-                sections: existing.sections,
-                seo: existing.seo,
-                status: existing.status,
-            });
-            if (history.length > MAX_HISTORY) history.splice(MAX_HISTORY);
+        if (existing.sections && existing.sections.length > 0) {
+            try {
+                const historyKey = `builder_history:${slug}`;
+                const history = await safeKvGet(historyKey, existing.history || []);
+                const lastSnapshot = history[0];
+                const lastSavedTime = lastSnapshot ? new Date(lastSnapshot.savedAt).getTime() : 0;
+                const fiveMinutesPassed = Date.now() - lastSavedTime > 5 * 60 * 1000;
+
+                // Take snapshot only on explicit manual save or if at least 5 minutes elapsed since last snapshot
+                if (isManualSave || fiveMinutesPassed) {
+                    history.unshift({
+                        savedAt: new Date().toISOString(),
+                        title: existing.title,
+                        sections: existing.sections,
+                        seo: existing.seo,
+                        status: existing.status,
+                    });
+                    if (history.length > MAX_HISTORY) history.splice(MAX_HISTORY);
+                    await safeKvSet(historyKey, history);
+                }
+            } catch (hErr) {
+                console.warn('Non-blocking history snapshot error:', hErr);
+            }
         }
 
         // ── Resolve status ──
@@ -152,10 +165,11 @@ export async function POST(request) {
             seo: seo || {},
             status: resolvedStatus,
             scheduledAt: scheduledAt || existing.scheduledAt || null,
-            history,
             createdAt: existing.createdAt || new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };
+        // Ensure no history array remains inside the main pages dictionary
+        delete pages[slug].history;
 
         await safeKvSet(PAGES_KEY, pages);
 

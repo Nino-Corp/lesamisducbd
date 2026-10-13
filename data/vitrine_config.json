@@ -1,0 +1,37 @@
+{
+  "flowers": [
+    {
+      "slug": "196-amnesia-haze-4g",
+      "name": "Amnésia Haze 4 g",
+      "image": "https://my.lesamisducbd.fr/539-home_default/amnesia-haze-4g.jpg",
+      "badge": "",
+      "badgeColor": "#00FFC2",
+      "formattedPrice": "10,00 €"
+    },
+    {
+      "slug": "195-skunk-number-one-10g",
+      "name": "Skunk number one 10 g",
+      "image": "https://my.lesamisducbd.fr/548-home_default/skunk-number-one-10g.jpg",
+      "badge": "",
+      "badgeColor": "#00FFC2",
+      "formattedPrice": "20,00 €"
+    },
+    {
+      "slug": "202-gorilla-10g",
+      "name": "Gorilla 10 g",
+      "image": "https://my.lesamisducbd.fr/551-home_default/gorilla-10g.jpg",
+      "badge": "",
+      "badgeColor": "#00FFC2",
+      "formattedPrice": "20,00 €"
+    },
+    {
+      "slug": "199-lemon-haze-10g",
+      "name": "Lemon Haze 10 g",
+      "image": "https://my.lesamisducbd.fr/545-home_default/lemon-haze-10g.jpg",
+      "badge": "",
+      "badgeColor": "#00FFC2",
+      "formattedPrice": "20,00 €"
+    }
+  ],
+  "resins": []
+}

@@ -1,0 +1,1463 @@
+[
+  {
+    "savedAt": "2026-10-12T13:29:57.856Z",
+    "title": "Comprendre le CBD",
+    "sections": [
+      {
+        "id": "codeembed-1791461606506",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 COMPRENDRE LE CBD - CENTRÉ + EFFET SURLIGNEUR -->\n\n<section class=\"adc-blog-title\">\n\n  <h1 class=\"adc-blog-title__h1\">\n    Comprendre\n    <span class=\"adc-blog-title__highlight\">le CBD</span>\n  </h1>\n\n</section>\n\n\n<style>\n\n/* BLOC */\n\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n\n  padding: 30px 20px 35px;\n\n  text-align: center;\n}\n\n\n/* H1 */\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n\n  color: #123F32;\n\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n\n  text-align: center;\n}\n\n\n/* TEXTE SURLIGNÉ */\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n\n  white-space: nowrap;\n\n  z-index: 1;\n}\n\n\n/* EFFET SURLIGNEUR VERT CLAIR */\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n\n  position: absolute;\n\n  left: -3%;\n  bottom: 3px;\n\n  width: 106%;\n  height: 13px;\n\n  background: #B8D98C;\n\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n\n  transform: rotate(-0.8deg);\n\n  opacity: .85;\n\n  z-index: -1;\n}\n\n\n/* MOBILE */\n\n@media (max-width: 700px) {\n\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n\n}\n\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791461726060",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong>Le&nbsp;CBD&nbsp;n&#39;aura&nbsp;bientôt&nbsp;plus&nbsp;de&nbsp;secrets&nbsp;pour&nbsp;vous&nbsp;!</strong></h3><p style=\"text-align: justify;\">CBD,&nbsp;THC,&nbsp;cannabinoïdes,&nbsp;terpènes…&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver&nbsp;dans&nbsp;tout&nbsp;ce&nbsp;vocabulaire&nbsp;!&nbsp;<strong>C&#39;est&nbsp;quoi&nbsp;exactement&nbsp;le&nbsp;cannabidiol&nbsp;?</strong>&nbsp;D&#39;où&nbsp;vient-il&nbsp;?&nbsp;Quelle&nbsp;différence&nbsp;entre&nbsp;le&nbsp;CBD&nbsp;et&nbsp;le&nbsp;THC&nbsp;?&nbsp;Et&nbsp;que&nbsp;dit&nbsp;la&nbsp;loi&nbsp;?&nbsp;Autant&nbsp;de&nbsp;questions&nbsp;auxquelles&nbsp;on&nbsp;vous&nbsp;aide&nbsp;à&nbsp;répondre,&nbsp;<strong>simplement&nbsp;et&nbsp;sans&nbsp;prise&nbsp;de&nbsp;tête&nbsp;!</strong></p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;comprendre&nbsp;ce&nbsp;qu&#39;on&nbsp;consomme&nbsp;et&nbsp;surtout&nbsp;partager&nbsp;ce&nbsp;qu&#39;on&nbsp;apprend.&nbsp;À&nbsp;travers&nbsp;nos&nbsp;<strong>articles,&nbsp;guides&nbsp;et&nbsp;décryptages</strong>,&nbsp;on&nbsp;démêle&nbsp;le&nbsp;vrai&nbsp;du&nbsp;faux,&nbsp;on&nbsp;explore&nbsp;l&#39;univers&nbsp;du&nbsp;chanvre&nbsp;et&nbsp;on&nbsp;rend&nbsp;le&nbsp;CBD&nbsp;accessible&nbsp;à&nbsp;tous.&nbsp;<strong>Pas&nbsp;besoin&nbsp;d&#39;être&nbsp;un&nbsp;expert&nbsp;pour&nbsp;devenir&nbsp;incollable&nbsp;sur&nbsp;le&nbsp;sujet&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791462661/lesamisducbd/partners/txpvjqokpffwrrc8e5an.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain",
+          "marginTop": "negative-medium"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791808234735",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "de A à Z (ou presque) !",
+              "introText": "CBD, THC, cannabinoïdes, terpènes, législation… Vous avez des questions ? Ça tombe bien, on adore chercher les réponses ! Retrouvez tous nos articles pour comprendre le CBD, découvrir ses particularités et démêler le vrai du faux. Promis, pas besoin d'un doctorat pour suivre !"
+            },
+            {
+              "id": "recettes",
+              "label": "Les bases du CBD",
+              "icon": "book",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est quoi au juste ?",
+              "introText": "Cannabidiol, chanvre, THC… Pas toujours facile de s'y retrouver ! Qu'est-ce que le CBD ? D'où vient-il ? Quelle différence entre CBD et THC ? On reprend les fondamentaux pour découvrir cette molécule issue du chanvre, ses origines et ses principales caractéristiques. Des explications simples, sans vous noyer sous le jargon !"
+            },
+            {
+              "id": "astuces",
+              "label": "CBD & science",
+              "icon": "oil",
+              "h2Prefix": "Le CBD ",
+              "h2Highlight": "sous la loupe !",
+              "introText": "Cannabinoïdes, terpènes, système endocannabinoïde… Derrière ces noms un peu barbares se cache un univers passionnant ! Comment le CBD interagit-il avec l'organisme ? Que disent réellement les études scientifiques ? On décrypte les mécanismes, les recherches et les découvertes autour du cannabidiol, en distinguant ce que l'on sait de ce qu'il reste à comprendre. De la science, oui… mais expliquée entre potes !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Législation du CBD",
+              "icon": "shield",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est légal ou pas ?",
+              "introText": "Entre les lois, les réglementations et les informations contradictoires, pas toujours facile de savoir ce qui est autorisé ! Le CBD est-il légal en France ? Quelles règles encadrent sa vente ? Quel taux de THC est autorisé ? On fait le point sur la législation du CBD en France et ses évolutions, avec des explications claires et des sources officielles. Parce que comprendre les règles, ça devrait être simple !"
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      },
+      {
+        "id": "codeembed-1791811779825",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "<!-- =====================================================\n     AUTRES UNIVERS — LES AMIS DU CBD\n     SANS H2 : LE TITRE EST GÉRÉ SÉPARÉMENT\n===================================================== -->\n\n<section class=\"adc-univers\">\n\n  <div class=\"adc-univers__grid\">\n\n\n    <!-- 1. CBD & USAGES -->\n    <a href=\"/p/cbd-usages\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680745/lesamisducbd/partners/idrls6aokyqq7bx7cmkq.png\"\n          alt=\"CBD et usages\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          CBD &amp; usages\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 2. CUISINE & CBD -->\n    <a href=\"/p/cuisine-cbd\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680623/lesamisducbd/partners/eotyqdyqoi9hzfntiy6t.png\"\n          alt=\"Cuisine et CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n        <span class=\"adc-univers__name\">\n          Cuisine &amp; CBD\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n      </div>\n\n    </a>\n\n\n    <!-- 3. GUIDES & CONSEILS -->\n    <a href=\"/p/conseils-guides\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680804/lesamisducbd/partners/i1fqpmzbxlueglqnkkyf.png\"\n          alt=\"Guides et conseils sur le CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Guides &amp; Conseils\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 4. COULISSES DES AMIS -->\n    <a href=\"/p/coulisses-des-amis\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680851/lesamisducbd/partners/wiqquiwlphufen57p71r.png\"\n          alt=\"Les coulisses des Amis du CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Coulisses des Amis\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 5. CULTURE DU CHANVRE & CBD -->\n    <a href=\"/p/culture-du-chanvre\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680921/lesamisducbd/partners/rjijcvlodah8guzczdpi.png\"\n          alt=\"Culture du Chanvre\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Culture du Chanvre\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n  </div>\n\n</section>\n\n\n<style>\n\n/* =====================================================\n   SECTION\n===================================================== */\n\n.adc-univers {\n  width: calc(100% - 50px);\n  max-width: 1450px;\n\n  margin: 30px auto 70px;\n\n  font-family: inherit;\n\n  background: transparent;\n}\n\n\n/* =====================================================\n   GRILLE — 5 CARTES SUR UNE LIGNE\n===================================================== */\n\n.adc-univers__grid {\n  display: grid;\n\n  grid-template-columns: repeat(5, minmax(0, 1fr));\n\n  gap: 16px;\n}\n\n\n/* =====================================================\n   CARTE\n===================================================== */\n\n.adc-univers__card {\n  position: relative;\n\n  min-width: 0;\n\n  display: block;\n\n  overflow: hidden;\n\n  background: transparent;\n\n  border: 1px solid rgba(18, 63, 50, .07);\n\n  border-radius: 20px;\n\n  color: #123F32;\n\n  text-decoration: none;\n\n  box-shadow:\n    0 7px 20px rgba(18, 63, 50, .07),\n    0 2px 6px rgba(18, 63, 50, .03);\n\n  transition:\n    transform .32s cubic-bezier(.2,.8,.2,1),\n    box-shadow .32s ease,\n    border-color .32s ease;\n}\n\n\n/* =====================================================\n   IMAGE\n===================================================== */\n\n.adc-univers__image {\n  position: relative;\n\n  width: 100%;\n\n  overflow: hidden;\n\n  margin: 0;\n\n  aspect-ratio: 1.65 / 1;\n\n  border-radius: 19px 19px 0 0;\n}\n\n\n.adc-univers__image img {\n  display: block;\n\n  width: 100%;\n  height: 100%;\n\n  object-fit: cover;\n\n  transition:\n    transform .6s cubic-bezier(.2,.8,.2,1);\n}\n\n\n/* =====================================================\n   BAS DE CARTE\n===================================================== */\n\n.adc-univers__bottom {\n  min-height: 68px;\n\n  padding: 15px 16px;\n\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n\n  gap: 10px;\n\n  box-sizing: border-box;\n\n  background: transparent;\n}\n\n\n/* =====================================================\n   NOM DE L'UNIVERS\n===================================================== */\n\n.adc-univers__name {\n  min-width: 0;\n\n  display: flex;\n  align-items: center;\n\n  gap: 9px;\n\n  color: #123F32;\n\n  font-family: inherit;\n\n  font-size: 15px;\n  font-weight: 800;\n\n  line-height: 1.25;\n}\n\n\n/* =====================================================\n   FLÈCHE\n===================================================== */\n\n.adc-univers__arrow {\n  flex: 0 0 auto;\n\n  display: flex;\n  align-items: center;\n  justify-content: center;\n\n  width: 30px;\n  height: 30px;\n\n  border-radius: 0;\n\n  background: transparent;\n\n  color: #123F32;\n\n  font-size: 18px;\n  font-weight: 800;\n\n  line-height: 1;\n\n  box-shadow: none;\n\n  transition:\n    transform .3s ease,\n    background .3s ease,\n    color .3s ease;\n}\n\n\n/* =====================================================\n   SURVOL — OMBRE + LÉGÈRE MONTÉE\n===================================================== */\n\n.adc-univers__card:hover {\n  transform: translateY(-7px);\n\n  border-color: rgba(18, 63, 50, .14);\n\n  box-shadow:\n    0 22px 40px rgba(18, 63, 50, .15),\n    0 7px 15px rgba(18, 63, 50, .07);\n}\n\n\n/* =====================================================\n   ZOOM PHOTO AU SURVOL\n===================================================== */\n\n.adc-univers__card:hover\n.adc-univers__image img {\n  transform: scale(1.055);\n}\n\n\n/* =====================================================\n   FLÈCHE AU SURVOL\n===================================================== */\n\n.adc-univers__card:hover\n.adc-univers__arrow {\n  transform: translateX(3px);\n\n  background: transparent;\n\n  color: #123F32;\n}\n\n\n/* =====================================================\n   REFLET TRÈS LÉGER AU SURVOL\n===================================================== */\n\n.adc-univers__card::after {\n  content: \"\";\n\n  position: absolute;\n\n  inset: 0;\n\n  pointer-events: none;\n\n  background:\n    linear-gradient(\n      120deg,\n      transparent 20%,\n      rgba(255, 255, 255, .18) 45%,\n      transparent 70%\n    );\n\n  transform: translateX(-120%);\n\n  transition:\n    transform .65s ease;\n}\n\n\n.adc-univers__card:hover::after {\n  transform: translateX(120%);\n}\n\n\n/* =====================================================\n   ÉCRANS INTERMÉDIAIRES\n===================================================== */\n\n@media (max-width: 1100px) {\n\n  .adc-univers__grid {\n    grid-template-columns: repeat(3, 1fr);\n  }\n\n}\n\n\n/* =====================================================\n   TABLETTE\n===================================================== */\n\n@media (max-width: 760px) {\n\n  .adc-univers {\n    width: calc(100% - 36px);\n\n    margin: 25px auto 55px;\n  }\n\n\n  .adc-univers__grid {\n    grid-template-columns: repeat(2, 1fr);\n\n    gap: 14px;\n  }\n\n\n  .adc-univers__card:hover {\n    transform: none;\n  }\n\n}\n\n\n/* =====================================================\n   MOBILE\n===================================================== */\n\n@media (max-width: 480px) {\n\n  .adc-univers {\n    width: calc(100% - 30px);\n\n    margin: 20px auto 50px;\n  }\n\n\n  .adc-univers__grid {\n    grid-template-columns: 1fr;\n\n    gap: 16px;\n  }\n\n\n  .adc-univers__image {\n    aspect-ratio: 1.9 / 1;\n  }\n\n\n  .adc-univers__bottom {\n    min-height: 65px;\n\n    padding: 14px 15px;\n  }\n\n\n  .adc-univers__name {\n    font-size: 15px;\n  }\n\n}\n\n\n/* =====================================================\n   ACCESSIBILITÉ\n===================================================== */\n\n@media (prefers-reduced-motion: reduce) {\n\n  .adc-univers__card,\n  .adc-univers__image img,\n  .adc-univers__arrow,\n  .adc-univers__card::after {\n    transition: none;\n  }\n\n\n  .adc-univers__card:hover {\n    transform: none;\n  }\n\n\n  .adc-univers__card:hover\n  .adc-univers__image img {\n    transform: none;\n  }\n\n}\n\n</style>"
+        }
+      },
+      {
+        "id": "codeembed-1791811792315",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<h2 class=\"adc-univers-heading\">\n  Nos autres\n  <span class=\"adc-univers-highlight\">\n    univers d’articles\n    <svg viewBox=\"0 0 330 22\"\n         preserveAspectRatio=\"none\"\n         aria-hidden=\"true\">\n      <path d=\"M6 15 C90 5, 235 5, 324 13\" />\n    </svg>\n  </span>\n</h2>\n\n<style>\n.adc-univers-heading {\n  margin: 0;\n  margin-left: 30px;\n  color: #123F32;\n  font-family: inherit;\n  font-size: 42px;\n  font-weight: 800;\n  line-height: 1.2;\n  letter-spacing: -0.8px;\n}\n\n/* TEXTE SOULIGNÉ */\n.adc-univers-highlight {\n  position: relative;\n  display: inline-block;\n  padding-bottom: 9px;\n}\n\n/* TRAIT VERT MANUSCRIT */\n.adc-univers-highlight svg {\n  position: absolute;\n  left: 0;\n  bottom: -1px;\n  width: 100%;\n  height: 10px;\n  overflow: visible;\n}\n\n.adc-univers-highlight path {\n  fill: none;\n  stroke: #087D45;\n  stroke-width: 4;\n  stroke-linecap: round;\n  stroke-dasharray: 380;\n  stroke-dashoffset: 0;\n}\n\n/* ANIMATION AU SURVOL */\n.adc-univers-heading:hover path {\n  animation: adc-univers-draw 1s ease forwards;\n}\n\n@keyframes adc-univers-draw {\n  from {\n    stroke-dashoffset: 380;\n  }\n  to {\n    stroke-dashoffset: 0;\n  }\n}\n\n/* MOBILE */\n@media (max-width: 700px) {\n  .adc-univers-heading {\n    margin-left: 15px;\n    font-size: 32px;\n    line-height: 1.2;\n    letter-spacing: -0.5px;\n  }\n\n  .adc-univers-highlight {\n    padding-bottom: 8px;\n  }\n\n  .adc-univers-highlight svg {\n    height: 8px;\n  }\n}\n</style>\n"
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaDescription": "CBD, THC, cannabinoïdes… Tu t'y perds ? Découvre nos guides et explications simples pour tout comprendre sur le CBD, sans prise de tête ! Copier",
+      "focusKeyword": "comprendre le CBD",
+      "metaTitle": "Comprendre le CBD : guide et conseils - Les Amis du CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791463605/lesamisducbd/partners/yeglz7ioyh196qb7rlec.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T13:29:45.439Z",
+    "title": "Comprendre le CBD",
+    "sections": [
+      {
+        "id": "codeembed-1791461606506",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 COMPRENDRE LE CBD - CENTRÉ + EFFET SURLIGNEUR -->\n\n<section class=\"adc-blog-title\">\n\n  <h1 class=\"adc-blog-title__h1\">\n    Comprendre\n    <span class=\"adc-blog-title__highlight\">le CBD</span>\n  </h1>\n\n</section>\n\n\n<style>\n\n/* BLOC */\n\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n\n  padding: 30px 20px 35px;\n\n  text-align: center;\n}\n\n\n/* H1 */\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n\n  color: #123F32;\n\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n\n  text-align: center;\n}\n\n\n/* TEXTE SURLIGNÉ */\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n\n  white-space: nowrap;\n\n  z-index: 1;\n}\n\n\n/* EFFET SURLIGNEUR VERT CLAIR */\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n\n  position: absolute;\n\n  left: -3%;\n  bottom: 3px;\n\n  width: 106%;\n  height: 13px;\n\n  background: #B8D98C;\n\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n\n  transform: rotate(-0.8deg);\n\n  opacity: .85;\n\n  z-index: -1;\n}\n\n\n/* MOBILE */\n\n@media (max-width: 700px) {\n\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n\n}\n\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791461726060",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong>Le&nbsp;CBD&nbsp;n&#39;aura&nbsp;bientôt&nbsp;plus&nbsp;de&nbsp;secrets&nbsp;pour&nbsp;vous&nbsp;!</strong></h3><p style=\"text-align: justify;\">CBD,&nbsp;THC,&nbsp;cannabinoïdes,&nbsp;terpènes…&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver&nbsp;dans&nbsp;tout&nbsp;ce&nbsp;vocabulaire&nbsp;!&nbsp;<strong>C&#39;est&nbsp;quoi&nbsp;exactement&nbsp;le&nbsp;cannabidiol&nbsp;?</strong>&nbsp;D&#39;où&nbsp;vient-il&nbsp;?&nbsp;Quelle&nbsp;différence&nbsp;entre&nbsp;le&nbsp;CBD&nbsp;et&nbsp;le&nbsp;THC&nbsp;?&nbsp;Et&nbsp;que&nbsp;dit&nbsp;la&nbsp;loi&nbsp;?&nbsp;Autant&nbsp;de&nbsp;questions&nbsp;auxquelles&nbsp;on&nbsp;vous&nbsp;aide&nbsp;à&nbsp;répondre,&nbsp;<strong>simplement&nbsp;et&nbsp;sans&nbsp;prise&nbsp;de&nbsp;tête&nbsp;!</strong></p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;comprendre&nbsp;ce&nbsp;qu&#39;on&nbsp;consomme&nbsp;et&nbsp;surtout&nbsp;partager&nbsp;ce&nbsp;qu&#39;on&nbsp;apprend.&nbsp;À&nbsp;travers&nbsp;nos&nbsp;<strong>articles,&nbsp;guides&nbsp;et&nbsp;décryptages</strong>,&nbsp;on&nbsp;démêle&nbsp;le&nbsp;vrai&nbsp;du&nbsp;faux,&nbsp;on&nbsp;explore&nbsp;l&#39;univers&nbsp;du&nbsp;chanvre&nbsp;et&nbsp;on&nbsp;rend&nbsp;le&nbsp;CBD&nbsp;accessible&nbsp;à&nbsp;tous.&nbsp;<strong>Pas&nbsp;besoin&nbsp;d&#39;être&nbsp;un&nbsp;expert&nbsp;pour&nbsp;devenir&nbsp;incollable&nbsp;sur&nbsp;le&nbsp;sujet&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791462661/lesamisducbd/partners/txpvjqokpffwrrc8e5an.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain",
+          "marginTop": "negative-medium"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791808234735",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "de A à Z (ou presque) !",
+              "introText": "CBD, THC, cannabinoïdes, terpènes, législation… Vous avez des questions ? Ça tombe bien, on adore chercher les réponses ! Retrouvez tous nos articles pour comprendre le CBD, découvrir ses particularités et démêler le vrai du faux. Promis, pas besoin d'un doctorat pour suivre !"
+            },
+            {
+              "id": "recettes",
+              "label": "Les bases du CBD",
+              "icon": "book",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est quoi au juste ?",
+              "introText": "Cannabidiol, chanvre, THC… Pas toujours facile de s'y retrouver ! Qu'est-ce que le CBD ? D'où vient-il ? Quelle différence entre CBD et THC ? On reprend les fondamentaux pour découvrir cette molécule issue du chanvre, ses origines et ses principales caractéristiques. Des explications simples, sans vous noyer sous le jargon !"
+            },
+            {
+              "id": "astuces",
+              "label": "CBD & science",
+              "icon": "oil",
+              "h2Prefix": "Le CBD ",
+              "h2Highlight": "sous la loupe !",
+              "introText": "Cannabinoïdes, terpènes, système endocannabinoïde… Derrière ces noms un peu barbares se cache un univers passionnant ! Comment le CBD interagit-il avec l'organisme ? Que disent réellement les études scientifiques ? On décrypte les mécanismes, les recherches et les découvertes autour du cannabidiol, en distinguant ce que l'on sait de ce qu'il reste à comprendre. De la science, oui… mais expliquée entre potes !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Législation du CBD",
+              "icon": "shield",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est légal ou pas ?",
+              "introText": "Entre les lois, les réglementations et les informations contradictoires, pas toujours facile de savoir ce qui est autorisé ! Le CBD est-il légal en France ? Quelles règles encadrent sa vente ? Quel taux de THC est autorisé ? On fait le point sur la législation du CBD en France et ses évolutions, avec des explications claires et des sources officielles. Parce que comprendre les règles, ça devrait être simple !"
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      },
+      {
+        "id": "codeembed-1791811779825",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "<!-- =====================================================\n     AUTRES UNIVERS — LES AMIS DU CBD\n     SANS H2 : LE TITRE EST GÉRÉ SÉPARÉMENT\n===================================================== -->\n\n<section class=\"adc-univers\">\n\n  <div class=\"adc-univers__grid\">\n\n\n    <!-- 1. CBD & USAGES -->\n    <a href=\"/p/cbd-usages\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680745/lesamisducbd/partners/idrls6aokyqq7bx7cmkq.png\"\n          alt=\"CBD et usages\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          CBD &amp; usages\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 2. CUISINE & CBD -->\n    <a href=\"/p/cuisine-cbd\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680623/lesamisducbd/partners/eotyqdyqoi9hzfntiy6t.png\"\n          alt=\"Cuisine et CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n        <span class=\"adc-univers__name\">\n          Cuisine &amp; CBD\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n      </div>\n\n    </a>\n\n\n    <!-- 3. GUIDES & CONSEILS -->\n    <a href=\"/p/conseils-guides\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680804/lesamisducbd/partners/i1fqpmzbxlueglqnkkyf.png\"\n          alt=\"Guides et conseils sur le CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Guides &amp; Conseils\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 4. COULISSES DES AMIS -->\n    <a href=\"/p/coulisses-des-amis\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680851/lesamisducbd/partners/wiqquiwlphufen57p71r.png\"\n          alt=\"Les coulisses des Amis du CBD\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Coulisses des Amis\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n\n    <!-- 5. CULTURE DU CHANVRE & CBD -->\n    <a href=\"/p/culture-du-chanvre\" class=\"adc-univers__card\">\n\n      <div class=\"adc-univers__image\">\n        <img\n          src=\"https://res.cloudinary.com/dasqyp35f/image/upload/v1790680921/lesamisducbd/partners/rjijcvlodah8guzczdpi.png\"\n          alt=\"Culture du Chanvre\"\n          loading=\"lazy\"\n        >\n      </div>\n\n      <div class=\"adc-univers__bottom\">\n\n        <span class=\"adc-univers__name\">\n          Culture du Chanvre\n        </span>\n\n        <span class=\"adc-univers__arrow\">→</span>\n\n      </div>\n\n    </a>\n\n  </div>\n\n</section>\n\n\n<style>\n\n/* =====================================================\n   SECTION\n===================================================== */\n\n.adc-univers {\n  width: calc(100% - 50px);\n  max-width: 1450px;\n\n  margin: 30px auto 70px;\n\n  font-family: inherit;\n\n  background: transparent;\n}\n\n\n/* =====================================================\n   GRILLE — 5 CARTES SUR UNE LIGNE\n===================================================== */\n\n.adc-univers__grid {\n  display: grid;\n\n  grid-template-columns: repeat(5, minmax(0, 1fr));\n\n  gap: 16px;\n}\n\n\n/* =====================================================\n   CARTE\n===================================================== */\n\n.adc-univers__card {\n  position: relative;\n\n  min-width: 0;\n\n  display: block;\n\n  overflow: hidden;\n\n  background: transparent;\n\n  border: 1px solid rgba(18, 63, 50, .07);\n\n  border-radius: 20px;\n\n  color: #123F32;\n\n  text-decoration: none;\n\n  box-shadow:\n    0 7px 20px rgba(18, 63, 50, .07),\n    0 2px 6px rgba(18, 63, 50, .03);\n\n  transition:\n    transform .32s cubic-bezier(.2,.8,.2,1),\n    box-shadow .32s ease,\n    border-color .32s ease;\n}\n\n\n/* =====================================================\n   IMAGE\n===================================================== */\n\n.adc-univers__image {\n  position: relative;\n\n  width: 100%;\n\n  overflow: hidden;\n\n  margin: 0;\n\n  aspect-ratio: 1.65 / 1;\n\n  border-radius: 19px 19px 0 0;\n}\n\n\n.adc-univers__image img {\n  display: block;\n\n  width: 100%;\n  height: 100%;\n\n  object-fit: cover;\n\n  transition:\n    transform .6s cubic-bezier(.2,.8,.2,1);\n}\n\n\n/* =====================================================\n   BAS DE CARTE\n===================================================== */\n\n.adc-univers__bottom {\n  min-height: 68px;\n\n  padding: 15px 16px;\n\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n\n  gap: 10px;\n\n  box-sizing: border-box;\n\n  background: transparent;\n}\n\n\n/* =====================================================\n   NOM DE L'UNIVERS\n===================================================== */\n\n.adc-univers__name {\n  min-width: 0;\n\n  display: flex;\n  align-items: center;\n\n  gap: 9px;\n\n  color: #123F32;\n\n  font-family: inherit;\n\n  font-size: 15px;\n  font-weight: 800;\n\n  line-height: 1.25;\n}\n\n\n/* =====================================================\n   FLÈCHE\n===================================================== */\n\n.adc-univers__arrow {\n  flex: 0 0 auto;\n\n  display: flex;\n  align-items: center;\n  justify-content: center;\n\n  width: 30px;\n  height: 30px;\n\n  border-radius: 0;\n\n  background: transparent;\n\n  color: #123F32;\n\n  font-size: 18px;\n  font-weight: 800;\n\n  line-height: 1;\n\n  box-shadow: none;\n\n  transition:\n    transform .3s ease,\n    background .3s ease,\n    color .3s ease;\n}\n\n\n/* =====================================================\n   SURVOL — OMBRE + LÉGÈRE MONTÉE\n===================================================== */\n\n.adc-univers__card:hover {\n  transform: translateY(-7px);\n\n  border-color: rgba(18, 63, 50, .14);\n\n  box-shadow:\n    0 22px 40px rgba(18, 63, 50, .15),\n    0 7px 15px rgba(18, 63, 50, .07);\n}\n\n\n/* =====================================================\n   ZOOM PHOTO AU SURVOL\n===================================================== */\n\n.adc-univers__card:hover\n.adc-univers__image img {\n  transform: scale(1.055);\n}\n\n\n/* =====================================================\n   FLÈCHE AU SURVOL\n===================================================== */\n\n.adc-univers__card:hover\n.adc-univers__arrow {\n  transform: translateX(3px);\n\n  background: transparent;\n\n  color: #123F32;\n}\n\n\n/* =====================================================\n   REFLET TRÈS LÉGER AU SURVOL\n===================================================== */\n\n.adc-univers__card::after {\n  content: \"\";\n\n  position: absolute;\n\n  inset: 0;\n\n  pointer-events: none;\n\n  background:\n    linear-gradient(\n      120deg,\n      transparent 20%,\n      rgba(255, 255, 255, .18) 45%,\n      transparent 70%\n    );\n\n  transform: translateX(-120%);\n\n  transition:\n    transform .65s ease;\n}\n\n\n.adc-univers__card:hover::after {\n  transform: translateX(120%);\n}\n\n\n/* =====================================================\n   ÉCRANS INTERMÉDIAIRES\n===================================================== */\n\n@media (max-width: 1100px) {\n\n  .adc-univers__grid {\n    grid-template-columns: repeat(3, 1fr);\n  }\n\n}\n\n\n/* =====================================================\n   TABLETTE\n===================================================== */\n\n@media (max-width: 760px) {\n\n  .adc-univers {\n    width: calc(100% - 36px);\n\n    margin: 25px auto 55px;\n  }\n\n\n  .adc-univers__grid {\n    grid-template-columns: repeat(2, 1fr);\n\n    gap: 14px;\n  }\n\n\n  .adc-univers__card:hover {\n    transform: none;\n  }\n\n}\n\n\n/* =====================================================\n   MOBILE\n===================================================== */\n\n@media (max-width: 480px) {\n\n  .adc-univers {\n    width: calc(100% - 30px);\n\n    margin: 20px auto 50px;\n  }\n\n\n  .adc-univers__grid {\n    grid-template-columns: 1fr;\n\n    gap: 16px;\n  }\n\n\n  .adc-univers__image {\n    aspect-ratio: 1.9 / 1;\n  }\n\n\n  .adc-univers__bottom {\n    min-height: 65px;\n\n    padding: 14px 15px;\n  }\n\n\n  .adc-univers__name {\n    font-size: 15px;\n  }\n\n}\n\n\n/* =====================================================\n   ACCESSIBILITÉ\n===================================================== */\n\n@media (prefers-reduced-motion: reduce) {\n\n  .adc-univers__card,\n  .adc-univers__image img,\n  .adc-univers__arrow,\n  .adc-univers__card::after {\n    transition: none;\n  }\n\n\n  .adc-univers__card:hover {\n    transform: none;\n  }\n\n\n  .adc-univers__card:hover\n  .adc-univers__image img {\n    transform: none;\n  }\n\n}\n\n</style>"
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaDescription": "CBD, THC, cannabinoïdes… Tu t'y perds ? Découvre nos guides et explications simples pour tout comprendre sur le CBD, sans prise de tête ! Copier",
+      "focusKeyword": "comprendre le CBD",
+      "metaTitle": "Comprendre le CBD : guide et conseils - Les Amis du CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791463605/lesamisducbd/partners/yeglz7ioyh196qb7rlec.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T13:06:38.500Z",
+    "title": "Comprendre le CBD",
+    "sections": [
+      {
+        "id": "codeembed-1791461606506",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 COMPRENDRE LE CBD - CENTRÉ + EFFET SURLIGNEUR -->\n\n<section class=\"adc-blog-title\">\n\n  <h1 class=\"adc-blog-title__h1\">\n    Comprendre\n    <span class=\"adc-blog-title__highlight\">le CBD</span>\n  </h1>\n\n</section>\n\n\n<style>\n\n/* BLOC */\n\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n\n  padding: 30px 20px 35px;\n\n  text-align: center;\n}\n\n\n/* H1 */\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n\n  color: #123F32;\n\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n\n  text-align: center;\n}\n\n\n/* TEXTE SURLIGNÉ */\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n\n  white-space: nowrap;\n\n  z-index: 1;\n}\n\n\n/* EFFET SURLIGNEUR VERT CLAIR */\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n\n  position: absolute;\n\n  left: -3%;\n  bottom: 3px;\n\n  width: 106%;\n  height: 13px;\n\n  background: #B8D98C;\n\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n\n  transform: rotate(-0.8deg);\n\n  opacity: .85;\n\n  z-index: -1;\n}\n\n\n/* MOBILE */\n\n@media (max-width: 700px) {\n\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n\n}\n\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791461726060",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong>Le&nbsp;CBD&nbsp;n&#39;aura&nbsp;bientôt&nbsp;plus&nbsp;de&nbsp;secrets&nbsp;pour&nbsp;vous&nbsp;!</strong></h3><p style=\"text-align: justify;\">CBD,&nbsp;THC,&nbsp;cannabinoïdes,&nbsp;terpènes…&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver&nbsp;dans&nbsp;tout&nbsp;ce&nbsp;vocabulaire&nbsp;!&nbsp;<strong>C&#39;est&nbsp;quoi&nbsp;exactement&nbsp;le&nbsp;cannabidiol&nbsp;?</strong>&nbsp;D&#39;où&nbsp;vient-il&nbsp;?&nbsp;Quelle&nbsp;différence&nbsp;entre&nbsp;le&nbsp;CBD&nbsp;et&nbsp;le&nbsp;THC&nbsp;?&nbsp;Et&nbsp;que&nbsp;dit&nbsp;la&nbsp;loi&nbsp;?&nbsp;Autant&nbsp;de&nbsp;questions&nbsp;auxquelles&nbsp;on&nbsp;vous&nbsp;aide&nbsp;à&nbsp;répondre,&nbsp;<strong>simplement&nbsp;et&nbsp;sans&nbsp;prise&nbsp;de&nbsp;tête&nbsp;!</strong></p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;comprendre&nbsp;ce&nbsp;qu&#39;on&nbsp;consomme&nbsp;et&nbsp;surtout&nbsp;partager&nbsp;ce&nbsp;qu&#39;on&nbsp;apprend.&nbsp;À&nbsp;travers&nbsp;nos&nbsp;<strong>articles,&nbsp;guides&nbsp;et&nbsp;décryptages</strong>,&nbsp;on&nbsp;démêle&nbsp;le&nbsp;vrai&nbsp;du&nbsp;faux,&nbsp;on&nbsp;explore&nbsp;l&#39;univers&nbsp;du&nbsp;chanvre&nbsp;et&nbsp;on&nbsp;rend&nbsp;le&nbsp;CBD&nbsp;accessible&nbsp;à&nbsp;tous.&nbsp;<strong>Pas&nbsp;besoin&nbsp;d&#39;être&nbsp;un&nbsp;expert&nbsp;pour&nbsp;devenir&nbsp;incollable&nbsp;sur&nbsp;le&nbsp;sujet&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791462661/lesamisducbd/partners/txpvjqokpffwrrc8e5an.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain",
+          "marginTop": "negative-medium"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791808234735",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "de A à Z (ou presque) !",
+              "introText": "CBD, THC, cannabinoïdes, terpènes, législation… Vous avez des questions ? Ça tombe bien, on adore chercher les réponses ! Retrouvez tous nos articles pour comprendre le CBD, découvrir ses particularités et démêler le vrai du faux. Promis, pas besoin d'un doctorat pour suivre !"
+            },
+            {
+              "id": "recettes",
+              "label": "Les bases du CBD",
+              "icon": "book",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est quoi au juste ?",
+              "introText": "Cannabidiol, chanvre, THC… Pas toujours facile de s'y retrouver ! Qu'est-ce que le CBD ? D'où vient-il ? Quelle différence entre CBD et THC ? On reprend les fondamentaux pour découvrir cette molécule issue du chanvre, ses origines et ses principales caractéristiques. Des explications simples, sans vous noyer sous le jargon !"
+            },
+            {
+              "id": "astuces",
+              "label": "CBD & science",
+              "icon": "oil",
+              "h2Prefix": "Le CBD ",
+              "h2Highlight": "sous la loupe !",
+              "introText": "Cannabinoïdes, terpènes, système endocannabinoïde… Derrière ces noms un peu barbares se cache un univers passionnant ! Comment le CBD interagit-il avec l'organisme ? Que disent réellement les études scientifiques ? On décrypte les mécanismes, les recherches et les découvertes autour du cannabidiol, en distinguant ce que l'on sait de ce qu'il reste à comprendre. De la science, oui… mais expliquée entre potes !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Législation du CBD",
+              "icon": "shield",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est légal ou pas ?",
+              "introText": "Entre les lois, les réglementations et les informations contradictoires, pas toujours facile de savoir ce qui est autorisé ! Le CBD est-il légal en France ? Quelles règles encadrent sa vente ? Quel taux de THC est autorisé ? On fait le point sur la législation du CBD en France et ses évolutions, avec des explications claires et des sources officielles. Parce que comprendre les règles, ça devrait être simple !"
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaDescription": "CBD, THC, cannabinoïdes… Tu t'y perds ? Découvre nos guides et explications simples pour tout comprendre sur le CBD, sans prise de tête ! Copier",
+      "focusKeyword": "comprendre le CBD",
+      "metaTitle": "Comprendre le CBD : guide et conseils - Les Amis du CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791463605/lesamisducbd/partners/yeglz7ioyh196qb7rlec.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:35:08.775Z",
+    "title": "Comprendre le CBD",
+    "sections": [
+      {
+        "id": "codeembed-1791461606506",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 COMPRENDRE LE CBD - CENTRÉ + EFFET SURLIGNEUR -->\n\n<section class=\"adc-blog-title\">\n\n  <h1 class=\"adc-blog-title__h1\">\n    Comprendre\n    <span class=\"adc-blog-title__highlight\">le CBD</span>\n  </h1>\n\n</section>\n\n\n<style>\n\n/* BLOC */\n\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n\n  padding: 30px 20px 35px;\n\n  text-align: center;\n}\n\n\n/* H1 */\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n\n  color: #123F32;\n\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n\n  text-align: center;\n}\n\n\n/* TEXTE SURLIGNÉ */\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n\n  white-space: nowrap;\n\n  z-index: 1;\n}\n\n\n/* EFFET SURLIGNEUR VERT CLAIR */\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n\n  position: absolute;\n\n  left: -3%;\n  bottom: 3px;\n\n  width: 106%;\n  height: 13px;\n\n  background: #B8D98C;\n\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n\n  transform: rotate(-0.8deg);\n\n  opacity: .85;\n\n  z-index: -1;\n}\n\n\n/* MOBILE */\n\n@media (max-width: 700px) {\n\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n\n}\n\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791461726060",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong>Le&nbsp;CBD&nbsp;n&#39;aura&nbsp;bientôt&nbsp;plus&nbsp;de&nbsp;secrets&nbsp;pour&nbsp;vous&nbsp;!</strong></h3><p style=\"text-align: justify;\">CBD,&nbsp;THC,&nbsp;cannabinoïdes,&nbsp;terpènes…&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver&nbsp;dans&nbsp;tout&nbsp;ce&nbsp;vocabulaire&nbsp;!&nbsp;<strong>C&#39;est&nbsp;quoi&nbsp;exactement&nbsp;le&nbsp;cannabidiol&nbsp;?</strong>&nbsp;D&#39;où&nbsp;vient-il&nbsp;?&nbsp;Quelle&nbsp;différence&nbsp;entre&nbsp;le&nbsp;CBD&nbsp;et&nbsp;le&nbsp;THC&nbsp;?&nbsp;Et&nbsp;que&nbsp;dit&nbsp;la&nbsp;loi&nbsp;?&nbsp;Autant&nbsp;de&nbsp;questions&nbsp;auxquelles&nbsp;on&nbsp;vous&nbsp;aide&nbsp;à&nbsp;répondre,&nbsp;<strong>simplement&nbsp;et&nbsp;sans&nbsp;prise&nbsp;de&nbsp;tête&nbsp;!</strong></p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;comprendre&nbsp;ce&nbsp;qu&#39;on&nbsp;consomme&nbsp;et&nbsp;surtout&nbsp;partager&nbsp;ce&nbsp;qu&#39;on&nbsp;apprend.&nbsp;À&nbsp;travers&nbsp;nos&nbsp;<strong>articles,&nbsp;guides&nbsp;et&nbsp;décryptages</strong>,&nbsp;on&nbsp;démêle&nbsp;le&nbsp;vrai&nbsp;du&nbsp;faux,&nbsp;on&nbsp;explore&nbsp;l&#39;univers&nbsp;du&nbsp;chanvre&nbsp;et&nbsp;on&nbsp;rend&nbsp;le&nbsp;CBD&nbsp;accessible&nbsp;à&nbsp;tous.&nbsp;<strong>Pas&nbsp;besoin&nbsp;d&#39;être&nbsp;un&nbsp;expert&nbsp;pour&nbsp;devenir&nbsp;incollable&nbsp;sur&nbsp;le&nbsp;sujet&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791462661/lesamisducbd/partners/txpvjqokpffwrrc8e5an.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain",
+          "marginTop": "negative-medium"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791808234735",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "de A à Z (ou presque) !",
+              "introText": "CBD, THC, cannabinoïdes, terpènes, législation… Vous avez des questions ? Ça tombe bien, on adore chercher les réponses ! Retrouvez tous nos articles pour comprendre le CBD, découvrir ses particularités et démêler le vrai du faux. Promis, pas besoin d'un doctorat pour suivre !"
+            },
+            {
+              "id": "recettes",
+              "label": "Les bases du CBD",
+              "icon": "book",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est quoi au juste ?",
+              "introText": "Cannabidiol, chanvre, THC… Pas toujours facile de s'y retrouver ! Qu'est-ce que le CBD ? D'où vient-il ? Quelle différence entre CBD et THC ? On reprend les fondamentaux pour découvrir cette molécule issue du chanvre, ses origines et ses principales caractéristiques. Des explications simples, sans vous noyer sous le jargon !"
+            },
+            {
+              "id": "astuces",
+              "label": "CBD & science",
+              "icon": "oil",
+              "h2Prefix": "Le CBD ",
+              "h2Highlight": "sous la loupe !",
+              "introText": "Cannabinoïdes, terpènes, système endocannabinoïde… Derrière ces noms un peu barbares se cache un univers passionnant ! Comment le CBD interagit-il avec l'organisme ? Que disent réellement les études scientifiques ? On décrypte les mécanismes, les recherches et les découvertes autour du cannabidiol, en distinguant ce que l'on sait de ce qu'il reste à comprendre. De la science, oui… mais expliquée entre potes !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Législation du CBD",
+              "icon": "shield",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est légal ou pas ?",
+              "introText": "Entre les lois, les réglementations et les informations contradictoires, pas toujours facile de savoir ce qui est autorisé ! Le CBD est-il légal en France ? Quelles règles encadrent sa vente ? Quel taux de THC est autorisé ? On fait le point sur la législation du CBD en France et ses évolutions, avec des explications claires et des sources officielles. Parce que comprendre les règles, ça devrait être simple !"
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaDescription": "CBD, THC, cannabinoïdes… Tu t'y perds ? Découvre nos guides et explications simples pour tout comprendre sur le CBD, sans prise de tête ! Copier",
+      "focusKeyword": "comprendre le CBD",
+      "metaTitle": "Comprendre le CBD : guide et conseils - Les Amis du CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791463605/lesamisducbd/partners/yeglz7ioyh196qb7rlec.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:35:01.484Z",
+    "title": "Comprendre le CBD",
+    "sections": [
+      {
+        "id": "codeembed-1791461606506",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 COMPRENDRE LE CBD - CENTRÉ + EFFET SURLIGNEUR -->\n\n<section class=\"adc-blog-title\">\n\n  <h1 class=\"adc-blog-title__h1\">\n    Comprendre\n    <span class=\"adc-blog-title__highlight\">le CBD</span>\n  </h1>\n\n</section>\n\n\n<style>\n\n/* BLOC */\n\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n\n  padding: 30px 20px 35px;\n\n  text-align: center;\n}\n\n\n/* H1 */\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n\n  color: #123F32;\n\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n\n  text-align: center;\n}\n\n\n/* TEXTE SURLIGNÉ */\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n\n  white-space: nowrap;\n\n  z-index: 1;\n}\n\n\n/* EFFET SURLIGNEUR VERT CLAIR */\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n\n  position: absolute;\n\n  left: -3%;\n  bottom: 3px;\n\n  width: 106%;\n  height: 13px;\n\n  background: #B8D98C;\n\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n\n  transform: rotate(-0.8deg);\n\n  opacity: .85;\n\n  z-index: -1;\n}\n\n\n/* MOBILE */\n\n@media (max-width: 700px) {\n\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n\n}\n\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791461726060",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong>Le&nbsp;CBD&nbsp;n&#39;aura&nbsp;bientôt&nbsp;plus&nbsp;de&nbsp;secrets&nbsp;pour&nbsp;vous&nbsp;!</strong></h3><p style=\"text-align: justify;\">CBD,&nbsp;THC,&nbsp;cannabinoïdes,&nbsp;terpènes…&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver&nbsp;dans&nbsp;tout&nbsp;ce&nbsp;vocabulaire&nbsp;!&nbsp;<strong>C&#39;est&nbsp;quoi&nbsp;exactement&nbsp;le&nbsp;cannabidiol&nbsp;?</strong>&nbsp;D&#39;où&nbsp;vient-il&nbsp;?&nbsp;Quelle&nbsp;différence&nbsp;entre&nbsp;le&nbsp;CBD&nbsp;et&nbsp;le&nbsp;THC&nbsp;?&nbsp;Et&nbsp;que&nbsp;dit&nbsp;la&nbsp;loi&nbsp;?&nbsp;Autant&nbsp;de&nbsp;questions&nbsp;auxquelles&nbsp;on&nbsp;vous&nbsp;aide&nbsp;à&nbsp;répondre,&nbsp;<strong>simplement&nbsp;et&nbsp;sans&nbsp;prise&nbsp;de&nbsp;tête&nbsp;!</strong></p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;comprendre&nbsp;ce&nbsp;qu&#39;on&nbsp;consomme&nbsp;et&nbsp;surtout&nbsp;partager&nbsp;ce&nbsp;qu&#39;on&nbsp;apprend.&nbsp;À&nbsp;travers&nbsp;nos&nbsp;<strong>articles,&nbsp;guides&nbsp;et&nbsp;décryptages</strong>,&nbsp;on&nbsp;démêle&nbsp;le&nbsp;vrai&nbsp;du&nbsp;faux,&nbsp;on&nbsp;explore&nbsp;l&#39;univers&nbsp;du&nbsp;chanvre&nbsp;et&nbsp;on&nbsp;rend&nbsp;le&nbsp;CBD&nbsp;accessible&nbsp;à&nbsp;tous.&nbsp;<strong>Pas&nbsp;besoin&nbsp;d&#39;être&nbsp;un&nbsp;expert&nbsp;pour&nbsp;devenir&nbsp;incollable&nbsp;sur&nbsp;le&nbsp;sujet&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791462661/lesamisducbd/partners/txpvjqokpffwrrc8e5an.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain",
+          "marginTop": "negative-medium"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791808234735",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "de A à Z (ou presque) !",
+              "introText": "CBD, THC, cannabinoïdes, terpènes, législation… Vous avez des questions ? Ça tombe bien, on adore chercher les réponses ! Retrouvez tous nos articles pour comprendre le CBD, découvrir ses particularités et démêler le vrai du faux. Promis, pas besoin d'un doctorat pour suivre !"
+            },
+            {
+              "id": "recettes",
+              "label": "Les bases du CBD",
+              "icon": "book",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est quoi au juste ?",
+              "introText": "Cannabidiol, chanvre, THC… Pas toujours facile de s'y retrouver ! Qu'est-ce que le CBD ? D'où vient-il ? Quelle différence entre CBD et THC ? On reprend les fondamentaux pour découvrir cette molécule issue du chanvre, ses origines et ses principales caractéristiques. Des explications simples, sans vous noyer sous le jargon !"
+            },
+            {
+              "id": "astuces",
+              "label": "CBD & science",
+              "icon": "oil",
+              "h2Prefix": "Le CBD ",
+              "h2Highlight": "sous la loupe !",
+              "introText": "Cannabinoïdes, terpènes, système endocannabinoïde… Derrière ces noms un peu barbares se cache un univers passionnant ! Comment le CBD interagit-il avec l'organisme ? Que disent réellement les études scientifiques ? On décrypte les mécanismes, les recherches et les découvertes autour du cannabidiol, en distinguant ce que l'on sait de ce qu'il reste à comprendre. De la science, oui… mais expliquée entre potes !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Législation du CBD",
+              "icon": "shield",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est légal ou pas ?",
+              "introText": "Entre les lois, les réglementations et les informations contradictoires, pas toujours facile de savoir ce qui est autorisé ! Le CBD est-il légal en France ? Quelles règles encadrent sa vente ? Quel taux de THC est autorisé ? On fait le point sur la législation du CBD en France et ses évolutions, avec des explications claires et des sources officielles. Parce que comprendre les règles, ça devrait être simple !"
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaDescription": "CBD, THC, cannabinoïdes… Tu t'y perds ? Découvre nos guides et explications simples pour tout comprendre sur le CBD, sans prise de tête ! Copier",
+      "focusKeyword": "comprendre le CBD",
+      "metaTitle": "Comprendre le CBD : guide et conseils - Les Amis du CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791463605/lesamisducbd/partners/yeglz7ioyh196qb7rlec.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:34:54.788Z",
+    "title": "Comprendre le CBD",
+    "sections": [
+      {
+        "id": "codeembed-1791461606506",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 COMPRENDRE LE CBD - CENTRÉ + EFFET SURLIGNEUR -->\n\n<section class=\"adc-blog-title\">\n\n  <h1 class=\"adc-blog-title__h1\">\n    Comprendre\n    <span class=\"adc-blog-title__highlight\">le CBD</span>\n  </h1>\n\n</section>\n\n\n<style>\n\n/* BLOC */\n\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n\n  padding: 30px 20px 35px;\n\n  text-align: center;\n}\n\n\n/* H1 */\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n\n  color: #123F32;\n\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n\n  text-align: center;\n}\n\n\n/* TEXTE SURLIGNÉ */\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n\n  white-space: nowrap;\n\n  z-index: 1;\n}\n\n\n/* EFFET SURLIGNEUR VERT CLAIR */\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n\n  position: absolute;\n\n  left: -3%;\n  bottom: 3px;\n\n  width: 106%;\n  height: 13px;\n\n  background: #B8D98C;\n\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n\n  transform: rotate(-0.8deg);\n\n  opacity: .85;\n\n  z-index: -1;\n}\n\n\n/* MOBILE */\n\n@media (max-width: 700px) {\n\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n\n}\n\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791461726060",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong>Le&nbsp;CBD&nbsp;n&#39;aura&nbsp;bientôt&nbsp;plus&nbsp;de&nbsp;secrets&nbsp;pour&nbsp;vous&nbsp;!</strong></h3><p style=\"text-align: justify;\">CBD,&nbsp;THC,&nbsp;cannabinoïdes,&nbsp;terpènes…&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver&nbsp;dans&nbsp;tout&nbsp;ce&nbsp;vocabulaire&nbsp;!&nbsp;<strong>C&#39;est&nbsp;quoi&nbsp;exactement&nbsp;le&nbsp;cannabidiol&nbsp;?</strong>&nbsp;D&#39;où&nbsp;vient-il&nbsp;?&nbsp;Quelle&nbsp;différence&nbsp;entre&nbsp;le&nbsp;CBD&nbsp;et&nbsp;le&nbsp;THC&nbsp;?&nbsp;Et&nbsp;que&nbsp;dit&nbsp;la&nbsp;loi&nbsp;?&nbsp;Autant&nbsp;de&nbsp;questions&nbsp;auxquelles&nbsp;on&nbsp;vous&nbsp;aide&nbsp;à&nbsp;répondre,&nbsp;<strong>simplement&nbsp;et&nbsp;sans&nbsp;prise&nbsp;de&nbsp;tête&nbsp;!</strong></p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;comprendre&nbsp;ce&nbsp;qu&#39;on&nbsp;consomme&nbsp;et&nbsp;surtout&nbsp;partager&nbsp;ce&nbsp;qu&#39;on&nbsp;apprend.&nbsp;À&nbsp;travers&nbsp;nos&nbsp;<strong>articles,&nbsp;guides&nbsp;et&nbsp;décryptages</strong>,&nbsp;on&nbsp;démêle&nbsp;le&nbsp;vrai&nbsp;du&nbsp;faux,&nbsp;on&nbsp;explore&nbsp;l&#39;univers&nbsp;du&nbsp;chanvre&nbsp;et&nbsp;on&nbsp;rend&nbsp;le&nbsp;CBD&nbsp;accessible&nbsp;à&nbsp;tous.&nbsp;<strong>Pas&nbsp;besoin&nbsp;d&#39;être&nbsp;un&nbsp;expert&nbsp;pour&nbsp;devenir&nbsp;incollable&nbsp;sur&nbsp;le&nbsp;sujet&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791462661/lesamisducbd/partners/txpvjqokpffwrrc8e5an.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain",
+          "marginTop": "negative-medium"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791808234735",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "de A à Z (ou presque) !",
+              "introText": "CBD, THC, cannabinoïdes, terpènes, législation… Vous avez des questions ? Ça tombe bien, on adore chercher les réponses ! Retrouvez tous nos articles pour comprendre le CBD, découvrir ses particularités et démêler le vrai du faux. Promis, pas besoin d'un doctorat pour suivre !"
+            },
+            {
+              "id": "recettes",
+              "label": "Les bases du CBD",
+              "icon": "book",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est quoi au juste ?",
+              "introText": "Cannabidiol, chanvre, THC… Pas toujours facile de s'y retrouver ! Qu'est-ce que le CBD ? D'où vient-il ? Quelle différence entre CBD et THC ? On reprend les fondamentaux pour découvrir cette molécule issue du chanvre, ses origines et ses principales caractéristiques. Des explications simples, sans vous noyer sous le jargon !"
+            },
+            {
+              "id": "astuces",
+              "label": "CBD & science",
+              "icon": "oil",
+              "h2Prefix": "Le CBD ",
+              "h2Highlight": "sous la loupe !",
+              "introText": "Cannabinoïdes, terpènes, système endocannabinoïde… Derrière ces noms un peu barbares se cache un univers passionnant ! Comment le CBD interagit-il avec l'organisme ? Que disent réellement les études scientifiques ? On décrypte les mécanismes, les recherches et les découvertes autour du cannabidiol, en distinguant ce que l'on sait de ce qu'il reste à comprendre. De la science, oui… mais expliquée entre potes !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Législation du CBD",
+              "icon": "shield",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est légal ou pas ?",
+              "introText": "Entre les lois, les réglementations et les informations contradictoires, pas toujours facile de savoir ce qui est autorisé ! Le CBD est-il légal en France ? Quelles règles encadrent sa vente ? Quel taux de THC est autorisé ? On fait le point sur la législation du CBD en France et ses évolutions, avec des explications claires et des sources officielles. Parce que comprendre les règles, ça devrait être simple !"
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaDescription": "CBD, THC, cannabinoïdes… Tu t'y perds ? Découvre nos guides et explications simples pour tout comprendre sur le CBD, sans prise de tête ! Copier",
+      "focusKeyword": "comprendre le CBD",
+      "metaTitle": "Comprendre le CBD : guide et conseils - Les Amis du CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791463605/lesamisducbd/partners/yeglz7ioyh196qb7rlec.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:34:40.886Z",
+    "title": "Comprendre le CBD",
+    "sections": [
+      {
+        "id": "codeembed-1791461606506",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 COMPRENDRE LE CBD - CENTRÉ + EFFET SURLIGNEUR -->\n\n<section class=\"adc-blog-title\">\n\n  <h1 class=\"adc-blog-title__h1\">\n    Comprendre\n    <span class=\"adc-blog-title__highlight\">le CBD</span>\n  </h1>\n\n</section>\n\n\n<style>\n\n/* BLOC */\n\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n\n  padding: 30px 20px 35px;\n\n  text-align: center;\n}\n\n\n/* H1 */\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n\n  color: #123F32;\n\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n\n  text-align: center;\n}\n\n\n/* TEXTE SURLIGNÉ */\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n\n  white-space: nowrap;\n\n  z-index: 1;\n}\n\n\n/* EFFET SURLIGNEUR VERT CLAIR */\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n\n  position: absolute;\n\n  left: -3%;\n  bottom: 3px;\n\n  width: 106%;\n  height: 13px;\n\n  background: #B8D98C;\n\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n\n  transform: rotate(-0.8deg);\n\n  opacity: .85;\n\n  z-index: -1;\n}\n\n\n/* MOBILE */\n\n@media (max-width: 700px) {\n\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n\n}\n\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791461726060",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong>Le&nbsp;CBD&nbsp;n&#39;aura&nbsp;bientôt&nbsp;plus&nbsp;de&nbsp;secrets&nbsp;pour&nbsp;vous&nbsp;!</strong></h3><p style=\"text-align: justify;\">CBD,&nbsp;THC,&nbsp;cannabinoïdes,&nbsp;terpènes…&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver&nbsp;dans&nbsp;tout&nbsp;ce&nbsp;vocabulaire&nbsp;!&nbsp;<strong>C&#39;est&nbsp;quoi&nbsp;exactement&nbsp;le&nbsp;cannabidiol&nbsp;?</strong>&nbsp;D&#39;où&nbsp;vient-il&nbsp;?&nbsp;Quelle&nbsp;différence&nbsp;entre&nbsp;le&nbsp;CBD&nbsp;et&nbsp;le&nbsp;THC&nbsp;?&nbsp;Et&nbsp;que&nbsp;dit&nbsp;la&nbsp;loi&nbsp;?&nbsp;Autant&nbsp;de&nbsp;questions&nbsp;auxquelles&nbsp;on&nbsp;vous&nbsp;aide&nbsp;à&nbsp;répondre,&nbsp;<strong>simplement&nbsp;et&nbsp;sans&nbsp;prise&nbsp;de&nbsp;tête&nbsp;!</strong></p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;comprendre&nbsp;ce&nbsp;qu&#39;on&nbsp;consomme&nbsp;et&nbsp;surtout&nbsp;partager&nbsp;ce&nbsp;qu&#39;on&nbsp;apprend.&nbsp;À&nbsp;travers&nbsp;nos&nbsp;<strong>articles,&nbsp;guides&nbsp;et&nbsp;décryptages</strong>,&nbsp;on&nbsp;démêle&nbsp;le&nbsp;vrai&nbsp;du&nbsp;faux,&nbsp;on&nbsp;explore&nbsp;l&#39;univers&nbsp;du&nbsp;chanvre&nbsp;et&nbsp;on&nbsp;rend&nbsp;le&nbsp;CBD&nbsp;accessible&nbsp;à&nbsp;tous.&nbsp;<strong>Pas&nbsp;besoin&nbsp;d&#39;être&nbsp;un&nbsp;expert&nbsp;pour&nbsp;devenir&nbsp;incollable&nbsp;sur&nbsp;le&nbsp;sujet&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791462661/lesamisducbd/partners/txpvjqokpffwrrc8e5an.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain",
+          "marginTop": "negative-medium"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791808234735",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "de A à Z (ou presque) !",
+              "introText": "CBD, THC, cannabinoïdes, terpènes, législation… Vous avez des questions ? Ça tombe bien, on adore chercher les réponses ! Retrouvez tous nos articles pour comprendre le CBD, découvrir ses particularités et démêler le vrai du faux. Promis, pas besoin d'un doctorat pour suivre !"
+            },
+            {
+              "id": "recettes",
+              "label": "Les bases du CBD",
+              "icon": "book",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est quoi au juste ?",
+              "introText": "Cannabidiol, chanvre, THC… Pas toujours facile de s'y retrouver ! Qu'est-ce que le CBD ? D'où vient-il ? Quelle différence entre CBD et THC ? On reprend les fondamentaux pour découvrir cette molécule issue du chanvre, ses origines et ses principales caractéristiques. Des explications simples, sans vous noyer sous le jargon !"
+            },
+            {
+              "id": "astuces",
+              "label": "CBD & science",
+              "icon": "oil",
+              "h2Prefix": "Le CBD ",
+              "h2Highlight": "sous la loupe !",
+              "introText": "Cannabinoïdes, terpènes, système endocannabinoïde… Derrière ces noms un peu barbares se cache un univers passionnant ! Comment le CBD interagit-il avec l'organisme ? Que disent réellement les études scientifiques ? On décrypte les mécanismes, les recherches et les découvertes autour du cannabidiol, en distinguant ce que l'on sait de ce qu'il reste à comprendre. De la science, oui… mais expliquée entre potes !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Législation du CBD",
+              "icon": "shield",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est légal ou pas ?",
+              "introText": "Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations."
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaDescription": "CBD, THC, cannabinoïdes… Tu t'y perds ? Découvre nos guides et explications simples pour tout comprendre sur le CBD, sans prise de tête ! Copier",
+      "focusKeyword": "comprendre le CBD",
+      "metaTitle": "Comprendre le CBD : guide et conseils - Les Amis du CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791463605/lesamisducbd/partners/yeglz7ioyh196qb7rlec.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:34:36.082Z",
+    "title": "Comprendre le CBD",
+    "sections": [
+      {
+        "id": "codeembed-1791461606506",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 COMPRENDRE LE CBD - CENTRÉ + EFFET SURLIGNEUR -->\n\n<section class=\"adc-blog-title\">\n\n  <h1 class=\"adc-blog-title__h1\">\n    Comprendre\n    <span class=\"adc-blog-title__highlight\">le CBD</span>\n  </h1>\n\n</section>\n\n\n<style>\n\n/* BLOC */\n\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n\n  padding: 30px 20px 35px;\n\n  text-align: center;\n}\n\n\n/* H1 */\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n\n  color: #123F32;\n\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n\n  text-align: center;\n}\n\n\n/* TEXTE SURLIGNÉ */\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n\n  white-space: nowrap;\n\n  z-index: 1;\n}\n\n\n/* EFFET SURLIGNEUR VERT CLAIR */\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n\n  position: absolute;\n\n  left: -3%;\n  bottom: 3px;\n\n  width: 106%;\n  height: 13px;\n\n  background: #B8D98C;\n\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n\n  transform: rotate(-0.8deg);\n\n  opacity: .85;\n\n  z-index: -1;\n}\n\n\n/* MOBILE */\n\n@media (max-width: 700px) {\n\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n\n}\n\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791461726060",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong>Le&nbsp;CBD&nbsp;n&#39;aura&nbsp;bientôt&nbsp;plus&nbsp;de&nbsp;secrets&nbsp;pour&nbsp;vous&nbsp;!</strong></h3><p style=\"text-align: justify;\">CBD,&nbsp;THC,&nbsp;cannabinoïdes,&nbsp;terpènes…&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver&nbsp;dans&nbsp;tout&nbsp;ce&nbsp;vocabulaire&nbsp;!&nbsp;<strong>C&#39;est&nbsp;quoi&nbsp;exactement&nbsp;le&nbsp;cannabidiol&nbsp;?</strong>&nbsp;D&#39;où&nbsp;vient-il&nbsp;?&nbsp;Quelle&nbsp;différence&nbsp;entre&nbsp;le&nbsp;CBD&nbsp;et&nbsp;le&nbsp;THC&nbsp;?&nbsp;Et&nbsp;que&nbsp;dit&nbsp;la&nbsp;loi&nbsp;?&nbsp;Autant&nbsp;de&nbsp;questions&nbsp;auxquelles&nbsp;on&nbsp;vous&nbsp;aide&nbsp;à&nbsp;répondre,&nbsp;<strong>simplement&nbsp;et&nbsp;sans&nbsp;prise&nbsp;de&nbsp;tête&nbsp;!</strong></p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;comprendre&nbsp;ce&nbsp;qu&#39;on&nbsp;consomme&nbsp;et&nbsp;surtout&nbsp;partager&nbsp;ce&nbsp;qu&#39;on&nbsp;apprend.&nbsp;À&nbsp;travers&nbsp;nos&nbsp;<strong>articles,&nbsp;guides&nbsp;et&nbsp;décryptages</strong>,&nbsp;on&nbsp;démêle&nbsp;le&nbsp;vrai&nbsp;du&nbsp;faux,&nbsp;on&nbsp;explore&nbsp;l&#39;univers&nbsp;du&nbsp;chanvre&nbsp;et&nbsp;on&nbsp;rend&nbsp;le&nbsp;CBD&nbsp;accessible&nbsp;à&nbsp;tous.&nbsp;<strong>Pas&nbsp;besoin&nbsp;d&#39;être&nbsp;un&nbsp;expert&nbsp;pour&nbsp;devenir&nbsp;incollable&nbsp;sur&nbsp;le&nbsp;sujet&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791462661/lesamisducbd/partners/txpvjqokpffwrrc8e5an.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain",
+          "marginTop": "negative-medium"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791808234735",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "de A à Z (ou presque) !",
+              "introText": "CBD, THC, cannabinoïdes, terpènes, législation… Vous avez des questions ? Ça tombe bien, on adore chercher les réponses ! Retrouvez tous nos articles pour comprendre le CBD, découvrir ses particularités et démêler le vrai du faux. Promis, pas besoin d'un doctorat pour suivre !"
+            },
+            {
+              "id": "recettes",
+              "label": "Les bases du CBD",
+              "icon": "book",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est quoi au juste ?",
+              "introText": "Cannabidiol, chanvre, THC… Pas toujours facile de s'y retrouver ! Qu'est-ce que le CBD ? D'où vient-il ? Quelle différence entre CBD et THC ? On reprend les fondamentaux pour découvrir cette molécule issue du chanvre, ses origines et ses principales caractéristiques. Des explications simples, sans vous noyer sous le jargon !"
+            },
+            {
+              "id": "astuces",
+              "label": "CBD & science",
+              "icon": "oil",
+              "h2Prefix": "Le CBD ",
+              "h2Highlight": "sous la loupe !",
+              "introText": "Cannabinoïdes, terpènes, système endocannabinoïde… Derrière ces noms un peu barbares se cache un univers passionnant ! Comment le CBD interagit-il avec l'organisme ? Que disent réellement les études scientifiques ? On décrypte les mécanismes, les recherches et les découvertes autour du cannabidiol, en distinguant ce que l'on sait de ce qu'il reste à comprendre. De la science, oui… mais expliquée entre potes !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Législation du CBD",
+              "icon": "shield",
+              "h2Prefix": "Le CBD, c'est légal ou pas ?",
+              "h2Highlight": "l’art des terpènes",
+              "introText": "Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations."
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaDescription": "CBD, THC, cannabinoïdes… Tu t'y perds ? Découvre nos guides et explications simples pour tout comprendre sur le CBD, sans prise de tête ! Copier",
+      "focusKeyword": "comprendre le CBD",
+      "metaTitle": "Comprendre le CBD : guide et conseils - Les Amis du CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791463605/lesamisducbd/partners/yeglz7ioyh196qb7rlec.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:34:24.648Z",
+    "title": "Comprendre le CBD",
+    "sections": [
+      {
+        "id": "codeembed-1791461606506",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 COMPRENDRE LE CBD - CENTRÉ + EFFET SURLIGNEUR -->\n\n<section class=\"adc-blog-title\">\n\n  <h1 class=\"adc-blog-title__h1\">\n    Comprendre\n    <span class=\"adc-blog-title__highlight\">le CBD</span>\n  </h1>\n\n</section>\n\n\n<style>\n\n/* BLOC */\n\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n\n  padding: 30px 20px 35px;\n\n  text-align: center;\n}\n\n\n/* H1 */\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n\n  color: #123F32;\n\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n\n  text-align: center;\n}\n\n\n/* TEXTE SURLIGNÉ */\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n\n  white-space: nowrap;\n\n  z-index: 1;\n}\n\n\n/* EFFET SURLIGNEUR VERT CLAIR */\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n\n  position: absolute;\n\n  left: -3%;\n  bottom: 3px;\n\n  width: 106%;\n  height: 13px;\n\n  background: #B8D98C;\n\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n\n  transform: rotate(-0.8deg);\n\n  opacity: .85;\n\n  z-index: -1;\n}\n\n\n/* MOBILE */\n\n@media (max-width: 700px) {\n\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n\n}\n\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791461726060",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong>Le&nbsp;CBD&nbsp;n&#39;aura&nbsp;bientôt&nbsp;plus&nbsp;de&nbsp;secrets&nbsp;pour&nbsp;vous&nbsp;!</strong></h3><p style=\"text-align: justify;\">CBD,&nbsp;THC,&nbsp;cannabinoïdes,&nbsp;terpènes…&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver&nbsp;dans&nbsp;tout&nbsp;ce&nbsp;vocabulaire&nbsp;!&nbsp;<strong>C&#39;est&nbsp;quoi&nbsp;exactement&nbsp;le&nbsp;cannabidiol&nbsp;?</strong>&nbsp;D&#39;où&nbsp;vient-il&nbsp;?&nbsp;Quelle&nbsp;différence&nbsp;entre&nbsp;le&nbsp;CBD&nbsp;et&nbsp;le&nbsp;THC&nbsp;?&nbsp;Et&nbsp;que&nbsp;dit&nbsp;la&nbsp;loi&nbsp;?&nbsp;Autant&nbsp;de&nbsp;questions&nbsp;auxquelles&nbsp;on&nbsp;vous&nbsp;aide&nbsp;à&nbsp;répondre,&nbsp;<strong>simplement&nbsp;et&nbsp;sans&nbsp;prise&nbsp;de&nbsp;tête&nbsp;!</strong></p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;comprendre&nbsp;ce&nbsp;qu&#39;on&nbsp;consomme&nbsp;et&nbsp;surtout&nbsp;partager&nbsp;ce&nbsp;qu&#39;on&nbsp;apprend.&nbsp;À&nbsp;travers&nbsp;nos&nbsp;<strong>articles,&nbsp;guides&nbsp;et&nbsp;décryptages</strong>,&nbsp;on&nbsp;démêle&nbsp;le&nbsp;vrai&nbsp;du&nbsp;faux,&nbsp;on&nbsp;explore&nbsp;l&#39;univers&nbsp;du&nbsp;chanvre&nbsp;et&nbsp;on&nbsp;rend&nbsp;le&nbsp;CBD&nbsp;accessible&nbsp;à&nbsp;tous.&nbsp;<strong>Pas&nbsp;besoin&nbsp;d&#39;être&nbsp;un&nbsp;expert&nbsp;pour&nbsp;devenir&nbsp;incollable&nbsp;sur&nbsp;le&nbsp;sujet&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791462661/lesamisducbd/partners/txpvjqokpffwrrc8e5an.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain",
+          "marginTop": "negative-medium"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791808234735",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "de A à Z (ou presque) !",
+              "introText": "CBD, THC, cannabinoïdes, terpènes, législation… Vous avez des questions ? Ça tombe bien, on adore chercher les réponses ! Retrouvez tous nos articles pour comprendre le CBD, découvrir ses particularités et démêler le vrai du faux. Promis, pas besoin d'un doctorat pour suivre !"
+            },
+            {
+              "id": "recettes",
+              "label": "Les bases du CBD",
+              "icon": "book",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est quoi au juste ?",
+              "introText": "Cannabidiol, chanvre, THC… Pas toujours facile de s'y retrouver ! Qu'est-ce que le CBD ? D'où vient-il ? Quelle différence entre CBD et THC ? On reprend les fondamentaux pour découvrir cette molécule issue du chanvre, ses origines et ses principales caractéristiques. Des explications simples, sans vous noyer sous le jargon !"
+            },
+            {
+              "id": "astuces",
+              "label": "CBD & science",
+              "icon": "oil",
+              "h2Prefix": "Le CBD ",
+              "h2Highlight": "sous la loupe !",
+              "introText": "Cannabinoïdes, terpènes, système endocannabinoïde… Derrière ces noms un peu barbares se cache un univers passionnant ! Comment le CBD interagit-il avec l'organisme ? Que disent réellement les études scientifiques ? On décrypte les mécanismes, les recherches et les découvertes autour du cannabidiol, en distinguant ce que l'on sait de ce qu'il reste à comprendre. De la science, oui… mais expliquée entre potes !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Législation du CBD",
+              "icon": "shield",
+              "h2Prefix": "Fleurs & saveurs,",
+              "h2Highlight": "l’art des terpènes",
+              "introText": "Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations."
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaDescription": "CBD, THC, cannabinoïdes… Tu t'y perds ? Découvre nos guides et explications simples pour tout comprendre sur le CBD, sans prise de tête ! Copier",
+      "focusKeyword": "comprendre le CBD",
+      "metaTitle": "Comprendre le CBD : guide et conseils - Les Amis du CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791463605/lesamisducbd/partners/yeglz7ioyh196qb7rlec.png"
+    },
+    "status": "draft"
+  },
+  {
+    "savedAt": "2026-10-12T12:34:17.934Z",
+    "title": "Comprendre le CBD",
+    "sections": [
+      {
+        "id": "codeembed-1791461606506",
+        "type": "CodeEmbed",
+        "props": {
+          "code": "\n<!-- H1 COMPRENDRE LE CBD - CENTRÉ + EFFET SURLIGNEUR -->\n\n<section class=\"adc-blog-title\">\n\n  <h1 class=\"adc-blog-title__h1\">\n    Comprendre\n    <span class=\"adc-blog-title__highlight\">le CBD</span>\n  </h1>\n\n</section>\n\n\n<style>\n\n/* BLOC */\n\n.adc-blog-title {\n  width: 100%;\n  box-sizing: border-box;\n\n  padding: 30px 20px 35px;\n\n  text-align: center;\n}\n\n\n/* H1 */\n\n.adc-blog-title__h1 {\n  margin: 0 auto;\n\n  color: #123F32;\n\n  font-family: inherit;\n  font-size: clamp(46px, 4.3vw, 62px);\n  font-weight: 800;\n\n  line-height: 1.08;\n  letter-spacing: -1.5px;\n\n  text-align: center;\n}\n\n\n/* TEXTE SURLIGNÉ */\n\n.adc-blog-title__highlight {\n  position: relative;\n  display: inline-block;\n\n  white-space: nowrap;\n\n  z-index: 1;\n}\n\n\n/* EFFET SURLIGNEUR VERT CLAIR */\n\n.adc-blog-title__highlight::after {\n  content: \"\";\n\n  position: absolute;\n\n  left: -3%;\n  bottom: 3px;\n\n  width: 106%;\n  height: 13px;\n\n  background: #B8D98C;\n\n  border-radius:\n    48% 42% 55% 45% /\n    50% 55% 45% 50%;\n\n  transform: rotate(-0.8deg);\n\n  opacity: .85;\n\n  z-index: -1;\n}\n\n\n/* MOBILE */\n\n@media (max-width: 700px) {\n\n  .adc-blog-title {\n    padding: 22px 15px 28px;\n  }\n\n  .adc-blog-title__h1 {\n    font-size: 40px;\n    line-height: 1.1;\n    letter-spacing: -.7px;\n  }\n\n  .adc-blog-title__highlight::after {\n    height: 10px;\n    bottom: 2px;\n  }\n\n}\n\n</style>\n"
+        }
+      },
+      {
+        "id": "twocolumns-1791461726060",
+        "type": "TwoColumns",
+        "props": {
+          "title": "",
+          "text": "<h3 style=\"text-align: justify;\"><strong>Le&nbsp;CBD&nbsp;n&#39;aura&nbsp;bientôt&nbsp;plus&nbsp;de&nbsp;secrets&nbsp;pour&nbsp;vous&nbsp;!</strong></h3><p style=\"text-align: justify;\">CBD,&nbsp;THC,&nbsp;cannabinoïdes,&nbsp;terpènes…&nbsp;Pas&nbsp;toujours&nbsp;facile&nbsp;de&nbsp;s&#39;y&nbsp;retrouver&nbsp;dans&nbsp;tout&nbsp;ce&nbsp;vocabulaire&nbsp;!&nbsp;<strong>C&#39;est&nbsp;quoi&nbsp;exactement&nbsp;le&nbsp;cannabidiol&nbsp;?</strong>&nbsp;D&#39;où&nbsp;vient-il&nbsp;?&nbsp;Quelle&nbsp;différence&nbsp;entre&nbsp;le&nbsp;CBD&nbsp;et&nbsp;le&nbsp;THC&nbsp;?&nbsp;Et&nbsp;que&nbsp;dit&nbsp;la&nbsp;loi&nbsp;?&nbsp;Autant&nbsp;de&nbsp;questions&nbsp;auxquelles&nbsp;on&nbsp;vous&nbsp;aide&nbsp;à&nbsp;répondre,&nbsp;<strong>simplement&nbsp;et&nbsp;sans&nbsp;prise&nbsp;de&nbsp;tête&nbsp;!</strong></p><p style=\"text-align: justify;\">Chez&nbsp;<strong>Les&nbsp;Amis&nbsp;du&nbsp;CBD</strong>,&nbsp;on&nbsp;aime&nbsp;comprendre&nbsp;ce&nbsp;qu&#39;on&nbsp;consomme&nbsp;et&nbsp;surtout&nbsp;partager&nbsp;ce&nbsp;qu&#39;on&nbsp;apprend.&nbsp;À&nbsp;travers&nbsp;nos&nbsp;<strong>articles,&nbsp;guides&nbsp;et&nbsp;décryptages</strong>,&nbsp;on&nbsp;démêle&nbsp;le&nbsp;vrai&nbsp;du&nbsp;faux,&nbsp;on&nbsp;explore&nbsp;l&#39;univers&nbsp;du&nbsp;chanvre&nbsp;et&nbsp;on&nbsp;rend&nbsp;le&nbsp;CBD&nbsp;accessible&nbsp;à&nbsp;tous.&nbsp;<strong>Pas&nbsp;besoin&nbsp;d&#39;être&nbsp;un&nbsp;expert&nbsp;pour&nbsp;devenir&nbsp;incollable&nbsp;sur&nbsp;le&nbsp;sujet&nbsp;!</strong></p>",
+          "imageSrc": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791462661/lesamisducbd/partners/txpvjqokpffwrrc8e5an.png",
+          "imagePosition": "right",
+          "imageWidth": 50,
+          "buttonText": "",
+          "buttonLink": "",
+          "imageFit": "contain",
+          "marginTop": "negative-medium"
+        }
+      },
+      {
+        "id": "blogcategoryfilter-1791808234735",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "de A à Z (ou presque) !",
+              "introText": "CBD, THC, cannabinoïdes, terpènes, législation… Vous avez des questions ? Ça tombe bien, on adore chercher les réponses ! Retrouvez tous nos articles pour comprendre le CBD, découvrir ses particularités et démêler le vrai du faux. Promis, pas besoin d'un doctorat pour suivre !"
+            },
+            {
+              "id": "recettes",
+              "label": "Les bases du CBD",
+              "icon": "book",
+              "h2Prefix": "Le CBD, ",
+              "h2Highlight": "c'est quoi au juste ?",
+              "introText": "Cannabidiol, chanvre, THC… Pas toujours facile de s'y retrouver ! Qu'est-ce que le CBD ? D'où vient-il ? Quelle différence entre CBD et THC ? On reprend les fondamentaux pour découvrir cette molécule issue du chanvre, ses origines et ses principales caractéristiques. Des explications simples, sans vous noyer sous le jargon !"
+            },
+            {
+              "id": "astuces",
+              "label": "CBD & science",
+              "icon": "oil",
+              "h2Prefix": "Le CBD ",
+              "h2Highlight": "sous la loupe !",
+              "introText": "Cannabinoïdes, terpènes, système endocannabinoïde… Derrière ces noms un peu barbares se cache un univers passionnant ! Comment le CBD interagit-il avec l'organisme ? Que disent réellement les études scientifiques ? On décrypte les mécanismes, les recherches et les découvertes autour du cannabidiol, en distinguant ce que l'on sait de ce qu'il reste à comprendre. De la science, oui… mais expliquée entre potes !"
+            },
+            {
+              "id": "fleurs",
+              "label": "Législation du CBD",
+              "icon": "flower",
+              "h2Prefix": "Fleurs & saveurs,",
+              "h2Highlight": "l’art des terpènes",
+              "introText": "Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations."
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
+      }
+    ],
+    "seo": {
+      "pageType": "LandingPage",
+      "metaDescription": "CBD, THC, cannabinoïdes… Tu t'y perds ? Découvre nos guides et explications simples pour tout comprendre sur le CBD, sans prise de tête ! Copier",
+      "focusKeyword": "comprendre le CBD",
+      "metaTitle": "Comprendre le CBD : guide et conseils - Les Amis du CBD",
+      "ogImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791463605/lesamisducbd/partners/yeglz7ioyh196qb7rlec.png"
+    },
+    "status": "draft"
+  }
+]
