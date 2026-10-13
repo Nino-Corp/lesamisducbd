@@ -594,6 +594,21 @@ const LivePreview = memo(function LivePreview({
                     { label: pageTitle || 'Titre de la page', href: '#' }
                 ];
 
+                const previewRelated = [
+                    {
+                        title: "Comment bien choisir son huile de CBD ?",
+                        slug: "#",
+                        image: "/images/hero.webp",
+                        category: pageCategory || "Conseils"
+                    },
+                    {
+                        title: "Les bienfaits du CBD pour le sommeil naturel",
+                        slug: "#",
+                        image: "/images/hero.webp",
+                        category: pageCategory || "Bien-être"
+                    }
+                ];
+
                 const wrappedContent = (iframeNode) => (
                     <div>
                         {!hasHeader && (
@@ -643,34 +658,51 @@ const LivePreview = memo(function LivePreview({
                         )}
                         
                         {isArticleLayout ? (
-                            <div style={{ 
-                                maxWidth: '100%', 
-                                margin: '60px auto', 
-                                padding: '0 40px', 
-                                display: 'flex', 
-                                alignItems: 'flex-start' 
-                            }}>
-                                {/* Espace à gauche */}
-                                <div style={{ flex: 1 }}></div>
-                                
-                                {/* Contenu principal */}
-                                <div className="article-content" style={{ maxWidth: '800px', width: '100%' }}>
+                            <div 
+                                className="article-layout"
+                                style={{ 
+                                    width: '100%',
+                                    maxWidth: 'var(--container-width)', 
+                                    margin: '40px auto 80px', 
+                                    padding: '0 24px', 
+                                    display: 'flex', 
+                                    justifyContent: 'center',
+                                    alignItems: 'flex-start',
+                                    gap: '48px',
+                                    boxSizing: 'border-box'
+                                }}
+                            >
+                                {/* Contenu principal élargi */}
+                                <div className="article-content" style={{ width: '100%', maxWidth: '1000px', flex: 1, minWidth: 0 }}>
                                     {sections.map((section, i) => renderSection(section, i))}
                                 </div>
                                 
-                                {/* Espace entre le contenu et le sommaire (égal à l'espace de gauche) */}
-                                <div style={{ flex: 1 }}></div>
-                                
-                                {/* Sommaire collé à droite */}
+                                {/* Sommaire et articles suggérés collés à droite */}
                                 {previewMode === 'desktop' && (
-                                    <div style={{ width: '260px', flexShrink: 0, position: 'sticky', top: '120px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
-                                        <ArticleSidebar containerNode={iframeNode} categories={[]} relatedArticles={[]} />
+                                    <div style={{ width: '310px', flexShrink: 0, position: 'sticky', top: '120px', display: 'flex', flexDirection: 'column', gap: '40px' }} className="article-sidebar-container">
+                                        <ArticleSidebar containerNode={iframeNode} categories={[]} relatedArticles={previewRelated} />
                                     </div>
                                 )}
                             </div>
                         ) : (
                             sections.map((section, i) => renderSection(section, i))
                         )}
+                        
+                        <style dangerouslySetInnerHTML={{ __html: `
+                            .article-content h2,
+                            .article-content h3 {
+                                scroll-margin-top: 120px;
+                            }
+                            .article-content .container {
+                                max-width: 100% !important;
+                                padding-left: 0 !important;
+                                padding-right: 0 !important;
+                            }
+                            .article-content [class*="heroSection"] {
+                                padding-left: 0 !important;
+                                padding-right: 0 !important;
+                            }
+                        `}} />
                         
                         {!hasFooter && <div style={{ opacity: 0.8, pointerEvents: 'none', marginTop: '40px' }}><Footer {...defaultFooterProps} /></div>}
                     </div>

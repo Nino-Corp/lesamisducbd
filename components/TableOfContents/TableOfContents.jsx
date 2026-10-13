@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import styles from './TableOfContents.module.css';
 
-export default function TableOfContents({ title = 'Sommaire', items = [] }) {
+export default function TableOfContents({ title = 'Au programme !', items = [] }) {
     const [isOpen, setIsOpen] = useState(true);
     if (!items || items.length === 0) return null;
 

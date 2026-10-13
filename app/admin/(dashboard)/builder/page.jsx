@@ -21,7 +21,7 @@ const PAGE_TEMPLATES = {
         icon: '📝',
         sections: [
             { id: `hero-${Date.now()}`, type: 'ContentHero', props: { title: 'Titre de l\'article', textAlign: 'center' } },
-            { id: `toc-${Date.now()}`, type: 'TableOfContents', props: { title: 'Sommaire', items: [] } },
+            { id: `toc-${Date.now()}`, type: 'TableOfContents', props: { title: 'Au programme !', items: [] } },
             { id: `rt-${Date.now()}`, type: 'RichText', props: { content: '<h2>Introduction</h2><p>Commencez à écrire ici...</p>' } },
             { id: `auth-${Date.now()}`, type: 'AuthorCard', props: { name: 'Auteur', role: 'Rédacteur CBD' } },
             { id: `rel-${Date.now()}`, type: 'RelatedArticles', props: { title: 'À lire aussi', articles: [] } }

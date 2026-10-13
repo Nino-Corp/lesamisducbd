@@ -285,15 +285,16 @@ export default async function DynamicPage(props) {
         if (currentCategory) {
             const sameCat = otherArticles.filter(p => p.seo?.category === currentCategory);
             const diffCat = otherArticles.filter(p => p.seo?.category !== currentCategory);
-            relatedArticles = [...sameCat, ...diffCat].slice(0, 3);
+            relatedArticles = [...sameCat, ...diffCat].slice(0, 2);
         } else {
-            relatedArticles = otherArticles.slice(0, 3);
+            relatedArticles = otherArticles.slice(0, 2);
         }
 
         relatedArticles = relatedArticles.map(p => ({
             title: p.title,
             slug: p.slug,
-            image: p.seo?.ogImage || p.seo?.featuredImage || ''
+            image: p.seo?.ogImage || p.seo?.featuredImage || '',
+            category: p.seo?.category || ''
         }));
     }
 
@@ -357,17 +358,18 @@ export default async function DynamicPage(props) {
                 {breadcrumbNode}
                 
                 <div style={{ 
-                    maxWidth: '100%', 
-                    margin: '60px auto', 
-                    padding: '0 40px', 
+                    width: '100%',
+                    maxWidth: 'var(--container-width)', 
+                    margin: '40px auto 80px', 
+                    padding: '0 24px', 
                     display: 'flex', 
-                    alignItems: 'flex-start' 
+                    justifyContent: 'center',
+                    alignItems: 'flex-start',
+                    gap: '48px',
+                    boxSizing: 'border-box'
                 }} className="article-layout">
-                    {/* Espace à gauche */}
-                    <div style={{ flex: 1 }}></div>
-                    
-                    {/* Contenu principal */}
-                    <div className="article-content" style={{ maxWidth: '800px', width: '100%' }}>
+                    {/* Contenu principal élargi */}
+                    <div className="article-content" style={{ width: '100%', maxWidth: '1000px', flex: 1, minWidth: 0 }}>
                         <PageBuilder sections={contentSections} />
                         {!contentSections.some(s => s.type === 'LatestArticlesBlock' || s.type === 'RelatedArticles') && (
                             <PageBuilder sections={[
@@ -384,11 +386,8 @@ export default async function DynamicPage(props) {
                         )}
                     </div>
                     
-                    {/* Espace entre le contenu et le sommaire (égal à l'espace de gauche) */}
-                    <div style={{ flex: 1 }}></div>
-                    
-                    {/* Sommaire collé à droite */}
-                    <div style={{ width: '260px', flexShrink: 0, display: 'none', position: 'sticky', top: '120px' }} className="article-sidebar-container">
+                    {/* Sommaire et articles suggérés à droite */}
+                    <div style={{ width: '310px', flexShrink: 0, display: 'none', position: 'sticky', top: '120px' }} className="article-sidebar-container">
                         <ArticleSidebar categories={categories} relatedArticles={relatedArticles} />
                     </div>
                 </div>
@@ -397,9 +396,24 @@ export default async function DynamicPage(props) {
                     @media (min-width: 1024px) {
                         .article-sidebar-container { display: block !important; }
                     }
+                    @media (max-width: 768px) {
+                        .article-layout {
+                            padding: 0 16px !important;
+                            margin: 20px auto 40px !important;
+                        }
+                    }
                     .article-content h2,
                     .article-content h3 {
                         scroll-margin-top: 120px;
+                    }
+                    .article-content .container {
+                        max-width: 100% !important;
+                        padding-left: 0 !important;
+                        padding-right: 0 !important;
+                    }
+                    .article-content [class*="heroSection"] {
+                        padding-left: 0 !important;
+                        padding-right: 0 !important;
                     }
                 `}} />
 

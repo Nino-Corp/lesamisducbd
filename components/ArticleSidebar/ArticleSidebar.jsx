@@ -53,11 +53,13 @@ export default function ArticleSidebar({ categories = [], relatedArticles = [], 
         }
     }, [activeId, toc]);
 
+    const suggestedArticles = (relatedArticles || []).slice(0, 2);
+
     return (
         <aside className={styles.sidebar}>
             {toc.length > 0 && (
                 <div className={styles.widget}>
-                    <h3 className={styles.widgetTitle}>Sommaire</h3>
+                    <h3 className={styles.widgetTitle}>Au programme !</h3>
                     <div className={styles.tocContainer}>
                         <div className={styles.sliderIndicator} style={indicatorStyle} />
                         <ul className={styles.tocList} ref={listRef}>
@@ -84,36 +86,46 @@ export default function ArticleSidebar({ categories = [], relatedArticles = [], 
                 </div>
             )}
 
-            {relatedArticles && relatedArticles.length > 0 && (
+            {suggestedArticles.length > 0 ? (
                 <div className={styles.widget}>
-                    <h3 className={styles.widgetTitle}>Articles similaires</h3>
+                    <h3 className={styles.widgetTitle}>La suite, c'est par ici !</h3>
                     <div className={styles.relatedList}>
-                        {relatedArticles.map((article, i) => (
-                            <Link key={article.slug || i} href={`/p/${article.slug}`} className={styles.relatedCard}>
-                                {article.image && (
+                        {suggestedArticles.map((article, i) => (
+                            <Link 
+                                key={article.slug || i} 
+                                href={article.slug && article.slug !== '#' ? `/p/${article.slug}` : (article.slug === '#' ? '#' : '/blog')} 
+                                className={styles.relatedCard}
+                            >
+                                {article.image ? (
                                     <div className={styles.relatedImgWrapper}>
                                         <img src={article.image} alt={article.title} className={styles.relatedImg} />
                                     </div>
+                                ) : (
+                                    <div className={styles.relatedImgPlaceholder}>
+                                        <span>🌿</span>
+                                    </div>
                                 )}
                                 <div className={styles.relatedContent}>
+                                    {article.category && (
+                                        <span className={styles.relatedCat}>{article.category}</span>
+                                    )}
                                     <h4 className={styles.relatedTitle}>{article.title}</h4>
                                 </div>
                             </Link>
                         ))}
                     </div>
-                </div>
-            )}
 
-            {categories && categories.length > 0 && (
+                    <Link href="/blog" className={styles.discoverBtn}>
+                        <span>Encore plus à découvrir</span>
+                        <span className={styles.discoverArrow}>→</span>
+                    </Link>
+                </div>
+            ) : (
                 <div className={styles.widget}>
-                    <h3 className={styles.widgetTitle}>Nos catégories</h3>
-                    <div className={styles.categoryTags}>
-                        {categories.map(cat => (
-                            <Link key={cat} href={`/blog?cat=${encodeURIComponent(cat)}`} className={styles.catTag}>
-                                {cat}
-                            </Link>
-                        ))}
-                    </div>
+                    <Link href="/blog" className={styles.discoverBtn}>
+                        <span>Encore plus à découvrir</span>
+                        <span className={styles.discoverArrow}>→</span>
+                    </Link>
                 </div>
             )}
         </aside>

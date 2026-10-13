@@ -379,7 +379,7 @@ export const TEMPLATES = [
         description: 'Table des matières auto-générée depuis les titres',
         category: 'blog',
         defaultProps: {
-            title: 'Sommaire',
+            title: 'Au programme !',
             items: [
                 { text: 'Introduction', anchor: 'introduction', level: 2 },
                 { text: 'Section principale', anchor: 'section-1', level: 2 },
