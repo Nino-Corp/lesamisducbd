@@ -610,7 +610,7 @@ const LivePreview = memo(function LivePreview({
                 ];
 
                 const wrappedContent = (iframeNode) => (
-                    <div>
+                    <div style={{ paddingTop: '100px', minHeight: '100%', boxSizing: 'border-box' }}>
                         {!hasHeader && (
                             <div 
                                 onClickCapture={e => { e.preventDefault(); e.stopPropagation(); }} 
@@ -626,14 +626,11 @@ const LivePreview = memo(function LivePreview({
                             <div 
                                 className="breadcrumb-wrapper"
                                 style={{
-                                    position: 'absolute',
-                                    top: '92px', 
-                                    left: 0,
                                     width: '100%',
                                     display: 'flex',
                                     justifyContent: 'center',
                                     zIndex: 50,
-                                    pointerEvents: 'none',
+                                    marginBottom: '20px',
                                 }}
                             >
                                 <div 
@@ -643,15 +640,14 @@ const LivePreview = memo(function LivePreview({
                                         maxWidth: 'var(--container-width)',
                                         display: 'flex',
                                         justifyContent: 'flex-start',
-                                        pointerEvents: 'auto',
                                     }}
                                 >
                                     <Breadcrumb items={previewBreadcrumbItems} />
                                 </div>
                                 <style dangerouslySetInnerHTML={{ __html: `
-                                    .breadcrumb-wrapper { padding: 0; box-sizing: border-box; }
+                                    .breadcrumb-wrapper { padding: 0 24px; box-sizing: border-box; }
                                     @media (max-width: 1024px) {
-                                        .breadcrumb-wrapper { padding: 0 5px; }
+                                        .breadcrumb-wrapper { padding: 0 16px; }
                                     }
                                 `}} />
                             </div>
@@ -663,7 +659,7 @@ const LivePreview = memo(function LivePreview({
                                 style={{ 
                                     width: '100%',
                                     maxWidth: 'var(--container-width)', 
-                                    margin: '40px auto 80px', 
+                                    margin: '0 auto 80px', 
                                     padding: '0 24px', 
                                     display: 'flex', 
                                     justifyContent: 'center',
