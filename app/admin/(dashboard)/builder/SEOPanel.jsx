@@ -333,8 +333,8 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
                             </div>
                             {/* Page layout and Sommaire */}
                             <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '16px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
-                                <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#6b7280', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Disposition de page & Sommaire</p>
-                                <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer' }}>
+                                <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#6b7280', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Disposition de page & Navigation</p>
+                                <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer', marginBottom: '14px' }}>
                                     <input
                                         type="checkbox"
                                         checked={seo.showSidebar === true || (isArticle && seo.showSidebar !== false)}
@@ -348,6 +348,23 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
                                         </div>
                                     </div>
                                 </label>
+
+                                <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '12px' }}>
+                                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={seo.hideBreadcrumb !== true}
+                                            onChange={e => update({ hideBreadcrumb: !e.target.checked })}
+                                            style={{ width: '18px', height: '18px', marginTop: '2px', accentColor: '#1F4B40' }}
+                                        />
+                                        <div>
+                                            <div style={{ fontWeight: 600, fontSize: '0.85rem', color: '#1e293b' }}>Afficher le fil d'Ariane (Breadcrumb)</div>
+                                            <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '2px' }}>
+                                                Activé par défaut sur toutes les pages pour le référencement Google et la navigation.
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
 
                             <Field label="URL Canonique" hint="Laissez vide pour utiliser l'URL par défaut (/p/slug)">

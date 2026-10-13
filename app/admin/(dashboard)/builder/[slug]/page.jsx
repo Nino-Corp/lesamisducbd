@@ -658,6 +658,10 @@ export default function PageEditor() {
                         setIsFullscreen={setIsFullscreen}
                         pageType={page.seo?.pageType}
                         showSidebar={page.seo?.showSidebar}
+                        pageTitle={page.title}
+                        pageSlug={page.slug}
+                        pageCategory={page.seo?.category}
+                        hideBreadcrumb={page.seo?.hideBreadcrumb || page.seo?.hideHeaderFooter}
                     />
                 </div>
             </div>

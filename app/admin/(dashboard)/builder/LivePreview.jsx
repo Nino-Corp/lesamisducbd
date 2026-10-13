@@ -47,6 +47,7 @@ import ContactFormBlock from '@/components/ContactFormBlock/ContactFormBlock';
 import NewsletterBlock from '@/components/NewsletterBlock/NewsletterBlock';
 import TitleBlock from '@/components/TitleBlock/TitleBlock';
 import ArticleSidebar from '@/components/ArticleSidebar/ArticleSidebar';
+import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 import { useState, useRef, useEffect, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { SessionProvider } from "next-auth/react";
@@ -181,7 +182,11 @@ const LivePreview = memo(function LivePreview({
     setIsFullscreen,
     pageKey,
     pageType,
-    showSidebar
+    showSidebar,
+    pageTitle = '',
+    pageSlug = '',
+    pageCategory = '',
+    hideBreadcrumb = false
 }) {
     if (!sections.length) {
         return (
@@ -577,6 +582,18 @@ const LivePreview = memo(function LivePreview({
                     ? (showSidebar === true && !hasCategoryFilter)
                     : isBlogArticleType;
 
+                const isBlogRelated = isBlogArticleType || pageType === 'CategoryPage' || pageType === 'PillarPage' || hasCategoryFilter;
+
+                const previewBreadcrumbItems = isBlogRelated ? [
+                    { label: 'Accueil', href: '#' },
+                    { label: 'Blog', href: '#' },
+                    ...(pageCategory ? [{ label: pageCategory, href: '#' }] : []),
+                    { label: pageTitle || 'Titre de la page', href: '#' }
+                ] : [
+                    { label: 'Accueil', href: '#' },
+                    { label: pageTitle || 'Titre de la page', href: '#' }
+                ];
+
                 const wrappedContent = (iframeNode) => (
                     <div>
                         {!hasHeader && (
@@ -587,6 +604,41 @@ const LivePreview = memo(function LivePreview({
                                 <Header {...defaultHeaderProps} />
                                 {/* Invisible overlay to aggressively block all clicks even native ones */}
                                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 10000, cursor: 'not-allowed' }}></div>
+                            </div>
+                        )}
+
+                        {!hideBreadcrumb && (
+                            <div 
+                                className="breadcrumb-wrapper"
+                                style={{
+                                    position: 'absolute',
+                                    top: '92px', 
+                                    left: 0,
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    zIndex: 50,
+                                    pointerEvents: 'none',
+                                }}
+                            >
+                                <div 
+                                    className="breadcrumb-container" 
+                                    style={{
+                                        width: '100%',
+                                        maxWidth: 'var(--container-width)',
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        pointerEvents: 'auto',
+                                    }}
+                                >
+                                    <Breadcrumb items={previewBreadcrumbItems} />
+                                </div>
+                                <style dangerouslySetInnerHTML={{ __html: `
+                                    .breadcrumb-wrapper { padding: 0; box-sizing: border-box; }
+                                    @media (max-width: 1024px) {
+                                        .breadcrumb-wrapper { padding: 0 5px; }
+                                    }
+                                `}} />
                             </div>
                         )}
                         

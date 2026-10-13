@@ -232,24 +232,36 @@ export default async function DynamicPage(props) {
         ? (page.seo.showSidebar === true && !hasCategoryFilter)
         : isBlogArticleType;
 
-    // Fil d'Ariane : articles et pages catégories de blog
+    // Fil d'Ariane : actif sur toutes les pages (sauf si explicitement désactivé via seo.hideBreadcrumb ou hideHeaderFooter)
     const isBlogRelated = isBlogArticleType || page.seo?.pageType === 'CategoryPage' || page.seo?.pageType === 'PillarPage' || hasCategoryFilter;
-    const breadcrumbItems = isBlogRelated ? [
-        { label: 'Accueil', href: '/' },
-        { label: 'Blog', href: '/blog' },
-        ...(page.seo?.category ? [{ label: page.seo.category, href: `/blog?cat=${encodeURIComponent(page.seo.category)}` }] : []),
-        { label: page.title, href: `/p/${pageSlug}` },
-    ] : [];
+    const showBreadcrumb = !page.seo?.hideBreadcrumb && !hideHeaderFooter;
+
+    let breadcrumbItems = [];
+    if (showBreadcrumb) {
+        if (isBlogRelated) {
+            breadcrumbItems = [
+                { label: 'Accueil', href: '/' },
+                { label: 'Blog', href: '/blog' },
+                ...(page.seo?.category ? [{ label: page.seo.category, href: `/blog?cat=${encodeURIComponent(page.seo.category)}` }] : []),
+                { label: page.title, href: `/p/${pageSlug}` },
+            ];
+        } else {
+            breadcrumbItems = [
+                { label: 'Accueil', href: '/' },
+                { label: page.title, href: `/p/${pageSlug}` },
+            ];
+        }
+    }
 
     // BreadcrumbList JSON-LD
-    const breadcrumbJsonLd = isBlogRelated ? {
+    const breadcrumbJsonLd = showBreadcrumb && breadcrumbItems.length > 0 ? {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: breadcrumbItems.map((item, i) => ({
             '@type': 'ListItem',
             position: i + 1,
             name: item.label,
-            item: `https://www.lesamisducbd.fr${item.href}`,
+            item: item.href.startsWith('http') ? item.href : `https://www.lesamisducbd.fr${item.href}`,
         }))
     } : null;
 
@@ -287,51 +299,62 @@ export default async function DynamicPage(props) {
 
     let contentNode;
     
-    if (isArticle) {
-        const headerIndex = finalSections.findIndex(s => s.type === 'Header');
-        let headerSection = null;
-        let contentSections = [...finalSections];
-        
-        if (headerIndex !== -1) {
-            headerSection = contentSections[headerIndex];
-            contentSections.splice(headerIndex, 1);
-        }
-        
-        const footerIndex = contentSections.findIndex(s => s.type === 'Footer');
-        let footerSection = null;
-        if (footerIndex !== -1) {
-            footerSection = contentSections[footerIndex];
-            contentSections.splice(footerIndex, 1);
-        }
+    const headerIndex = finalSections.findIndex(s => s.type === 'Header');
+    let headerSection = null;
+    let contentSections = [...finalSections];
+    
+    if (headerIndex !== -1) {
+        headerSection = contentSections[headerIndex];
+        contentSections.splice(headerIndex, 1);
+    }
+    
+    const footerIndex = contentSections.findIndex(s => s.type === 'Footer');
+    let footerSection = null;
+    if (footerIndex !== -1) {
+        footerSection = contentSections[footerIndex];
+        contentSections.splice(footerIndex, 1);
+    }
 
+    const breadcrumbNode = breadcrumbItems.length > 0 ? (
+        <div 
+            className="breadcrumb-wrapper" 
+            style={{
+                position: 'absolute',
+                top: '92px', 
+                left: 0,
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                zIndex: 50,
+                pointerEvents: 'none',
+            }}
+        >
+            <div 
+                className="breadcrumb-container" 
+                style={{
+                    width: '100%',
+                    maxWidth: 'var(--container-width)',
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    pointerEvents: 'auto',
+                }}
+            >
+                <Breadcrumb items={breadcrumbItems} />
+            </div>
+            <style dangerouslySetInnerHTML={{ __html: `
+                .breadcrumb-wrapper { padding: 0; box-sizing: border-box; }
+                @media (max-width: 1024px) {
+                    .breadcrumb-wrapper { padding: 0 5px; }
+                }
+            `}} />
+        </div>
+    ) : null;
+
+    if (isArticle) {
         contentNode = (
             <>
                 {headerSection && <PageBuilder sections={[headerSection]} />}
-                
-                {breadcrumbItems.length > 0 && (
-                    <div style={{
-                        position: 'absolute',
-                        top: '100px', 
-                        left: 0,
-                        width: '100%',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        zIndex: 50,
-                    }} className="breadcrumb-wrapper">
-                        <div className="breadcrumb-container" style={{
-                            width: '100%',
-                            maxWidth: 'var(--container-width, 1400px)',
-                        }}>
-                            <Breadcrumb items={breadcrumbItems} />
-                        </div>
-                        <style dangerouslySetInnerHTML={{ __html: `
-                            .breadcrumb-wrapper { padding: 0; }
-                            @media (max-width: 1024px) {
-                                .breadcrumb-wrapper { padding: 0 5px; }
-                            }
-                        `}} />
-                    </div>
-                )}
+                {breadcrumbNode}
                 
                 <div style={{ 
                     maxWidth: '100%', 
@@ -386,8 +409,10 @@ export default async function DynamicPage(props) {
     } else {
         contentNode = (
             <>
-                {breadcrumbItems.length > 0 && <Breadcrumb items={breadcrumbItems} />}
-                <PageBuilder sections={finalSections} />
+                {headerSection && <PageBuilder sections={[headerSection]} />}
+                {breadcrumbNode}
+                <PageBuilder sections={contentSections} />
+                {footerSection && <PageBuilder sections={[footerSection]} />}
             </>
         );
     }
