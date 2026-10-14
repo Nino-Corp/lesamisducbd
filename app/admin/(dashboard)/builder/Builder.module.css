@@ -9,6 +9,7 @@
     margin: 0 auto;
     min-height: 100vh;
     background: #f4f6f4;
+    border-radius: 25px;
 }
 
 /* ── Top header bar ───────────────────────────── */
