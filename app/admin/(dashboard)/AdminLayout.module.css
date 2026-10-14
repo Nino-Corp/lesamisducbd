@@ -35,16 +35,29 @@
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #00FF94;
-    /* Neon Accent */
-    margin-bottom: 4rem;
-    text-transform: uppercase;
-    letter-spacing: -0.02em;
+    margin-bottom: 3.5rem;
     display: flex;
     align-items: center;
-    gap: 10px;
+}
+
+.logoLink {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.logoLink:hover {
+    opacity: 0.88;
+    transform: scale(1.02);
+}
+
+.logoImage {
+    height: 40px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .nav {

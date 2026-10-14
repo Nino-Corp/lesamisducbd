@@ -12,7 +12,15 @@ export default async function DashboardLayout({ children }) {
     return (
         <div className={styles.container}>
             <aside className={styles.sidebar}>
-                <div className={styles.logo}>CBD Admin</div>
+                <div className={styles.logo}>
+                    <Link href="/admin" className={styles.logoLink} title="Tableau de bord">
+                        <img 
+                            src="/images/logo.webp" 
+                            alt="Les Amis du CBD" 
+                            className={styles.logoImage} 
+                        />
+                    </Link>
+                </div>
                 <nav className={styles.nav}>
                     <Link href="/admin/content" className={styles.link}>Contenu Site</Link>
                     <Link href="/admin/builder" className={styles.link}>Page Builder</Link>
