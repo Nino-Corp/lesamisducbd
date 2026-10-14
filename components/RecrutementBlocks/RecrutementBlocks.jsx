@@ -39,13 +39,17 @@ const renderText = (textStr) => {
 export function RecrutementText({ title, text }) {
     if (!title && !text) return null;
 
+    const formattedText = text && !text.includes('<p') && !text.includes('<br')
+        ? text.replace(/\n/g, '<br />')
+        : text;
+
     return (
         <ScrollReveal animation="fade-up">
             <section className={styles.contentSection}>
                 {title && (
                     <h2 className={styles.mainTitle} dangerouslySetInnerHTML={{ __html: title || '' }} />
                 )}
-                <div className={styles.textBlock} dangerouslySetInnerHTML={{ __html: text || '' }} />
+                <div className={styles.textBlock} dangerouslySetInnerHTML={{ __html: formattedText || '' }} />
             </section>
         </ScrollReveal>
     );
@@ -55,6 +59,15 @@ export function RecrutementJobs({ title, jobs }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     if (!jobs || jobs.length === 0) return null;
+
+    const formatDescription = (html) => {
+        if (!html) return '';
+        if (!html.includes('<p') && !html.includes('<br') && html.includes('\n')) {
+            return html.replace(/\n/g, '<br />');
+        }
+        // Replace empty paragraphs <p></p> with <p><br></p> so they render with height in all browsers
+        return html.replace(/<p>\s*<\/p>/gi, '<p><br></p>');
+    };
 
     return (
         <ScrollReveal animation="fade-up" delay={100}>
@@ -70,7 +83,10 @@ export function RecrutementJobs({ title, jobs }) {
                             <p className={styles.jobLocation} style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
                                 <MapPin size={14} /> {job.location}
                             </p>
-                            <div dangerouslySetInnerHTML={{ __html: job.description || '' }} />
+                            <div 
+                                className={styles.jobDescription} 
+                                dangerouslySetInnerHTML={{ __html: formatDescription(job.description) }} 
+                            />
                             <button onClick={() => { trackCTA('recrutement_postuler'); setIsModalOpen(true); }} className={styles.applyBtn}>
                                 Postuler
                             </button>
@@ -88,15 +104,23 @@ export function RecrutementContact({ title, text }) {
 
     if (!title && !text) return null;
 
+    const formattedTitle = title && !title.includes('<p') && !title.includes('<br') && !title.includes('<h')
+        ? title.replace(/\n/g, '<br />')
+        : title;
+
+    const formattedText = text && !text.includes('<p') && !text.includes('<br')
+        ? text.replace(/\n/g, '<br />')
+        : text;
+
     return (
         <ScrollReveal animation="fade-up" delay={200}>
             <section className={styles.contactCardSection}>
                 <div className={styles.contactCard}>
                     {title && (
-                        <h3 className={styles.cardTitle} dangerouslySetInnerHTML={{ __html: title || '' }} />
+                        <h3 className={styles.cardTitle} dangerouslySetInnerHTML={{ __html: formattedTitle || '' }} />
                     )}
                     {text && (
-                        <div className={styles.cardText} dangerouslySetInnerHTML={{ __html: text || '' }} />
+                        <div className={styles.cardText} dangerouslySetInnerHTML={{ __html: formattedText || '' }} />
                     )}
                     <button onClick={() => setIsModalOpen(true)} className={styles.contactButton}>
                         Contactez-nous !
