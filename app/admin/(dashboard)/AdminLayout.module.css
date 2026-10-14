@@ -38,11 +38,14 @@
     margin-bottom: 3.5rem;
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .logoLink {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     text-decoration: none;
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
@@ -53,7 +56,7 @@
 }
 
 .logoImage {
-    height: 40px;
+    height: 42px;
     width: auto;
     max-width: 100%;
     object-fit: contain;
