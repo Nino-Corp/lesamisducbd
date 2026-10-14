@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import styles from './CheckoutClient.module.css';
-import { MapPin, Package, ArrowRight, Loader2 } from 'lucide-react';
+import { MapPin, Package, ArrowRight, Loader2, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -117,7 +117,9 @@ export default function CheckoutClient({ user }) {
                         )}
                     </button>
 
-                    <p className={styles.secureText}>🔒 Paiement 100% Sécurisé via PrestaShop</p>
+                    <p className={styles.secureText} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                        <ShieldCheck size={16} /> Paiement 100% Sécurisé via PrestaShop
+                    </p>
                 </div>
             </div>
 

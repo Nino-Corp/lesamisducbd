@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import styles from './blog.module.css';
+import { Newspaper } from 'lucide-react';
 
 export const revalidate = 60;
 
@@ -70,7 +71,7 @@ export default async function BlogPage(props) {
                 {/* Hero */}
                 <section className={styles.hero}>
                     <div className={styles.heroContent}>
-                        <span className={styles.heroBadge}>📰 Notre Blog</span>
+                        <span className={styles.heroBadge} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Newspaper size={14} /> Notre Blog</span>
                         <h1 className={styles.heroTitle}>Guides & Actualités CBD</h1>
                         <p className={styles.heroSub}>
                             Conseils d'experts, fiches pratiques et actualités sur le CBD — pour tout comprendre simplement.

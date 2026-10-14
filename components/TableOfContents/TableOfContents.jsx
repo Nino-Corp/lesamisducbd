@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import styles from './TableOfContents.module.css';
+import { ListOrdered } from 'lucide-react';
 
 export default function TableOfContents({ title = 'Au programme !', items = [] }) {
     const [isOpen, setIsOpen] = useState(true);
@@ -10,7 +11,7 @@ export default function TableOfContents({ title = 'Au programme !', items = [] }
         <nav className={styles.wrapper} aria-label="Table des matières">
             <div className={styles.container}>
                 <button className={styles.toggle} onClick={() => setIsOpen(o => !o)} aria-expanded={isOpen}>
-                    <span className={styles.toggleIcon}>📋</span>
+                    <span className={styles.toggleIcon} style={{ display: 'inline-flex', alignItems: 'center' }}><ListOrdered size={18} /></span>
                     <span className={styles.toggleTitle}>{title}</span>
                     <span className={styles.arrow} style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▾</span>
                 </button>

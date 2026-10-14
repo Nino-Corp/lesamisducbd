@@ -12,7 +12,7 @@ import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
 import { trackCTA } from '@/utils/analytics';
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Sprout, Layers, Package } from 'lucide-react';
 import { useLoyaltyRatio } from '@/hooks/useLoyaltyRatio';
 
 const HEADER_PROPS = {
@@ -130,16 +130,26 @@ export default function ProductsClient({ initialProducts, globalContent, categor
         return 'autre';
     };
 
+    const getCategoryIcon = (catId) => {
+        switch (catId) {
+            case 'fleur': return <Sprout size={15} style={{ flexShrink: 0 }} />;
+            case 'resine': return <Layers size={15} style={{ flexShrink: 0 }} />;
+            case 'pack': return <Package size={15} style={{ flexShrink: 0 }} />;
+            case 'autre': return <Sparkles size={15} style={{ flexShrink: 0 }} />;
+            default: return null;
+        }
+    };
+
     // Dynamic Categories
     const categories = [
         { id: 'all', label: 'Tout voir' },
         ...(productCategories && productCategories.length > 0 
             ? productCategories 
             : [
-                { id: 'fleur', label: '🌿 Fleurs CBD' },
-                { id: 'resine', label: '🍫 Résines & Pollens' },
-                { id: 'pack', label: '📦 Packs & Découverte' },
-                { id: 'autre', label: '🔧 Accessoires & Divers' }
+                { id: 'fleur', label: 'Fleurs CBD' },
+                { id: 'resine', label: 'Résines & Pollens' },
+                { id: 'pack', label: 'Packs & Découverte' },
+                { id: 'autre', label: 'Accessoires & Divers' }
             ]
         )
     ];
@@ -272,15 +282,22 @@ export default function ProductsClient({ initialProducts, globalContent, categor
                 <ScrollReveal animation="fade-up" duration={700} delay={100}>
                     <div className={styles.filtersWrapper}>
                         <div className={styles.filtersScroll}>
-                            {categories.map(cat => (
-                                <button
-                                    key={cat.id}
-                                    className={`${styles.filterBtn} ${activeCategory === cat.id ? styles.active : ''}`}
-                                    onClick={() => setActiveCategory(cat.id)}
-                                >
-                                    {cat.label}
-                                </button>
-                            ))}
+                            {categories.map(cat => {
+                                const cleanLabel = (cat.label || '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}]/gu, '').trim();
+                                const icon = getCategoryIcon(cat.id);
+                                return (
+                                    <button
+                                        key={cat.id}
+                                        className={`${styles.filterBtn} ${activeCategory === cat.id ? styles.active : ''}`}
+                                        onClick={() => setActiveCategory(cat.id)}
+                                    >
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '7px' }}>
+                                            {icon}
+                                            {cleanLabel}
+                                        </span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 </ScrollReveal>

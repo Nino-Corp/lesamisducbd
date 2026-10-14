@@ -1,10 +1,20 @@
 import styles from './CardsGrid.module.css';
 import Image from 'next/image';
+import { Leaf, Star, Shield, Heart, CheckCircle2, Zap, Globe, Truck, Award, Smile, Flame, Lock } from 'lucide-react';
 
 const ICONS = {
-    leaf: '🌿', star: '⭐', shield: '🛡️', heart: '❤️',
-    check: '✅', bolt: '⚡', globe: '🌍', truck: '🚚',
-    award: '🏆', smile: '😊', fire: '🔥', lock: '🔒'
+    leaf: Leaf,
+    star: Star,
+    shield: Shield,
+    heart: Heart,
+    check: CheckCircle2,
+    bolt: Zap,
+    globe: Globe,
+    truck: Truck,
+    award: Award,
+    smile: Smile,
+    fire: Flame,
+    lock: Lock
 };
 
 export default function CardsGrid({
@@ -49,9 +59,17 @@ export default function CardsGrid({
                                 <div className={`${styles.cardImageWrapper} hover-zoom-wrapper`}>
                                     <Image src={card.imageSrc} alt={card.title || ''} width={80} height={80} style={{ objectFit: 'contain' }} />
                                 </div>
-                            ) : (
-                                card.icon && <span className={styles.cardIcon}>{ICONS[card.icon] || card.icon}</span>
-                            )}
+                            ) : (() => {
+                                const IconComp = ICONS[card.icon];
+                                if (IconComp) {
+                                    return (
+                                        <div className={styles.cardIcon} style={{ display: 'flex', alignItems: 'center', color: card.textColor || '#1F4B40' }}>
+                                            <IconComp size={36} />
+                                        </div>
+                                    );
+                                }
+                                return card.icon ? <span className={styles.cardIcon}>{card.icon}</span> : null;
+                            })()}
                             <h3 className={styles.cardTitle} style={{ color: card.textColor || '#1F4B40' }}>{card.title}</h3>
                             {card.text && <div className={styles.cardText} style={{ color: card.textColor ? 'inherit' : '#555' }} dangerouslySetInnerHTML={{ __html: card.text }} />}
                         </div>

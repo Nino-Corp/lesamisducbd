@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { FileText } from 'lucide-react';
+import { FileText, AlertTriangle } from 'lucide-react';
 import styles from './ImageUpload.module.css';
 
 export default function ImageUpload({ currentImage, onImageChange, accept = "image/*,application/pdf" }) {
@@ -81,7 +81,9 @@ export default function ImageUpload({ currentImage, onImageChange, accept = "ima
                     style={{ display: 'none' }}
                 />
             </label>
-            <span className={styles.sizeWarning}>⚠️ Poids max. : 4.5 Mo</span>
+            <span className={styles.sizeWarning} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <AlertTriangle size={13} /> Poids max. : 4.5 Mo
+            </span>
         </div>
     );
 }

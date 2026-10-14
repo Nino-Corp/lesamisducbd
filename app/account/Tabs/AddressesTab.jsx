@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Save, Loader2, MapPin, ArrowLeft } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, Loader2, MapPin, ArrowLeft, Building2, Phone } from 'lucide-react';
 
 const COUNTRIES = [
     { code: 'DE', name: 'Allemagne' },
@@ -309,12 +309,12 @@ export default function AddressesTab({ user }) {
 
                             <div style={{ fontSize: '0.93rem', color: '#4B5563', lineHeight: '1.65', flex: 1 }}>
                                 <div style={{ fontWeight: '700', color: '#1F2937' }}>{addr.firstname} {addr.lastname}</div>
-                                {addr.company && <div style={{ color: 'var(--primary-dark)', fontWeight: '600' }}>🏢 {addr.company}</div>}
+                                {addr.company && <div style={{ color: 'var(--primary-dark)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}><Building2 size={14} /> {addr.company}</div>}
                                 <div>{addr.address1}</div>
                                 {addr.address2 && <div>{addr.address2}</div>}
                                 <div>{addr.postcode} {addr.city}</div>
                                 <div style={{ color: '#6B7280' }}>{COUNTRIES.find(c => c.code === addr.country_code)?.name || addr.country_code}</div>
-                                {addr.phone && <div style={{ marginTop: '8px', color: '#6B7280' }}>📞 {addr.phone}</div>}
+                                {addr.phone && <div style={{ marginTop: '8px', color: '#6B7280', display: 'flex', alignItems: 'center', gap: '6px' }}><Phone size={14} /> {addr.phone}</div>}
                             </div>
 
                             <div style={{ display: 'flex', gap: '10px' }}>

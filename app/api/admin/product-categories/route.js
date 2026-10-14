@@ -4,10 +4,10 @@ import { kv } from '@vercel/kv';
 const CATEGORIES_KEY = 'product_categories';
 
 const DEFAULT_CATEGORIES = [
-    { id: 'fleur', label: '🌿 Fleurs CBD' },
-    { id: 'resine', label: '🍫 Résines / Pollens' },
-    { id: 'pack', label: '📦 Packs & Découverte' },
-    { id: 'autre', label: '🔧 Accessoires & Divers' }
+    { id: 'fleur', label: 'Fleurs CBD' },
+    { id: 'resine', label: 'Résines & Pollens' },
+    { id: 'pack', label: 'Packs & Découverte' },
+    { id: 'autre', label: 'Accessoires & Divers' }
 ];
 
 export async function GET() {

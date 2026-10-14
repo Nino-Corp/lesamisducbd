@@ -1,12 +1,24 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './ImageCardsGrid.module.css';
+import { Leaf, Star, Shield, Heart, CheckCircle2, Zap, Globe, Truck, Award, Smile, Flame, Lock, Users, Sprout, FlaskConical } from 'lucide-react';
 
 const ICONS = {
-    leaf: '🌿', star: '⭐', shield: '🛡️', heart: '❤️',
-    check: '✅', bolt: '⚡', globe: '🌍', truck: '🚚',
-    award: '🏆', smile: '😊', fire: '🔥', lock: '🔒',
-    users: '👥', sprout: '🌱', flask: '🧪'
+    leaf: Leaf,
+    star: Star,
+    shield: Shield,
+    heart: Heart,
+    check: CheckCircle2,
+    bolt: Zap,
+    globe: Globe,
+    truck: Truck,
+    award: Award,
+    smile: Smile,
+    fire: Flame,
+    lock: Lock,
+    users: Users,
+    sprout: Sprout,
+    flask: FlaskConical
 };
 
 export default function ImageCardsGrid({
@@ -42,7 +54,13 @@ export default function ImageCardsGrid({
                         <div className={styles.content}>
                             {card.icon && card.icon !== 'none' && (
                                 <div className={styles.iconWrapper}>
-                                    <span className={styles.icon}>{ICONS[card.icon] || card.icon}</span>
+                                    {(() => {
+                                        const IconComp = ICONS[card.icon];
+                                        if (IconComp) {
+                                            return <IconComp size={24} color="#1F4B40" />;
+                                        }
+                                        return <span className={styles.icon}>{card.icon}</span>;
+                                    })()}
                                 </div>
                             )}
                             <h3 className={styles.title}>{card.title}</h3>

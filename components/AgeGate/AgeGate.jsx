@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import styles from './AgeGate.module.css';
+import { Sprout } from 'lucide-react';
 
 // Routes qui ne doivent jamais afficher l'age gate
 const EXCLUDED_PREFIXES = ['/admin', '/connexion'];
@@ -164,7 +165,9 @@ export default function AgeGate() {
             Vous devez avoir au moins <strong>18 ans</strong> pour accéder à ce site.
             Merci de votre compréhension.
           </p>
-          <p className={styles.refusedEmoji} aria-hidden="true">🌿</p>
+          <div className={styles.refusedEmoji} aria-hidden="true" style={{ display: 'flex', justifyContent: 'center', marginTop: '12px' }}>
+            <Sprout size={32} color="#00FF94" />
+          </div>
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import styles from './ArticleSidebar.module.css';
+import { Sprout } from 'lucide-react';
 
 export default function ArticleSidebar({ categories = [], relatedArticles = [], containerNode = null }) {
     const [toc, setToc] = useState([]);
@@ -102,7 +103,7 @@ export default function ArticleSidebar({ categories = [], relatedArticles = [], 
                                     </div>
                                 ) : (
                                     <div className={styles.relatedImgPlaceholder}>
-                                        <span>🌿</span>
+                                        <Sprout size={22} color="#1F4B40" />
                                     </div>
                                 )}
                                 <div className={styles.relatedContent}>

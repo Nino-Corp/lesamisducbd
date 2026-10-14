@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import styles from './BlogCategoryFilter.module.css';
+import { Sprout } from 'lucide-react';
 
 // SVG Icon Library
 function FilterIcon({ name }) {
@@ -582,7 +583,9 @@ export default function BlogCategoryFilter({
                     ))
                 ) : (
                     <div className={styles.emptyState}>
-                        <div style={{ fontSize: '2.4rem', marginBottom: '10px' }}>🌿</div>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
+                            <Sprout size={40} color="#1F4B40" style={{ opacity: 0.6 }} />
+                        </div>
                         <h3 className={styles.emptyStateTitle}>Aucun article trouvé</h3>
                         <p className={styles.emptyStateSub}>
                             {searchQuery

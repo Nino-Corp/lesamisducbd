@@ -85,10 +85,10 @@ export const LOYALTY_LUCIDE_ICONS = {
 
 export const LOYALTY_ICON_CATEGORIES = [
     { id: 'all', label: 'Toutes les icônes' },
-    { id: 'nature', label: '🌿 Végétal & Nature' },
-    { id: 'vip', label: '👑 VIP & Prestige' },
-    { id: 'rewards', label: '⚡ Paliers & Bonus' },
-    { id: 'community', label: '💎 Symboles & Formes' }
+    { id: 'nature', label: 'Végétal & Nature' },
+    { id: 'vip', label: 'VIP & Prestige' },
+    { id: 'rewards', label: 'Paliers & Bonus' },
+    { id: 'community', label: 'Symboles & Formes' }
 ];
 
 export default function LoyaltyTierIcon({ icon, alt = '', size = 24, className = '', style = {} }) {

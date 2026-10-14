@@ -5,6 +5,7 @@ import styles from './RecrutementBlocks.module.css';
 import RecruitmentModal from '@/components/RecruitmentModal/RecruitmentModal';
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
 import { trackCTA } from '@/utils/analytics';
+import { MapPin } from 'lucide-react';
 
 // Helper for rendering multi-line string into <p> or <li>
 const renderText = (textStr) => {
@@ -66,7 +67,9 @@ export function RecrutementJobs({ title, jobs }) {
                                 <h3 className={styles.jobTitle}>{job.title}</h3>
                                 <span className={styles.jobBadge}>{job.type}</span>
                             </div>
-                            <p className={styles.jobLocation}>📍 {job.location}</p>
+                            <p className={styles.jobLocation} style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                                <MapPin size={14} /> {job.location}
+                            </p>
                             <div dangerouslySetInnerHTML={{ __html: job.description || '' }} />
                             <button onClick={() => { trackCTA('recrutement_postuler'); setIsModalOpen(true); }} className={styles.applyBtn}>
                                 Postuler

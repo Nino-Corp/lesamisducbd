@@ -1,4 +1,5 @@
 import styles from './VideoEmbed.module.css';
+import { Video } from 'lucide-react';
 
 function getEmbedUrl(url) {
     if (!url) return null;
@@ -40,7 +41,7 @@ export default function VideoEmbed({
                         />
                     ) : (
                         <div className={styles.placeholder}>
-                            <span>🎥</span>
+                            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Video size={36} color="#94a3b8" /></span>
                             <p>Collez une URL YouTube ou Vimeo</p>
                         </div>
                     )}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import FeaturedProductsClient from './FeaturedProductsClient';
+import { Loader2, AlertTriangle } from 'lucide-react';
 
 /**
  * Client-side wrapper for FeaturedProducts — used in the LivePreview (page builder).
@@ -57,16 +58,16 @@ export default function FeaturedProductsPreview({ title, subtitle, skus, columns
 
     if (loading) {
         return (
-            <div style={{ padding: '40px 20px', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>
-                ⏳ Chargement des produits en vedette…
+            <div style={{ padding: '40px 20px', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <Loader2 size={16} className="animate-spin" /> Chargement des produits en vedette…
             </div>
         );
     }
 
     if (products.length === 0) {
         return (
-            <div style={{ padding: '40px 20px', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>
-                ⚠️ Aucun produit trouvé pour les références indiquées.
+            <div style={{ padding: '40px 20px', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                <AlertTriangle size={16} /> Aucun produit trouvé pour les références indiquées.
             </div>
         );
     }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import styles from './VideoCard.module.css';
+import { Pin } from 'lucide-react';
 
 function getEmbedUrl(url, autoplay = true) {
     if (!url) return null;
@@ -154,7 +155,9 @@ export default function VideoCard({
                     )}
 
                     {cornerDecoration === 'pin' && (
-                        <div className={styles.pinDeco}>📌</div>
+                        <div className={styles.pinDeco} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Pin size={18} color="#ef4444" style={{ transform: 'rotate(-45deg)' }} />
+                        </div>
                     )}
 
                     {/* En-tête : Icône + Titre */}
