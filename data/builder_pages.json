@@ -1575,24 +1575,6 @@
           "marginBottom": "negative-medium",
           "marginTop": "negative-large"
         }
-      },
-      {
-        "id": "iconsummary-1792015806458",
-        "type": "IconSummary",
-        "props": {
-          "items": [
-            {
-              "title": "Avantage 1",
-              "emoji": "✨",
-              "link": ""
-            },
-            {
-              "title": "Avantage 2",
-              "emoji": "🌿",
-              "link": ""
-            }
-          ]
-        }
       }
     ],
     "seo": {
@@ -1605,7 +1587,7 @@
     "status": "draft",
     "scheduledAt": null,
     "createdAt": "2026-09-22T08:31:36.598Z",
-    "updatedAt": "2026-10-14T22:10:29.722Z"
+    "updatedAt": "2026-10-14T23:18:07.671Z"
   },
   "cuisiner-avec-du-cbd-conseils-idees-et-recettes": {
     "slug": "cuisiner-avec-du-cbd-conseils-idees-et-recettes",
