@@ -5,6 +5,7 @@ import Image from 'next/image';
 import styles from './Products.module.css';
 import WysiwygEditor from '../builder/WysiwygEditor';
 import ImageUpload from '@/components/Admin/ImageUpload';
+import { Store, Eye, EyeOff, FileText, Tag, Image as ImageIcon, Sprout, Layers, Save, Trash2, Edit3, Award, Lock } from 'lucide-react';
 
 // Suppression de BADGE_OPTIONS pour saisie libre
 
@@ -134,7 +135,7 @@ export default function ProductsPage() {
 
     // Category detection (same logic as ProductsClient for consistency)
     const CATEGORY_OPTIONS = [
-        { id: 'auto', label: '🤖 Auto-détection' },
+        { id: 'auto', label: 'Auto-détection' },
         ...dynamicCategories
     ];
 
@@ -380,35 +381,40 @@ export default function ProductsPage() {
                 <button
                     onClick={() => setTab('vitrine')}
                     className={`${styles.tab} ${tab === 'vitrine' ? styles.activeTab : ''}`}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
-                    🏪 Vitrine Homepage
+                    <Store size={16} /> Vitrine Homepage
                 </button>
                 <button
                     onClick={() => setTab('visibility')}
                     className={`${styles.tab} ${tab === 'visibility' ? styles.activeTab : ''}`}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
-                    👁 Visibilité Catalogue
+                    <Eye size={16} /> Visibilité Catalogue
                     {hiddenCount > 0 && <span className={styles.hiddenBadge}>{hiddenCount} masqué{hiddenCount > 1 ? 's' : ''}</span>}
                 </button>
                 <button
                     onClick={() => setTab('descriptions')}
                     className={`${styles.tab} ${tab === 'descriptions' ? styles.activeTab : ''}`}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
-                    ✏️ Descriptions
+                    <FileText size={16} /> Descriptions
                     {Object.keys(overrides).length > 0 && <span className={styles.hiddenBadge}>{Object.keys(overrides).length} modifié{Object.keys(overrides).length > 1 ? 's' : ''}</span>}
                 </button>
                 <button
                     onClick={() => setTab('categories')}
                     className={`${styles.tab} ${tab === 'categories' ? styles.activeTab : ''}`}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
-                    🏷️ Catégories
+                    <Tag size={16} /> Catégories
                     {Object.keys(categoryOverrides).length > 0 && <span className={styles.hiddenBadge}>{Object.keys(categoryOverrides).length} forcé{Object.keys(categoryOverrides).length > 1 ? 's' : ''}</span>}
                 </button>
                 <button
                     onClick={() => setTab('couverture')}
                     className={`${styles.tab} ${tab === 'couverture' ? styles.activeTab : ''}`}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                 >
-                    🖼️ Page Couverture
+                    <ImageIcon size={16} /> Page Couverture
                 </button>
             </div>
 
@@ -434,7 +440,7 @@ export default function ProductsPage() {
                                     <div className={styles.catalogInfo}>
                                         <strong>{product.name}</strong>
                                         <span className={styles.catalogPrice}>{product.formattedPrice}</span>
-                                        <span className={styles.typeLabel}>{isResin(product) ? '🍫 Résine' : '🌿 Fleur'}</span>
+                                        <span className={styles.typeLabel}>{isResin(product) ? 'Résine' : 'Fleur'}</span>
                                     </div>
                                     <button
                                         onClick={() => pin(product)}
@@ -453,7 +459,7 @@ export default function ProductsPage() {
                         <h2 className={styles.panelTitle}>Vitrine Homepage</h2>
 
                         <div className={styles.vitrineSection}>
-                            <h3 className={styles.sectionLabel}>🌿 Fleurs — "Nos fleurs phares"</h3>
+                            <h3 className={styles.sectionLabel} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Sprout size={16} /> Fleurs — "Nos fleurs phares"</h3>
                             {vitrine.flowers.length === 0 ? (
                                 <p className={styles.emptyHint}>Aucune fleur épinglée.</p>
                             ) : vitrine.flowers.map((item, idx) => (
@@ -493,7 +499,7 @@ export default function ProductsPage() {
                         </div>
 
                         <div className={styles.vitrineSection}>
-                            <h3 className={styles.sectionLabel}>🍫 Résines — "Nos résines phares"</h3>
+                            <h3 className={styles.sectionLabel} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Layers size={16} /> Résines — "Nos résines phares"</h3>
                             {vitrine.resins.length === 0 ? (
                                 <p className={styles.emptyHint}>Aucune résine épinglée.</p>
                             ) : vitrine.resins.map((item, idx) => (
@@ -570,11 +576,11 @@ export default function ProductsPage() {
                                     <div className={styles.catalogInfo}>
                                         <strong>{product.name}</strong>
                                         <span className={styles.catalogPrice}>{product.formattedPrice}</span>
-                                        <span className={styles.typeLabel}>{isResin(product) ? '🍫 Résine' : '🌿 Fleur'}</span>
+                                        <span className={styles.typeLabel}>{isResin(product) ? 'Résine' : 'Fleur'}</span>
                                     </div>
                                     <div className={styles.visStatus}>
-                                        <span className={hidden ? styles.statusHidden : styles.statusVisible}>
-                                            {hidden ? '🙈 Masqué' : '👁 Visible'}
+                                        <span className={hidden ? styles.statusHidden : styles.statusVisible} style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                                            {hidden ? <><EyeOff size={13} /> Masqué</> : <><Eye size={13} /> Visible</>}
                                         </span>
                                         <button
                                             onClick={() => toggleVisibility(product)}
@@ -691,7 +697,7 @@ export default function ProductsPage() {
                                                                 finally { setDescSaving(false); }
                                                             }}
                                                         >
-                                                            {descSaving ? 'Enregistrement...' : descSaved ? '✓ Sauvegardé' : '💾 Sauvegarder'}
+                                                            {descSaving ? 'Enregistrement...' : descSaved ? '✓ Sauvegardé' : <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Save size={14} /> Sauvegarder</span>}
                                                         </button>
                                                         <button
                                                             className={styles.hideBtn}
@@ -703,7 +709,7 @@ export default function ProductsPage() {
                                                         {hasOverride && (
                                                             <button
                                                                 className={styles.unpinBtn}
-                                                                style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                                                                style={{ padding: '6px 16px', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
                                                                 onClick={async () => {
                                                                     const newOverrides = { ...overrides };
                                                                     delete newOverrides[product.id];
@@ -716,7 +722,7 @@ export default function ProductsPage() {
                                                                     setEditingId(null);
                                                                 }}
                                                             >
-                                                                🗑 Supprimer l'override
+                                                                <Trash2 size={13} /> Supprimer l'override
                                                             </button>
                                                         )}
                                                     </div>
@@ -733,6 +739,7 @@ export default function ProductsPage() {
                                         {!isEditing && (
                                             <button
                                                 className={styles.pinBtn}
+                                                style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}
                                                 onClick={() => {
                                                     const existing = overrides[product.id] || {};
                                                     setEditingId(product.id);
@@ -743,7 +750,7 @@ export default function ProductsPage() {
                                                     });
                                                 }}
                                             >
-                                                ✏️ Modifier
+                                                <Edit3 size={13} /> Modifier
                                             </button>
                                         )}
                                     </div>
@@ -772,13 +779,13 @@ export default function ProductsPage() {
                             disabled={catSaving}
                             className={`${styles.saveButton} ${catSaved ? styles.savedButton : ''}`}
                         >
-                            {catSaving ? 'Enregistrement...' : catSaved ? '✓ Sauvegardé' : '💾 Sauvegarder les catégories'}
+                            {catSaving ? 'Enregistrement...' : catSaved ? '✓ Sauvegardé' : <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Save size={14} /> Sauvegarder les catégories</span>}
                         </button>
                     </div>
 
                     <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', marginBottom: '24px', border: '1px solid #e2e8f0' }}>
                         <h3 style={{ margin: '0 0 12px 0', fontSize: '1rem', color: '#1F4B40', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'space-between' }}>
-                            <span>🏷️ Gérer les filtres de la page Produits</span>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Tag size={16} /> Gérer les filtres de la page Produits</span>
                             {catFiltersSaving && <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 'normal' }}>Enregistrement...</span>}
                         </h3>
                         
@@ -808,7 +815,7 @@ export default function ProductsPage() {
                             />
                             <input
                                 type="text"
-                                placeholder="Label affiché (ex: 💧 Huiles CBD)"
+                                placeholder="Label affiché (ex: Huiles CBD)"
                                 value={newCatLabel}
                                 onChange={e => setNewCatLabel(e.target.value)}
                                 className={styles.search}
@@ -835,7 +842,7 @@ export default function ProductsPage() {
                         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                             {[
                                 { id: 'all', label: 'Tous' },
-                                { id: 'overridden', label: '🔒 Forcés' },
+                                { id: 'overridden', label: <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Lock size={12} /> Forcés</span> },
                                 ...dynamicCategories.map(c => ({ id: c.id, label: c.label }))
                             ].map(f => (
                                 <button
@@ -963,13 +970,13 @@ export default function ProductsPage() {
                             disabled={configSaving}
                             className={`${styles.saveButton} ${configSaved ? styles.savedButton : ''}`}
                         >
-                            {configSaving ? 'Enregistrement...' : configSaved ? '✓ Sauvegardé' : '💾 Sauvegarder'}
+                            {configSaving ? 'Enregistrement...' : configSaved ? '✓ Sauvegardé' : <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Save size={14} /> Sauvegarder</span>}
                         </button>
                     </div>
 
                     <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', marginBottom: '24px', border: '1px solid #e2e8f0' }}>
                         <h3 style={{ margin: '0 0 12px 0', fontSize: '1rem', color: '#1F4B40', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span>🏅</span> Badge Produit
+                            <Award size={18} color="#1F4B40" /> Badge Produit
                         </h3>
                         <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
                             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', cursor: 'pointer' }}>
@@ -996,7 +1003,7 @@ export default function ProductsPage() {
                     </div>
 
                     <h3 style={{ margin: '0 0 16px 0', fontSize: '1rem', color: '#1F4B40', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>🎠</span> Slides du Carousel
+                        <Layers size={18} color="#1F4B40" /> Slides du Carousel
                     </h3>
                     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>

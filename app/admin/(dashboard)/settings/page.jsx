@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './Editor.module.css';
+import { Globe, Phone, Eye } from 'lucide-react';
 
 const DEFAULTS = {
     contact: {
@@ -94,29 +95,35 @@ export default function GlobalContentPage() {
     if (!loaded) return <div style={{ padding: 20 }}>Chargement...</div>;
 
     const TABS = [
-        { id: 'contact', label: '📞 Informations de contact' },
-        { id: 'visibility', label: '👁️ Visibilité' }
+        { id: 'contact', label: 'Informations de contact', icon: Phone },
+        { id: 'visibility', label: 'Visibilité', icon: Eye }
     ];
 
     return (
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <div style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
                 <Link href="/admin/builder" style={{ textDecoration: 'none', color: '#666' }}>← Retour</Link>
-                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1F4B40', margin: 0 }}>🌍 Éléments Globaux</h1>
+                <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1F4B40', margin: 0, display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                    <Globe size={22} color="#1F4B40" /> Éléments Globaux
+                </h1>
             </div>
 
             {/* Tabs */}
             <div className={styles.adminTabsContainer}>
-                {TABS.map(t => (
-                    <button 
-                        key={t.id} 
-                        type="button" 
-                        onClick={() => setTab(t.id)} 
-                        className={`${styles.adminTab} ${tab === t.id ? styles.adminTabActive : ''}`}
-                    >
-                        {t.label}
-                    </button>
-                ))}
+                {TABS.map(t => {
+                    const TabIcon = t.icon;
+                    return (
+                        <button 
+                            key={t.id} 
+                            type="button" 
+                            onClick={() => setTab(t.id)} 
+                            className={`${styles.adminTab} ${tab === t.id ? styles.adminTabActive : ''}`}
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                        >
+                            <TabIcon size={16} /> {t.label}
+                        </button>
+                    );
+                })}
             </div>
 
             <form onSubmit={handleSubmit} className={styles.form} style={{ maxWidth: '100%' }}>

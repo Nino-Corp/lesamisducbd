@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import styles from './LoyaltySettings.module.css';
-import { Save, Plus, Trash2, Loader2, Sparkles, Droplet, Star, Leaf, Award, Palette, Layers, CreditCard, ChevronDown, Check } from 'lucide-react';
+import { Save, Plus, Trash2, Loader2, Sparkles, Droplet, Star, Leaf, Award, Palette, Layers, CreditCard, ChevronDown, Check, Lightbulb } from 'lucide-react';
 import rewardsStyles from '../../../account/Tabs/RewardsTab.module.css';
 
 
@@ -373,7 +373,7 @@ export default function LoyaltySettings() {
                                 onChange={(e) => updateSetting('ratio', parseFloat(e.target.value))}
                             />
                             <p style={{ fontSize: '0.8rem', color: '#6b7280', marginTop: '4px', lineHeight: '1.4' }}>
-                                💡 <strong>Exemple simple :</strong><br/>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Lightbulb size={13} /> <strong>Exemple simple :</strong></span><br/>
                                 • Si un client gagne <strong>1 point</strong> pour chaque <strong>1 euro</strong> dépensé, tapez <strong>1</strong>.<br/>
                                 • Si un client gagne <strong>1 point</strong> seulement tous les <strong>10 euros</strong> dépensés, tapez <strong>10</strong>.
                             </p>

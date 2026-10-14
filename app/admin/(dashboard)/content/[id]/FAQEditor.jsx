@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import styles from './Editor.module.css';
 import WysiwygEditor from '../../builder/WysiwygEditor';
+import { Trash2 } from 'lucide-react';
 
 export default function FAQEditor({ section, onSave }) {
     const [title, setTitle] = useState(section.props.title || '');
@@ -86,7 +87,7 @@ export default function FAQEditor({ section, onSave }) {
                             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '5px', marginBottom: '10px' }}>
                                 <button type="button" onClick={() => moveItem(index, 'up')} disabled={index === 0}>↑</button>
                                 <button type="button" onClick={() => moveItem(index, 'down')} disabled={index === items.length - 1}>↓</button>
-                                <button type="button" onClick={() => removeItem(index)} style={{ color: 'red', marginLeft: '10px' }}>🗑️</button>
+                                <button type="button" onClick={() => removeItem(index)} style={{ color: 'red', marginLeft: '10px', display: 'inline-flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer' }} title="Supprimer"><Trash2 size={15} /></button>
                             </div>
 
                             <input

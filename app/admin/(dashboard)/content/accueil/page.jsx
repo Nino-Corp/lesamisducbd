@@ -8,22 +8,24 @@ import ImageUpload from '@/components/Admin/ImageUpload';
 import { TEMPLATES, CATEGORIES } from '../../builder/builderConfig';
 import { EDITORS } from '../../builder/builderEditors';
 import SEOPanel from '../../builder/SEOPanel';
+import BlockIcon from '../../builder/BlockIcon';
+import { Home, CheckCircle2, Settings, Eye, EyeOff, ExternalLink, Trash2, Copy, Boxes, Save } from 'lucide-react';
 
 /* ── Section type metadata for legacy blocks ────── */
 const LEGACY_META = {
-    Header:         { icon: '🔝', label: 'En-tête (Header)' },
-    Marquee:        { icon: '📢', label: 'Bandeau promo' },
-    Hero:           { icon: '🖼', label: 'Héro principal' },
-    QualityBanner:  { icon: '🏅', label: 'Bandeau Qualité' },
-    ProductList:    { icon: '🛍️', label: 'Produits vedettes' },
-    WhyChooseUs:    { icon: '✅', label: 'Nos atouts' },
-    FAQ:            { icon: '❓', label: 'FAQ' },
-    Partners:       { icon: '💬', label: 'Témoignages' },
-    InteractiveMap: { icon: '🗺️', label: 'Carte interactive' },
-    PartnersNetwork:{ icon: '🤝', label: 'Réseau partenaires' },
-    Quote:          { icon: '✍️', label: 'Citation' },
-    JoinUs:         { icon: '👋', label: 'Recrutement' },
-    Footer:         { icon: '🔻', label: 'Pied de page (Footer)' },
+    Header:         { icon: 'Header', label: 'En-tête (Header)' },
+    Marquee:        { icon: 'Marquee', label: 'Bandeau promo' },
+    Hero:           { icon: 'Hero', label: 'Héro principal' },
+    QualityBanner:  { icon: 'QualityBanner', label: 'Bandeau Qualité' },
+    ProductList:    { icon: 'ProductList', label: 'Produits vedettes' },
+    WhyChooseUs:    { icon: 'WhyChooseUs', label: 'Nos atouts' },
+    FAQ:            { icon: 'FAQ', label: 'FAQ' },
+    Partners:       { icon: 'Partners', label: 'Témoignages' },
+    InteractiveMap: { icon: 'InteractiveMap', label: 'Carte interactive' },
+    PartnersNetwork:{ icon: 'PartnersNetwork', label: 'Réseau partenaires' },
+    Quote:          { icon: 'Quote', label: 'Citation' },
+    JoinUs:         { icon: 'JoinUs', label: 'Recrutement' },
+    Footer:         { icon: 'Footer', label: 'Pied de page (Footer)' },
 };
 
 /* Types that are not editable in this view (managed elsewhere) */
@@ -171,7 +173,7 @@ function getMeta(type) {
     if (legacy) return legacy;
     const tpl = TEMPLATES.find(t => t.type === type);
     if (tpl) return { icon: tpl.icon, label: tpl.label };
-    return { icon: '🧩', label: type };
+    return { icon: type, label: type };
 }
 
 /* ── Main Component ──────────────────────────────── */
@@ -361,7 +363,9 @@ export default function AccueilContentPage() {
                             display: 'flex', alignItems: 'center', gap: '6px',
                         }}>← Retour</Link>
                         <div>
-                            <h1 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>🏠 Page d'Accueil</h1>
+                            <h1 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', margin: 0, display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                <Home size={18} color="#1F4B40" /> Page d'Accueil
+                            </h1>
                             <code style={{ fontSize: '0.72rem', color: '#94a3b8' }}>/</code>
                         </div>
                     </div>
@@ -370,26 +374,35 @@ export default function AccueilContentPage() {
                         <span style={{
                             padding: '6px 12px', borderRadius: '8px',
                             background: '#f0fdf4', color: '#166534', fontWeight: 700, fontSize: '0.8rem',
-                            border: '1px solid #16653430',
-                        }}>✅ Publié</span>
+                            border: '1px solid #16653430', display: 'inline-flex', alignItems: 'center', gap: '6px'
+                        }}>
+                            <CheckCircle2 size={13} /> Publié
+                        </span>
 
                         {/* SEO */}
                         <button onClick={() => setShowSEOModal(true)} style={{
                             padding: '8px 16px', borderRadius: '8px', border: '1px solid #1F4B40',
                             background: 'white', color: '#1F4B40', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem',
-                        }}>⚙️ SEO</button>
+                            display: 'inline-flex', alignItems: 'center', gap: '6px'
+                        }}>
+                            <Settings size={14} /> SEO
+                        </button>
 
                         {/* Preview link */}
                         <a href="/" target="_blank" rel="noopener noreferrer" style={{
                             padding: '8px 16px', borderRadius: '8px', background: '#e0f2fe', color: '#0369a1',
-                            textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem',
-                        }}>👁 Aperçu</a>
+                            textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px'
+                        }}>
+                            <Eye size={14} /> Aperçu
+                        </a>
 
                         {/* View live */}
                         <a href="https://www.lesamisducbd.fr" target="_blank" rel="noopener noreferrer" style={{
                             padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937',
-                            textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem',
-                        }}>🔗 Voir</a>
+                            textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px'
+                        }}>
+                            <ExternalLink size={14} /> Voir
+                        </a>
 
                         {/* Save */}
                         <button onClick={save} disabled={saving} style={{
@@ -457,7 +470,7 @@ export default function AccueilContentPage() {
                                                 onMouseLeave={e => { if (!isDragTarget) e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#f1f5f9'; }}
                                             >
                                                 <span style={{ cursor: 'grab', opacity: 0.4, fontSize: '0.9rem', flexShrink: 0 }}>⠿</span>
-                                                <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{meta.icon}</span>
+                                                <BlockIcon type={section.type} icon={meta.icon} size={18} />
                                                 <div style={{ flex: 1, minWidth: 0 }}>
                                                     <div style={{ fontWeight: 700, fontSize: '0.82rem', color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                         {meta.label}
@@ -466,14 +479,14 @@ export default function AccueilContentPage() {
                                                         {section.props?.title || section.props?.text || section.type}
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', gap: '2px', flexShrink: 0 }}>
+                                                <div style={{ display: 'flex', gap: '2px', flexShrink: 0, alignItems: 'center' }}>
                                                     <button onClick={e => { e.stopPropagation(); toggleVisibility(origIdx); }} title={isHidden ? 'Afficher' : 'Masquer'}
-                                                        style={{ padding: '4px 6px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#94a3b8' }}>
-                                                        {isHidden ? '👁' : '🙈'}
+                                                        style={{ padding: '4px 6px', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', display: 'flex', alignItems: 'center' }}>
+                                                        {isHidden ? <Eye size={16} /> : <EyeOff size={16} />}
                                                     </button>
                                                     <button onClick={e => { e.stopPropagation(); removeSection(origIdx); }} title="Supprimer"
-                                                        style={{ padding: '4px 6px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#ef4444' }}>
-                                                        🗑️
+                                                        style={{ padding: '4px 6px', background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', display: 'flex', alignItems: 'center' }}>
+                                                        <Trash2 size={16} />
                                                     </button>
                                                 </div>
                                             </div>
@@ -507,21 +520,21 @@ export default function AccueilContentPage() {
                                             background: '#fff', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, color: '#64748b',
                                         }}>← Liste</button>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
-                                            <span style={{ fontSize: '1.1rem' }}>{currentMeta?.icon}</span>
+                                            <BlockIcon type={currentSection.type} icon={currentMeta?.icon} size={18} />
                                             <div>
                                                 <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#0f172a' }}>{currentMeta?.label}</div>
                                             </div>
                                         </div>
                                         {/* Move / Duplicate / Delete controls */}
-                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
                                             <button onClick={() => moveSection(activeSection, -1)} disabled={activeSection === 0}
                                                 style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '0.8rem', color: activeSection === 0 ? '#cbd5e1' : '#475569' }} title="Monter">▲</button>
                                             <button onClick={() => moveSection(activeSection, 1)} disabled={activeSection === sections.length - 1}
                                                 style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '0.8rem', color: activeSection === sections.length - 1 ? '#cbd5e1' : '#475569' }} title="Descendre">▼</button>
                                             <button onClick={() => duplicateSection(activeSection)}
-                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '0.8rem', color: '#475569' }} title="Dupliquer">📋</button>
+                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', color: '#475569', display: 'flex', alignItems: 'center' }} title="Dupliquer"><Copy size={13} /></button>
                                             <button onClick={() => removeSection(activeSection)}
-                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', cursor: 'pointer', fontSize: '0.8rem', color: '#ef4444' }} title="Supprimer">🗑</button>
+                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', cursor: 'pointer', color: '#ef4444', display: 'flex', alignItems: 'center' }} title="Supprimer"><Trash2 size={13} /></button>
                                         </div>
                                     </div>
 
@@ -620,11 +633,11 @@ export default function AccueilContentPage() {
 
                         {/* Template tabs switcher */}
                         <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb' }}>
-                            <button onClick={() => setTemplateTab('models')} style={{ flex: 1, padding: '12px', background: templateTab === 'models' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'models' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'models' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px' }}>
-                                🧱 Modèles Standards
+                            <button onClick={() => setTemplateTab('models')} style={{ flex: 1, padding: '12px', background: templateTab === 'models' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'models' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'models' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                                <Boxes size={15} /> Modèles Standards
                             </button>
-                            <button onClick={() => setTemplateTab('blocks')} style={{ flex: 1, padding: '12px', background: templateTab === 'blocks' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'blocks' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'blocks' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px' }}>
-                                💾 Mes Blocs Sauvegardés ({savedBlocks.length})
+                            <button onClick={() => setTemplateTab('blocks')} style={{ flex: 1, padding: '12px', background: templateTab === 'blocks' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'blocks' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'blocks' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                                <Save size={15} /> Mes Blocs Sauvegardés ({savedBlocks.length})
                             </button>
                         </div>
 
@@ -659,7 +672,9 @@ export default function AccueilContentPage() {
                                             style={{ minWidth: 0, width: '100%', padding: '20px 16px', borderRadius: '16px', border: '1.5px solid #e5e7eb', background: '#fff', cursor: 'pointer', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', transition: 'all 0.15s', whiteSpace: 'normal' }}
                                             onMouseEnter={e => { e.currentTarget.style.border = '1.5px solid #1F4B40'; e.currentTarget.style.background = '#f0fdf4'; }}
                                             onMouseLeave={e => { e.currentTarget.style.border = '1.5px solid #e5e7eb'; e.currentTarget.style.background = '#fff'; }}>
-                                            <span style={{ fontSize: '2rem' }}>{t.icon}</span>
+                                            <div style={{ height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <BlockIcon type={t.type} icon={t.icon} size={28} color="#1F4B40" />
+                                            </div>
                                             <strong style={{ fontSize: '0.88rem', color: '#1F4B40', wordBreak: 'break-word' }}>{t.label}</strong>
                                             <span style={{ fontSize: '0.75rem', color: '#888', lineHeight: 1.4, wordBreak: 'break-word' }}>{t.description}</span>
                                         </button>
@@ -674,7 +689,9 @@ export default function AccueilContentPage() {
                                     savedBlocks.map(block => (
                                         <div key={block.id} style={{ minWidth: 0, position: 'relative', padding: '20px 16px', borderRadius: '16px', border: '1.5px solid #e5e7eb', background: '#fff', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                                             <button onClick={() => deleteSavedBlock(block.id)} title="Supprimer" style={{ position: 'absolute', top: '8px', right: '8px', background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}>✕</button>
-                                            <span style={{ fontSize: '2rem' }}>{TEMPLATES.find(t => t.type === block.type)?.icon || '🧩'}</span>
+                                            <div style={{ height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <BlockIcon type={block.type} icon={TEMPLATES.find(t => t.type === block.type)?.icon} size={28} color="#1F4B40" />
+                                            </div>
                                             <strong style={{ fontSize: '0.88rem', color: '#1F4B40', wordBreak: 'break-word', whiteSpace: 'normal' }}>{block.savedName || block.type}</strong>
                                             <span style={{ fontSize: '0.7rem', color: '#aaa' }}>{new Date(block.savedAt).toLocaleDateString('fr-FR')}</span>
                                             <button onClick={() => addSection(block)} style={{ marginTop: '8px', width: '100%', padding: '6px', background: '#00FF94', color: '#1F4B40', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '0.8rem' }}>

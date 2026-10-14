@@ -2,12 +2,16 @@
 
 import Link from 'next/link';
 import styles from './ContentDashboard.module.css';
+import { 
+    Home, Sparkles, Store, Wind, Microscope, 
+    Briefcase, Globe, FileText, Truck, Lock 
+} from 'lucide-react';
 
 const PAGES = [
     {
         id: 'accueil',
         label: 'Page d\'Accueil',
-        icon: '🏠',
+        Icon: Home,
         description: 'Bandeau, Héro, Arguments, FAQ, Témoignages, Logos, Citation',
         count: 7,
         href: '/admin/content/accueil'
@@ -15,7 +19,7 @@ const PAGES = [
     {
         id: 'essentiel',
         label: 'L\'Essentiel',
-        icon: '🌿',
+        Icon: Sparkles,
         description: 'Intro, Carrousels Légalité & Culture, Points clés, Citation',
         count: 5,
         href: '/admin/content/essentiel'
@@ -23,7 +27,7 @@ const PAGES = [
     {
         id: 'professionnel',
         label: 'Professionnel',
-        icon: '🏪',
+        Icon: Store,
         description: 'Hero, Arguments partenariat, Étapes pour devenir partenaire',
         count: 4,
         href: '/admin/content/professionnel'
@@ -31,7 +35,7 @@ const PAGES = [
     {
         id: 'usages',
         label: 'CBD & Usages',
-        icon: '💨',
+        Icon: Wind,
         description: 'Hero, Guides d\'usage, Citation',
         count: 3,
         href: '/admin/content/usages'
@@ -39,7 +43,7 @@ const PAGES = [
     {
         id: 'transparence',
         label: 'Transparence',
-        icon: '🔬',
+        Icon: Microscope,
         description: 'Héro, Manifesto, Arguments de qualité, Analyses labo',
         count: 4,
         href: '/admin/content/transparence'
@@ -47,7 +51,7 @@ const PAGES = [
     {
         id: 'recrutement',
         label: 'Recrutement',
-        icon: '💼',
+        Icon: Briefcase,
         description: 'Texte d\'introduction, Offres d\'emploi, Contact',
         count: 3,
         href: '/admin/content/recrutement'
@@ -55,7 +59,7 @@ const PAGES = [
     {
         id: 'global',
         label: 'Éléments Globaux',
-        icon: '🌍',
+        Icon: Globe,
         description: 'Informations de contact de la boutique, Bannière, Newsletter',
         count: 2,
         href: '/admin/content/global'
@@ -63,7 +67,7 @@ const PAGES = [
     {
         id: 'cgv',
         label: 'CGV',
-        icon: '📄',
+        Icon: FileText,
         description: 'Conditions Générales de Vente (Texte de loi complet)',
         count: 'Texte',
         href: '/admin/content/legal/cgv'
@@ -71,7 +75,7 @@ const PAGES = [
     {
         id: 'livraison',
         label: 'Livraison',
-        icon: '🚚',
+        Icon: Truck,
         description: 'Délais, Tarifs et Méthodes d\'expédition',
         count: 'Texte',
         href: '/admin/content/legal/livraison'
@@ -79,7 +83,7 @@ const PAGES = [
     {
         id: 'privacy',
         label: 'Confidentialité',
-        icon: '🔒',
+        Icon: Lock,
         description: 'Politique de confidentialité et RGPD',
         count: 'Texte',
         href: '/admin/content/legal/privacy'
@@ -95,19 +99,24 @@ export default function ContentDashboard() {
             </div>
 
             <div className={styles.pagesGrid}>
-                {PAGES.map(page => (
-                    <Link key={page.id} href={page.href} className={styles.pageCard}>
-                        <div className={styles.pageCardIcon}>{page.icon}</div>
-                        <div className={styles.pageCardContent}>
-                            <h2 className={styles.pageCardTitle}>{page.label}</h2>
-                            <p className={styles.pageCardDesc}>{page.description}</p>
-                        </div>
-                        <div className={styles.pageCardFooter}>
-                            <span className={styles.sectionCount}>{page.count} section{page.count > 1 ? 's' : ''}</span>
-                            <span className={styles.editArrow}>Modifier →</span>
-                        </div>
-                    </Link>
-                ))}
+                {PAGES.map(page => {
+                    const PageIcon = page.Icon;
+                    return (
+                        <Link key={page.id} href={page.href} className={styles.pageCard}>
+                            <div className={styles.pageCardIcon}>
+                                <PageIcon size={24} color="#1F4B40" />
+                            </div>
+                            <div className={styles.pageCardContent}>
+                                <h2 className={styles.pageCardTitle}>{page.label}</h2>
+                                <p className={styles.pageCardDesc}>{page.description}</p>
+                            </div>
+                            <div className={styles.pageCardFooter}>
+                                <span className={styles.sectionCount}>{page.count} section{page.count > 1 ? 's' : ''}</span>
+                                <span className={styles.editArrow}>Modifier →</span>
+                            </div>
+                        </Link>
+                    );
+                })}
             </div>
         </div>
     );

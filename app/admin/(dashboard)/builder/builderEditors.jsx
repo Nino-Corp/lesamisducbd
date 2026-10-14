@@ -1,8 +1,12 @@
 'use client';
 
-// All per-block editor forms for the Page Builder
 import { useState, useEffect } from 'react';
 import WysiwygEditor from './WysiwygEditor';
+import { 
+    FolderOpen, Film, Code, AlertTriangle, Lightbulb, 
+    Lock, Clock, Tag, Image as ImageIcon, PenLine, 
+    Target, FileText, Sliders, Settings, RefreshCw, Loader2 
+} from 'lucide-react';
 
 function Field({ label, hint, children }) {
     return (
@@ -35,8 +39,8 @@ export function ImageUploader({ value, onChange, folder = 'pages' }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {value && <img src={value} alt="aperçu" style={{ width: '100%', maxHeight: '160px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #eee' }} />}
             <div style={{ display: 'flex', gap: '8px' }}>
-                <label style={{ flex: 1, padding: '8px', background: '#f5f5f5', borderRadius: '8px', textAlign: 'center', cursor: 'pointer', fontSize: '0.85rem', border: '1px dashed #ddd' }}>
-                    📁 {value ? 'Changer l\'image' : 'Choisir une image'}
+                <label style={{ flex: 1, padding: '8px', background: '#f5f5f5', borderRadius: '8px', textAlign: 'center', cursor: 'pointer', fontSize: '0.85rem', border: '1px dashed #ddd', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                    <FolderOpen size={14} /> {value ? 'Changer l\'image' : 'Choisir une image'}
                     <input type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFile} />
                 </label>
                 {value && <button type="button" onClick={() => onChange('')} style={{ padding: '8px 12px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '0.8rem' }}>✕</button>}
@@ -160,7 +164,7 @@ export function RichTextEditor({ props, onChange }) {
 export function CardsGridEditor({ props, onChange }) {
     const cards = props.cards || [];
     const ICONS = ['leaf', 'star', 'shield', 'heart', 'check', 'bolt', 'globe', 'truck', 'award', 'smile', 'fire', 'lock'];
-    const ICON_LABELS = { leaf: '🌿', star: '⭐', shield: '🛡️', heart: '❤️', check: '✅', bolt: '⚡', globe: '🌍', truck: '🚚', award: '🏆', smile: '😊', fire: '🔥', lock: '🔒' };
+    const ICON_LABELS = { leaf: 'Feuille', star: 'Étoile', shield: 'Bouclier', heart: 'Cœur', check: 'Validation', bolt: 'Éclair', globe: 'Globe', truck: 'Livraison', award: 'Trophée', smile: 'Sourire', fire: 'Flamme', lock: 'Cadenas' };
 
     const updateCard = (i, field, val) => onChange({ cards: cards.map((c, idx) => idx === i ? { ...c, [field]: val } : c) });
     const addCard = () => onChange({ cards: [...cards, { icon: 'star', title: 'Nouvelle carte', text: 'Description.' }] });
@@ -206,7 +210,7 @@ export function CardsGridEditor({ props, onChange }) {
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                         <Field label="Icône">
                             <select style={selectStyle} value={card.icon || 'star'} onChange={e => updateCard(i, 'icon', e.target.value)}>
-                                {ICONS.map(k => <option key={k} value={k}>{ICON_LABELS[k]} {k}</option>)}
+                                {ICONS.map(k => <option key={k} value={k}>{ICON_LABELS[k] || k} ({k})</option>)}
                             </select>
                         </Field>
                         <Field label="Ou Image" hint="Remplace l'icône">
@@ -483,7 +487,7 @@ export function VideoCardEditor({ props, onChange }) {
                         transition: 'all 0.15s ease'
                     }}
                 >
-                    <span>🎬 Lecteur Stylisé</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Film size={14} /> Lecteur Stylisé</span>
                     <span style={{ 
                         fontSize: '0.65rem', 
                         padding: '1px 6px', 
@@ -515,7 +519,7 @@ export function VideoCardEditor({ props, onChange }) {
                         transition: 'all 0.15s ease'
                     }}
                 >
-                    <span>💻 Code / Iframe</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Code size={14} /> Code / Iframe</span>
                     <span style={{ 
                         fontSize: '0.65rem', 
                         padding: '1px 6px', 
@@ -530,8 +534,8 @@ export function VideoCardEditor({ props, onChange }) {
             </div>
             <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '8px', lineHeight: 1.35 }}>
                 {embedType === 'video' 
-                    ? '✨ Lecteur recommandé : miniature personnalisée, badge de durée automatique et streaming fluide.'
-                    : '💻 Intégrez n\'importe quel code <iframe> (TikTok, YouTube, Vimeo, Wistia...) ou du code HTML.'
+                    ? 'Lecteur recommandé : miniature personnalisée, badge de durée automatique et streaming fluide.'
+                    : 'Intégrez n\'importe quel code <iframe> (TikTok, YouTube, Vimeo, Wistia...) ou du code HTML.'
                 }
             </div>
         </div>
@@ -539,7 +543,7 @@ export function VideoCardEditor({ props, onChange }) {
         {/* Section 1 : Iframe personnalisé OU Lecteur stylisé */}
         {embedType === 'iframe' ? (
             <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
-                <span style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '12px' }}>💻 CODE D'INTÉGRATION (IFRAME / HTML)</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '12px' }}><Code size={15} /> CODE D'INTÉGRATION (IFRAME / HTML)</span>
                 
                 <Field 
                     label="Code Iframe ou HTML d'intégration" 
@@ -576,7 +580,7 @@ export function VideoCardEditor({ props, onChange }) {
             </div>
         ) : (
             <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
-                <span style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '12px' }}>🎬 VIDÉO & MÉDIA</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '12px' }}><Film size={15} /> VIDÉO & MÉDIA</span>
                 
                 <Field label="URL Vidéo (YouTube, Vimeo ou lien externe)">
                     <input 
@@ -604,9 +608,13 @@ export function VideoCardEditor({ props, onChange }) {
                             border: '1.5px dashed #1F4B40',
                             color: '#1F4B40',
                             fontWeight: 600,
-                            transition: 'all 0.2s'
+                            transition: 'all 0.2s',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px'
                         }}>
-                            {uploadingVideo ? '⏳ Téléversement de la vidéo en cours...' : '📁 Choisir ou déposer une vidéo (max 25 Mo)'}
+                            {uploadingVideo ? <><Loader2 size={14} /> Téléversement de la vidéo en cours...</> : <><FolderOpen size={14} /> Choisir ou déposer une vidéo (max 25 Mo)</>}
                             <input 
                                 type="file" 
                                 accept="video/mp4,video/webm,video/quicktime,video/*" 
@@ -629,8 +637,8 @@ export function VideoCardEditor({ props, onChange }) {
                     </div>
 
                     {uploadError && (
-                        <div style={{ marginTop: '8px', padding: '8px 12px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '6px', color: '#b91c1c', fontSize: '0.8rem', lineHeight: 1.4 }}>
-                            ⚠️ {uploadError}
+                        <div style={{ marginTop: '8px', padding: '8px 12px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '6px', color: '#b91c1c', fontSize: '0.8rem', lineHeight: 1.4, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <AlertTriangle size={14} color="#b91c1c" /> {uploadError}
                         </div>
                     )}
                 </div>
@@ -647,7 +655,7 @@ export function VideoCardEditor({ props, onChange }) {
                     lineHeight: 1.45
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, marginBottom: '6px', color: '#B45309' }}>
-                        <span style={{ fontSize: '1.1rem' }}>💡</span>
+                        <Lightbulb size={18} color="#B45309" />
                         <span>Performance & SEO : Pourquoi privilégier YouTube ?</span>
                     </div>
                     <p style={{ margin: '0 0 6px 0' }}>
@@ -658,8 +666,8 @@ export function VideoCardEditor({ props, onChange }) {
                         <li><strong>Streaming adaptatif :</strong> YouTube ajuste automatiquement la résolution (480p, 720p, 1080p) selon la connexion (4G/5G/Wifi) de l'internaute sans saccades.</li>
                         <li><strong>Bande passante :</strong> La diffusion est prise en charge par l'infrastructure mondiale de Google plutôt que de consommer les ressources d'hébergement de votre boutique.</li>
                     </ul>
-                    <div style={{ fontSize: '0.78rem', background: '#FEF3C7', padding: '6px 10px', borderRadius: '6px', border: '1px dashed #F59E0B', color: '#78350F' }}>
-                        🔒 <strong>Astuce discrétion :</strong> Sur YouTube, publiez votre vidéo en <strong>« Non répertoriée »</strong>. Elle sera invisible sur votre chaîne publique, mais sera parfaitement lisible ici dans l'article !
+                    <div style={{ fontSize: '0.78rem', background: '#FEF3C7', padding: '6px 10px', borderRadius: '6px', border: '1px dashed #F59E0B', color: '#78350F', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Lock size={13} color="#78350F" /> <span><strong>Astuce discrétion :</strong> Sur YouTube, publiez votre vidéo en <strong>« Non répertoriée »</strong>. Elle sera invisible sur votre chaîne publique, mais sera parfaitement lisible ici dans l'article !</span>
                     </div>
                 </div>
 
@@ -682,7 +690,7 @@ export function VideoCardEditor({ props, onChange }) {
                         borderRadius: '8px',
                         fontSize: '0.88rem'
                     }}>
-                        <span style={{ fontSize: '1.1rem' }}>⏱️</span>
+                        <Clock size={18} color="#64748b" />
                         <div style={{ flex: 1 }}>
                             {loadingInfo || uploadingVideo ? (
                                 <span style={{ color: '#0284c7', fontWeight: 600 }}>Détection de la durée réelle en cours...</span>
@@ -697,8 +705,8 @@ export function VideoCardEditor({ props, onChange }) {
                             )}
                         </div>
                     </div>
-                    <span style={{ display: 'block', fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>
-                        🔒 La durée est extraite automatiquement de la vidéo et ne peut pas être modifiée manuellement.
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.74rem', color: '#64748b', marginTop: '4px' }}>
+                        <Lock size={12} /> La durée est extraite automatiquement de la vidéo et ne peut pas être modifiée manuellement.
                     </span>
                 </Field>
             </div>
@@ -706,7 +714,7 @@ export function VideoCardEditor({ props, onChange }) {
 
         {/* Section 2: En-tête & Bouton */}
         <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
-            <span style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '10px' }}>🏷️ TITRE & BOUTON</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '10px' }}><Tag size={15} /> TITRE & BOUTON</span>
             <Field label="Titre du bloc">
                 <input 
                     style={inputStyle} 
@@ -732,7 +740,7 @@ export function VideoCardEditor({ props, onChange }) {
                         value={props.badgeIcon || 'camera'} 
                         onChange={e => onChange({ badgeIcon: e.target.value })}
                     >
-                        <option value="camera">📹 Caméra rétro</option>
+                        <option value="camera">Caméra rétro</option>
                         <option value="none">Aucune</option>
                     </select>
                 </Field>
@@ -759,7 +767,7 @@ export function VideoCardEditor({ props, onChange }) {
 
         {/* Section 3: Personnalisation de l'encadré */}
         <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
-            <span style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '10px' }}>🖼️ TRAVAILLER L'ENCADRÉ (CADRE & STYLE)</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '10px' }}><ImageIcon size={15} /> TRAVAILLER L'ENCADRÉ (CADRE & STYLE)</span>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <Field label="Style de cadre">
@@ -768,10 +776,10 @@ export function VideoCardEditor({ props, onChange }) {
                         value={props.cardStyle || 'sticker'} 
                         onChange={e => onChange({ cardStyle: e.target.value })}
                     >
-                        <option value="sticker">🏷️ Sticker / Papier rétro</option>
-                        <option value="modern">⬜ Moderne épuré</option>
-                        <option value="dark">⬛ Sombre élégant</option>
-                        <option value="transparent">🔲 Transparent</option>
+                        <option value="sticker">Sticker / Papier rétro</option>
+                        <option value="modern">Moderne épuré</option>
+                        <option value="dark">Sombre élégant</option>
+                        <option value="transparent">Transparent</option>
                     </select>
                 </Field>
                 <Field label="Décoration en coin">
@@ -780,9 +788,9 @@ export function VideoCardEditor({ props, onChange }) {
                         value={props.cornerDecoration || 'candy'} 
                         onChange={e => onChange({ cornerDecoration: e.target.value })}
                     >
-                        <option value="candy">🍬 Bonbon vert (maquette)</option>
-                        <option value="tape">🩹 Scotch adhésif</option>
-                        <option value="pin">📌 Épingle</option>
+                        <option value="candy">Bonbon vert (maquette)</option>
+                        <option value="tape">Scotch adhésif</option>
+                        <option value="pin">Épingle</option>
                         <option value="none">Aucune</option>
                     </select>
                 </Field>
@@ -833,7 +841,7 @@ export function VideoCardEditor({ props, onChange }) {
 
         {/* Section 4: Annotation latérale & Flèches */}
         <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '16px' }}>
-            <span style={{ display: 'block', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '10px' }}>✍️ ANNOTATION LATÉRALE & FLÈCHES</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40', marginBottom: '10px' }}><PenLine size={15} /> ANNOTATION LATÉRALE & FLÈCHES</span>
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <Field label="Afficher l'annotation">
@@ -972,11 +980,11 @@ export function CalloutBoxEditor({ props, onChange }) {
     return <>
         <Field label="Type d'encadré">
             <select style={selectStyle} value={props.type || 'tip'} onChange={e => onChange({ type: e.target.value })}>
-                <option value="note">ℹ️ Note</option>
-                <option value="tip">💡 Conseil</option>
-                <option value="warning">⚠️ Attention</option>
-                <option value="danger">🚨 Important</option>
-                <option value="quote">💬 À retenir</option>
+                <option value="note">Note</option>
+                <option value="tip">Conseil</option>
+                <option value="warning">Attention</option>
+                <option value="danger">Important</option>
+                <option value="quote">À retenir</option>
             </select>
         </Field>
         <Field label="Émoji personnalisé (optionnel)" hint="Laissez vide pour utiliser l'émoji par défaut">
@@ -1508,7 +1516,7 @@ export function RecrutementContactEditor({ props, onChange }) {
 export function ImageCardsGridEditor({ props, onChange }) {
     const cards = props.cards || [];
     const ICONS = ['users', 'sprout', 'flask', 'leaf', 'star', 'shield', 'heart', 'check', 'bolt', 'globe', 'truck', 'award', 'smile', 'fire', 'lock'];
-    const ICON_LABELS = { users: '👥', sprout: '🌱', flask: '🧪', leaf: '🌿', star: '⭐', shield: '🛡️', heart: '❤️', check: '✅', bolt: '⚡', globe: '🌍', truck: '🚚', award: '🏆', smile: '😊', fire: '🔥', lock: '🔒' };
+    const ICON_LABELS = { users: 'Utilisateurs', sprout: 'Pousse', flask: 'Laboratoire', leaf: 'Feuille', star: 'Étoile', shield: 'Bouclier', heart: 'Cœur', check: 'Validation', bolt: 'Éclair', globe: 'Globe', truck: 'Livraison', award: 'Trophée', smile: 'Sourire', fire: 'Flamme', lock: 'Cadenas' };
 
     const updateCard = (i, field, val) => onChange({ cards: cards.map((c, idx) => idx === i ? { ...c, [field]: val } : c) });
     const addCard = () => onChange({ cards: [...cards, { heroImage: '', icon: 'star', title: 'Nouveau', description: 'Description', linkText: '', linkUrl: '' }] });
@@ -1541,7 +1549,7 @@ export function ImageCardsGridEditor({ props, onChange }) {
                     <Field label="Icône Superposée">
                         <select style={selectStyle} value={card.icon || 'none'} onChange={e => updateCard(i, 'icon', e.target.value)}>
                             <option value="none">Aucune</option>
-                            {ICONS.map(k => <option key={k} value={k}>{ICON_LABELS[k] || '✨'} {k}</option>)}
+                            {ICONS.map(k => <option key={k} value={k}>{ICON_LABELS[k] || k} ({k})</option>)}
                         </select>
                     </Field>
                     <Field label="Titre"><input style={inputStyle} value={card.title || ''} onChange={e => updateCard(i, 'title', e.target.value)} /></Field>
@@ -1560,7 +1568,7 @@ export function ImageCardsGridEditor({ props, onChange }) {
 export function IconSummaryEditor({ props, onChange, allSections = [] }) {
     const items = props.items || [];
     const updateItem = (i, field, val) => onChange({ items: items.map((c, idx) => idx === i ? { ...c, [field]: val } : c) });
-    const addItem = () => onChange({ items: [...items, { title: 'Nouveau', emoji: '✨', link: '' }] });
+    const addItem = () => onChange({ items: [...items, { title: 'Nouveau', emoji: '', link: '' }] });
     const removeItem = i => onChange({ items: items.filter((_, idx) => idx !== i) });
 
     const anchors = allSections.map((s, idx) => {
@@ -1843,7 +1851,7 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                     whiteSpace: 'nowrap'
                 }}
             >
-                🎯 Onglets
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Target size={13} /> Onglets</span>
             </button>
             <button
                 type="button"
@@ -1860,7 +1868,7 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                     whiteSpace: 'nowrap'
                 }}
             >
-                📰 Articles
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><FileText size={13} /> Articles</span>
             </button>
             <button
                 type="button"
@@ -1877,7 +1885,7 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                     whiteSpace: 'nowrap'
                 }}
             >
-                ⚙️ Style
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sliders size={13} /> Style</span>
             </button>
         </div>
 
@@ -1946,8 +1954,8 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                     return (
                         <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px' }}>
-                                <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#123F32' }}>
-                                    ⚙️ Configuration : « {currentFilter.label} »
+                                <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#123F32', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <Settings size={15} /> Configuration : « {currentFilter.label} »
                                 </span>
                                 {filters.length > 1 && (
                                     <button
@@ -1977,14 +1985,14 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                                         onChange={e => updateFilterField('icon', e.target.value)}
                                     >
                                         <option value="all">Grille (Tous)</option>
-                                        <option value="chef">👨‍🍳 Recettes</option>
-                                        <option value="lightbulb">💡 Conseils</option>
-                                        <option value="flower">🌿 Fleurs</option>
-                                        <option value="book">📖 Guides</option>
-                                        <option value="oil">💧 Huile</option>
-                                        <option value="heart">❤️ Cœur</option>
-                                        <option value="star">⭐ Étoile</option>
-                                        <option value="shield">🛡️ Bouclier</option>
+                                        <option value="chef">Recettes</option>
+                                        <option value="lightbulb">Conseils</option>
+                                        <option value="flower">Fleurs</option>
+                                        <option value="book">Guides</option>
+                                        <option value="oil">Huile</option>
+                                        <option value="heart">Cœur</option>
+                                        <option value="star">Étoile</option>
+                                        <option value="shield">Bouclier</option>
                                     </select>
                                 </Field>
                             </div>
@@ -2000,8 +2008,8 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
 
                             {/* Titre H2 découpé intuitivement */}
                             <div style={{ marginTop: '12px', padding: '12px', background: '#ffffff', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
-                                <span style={{ display: 'block', fontWeight: 700, fontSize: '0.8rem', color: '#123F32', marginBottom: '8px' }}>
-                                    🏷️ TITRE H2 DYNAMIQUE (AFFICHÉ SUR CET ONGLET)
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.8rem', color: '#123F32', marginBottom: '8px' }}>
+                                    <Tag size={14} /> TITRE H2 DYNAMIQUE (AFFICHÉ SUR CET ONGLET)
                                 </span>
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -2014,7 +2022,7 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                                         />
                                     </Field>
 
-                                    <Field label="2. Fin du titre (souligné vert animé ✨)">
+                                    <Field label="2. Fin du titre (souligné vert animé)">
                                         <input
                                             style={inputStyle}
                                             value={highlightValue}
@@ -2024,8 +2032,8 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                                     </Field>
                                 </div>
 
-                                <span style={{ display: 'block', fontSize: '0.73rem', color: '#64748b', marginTop: '6px' }}>
-                                    💡 Le texte du champ 2 bénéficiera automatiquement du soulignement vert tracé au feutre.
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.73rem', color: '#64748b', marginTop: '6px' }}>
+                                    <Lightbulb size={13} color="#f59e0b" /> Le texte du champ 2 bénéficiera automatiquement du soulignement vert tracé au feutre.
                                 </span>
                             </div>
 
@@ -2070,7 +2078,7 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                                 gap: '6px'
                             }}
                         >
-                            <span>🔄 Automatique (Blog)</span>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><RefreshCw size={13} /> Automatique (Blog)</span>
                         </button>
                         <button
                             type="button"
@@ -2090,14 +2098,14 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                                 gap: '6px'
                             }}
                         >
-                            <span>✍️ Manuel (Cartes fixes)</span>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><PenLine size={13} /> Manuel (Cartes fixes)</span>
                         </button>
                     </div>
 
                     <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '8px', lineHeight: 1.35 }}>
                         {(props.sourceMode || 'auto') === 'auto'
-                            ? '✨ Mode Automatique : Les articles publiés dans le blog sont chargés automatiquement avec leurs vraies données. Les cartes ci-dessous servent de complément / démonstration.'
-                            : '✍️ Mode Manuel : Seules les cartes personnalisées ci-dessous s\'affichent.'}
+                            ? 'Mode Automatique : Les articles publiés dans le blog sont chargés automatiquement avec leurs vraies données. Les cartes ci-dessous servent de complément / démonstration.'
+                            : 'Mode Manuel : Seules les cartes personnalisées ci-dessous s\'affichent.'}
                     </div>
                 </div>
 

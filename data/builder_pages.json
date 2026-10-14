@@ -1547,45 +1547,6 @@
         }
       },
       {
-        "id": "faq-1789999558163",
-        "type": "FAQ",
-        "props": {
-          "title": "",
-          "variant": "simple",
-          "items": [
-            {
-              "question": "Proposez-vous des tarifs professionnels ?",
-              "answer": "<p>Bien&nbsp;sûr&nbsp;!&nbsp;Chez&nbsp;Les&nbsp;Amis&nbsp;du&nbsp;CBD,&nbsp;nous&nbsp;proposons&nbsp;des&nbsp;tarifs&nbsp;spécialement&nbsp;adaptés&nbsp;aux&nbsp;professionnels&nbsp;de&nbsp;la&nbsp;revente.</p><p>Que&nbsp;vous&nbsp;soyez&nbsp;buraliste,&nbsp;gérant&nbsp;d&#39;un&nbsp;CBD&nbsp;shop&nbsp;ou&nbsp;commerçant&nbsp;indépendant,&nbsp;notre&nbsp;équipe&nbsp;vous&nbsp;accompagne&nbsp;pour&nbsp;construire&nbsp;une&nbsp;offre&nbsp;adaptée&nbsp;à&nbsp;votre&nbsp;boutique&nbsp;et&nbsp;à&nbsp;votre&nbsp;clientèle.</p><p><strong>👉&nbsp;<a href=\"/contact-pro\" rel=\"noopener noreferrer\" target=\"_blank\">Contactez&nbsp;notre&nbsp;équipe&nbsp;pour&nbsp;découvrir&nbsp;nos&nbsp;tarifs&nbsp;professionnels.</a></strong></p>"
-            },
-            {
-              "question": "Y a-t-il un minimum de commande ?",
-              "answer": "<p>Non,&nbsp;et&nbsp;c&#39;est&nbsp;justement&nbsp;l&#39;un&nbsp;de&nbsp;nos&nbsp;engagements&nbsp;!</p><p>Chez&nbsp;Les&nbsp;Amis&nbsp;du&nbsp;CBD,&nbsp;<strong>aucun&nbsp;minimum&nbsp;de&nbsp;commande&nbsp;n&#39;est&nbsp;imposé.</strong>&nbsp;Vous&nbsp;êtes&nbsp;libre&nbsp;de&nbsp;commander&nbsp;les&nbsp;quantités&nbsp;qui&nbsp;vous&nbsp;conviennent,&nbsp;selon&nbsp;vos&nbsp;besoins&nbsp;et&nbsp;votre&nbsp;rythme&nbsp;de&nbsp;vente.</p><p>Que&nbsp;vous&nbsp;souhaitiez&nbsp;tester&nbsp;quelques&nbsp;références&nbsp;ou&nbsp;développer&nbsp;une&nbsp;gamme&nbsp;complète,&nbsp;vous&nbsp;gardez&nbsp;la&nbsp;main&nbsp;sur&nbsp;vos&nbsp;commandes.</p>"
-            },
-            {
-              "question": "Quels sont les délais de livraison ?",
-              "answer": "<p>Nous&nbsp;savons&nbsp;qu&#39;un&nbsp;réassort&nbsp;rapide&nbsp;est&nbsp;essentiel&nbsp;pour&nbsp;votre&nbsp;boutique&nbsp;!</p><p>C&#39;est&nbsp;pourquoi&nbsp;nous&nbsp;préparons&nbsp;et&nbsp;expédions&nbsp;vos&nbsp;commandes&nbsp;dans&nbsp;les&nbsp;meilleurs&nbsp;délais,&nbsp;avec&nbsp;une&nbsp;<strong>livraison&nbsp;généralement&nbsp;assurée&nbsp;sous&nbsp;24&nbsp;à&nbsp;48&nbsp;h</strong>,&nbsp;selon&nbsp;votre&nbsp;localisation&nbsp;et&nbsp;les&nbsp;conditions&nbsp;de&nbsp;transport.</p><p>Notre&nbsp;équipe&nbsp;reste&nbsp;disponible&nbsp;pour&nbsp;vous&nbsp;renseigner&nbsp;sur&nbsp;le&nbsp;suivi&nbsp;de&nbsp;votre&nbsp;commande.</p>"
-            },
-            {
-              "question": "Vos produits sont-ils analysés ?",
-              "answer": "<p>Oui&nbsp;!&nbsp;La&nbsp;qualité&nbsp;et&nbsp;la&nbsp;transparence&nbsp;font&nbsp;partie&nbsp;de&nbsp;nos&nbsp;engagements.</p><p>Nos&nbsp;produits&nbsp;font&nbsp;l&#39;objet&nbsp;d&#39;analyses&nbsp;en&nbsp;laboratoire&nbsp;afin&nbsp;de&nbsp;contrôler&nbsp;leur&nbsp;teneur&nbsp;en&nbsp;cannabinoïdes,&nbsp;notamment&nbsp;en&nbsp;CBD&nbsp;et&nbsp;en&nbsp;THC,&nbsp;et&nbsp;de&nbsp;vérifier&nbsp;leur&nbsp;conformité&nbsp;à&nbsp;la&nbsp;réglementation&nbsp;en&nbsp;vigueur.</p><p>Vous&nbsp;pouvez&nbsp;ainsi&nbsp;proposer&nbsp;à&nbsp;vos&nbsp;clients&nbsp;des&nbsp;produits&nbsp;sélectionnés&nbsp;avec&nbsp;soin,&nbsp;en&nbsp;toute&nbsp;transparence.</p><p><strong>👉&nbsp;Découvrez&nbsp;nos&nbsp;engagements&nbsp;qualité&nbsp;et&nbsp;traçabilité.</strong></p>"
-            },
-            {
-              "question": "Comment devenir revendeur Les Amis du CBD ?",
-              "answer": "<p>Rien&nbsp;de&nbsp;plus&nbsp;simple&nbsp;!&nbsp;Que&nbsp;vous&nbsp;souhaitiez&nbsp;vous&nbsp;lancer&nbsp;dans&nbsp;la&nbsp;vente&nbsp;de&nbsp;CBD&nbsp;ou&nbsp;compléter&nbsp;votre&nbsp;gamme&nbsp;actuelle,&nbsp;notre&nbsp;équipe&nbsp;est&nbsp;là&nbsp;pour&nbsp;vous&nbsp;accompagner.</p><p><strong>Pour&nbsp;rejoindre&nbsp;l&#39;aventure&nbsp;:</strong></p><ol><li>Contactez-nous&nbsp;et&nbsp;parlez-nous&nbsp;de&nbsp;votre&nbsp;projet.</li><li>Découvrez&nbsp;notre&nbsp;offre&nbsp;professionnelle&nbsp;et&nbsp;notre&nbsp;kit&nbsp;de&nbsp;démarrage.</li><li>Choisissez&nbsp;les&nbsp;produits&nbsp;adaptés&nbsp;à&nbsp;votre&nbsp;boutique.</li><li>Passez&nbsp;votre&nbsp;première&nbsp;commande&nbsp;et&nbsp;lancez-vous&nbsp;!</li></ol><p>Et&nbsp;bien&nbsp;sûr,&nbsp;notre&nbsp;équipe&nbsp;reste&nbsp;à&nbsp;vos&nbsp;côtés&nbsp;pour&nbsp;vous&nbsp;conseiller&nbsp;tout&nbsp;au&nbsp;long&nbsp;de&nbsp;notre&nbsp;collaboration.</p><p><strong>👉&nbsp;<a href=\"/contact-pro\" rel=\"noopener noreferrer\" target=\"_blank\">Contactez-nous&nbsp;pour&nbsp;devenir&nbsp;partenaire.</a></strong></p>"
-            },
-            {
-              "question": "Proposez-vous des présentoirs et supports PLV ?",
-              "answer": "<p><strong>Oui.&nbsp;</strong>Nous&nbsp;proposons&nbsp;des&nbsp;présentoirs&nbsp;et&nbsp;différents&nbsp;supports&nbsp;PLV&nbsp;pour&nbsp;vous&nbsp;aider&nbsp;à&nbsp;mettre&nbsp;en&nbsp;valeur&nbsp;les&nbsp;produits&nbsp;Les&nbsp;Amis&nbsp;du&nbsp;CBD&nbsp;dans&nbsp;votre&nbsp;boutique.&nbsp;Selon&nbsp;vos&nbsp;besoins,&nbsp;nous&nbsp;pouvons&nbsp;également&nbsp;vous&nbsp;fournir&nbsp;des&nbsp;fiches&nbsp;produits&nbsp;et&nbsp;des&nbsp;supports&nbsp;pédagogiques.</p>"
-            }
-          ],
-          "paddingTop": "none",
-          "paddingBottom": "none",
-          "columns": 2,
-          "marginBottom": "negative-small",
-          "marginTop": "negative-large"
-        }
-      },
-      {
         "id": "codeembed-1790941981546",
         "type": "CodeEmbed",
         "props": {
@@ -1614,6 +1575,24 @@
           "marginBottom": "negative-medium",
           "marginTop": "negative-large"
         }
+      },
+      {
+        "id": "iconsummary-1792015806458",
+        "type": "IconSummary",
+        "props": {
+          "items": [
+            {
+              "title": "Avantage 1",
+              "emoji": "✨",
+              "link": ""
+            },
+            {
+              "title": "Avantage 2",
+              "emoji": "🌿",
+              "link": ""
+            }
+          ]
+        }
       }
     ],
     "seo": {
@@ -1626,7 +1605,7 @@
     "status": "draft",
     "scheduledAt": null,
     "createdAt": "2026-09-22T08:31:36.598Z",
-    "updatedAt": "2026-10-13T21:53:05.798Z"
+    "updatedAt": "2026-10-14T22:10:29.722Z"
   },
   "cuisiner-avec-du-cbd-conseils-idees-et-recettes": {
     "slug": "cuisiner-avec-du-cbd-conseils-idees-et-recettes",

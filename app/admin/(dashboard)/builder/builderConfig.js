@@ -664,7 +664,7 @@ export const TEMPLATES = [
 export const CATEGORIES = [
     { id: 'layout', label: 'Mise en page' },
     { id: 'content', label: 'Contenu' },
-    { id: 'blog', label: '📝 Blog / Article' },
+    { id: 'blog', label: 'Blog / Article' },
     { id: 'conversion', label: 'Conversion' },
     { id: 'leads', label: 'Acquisition / Leads' },
     { id: 'media', label: 'Médias' },

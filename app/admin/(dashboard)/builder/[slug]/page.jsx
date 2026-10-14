@@ -8,6 +8,12 @@ import { TEMPLATES, CATEGORIES } from '../builderConfig';
 import { EDITORS } from '../builderEditors';
 import LivePreview from '../LivePreview';
 import SEOPanel from '../SEOPanel';
+import BlockIcon from '../BlockIcon';
+import { 
+    Pencil, FileText, CheckCircle2, Clock, Settings, History, 
+    Copy, Eye, EyeOff, ExternalLink, Rocket, AlertTriangle, 
+    AlertCircle, Trash2, Save, Sparkles, Boxes 
+} from 'lucide-react';
 
 export default function PageEditor() {
     const { slug } = useParams();
@@ -334,10 +340,10 @@ export default function PageEditor() {
                                                 setEditTitleValue(page.title);
                                                 setIsEditingTitle(true);
                                             }}
-                                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', opacity: 0.6, padding: '4px' }}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer', opacity: 0.6, padding: '4px', display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle' }}
                                             title="Modifier le titre"
                                         >
-                                            ✏️
+                                            <Pencil size={14} />
                                         </button>
                                     </>
                                 )}
@@ -350,43 +356,45 @@ export default function PageEditor() {
                         {(() => {
                             const s = page.status || 'draft';
                             const cfg = {
-                                draft:     { label: '📝 Brouillon',  bg: '#f3f4f6', color: '#374151' },
-                                published: { label: '✅ Publié',      bg: '#f0fdf4', color: '#166534' },
-                                scheduled: { label: '🕐 Planifié',   bg: '#fffbeb', color: '#92400e' },
-                            }[s] || { label: s, bg: '#f3f4f6', color: '#374151' };
+                                draft:     { label: 'Brouillon',  Icon: FileText,     bg: '#f3f4f6', color: '#374151' },
+                                published: { label: 'Publié',      Icon: CheckCircle2, bg: '#f0fdf4', color: '#166534' },
+                                scheduled: { label: 'Planifié',   Icon: Clock,        bg: '#fffbeb', color: '#92400e' },
+                            }[s] || { label: s, Icon: FileText, bg: '#f3f4f6', color: '#374151' };
+                            const StatusIcon = cfg.Icon;
                             return (
-                                <span style={{ padding: '6px 12px', borderRadius: '8px', background: cfg.bg, color: cfg.color, fontWeight: 700, fontSize: '0.8rem', border: `1px solid ${cfg.color}30` }}>
+                                <span style={{ padding: '6px 12px', borderRadius: '8px', background: cfg.bg, color: cfg.color, fontWeight: 700, fontSize: '0.8rem', border: `1px solid ${cfg.color}30`, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                    <StatusIcon size={13} />
                                     {cfg.label}
                                 </span>
                             );
                         })()}
                         <button
                             onClick={() => setShowSEOModal(true)}
-                            style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #1F4B40', background: 'white', color: '#1F4B40', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}
+                            style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #1F4B40', background: 'white', color: '#1F4B40', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                         >
-                            ⚙️ SEO
+                            <Settings size={14} /> SEO
                         </button>
                         <button onClick={loadHistory}
-                            style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #e5e7eb', background: 'white', color: '#6b7280', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}
+                            style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #e5e7eb', background: 'white', color: '#6b7280', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                             title="Historique des versions">
-                            🕐
+                            <History size={16} />
                         </button>
                         <button onClick={duplicate}
-                            style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #e5e7eb', background: 'white', color: '#6b7280', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}
+                            style={{ padding: '8px 14px', borderRadius: '8px', border: '1px solid #e5e7eb', background: 'white', color: '#6b7280', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                             title="Dupliquer la page">
-                            📋
+                            <Copy size={16} />
                         </button>
                         <button onClick={async () => {
                             await save();
                             window.open(`/p/${page.slug}?preview=true`, '_blank');
                         }}
-                            style={{ padding: '8px 16px', borderRadius: '8px', background: '#e0f2fe', color: '#0369a1', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem' }}
+                            style={{ padding: '8px 16px', borderRadius: '8px', background: '#e0f2fe', color: '#0369a1', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                             title="Sauvegarder et voir l'aperçu">
-                            👁 Aperçu
+                            <Eye size={14} /> Aperçu
                         </button>
                         <a href={`https://www.lesamisducbd.fr/p/${page.slug}`} target="_blank" rel="noopener noreferrer"
-                            style={{ padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem' }}>
-                            🔗 Voir
+                            style={{ padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                            <ExternalLink size={14} /> Voir
                         </a>
                         {(page.status === 'published') ? (
                             <button onClick={() => save('draft')} disabled={saving}
@@ -396,8 +404,8 @@ export default function PageEditor() {
                         ) : (
                             <button onClick={() => save('published')} disabled={saving}
                                 className={styles.saveButton}
-                                style={{ background: '#166534', borderColor: '#166534' }}>
-                                🚀 Publier
+                                style={{ background: '#166534', borderColor: '#166534', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                <Rocket size={15} /> Publier
                             </button>
                         )}
                         <button
@@ -439,13 +447,13 @@ export default function PageEditor() {
                                         };
                                         const h1Count = page.sections?.filter(hasH1).length || 0;
                                         if (h1Count === 0) return (
-                                            <div style={{ margin: '4px 0 8px', padding: '10px 12px', background: '#fffbeb', borderRadius: '8px', border: '1px solid #fde68a', fontSize: '0.75rem', color: '#92400e', display: 'flex', gap: '6px' }}>
-                                                ⚠️ <span>Pas de <strong>H1</strong> — ajoutez un bloc Hero.</span>
+                                            <div style={{ margin: '4px 0 8px', padding: '10px 12px', background: '#fffbeb', borderRadius: '8px', border: '1px solid #fde68a', fontSize: '0.75rem', color: '#92400e', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <AlertTriangle size={15} color="#d97706" style={{ flexShrink: 0 }} /> <span>Pas de <strong>H1</strong> — ajoutez un bloc Hero.</span>
                                             </div>
                                         );
                                         if (h1Count > 1) return (
-                                            <div style={{ margin: '4px 0 8px', padding: '10px 12px', background: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca', fontSize: '0.75rem', color: '#991b1b', display: 'flex', gap: '6px' }}>
-                                                🚨 <span><strong>{h1Count} H1</strong> détectés — conservez-en un seul.</span>
+                                            <div style={{ margin: '4px 0 8px', padding: '10px 12px', background: '#fef2f2', borderRadius: '8px', border: '1px solid #fecaca', fontSize: '0.75rem', color: '#991b1b', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <AlertCircle size={15} color="#dc2626" style={{ flexShrink: 0 }} /> <span><strong>{h1Count} H1</strong> détectés — conservez-en un seul.</span>
                                             </div>
                                         );
                                         return null;
@@ -484,21 +492,21 @@ export default function PageEditor() {
                                                 }}
                                             >
                                                 <span style={{ cursor: 'grab', opacity: 0.5, fontSize: '1rem', flexShrink: 0 }}>⠿</span>
-                                                <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>{tpl?.icon || '🧩'}</span>
+                                                <BlockIcon type={section.type} icon={tpl?.icon} size={18} />
                                                 <div style={{ flex: 1, minWidth: 0 }}>
                                                     <div style={{ fontWeight: 700, fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tpl?.label || section.type}</div>
                                                     <div style={{ fontSize: '0.72rem', opacity: 0.6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                         {section.props?.title || section.props?.text || section.props?.src || 'Cliquez pour éditer'}
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', gap: '4px' }}>
+                                                <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
                                                     <button onClick={(e) => { e.stopPropagation(); toggleVisibility(index); }} title={isHidden ? 'Afficher' : 'Masquer'}
-                                                        style={{ padding: '4px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: isActive ? '#fff' : '#666' }}>
-                                                        {isHidden ? '👁' : '🙈'}
+                                                        style={{ padding: '4px', background: 'none', border: 'none', cursor: 'pointer', color: isActive ? '#fff' : '#666', display: 'flex', alignItems: 'center' }}>
+                                                        {isHidden ? <Eye size={16} /> : <EyeOff size={16} />}
                                                     </button>
                                                     <button onClick={(e) => { e.stopPropagation(); removeSection(index); }} title="Supprimer"
-                                                        style={{ padding: '4px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '1rem', color: isActive ? '#fecaca' : '#ef4444' }}>
-                                                        🗑️
+                                                        style={{ padding: '4px', background: 'none', border: 'none', cursor: 'pointer', color: isActive ? '#fecaca' : '#ef4444', display: 'flex', alignItems: 'center' }}>
+                                                        <Trash2 size={16} />
                                                     </button>
                                                 </div>
                                             </div>
@@ -520,7 +528,7 @@ export default function PageEditor() {
                                     <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb', display: 'flex', alignItems: 'center', gap: '12px', background: '#fafafa' }}>
                                         <button onClick={() => setActiveSection(null)} style={{ background: '#e5e7eb', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '0.9rem', padding: '6px 12px', color: '#333', fontWeight: 600 }}>← Retour</button>
                                         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <span style={{ fontSize: '1.2rem' }}>{TEMPLATES.find(t => t.type === currentSection.type)?.icon}</span>
+                                            <BlockIcon type={currentSection.type} icon={TEMPLATES.find(t => t.type === currentSection.type)?.icon} size={20} />
                                             <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#1F4B40' }}>{TEMPLATES.find(t => t.type === currentSection.type)?.label}</div>
                                         </div>
                                     </div>
@@ -533,7 +541,7 @@ export default function PageEditor() {
                                         {/* Advanced Options */}
                                         <div style={{ marginTop: '24px', paddingTop: '16px', borderTop: '1px dashed #ccc' }}>
                                             <h3 style={{ fontSize: '0.9rem', color: '#1F4B40', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                <span>⚙️</span> Options Avancées
+                                                <Settings size={16} /> Options Avancées
                                             </h3>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -627,7 +635,7 @@ export default function PageEditor() {
                                             <div style={{ marginTop: '16px', borderTop: '1px dashed #e5e7eb', paddingTop: '16px' }}>
                                                 <button onClick={() => handleSaveBlock(currentSection)}
                                                     style={{ width: '100%', padding: '8px', background: '#f9fafb', color: '#1F4B40', border: '1px solid #e5e7eb', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                                                    💾 Sauvegarder dans 'Mes Blocs'
+                                                    <Save size={15} /> Sauvegarder dans 'Mes Blocs'
                                                 </button>
                                             </div>
                                         </div>
@@ -642,7 +650,7 @@ export default function PageEditor() {
                 <div style={{ overflow: 'hidden', background: '#e5e7eb', position: 'relative', borderRadius: isFullscreen ? '0' : '16px', border: isFullscreen ? 'none' : '1px solid #ddd', height: '100%', flex: 1 }}>
                     {!isFullscreen && (
                         <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', background: 'rgba(0,0,0,0.6)', color: '#fff', padding: '4px 14px', borderRadius: '99px', fontSize: '0.72rem', fontWeight: 600, zIndex: 20, pointerEvents: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span>✨ CANVAS INTERACTIF</span>
+                            <Sparkles size={13} color="#00FF94" /> <span>CANVAS INTERACTIF</span>
                         </div>
                     )}
                     <LivePreview
@@ -679,11 +687,11 @@ export default function PageEditor() {
 
                         {/* Template tabs switcher */}
                         <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb' }}>
-                            <button onClick={() => setTemplateTab('models')} style={{ flex: 1, padding: '12px', background: templateTab === 'models' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'models' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'models' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px' }}>
-                                🧱 Modèles Standards
+                            <button onClick={() => setTemplateTab('models')} style={{ flex: 1, padding: '12px', background: templateTab === 'models' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'models' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'models' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                <Boxes size={16} /> Modèles Standards
                             </button>
-                            <button onClick={() => setTemplateTab('blocks')} style={{ flex: 1, padding: '12px', background: templateTab === 'blocks' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'blocks' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'blocks' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px' }}>
-                                💾 Mes Blocs Sauvegardés ({savedBlocks.length})
+                            <button onClick={() => setTemplateTab('blocks')} style={{ flex: 1, padding: '12px', background: templateTab === 'blocks' ? '#fff' : '#f9fafb', border: 'none', borderBottom: templateTab === 'blocks' ? '2px solid #1F4B40' : '2px solid transparent', fontWeight: templateTab === 'blocks' ? 700 : 500, cursor: 'pointer', fontSize: '0.95rem', marginBottom: '-1px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                <Save size={16} /> Mes Blocs Sauvegardés ({savedBlocks.length})
                             </button>
                         </div>
 
@@ -718,7 +726,9 @@ export default function PageEditor() {
                                             style={{ minWidth: 0, width: '100%', padding: '20px 16px', borderRadius: '16px', border: '1.5px solid #e5e7eb', background: '#fff', cursor: 'pointer', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', transition: 'all 0.15s', whiteSpace: 'normal' }}
                                             onMouseEnter={e => { e.currentTarget.style.border = '1.5px solid #1F4B40'; e.currentTarget.style.background = '#f0fdf4'; }}
                                             onMouseLeave={e => { e.currentTarget.style.border = '1.5px solid #e5e7eb'; e.currentTarget.style.background = '#fff'; }}>
-                                            <span style={{ fontSize: '2rem' }}>{t.icon}</span>
+                                            <div style={{ height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <BlockIcon type={t.type} icon={t.icon} size={30} color="#1F4B40" />
+                                            </div>
                                             <strong style={{ fontSize: '0.88rem', color: '#1F4B40', wordBreak: 'break-word' }}>{t.label}</strong>
                                             <span style={{ fontSize: '0.75rem', color: '#888', lineHeight: 1.4, wordBreak: 'break-word' }}>{t.description}</span>
                                         </button>
@@ -733,7 +743,9 @@ export default function PageEditor() {
                                     savedBlocks.map(block => (
                                         <div key={block.id} style={{ minWidth: 0, position: 'relative', padding: '20px 16px', borderRadius: '16px', border: '1.5px solid #e5e7eb', background: '#fff', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                                             <button onClick={() => deleteSavedBlock(block.id)} title="Supprimer" style={{ position: 'absolute', top: '8px', right: '8px', background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444' }}>✕</button>
-                                            <span style={{ fontSize: '2rem' }}>{TEMPLATES.find(t => t.type === block.type)?.icon || '🧩'}</span>
+                                            <div style={{ height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <BlockIcon type={block.type} icon={TEMPLATES.find(t => t.type === block.type)?.icon} size={30} color="#1F4B40" />
+                                            </div>
                                             <strong style={{ fontSize: '0.88rem', color: '#1F4B40', wordBreak: 'break-word', whiteSpace: 'normal' }}>{block.savedName || block.type}</strong>
                                             <span style={{ fontSize: '0.7rem', color: '#aaa' }}>{new Date(block.savedAt).toLocaleDateString('fr-FR')}</span>
                                             <button onClick={() => addSection(block)} style={{ marginTop: '8px', width: '100%', padding: '6px', background: '#00FF94', color: '#1F4B40', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '0.8rem' }}>
@@ -766,7 +778,9 @@ export default function PageEditor() {
                         onClick={e => e.stopPropagation()}>
                         <div style={{ padding: '20px 24px', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
-                                <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: '#1F4B40' }}>🕐 Historique des versions</h2>
+                                <h2 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: '#1F4B40', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                    <History size={20} /> Historique des versions
+                                </h2>
                                 <p style={{ margin: '4px 0 0', fontSize: '0.78rem', color: '#9ca3af' }}>Les 10 dernières sauvegardes sont conservées</p>
                             </div>
                             <button onClick={() => setShowHistoryModal(false)} style={{ background: 'none', border: 'none', fontSize: '1.3rem', cursor: 'pointer', color: '#9ca3af' }}>✕</button>
@@ -801,7 +815,9 @@ export default function PageEditor() {
             {/* Scheduled publish panel (shown when status=scheduled) */}
             {page.status === 'scheduled' && (
                 <div style={{ position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '12px', padding: '12px 20px', display: 'flex', alignItems: 'center', gap: '16px', zIndex: 50, boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
-                    <span style={{ fontSize: '0.85rem', color: '#92400e', fontWeight: 600 }}>🕐 Publication planifiée :</span>
+                    <span style={{ fontSize: '0.85rem', color: '#92400e', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <Clock size={16} /> Publication planifiée :
+                    </span>
                     <input type="datetime-local"
                         value={page.scheduledAt ? page.scheduledAt.slice(0, 16) : ''}
                         onChange={e => setPage(prev => ({ ...prev, scheduledAt: e.target.value }))}

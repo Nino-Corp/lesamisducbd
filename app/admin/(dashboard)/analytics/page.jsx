@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import styles from './Analytics.module.css';
 import Link from 'next/link';
+import { Smartphone, Monitor, Globe, MousePointer, ShoppingBag } from 'lucide-react';
 
 const STATIC_PAGES = {
     'accueil': "Page d'Accueil",
@@ -247,8 +248,10 @@ export default function AnalyticsDashboard() {
                 </div>
                 <div className={styles.kpiCard}>
                     <div className={styles.kpiLabel}>Trafic Mobile vs Desktop</div>
-                    <div className={styles.kpiValue} style={{ fontSize: '1.4rem' }}>
-                        📱 {getDevicePct(deviceMap?.mobile || 0)}% / 💻 {getDevicePct(deviceMap?.desktop || 0)}%
+                    <div className={styles.kpiValue} style={{ fontSize: '1.4rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Smartphone size={18} /> {getDevicePct(deviceMap?.mobile || 0)}%</span>
+                        <span>/</span>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Monitor size={18} /> {getDevicePct(deviceMap?.desktop || 0)}%</span>
                     </div>
                     <div className={styles.kpiSub}>Total tracés: {totalDevices}</div>
                 </div>
@@ -270,7 +273,9 @@ export default function AnalyticsDashboard() {
             {/* Sub-Grids: Referrers & CTAs */}
             <div className={styles.grid2}>
                 <div className={styles.sectionBlock}>
-                    <h2 className={styles.sectionTitle}>🌍 Sources de trafic</h2>
+                    <h2 className={styles.sectionTitle} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Globe size={18} /> Sources de trafic
+                    </h2>
                     <ul className={styles.listBlock}>
                         {topReferrers.length > 0 ? topReferrers.map(([ref, count]) => (
                             <li key={ref} className={styles.listItem}>
@@ -282,7 +287,9 @@ export default function AnalyticsDashboard() {
                 </div>
                 
                 <div className={styles.sectionBlock}>
-                    <h2 className={styles.sectionTitle}>🖱️ Call-To-Action (Clics)</h2>
+                    <h2 className={styles.sectionTitle} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <MousePointer size={18} /> Call-To-Action (Clics)
+                    </h2>
                     <ul className={styles.listBlock}>
                         {mainCTAs.length > 0 ? mainCTAs.map(([key, count]) => (
                             <li key={key} className={styles.listItem}>
@@ -294,7 +301,9 @@ export default function AnalyticsDashboard() {
                 </div>
 
                 <div className={styles.sectionBlock}>
-                    <h2 className={styles.sectionTitle}>🛍️ Produits les plus cliqués</h2>
+                    <h2 className={styles.sectionTitle} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <ShoppingBag size={18} /> Produits les plus cliqués
+                    </h2>
                     <ul className={styles.listBlock}>
                         {productClicks.length > 0 ? productClicks.map(([slug, count]) => (
                             <li key={slug} className={styles.listItem}>

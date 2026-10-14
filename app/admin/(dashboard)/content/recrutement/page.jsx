@@ -6,15 +6,17 @@ import LivePreview from '../../builder/LivePreview';
 import { TEMPLATES, CATEGORIES } from '../../builder/builderConfig';
 import { EDITORS } from '../../builder/builderEditors';
 import SEOPanel from '../../builder/SEOPanel';
+import BlockIcon from '../../builder/BlockIcon';
+import { Briefcase, CheckCircle2, Settings, Eye, EyeOff, ExternalLink, Trash2, Copy } from 'lucide-react';
 
 /* ── Section type metadata ────────────────────────── */
 const LEGACY_META = {
-    RecrutementText: { icon: '📝', label: 'Texte Recrutement' },
-    RecrutementJobs:  { icon: '💼', label: 'Offres d\'emploi' },
-    RecrutementContact:{ icon: '✉️', label: 'Contact Recrutement' },
-    ContentHero:        { icon: '🖼️', label: 'En-tête (Hero)' },
-    Header:             { icon: '🔝', label: 'En-tête (Header)' },
-    Footer:             { icon: '🔻', label: 'Pied de page (Footer)' },
+    RecrutementText: { icon: 'RecrutementText', label: 'Texte Recrutement' },
+    RecrutementJobs:  { icon: 'RecrutementJobs', label: 'Offres d\'emploi' },
+    RecrutementContact:{ icon: 'RecrutementContact', label: 'Contact Recrutement' },
+    ContentHero:        { icon: 'ContentHero', label: 'En-tête (Hero)' },
+    Header:             { icon: 'Header', label: 'En-tête (Header)' },
+    Footer:             { icon: 'Footer', label: 'Pied de page (Footer)' },
 };
 
 const SYSTEM_TYPES = new Set(['Header', 'Footer']);
@@ -28,7 +30,7 @@ function getMeta(type) {
     if (legacy) return legacy;
     const tpl = TEMPLATES.find(t => t.type === type);
     if (tpl) return { icon: tpl.icon, label: tpl.label };
-    return { icon: '🧩', label: type };
+    return { icon: type, label: type };
 }
 
 /* ── Main Component ──────────────────────────────── */
@@ -215,7 +217,9 @@ export default function RecrutementContentPage() {
                             display: 'flex', alignItems: 'center', gap: '6px',
                         }}>← Retour</Link>
                         <div>
-                            <h1 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>💼 Recrutement</h1>
+                            <h1 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', margin: 0, display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                <Briefcase size={18} color="#1F4B40" /> Recrutement
+                            </h1>
                             <code style={{ fontSize: '0.72rem', color: '#94a3b8' }}>/recrutement</code>
                         </div>
                     </div>
@@ -223,23 +227,34 @@ export default function RecrutementContentPage() {
                         <span style={{
                             padding: '6px 12px', borderRadius: '8px',
                             background: '#f0fdf4', color: '#166534', fontWeight: 700, fontSize: '0.8rem',
-                            border: '1px solid #16653430',
-                        }}>✅ Publié</span>
+                            border: '1px solid #16653430', display: 'inline-flex', alignItems: 'center', gap: '5px'
+                        }}>
+                            <CheckCircle2 size={13} /> Publié
+                        </span>
 
                         <button onClick={() => setShowSEOModal(true)} style={{
                             padding: '8px 16px', borderRadius: '8px', border: '1px solid #1F4B40',
                             background: 'white', color: '#1F4B40', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem',
-                        }}>⚙️ SEO</button>
+                            display: 'inline-flex', alignItems: 'center', gap: '6px'
+                        }}>
+                            <Settings size={14} /> SEO
+                        </button>
 
                         <a href="/recrutement" target="_blank" rel="noopener noreferrer" style={{
                             padding: '8px 16px', borderRadius: '8px', background: '#e0f2fe', color: '#0369a1',
                             textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem',
-                        }}>👁 Aperçu</a>
+                            display: 'inline-flex', alignItems: 'center', gap: '6px'
+                        }}>
+                            <Eye size={14} /> Aperçu
+                        </a>
 
                         <a href="https://www.lesamisducbd.fr/recrutement" target="_blank" rel="noopener noreferrer" style={{
                             padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937',
                             textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem',
-                        }}>🔗 Voir</a>
+                            display: 'inline-flex', alignItems: 'center', gap: '6px'
+                        }}>
+                            <ExternalLink size={14} /> Voir
+                        </a>
 
                         <button onClick={save} disabled={saving} style={{
                             padding: '8px 20px', borderRadius: '10px', border: 'none',
@@ -306,7 +321,7 @@ export default function RecrutementContentPage() {
                                                 onMouseLeave={e => { if (!isDragTarget) e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#f1f5f9'; }}
                                             >
                                                 <span style={{ cursor: 'grab', opacity: 0.4, fontSize: '0.9rem', flexShrink: 0 }}>⠿</span>
-                                                <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{meta.icon}</span>
+                                                <BlockIcon type={section.type} icon={meta.icon} size={18} />
                                                 <div style={{ flex: 1, minWidth: 0 }}>
                                                     <div style={{ fontWeight: 700, fontSize: '0.82rem', color: '#1e293b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                         {meta.label}
@@ -317,12 +332,12 @@ export default function RecrutementContentPage() {
                                                 </div>
                                                 <div style={{ display: 'flex', gap: '2px', flexShrink: 0 }}>
                                                     <button onClick={e => { e.stopPropagation(); toggleVisibility(origIdx); }} title={isHidden ? 'Afficher' : 'Masquer'}
-                                                        style={{ padding: '4px 6px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#94a3b8' }}>
-                                                        {isHidden ? '👁' : '🙈'}
+                                                        style={{ padding: '4px 6px', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', display: 'flex', alignItems: 'center' }}>
+                                                        {isHidden ? <Eye size={16} /> : <EyeOff size={16} />}
                                                     </button>
                                                     <button onClick={e => { e.stopPropagation(); removeSection(origIdx); }} title="Supprimer"
-                                                        style={{ padding: '4px 6px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#ef4444' }}>
-                                                        🗑️
+                                                        style={{ padding: '4px 6px', background: 'none', border: 'none', cursor: 'pointer', color: '#ef4444', display: 'flex', alignItems: 'center' }}>
+                                                        <Trash2 size={16} />
                                                     </button>
                                                 </div>
                                             </div>
@@ -334,7 +349,7 @@ export default function RecrutementContentPage() {
                                     <button onClick={() => setShowAddModal(true)} style={{
                                         width: '100%', padding: '12px', background: '#00FF94', color: '#1F4B40',
                                         border: 'none', borderRadius: '10px', fontWeight: 800, cursor: 'pointer',
-                                        fontSize: '0.9rem', boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                                        fontSize: '0.9rem', boxShadow: '0 4px 12px rgba(0,255,148,0.2)',
                                         transition: 'transform 0.2s',
                                     }}
                                         onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.02)'}
@@ -355,20 +370,20 @@ export default function RecrutementContentPage() {
                                             background: '#fff', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, color: '#64748b',
                                         }}>← Liste</button>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
-                                            <span style={{ fontSize: '1.1rem' }}>{currentMeta?.icon}</span>
+                                            <BlockIcon type={currentSection.type} icon={currentMeta?.icon} size={18} />
                                             <div>
                                                 <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#0f172a' }}>{currentMeta?.label}</div>
                                             </div>
                                         </div>
-                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
                                             <button onClick={() => moveSection(activeSection, -1)} disabled={activeSection === 0}
                                                 style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '0.8rem', color: activeSection === 0 ? '#cbd5e1' : '#475569' }} title="Monter">▲</button>
                                             <button onClick={() => moveSection(activeSection, 1)} disabled={activeSection === sections.length - 1}
                                                 style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '0.8rem', color: activeSection === sections.length - 1 ? '#cbd5e1' : '#475569' }} title="Descendre">▼</button>
                                             <button onClick={() => duplicateSection(activeSection)}
-                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', fontSize: '0.8rem', color: '#475569' }} title="Dupliquer">📋</button>
+                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #e2e8f0', background: '#fff', cursor: 'pointer', color: '#475569', display: 'flex', alignItems: 'center' }} title="Dupliquer"><Copy size={13} /></button>
                                             <button onClick={() => removeSection(activeSection)}
-                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', cursor: 'pointer', fontSize: '0.8rem', color: '#ef4444' }} title="Supprimer">🗑</button>
+                                                style={{ padding: '5px 8px', borderRadius: '6px', border: '1px solid #fecaca', background: '#fef2f2', cursor: 'pointer', color: '#ef4444', display: 'flex', alignItems: 'center' }} title="Supprimer"><Trash2 size={13} /></button>
                                         </div>
                                     </div>
 
@@ -489,7 +504,9 @@ export default function RecrutementContentPage() {
                                     onMouseEnter={e => { e.currentTarget.style.borderColor = '#1F4B40'; e.currentTarget.style.background = '#f0fdf4'; }}
                                     onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.background = '#fff'; }}
                                 >
-                                    <span style={{ fontSize: '1.3rem', flexShrink: 0 }}>{tpl.icon}</span>
+                                    <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <BlockIcon type={tpl.type} icon={tpl.icon} size={22} color="#1F4B40" />
+                                    </div>
                                     <div>
                                         <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#0f172a' }}>{tpl.label}</div>
                                         <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>{tpl.description}</div>

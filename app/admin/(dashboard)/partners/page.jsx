@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useDeferredValue } from 'react';
 import styles from './Partners.module.css';
-import { MapPin, Trash2, Edit2, Search, Loader2, Save, X, Upload, Download, RefreshCw, ExternalLink } from 'lucide-react';
+import { MapPin, Trash2, Edit2, Search, Loader2, Save, X, Upload, Download, RefreshCw, ExternalLink, CheckCircle2, FileText, SkipForward, AlertTriangle } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import Fuse from 'fuse.js';
 import Link from 'next/link';
@@ -289,8 +289,8 @@ export default function PartnersAdmin() {
                         )}
                     </div>
                     {prestaExportDone && (
-                        <p style={{ marginTop: '10px', fontSize: '13px', color: '#10B981' }}>
-                            ✅ {prestaRows.length} adresses récupérées et prêtes à être géocodées.
+                        <p style={{ marginTop: '10px', fontSize: '13px', color: '#10B981', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <CheckCircle2 size={15} /> {prestaRows.length} adresses récupérées et prêtes à être géocodées.
                         </p>
                     )}
                 </div>
@@ -308,8 +308,8 @@ export default function PartnersAdmin() {
                     <input type="file" accept=".xlsx,.xls,.csv" onChange={handleFileChange} style={{ marginBottom: '12px', fontSize: '14px', color: '#ccc' }} />
                     {importRows.length > 0 && (
                         <div>
-                            <p style={{ fontSize: '13px', color: '#aaa', marginBottom: '10px' }}>
-                                📄 {importRows.length} lignes. Aperçu : <em>{importRows.slice(0, 3).map(r => r.name || r.city).join(', ')}…</em>
+                            <p style={{ fontSize: '13px', color: '#aaa', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <FileText size={15} /> {importRows.length} lignes. Aperçu : <em>{importRows.slice(0, 3).map(r => r.name || r.city).join(', ')}…</em>
                             </p>
                             <button onClick={handleImportFile} disabled={isImporting} className={styles.submitBtn}>
                                 {isImporting ? <><Loader2 size={16} className="animate-spin" /> En cours...</> : <><MapPin size={16} /> Géocoder & Importer ({importRows.length})</>}
@@ -334,20 +334,20 @@ export default function PartnersAdmin() {
 
                 {/* Résultat global de l'import (PrestaShop ou Excel) */}
                 {isImporting && (
-                    <p style={{ marginTop: '0', fontSize: '13px', color: '#f59e0b', fontStyle: 'italic', padding: '0 16px' }}>
-                        ⏳ Ne fermez pas cette page — géocodage en cours...
+                    <p style={{ marginTop: '0', fontSize: '13px', color: '#f59e0b', fontStyle: 'italic', padding: '0 16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Loader2 size={14} className="animate-spin" /> Ne fermez pas cette page — géocodage en cours...
                     </p>
                 )}
                 {importResult && (
                     <div style={{ margin: '0 16px 16px', fontSize: '13px', padding: '16px', borderRadius: '8px', background: importResult.failed > 0 ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)' }}>
-                        <p>✅ <strong>{importResult.imported || 0}</strong> nouveaux ajoutés.</p>
-                        <p>🔄 <strong>{importResult.updated || 0}</strong> mis à jour (nouvelle adresse).</p>
-                        <p>⏭️ <strong>{importResult.skipped || 0}</strong> ignorés (déjà à jour).</p>
-                        {importResult.deleted > 0 && <p style={{ color: '#dc2626' }}>🗑️ <strong>{importResult.deleted}</strong> obsolètes supprimés de la carte.</p>}
+                        <p style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><CheckCircle2 size={14} color="#10B981" /> <strong>{importResult.imported || 0}</strong> nouveaux ajoutés.</p>
+                        <p style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><RefreshCw size={14} color="#3b82f6" /> <strong>{importResult.updated || 0}</strong> mis à jour (nouvelle adresse).</p>
+                        <p style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><SkipForward size={14} color="#6b7280" /> <strong>{importResult.skipped || 0}</strong> ignorés (déjà à jour).</p>
+                        {importResult.deleted > 0 && <p style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: '6px' }}><Trash2 size={14} /> <strong>{importResult.deleted}</strong> obsolètes supprimés de la carte.</p>}
 
                         {importResult.failed > 0 && (
                             <div style={{ marginTop: '12px', background: 'rgba(245,158,11,0.1)', padding: '10px', borderRadius: '6px', borderLeft: '3px solid #f59e0b' }}>
-                                <p style={{ color: '#b45309', marginBottom: '8px' }}>⚠️ <strong>{importResult.failed}</strong> échec(s) de géocodage.</p>
+                                <p style={{ color: '#b45309', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}><AlertTriangle size={14} /> <strong>{importResult.failed}</strong> échec(s) de géocodage.</p>
                                 <button
                                     onClick={handleDownloadErrors}
                                     style={{ background: '#fff', border: '1px solid #d1d5db', padding: '4px 8px', borderRadius: '4px', fontSize: '12px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
@@ -356,7 +356,7 @@ export default function PartnersAdmin() {
                                 </button>
                             </div>
                         )}
-                        <p style={{ marginTop: '12px', borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '12px' }}>📍 Total en base : <strong>{importResult.total}</strong></p>
+                        <p style={{ marginTop: '12px', borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}><MapPin size={14} /> Total en base : <strong>{importResult.total}</strong></p>
                     </div>
                 )}
             </div>

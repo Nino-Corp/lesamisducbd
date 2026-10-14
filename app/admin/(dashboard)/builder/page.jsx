@@ -3,22 +3,26 @@
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import styles from './Builder.module.css';
+import { 
+    FileText, PenLine, Newspaper, Tag, Landmark, Target, 
+    HelpCircle, Eye, AlertTriangle, Copy, ExternalLink 
+} from 'lucide-react';
 
 const PAGE_TYPES = [
-    { value: 'WebPage',      label: 'Page Web',       icon: '📄', color: '#6b7280' },
-    { value: 'BlogPosting',  label: 'Article Blog',   icon: '📝', color: '#2563eb' },
-    { value: 'Article',      label: 'Article',        icon: '📰', color: '#7c3aed' },
-    { value: 'CategoryPage', label: 'Catégorie Blog', icon: '🏷️', color: '#0891b2' },
-    { value: 'PillarPage',   label: 'Page Pilier',    icon: '🏛️', color: '#059669' },
-    { value: 'LandingPage',  label: 'Landing SEA',    icon: '🎯', color: '#dc2626' },
-    { value: 'FAQPage',      label: 'FAQ',            icon: '❓', color: '#d97706' },
+    { value: 'WebPage',      label: 'Page Web',       Icon: FileText,   color: '#6b7280' },
+    { value: 'BlogPosting',  label: 'Article Blog',   Icon: PenLine,    color: '#2563eb' },
+    { value: 'Article',      label: 'Article',        Icon: Newspaper,  color: '#7c3aed' },
+    { value: 'CategoryPage', label: 'Catégorie Blog', Icon: Tag,        color: '#0891b2' },
+    { value: 'PillarPage',   label: 'Page Pilier',    Icon: Landmark,   color: '#059669' },
+    { value: 'LandingPage',  label: 'Landing SEA',    Icon: Target,     color: '#dc2626' },
+    { value: 'FAQPage',      label: 'FAQ',            Icon: HelpCircle, color: '#d97706' },
 ];
 
 const PAGE_TEMPLATES = {
-    blank: { label: 'Page Vide', icon: '📄', sections: [] },
+    blank: { label: 'Page Vide', Icon: FileText, sections: [] },
     blog: { 
         label: 'Article de Blog Typique', 
-        icon: '📝',
+        Icon: PenLine,
         sections: [
             { id: `hero-${Date.now()}`, type: 'ContentHero', props: { title: 'Titre de l\'article', textAlign: 'center' } },
             { id: `toc-${Date.now()}`, type: 'TableOfContents', props: { title: 'Au programme !', items: [] } },
@@ -29,7 +33,7 @@ const PAGE_TEMPLATES = {
     },
     category: {
         label: 'Hub Catégorie Blog',
-        icon: '🏷️',
+        Icon: Tag,
         sections: [
             { id: `hero-${Date.now()}`, type: 'ContentHero', props: { title: 'Guide & Articles CBD', textAlign: 'center' } },
             { id: `filter-${Date.now()}`, type: 'BlogCategoryFilter', props: { activeCategory: 'Tous' } }
@@ -37,7 +41,7 @@ const PAGE_TEMPLATES = {
     },
     landing: {
         label: 'Landing Page Promo',
-        icon: '🎯',
+        Icon: Target,
         sections: [
             { id: `hero-${Date.now()}`, type: 'ContentHero', props: { title: 'Offre Spéciale', textAlign: 'center' } },
             { id: `why-${Date.now()}`, type: 'WhyChooseUs', props: { title: 'Pourquoi choisir nos produits ?' } },
@@ -77,9 +81,10 @@ function SeoScorePill({ score }) {
 
 function TypeBadge({ pageType }) {
     const t = PAGE_TYPES.find(p => p.value === pageType) || PAGE_TYPES[0];
+    const PageIcon = t.Icon;
     return (
-        <span style={{ background: t.color + '15', color: t.color, border: `1px solid ${t.color}30`, borderRadius: '99px', padding: '2px 9px', fontSize: '0.72rem', fontWeight: 700 }}>
-            {t.icon} {t.label}
+        <span style={{ background: t.color + '15', color: t.color, border: `1px solid ${t.color}30`, borderRadius: '99px', padding: '2px 9px', fontSize: '0.72rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+            <PageIcon size={12} /> {t.label}
         </span>
     );
 }
@@ -219,37 +224,44 @@ export default function BuilderIndex() {
 
                     {/* Type selector */}
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(95px, 1fr))', gap: '8px', marginBottom: '16px' }}>
-                        {PAGE_TYPES.map(t => (
-                            <button key={t.value} type="button"
-                                onClick={() => setNewPage({ ...newPage, seo: { pageType: t.value } })}
-                                style={{
-                                    padding: '10px 6px', borderRadius: '10px',
-                                    border: `2px solid ${newPage.seo?.pageType === t.value ? t.color : '#e5e7eb'}`,
-                                    background: newPage.seo?.pageType === t.value ? t.color + '15' : '#fafafa',
-                                    cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s'
-                                }}>
-                                <div style={{ fontSize: '1.3rem', marginBottom: '2px' }}>{t.icon}</div>
-                                <div style={{ fontSize: '0.7rem', fontWeight: 700, color: newPage.seo?.pageType === t.value ? t.color : '#6b7280' }}>{t.label}</div>
-                            </button>
-                        ))}
+                        {PAGE_TYPES.map(t => {
+                            const TypeIcon = t.Icon;
+                            return (
+                                <button key={t.value} type="button"
+                                    onClick={() => setNewPage({ ...newPage, seo: { pageType: t.value } })}
+                                    style={{
+                                        padding: '10px 6px', borderRadius: '10px',
+                                        border: `2px solid ${newPage.seo?.pageType === t.value ? t.color : '#e5e7eb'}`,
+                                        background: newPage.seo?.pageType === t.value ? t.color + '15' : '#fafafa',
+                                        cursor: 'pointer', textAlign: 'center', transition: 'all 0.15s',
+                                        display: 'flex', flexDirection: 'column', alignItems: 'center'
+                                    }}>
+                                    <div style={{ marginBottom: '4px', color: newPage.seo?.pageType === t.value ? t.color : '#6b7280' }}><TypeIcon size={20} /></div>
+                                    <div style={{ fontSize: '0.7rem', fontWeight: 700, color: newPage.seo?.pageType === t.value ? t.color : '#6b7280' }}>{t.label}</div>
+                                </button>
+                            );
+                        })}
                     </div>
 
                     {/* Modèles de départ */}
                     <div style={{ marginBottom: '16px' }}>
                         <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.85rem', fontWeight: 600, color: '#444' }}>Démarrer avec un modèle :</label>
                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                            {Object.entries(PAGE_TEMPLATES).map(([key, tpl]) => (
-                                <button key={key} type="button" onClick={() => setSelectedTemplate(key)}
-                                    style={{
-                                        padding: '8px 16px', borderRadius: '8px',
-                                        border: `2px solid ${selectedTemplate === key ? '#00FF94' : '#e5e7eb'}`,
-                                        background: selectedTemplate === key ? '#f0fdf4' : '#fff',
-                                        cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', color: '#1F4B40',
-                                        transition: 'all 0.15s'
-                                    }}>
-                                    {tpl.icon} {tpl.label}
-                                </button>
-                            ))}
+                            {Object.entries(PAGE_TEMPLATES).map(([key, tpl]) => {
+                                const TplIcon = tpl.Icon;
+                                return (
+                                    <button key={key} type="button" onClick={() => setSelectedTemplate(key)}
+                                        style={{
+                                            padding: '8px 16px', borderRadius: '8px',
+                                            border: `2px solid ${selectedTemplate === key ? '#00FF94' : '#e5e7eb'}`,
+                                            background: selectedTemplate === key ? '#f0fdf4' : '#fff',
+                                            cursor: 'pointer', fontWeight: 600, fontSize: '0.85rem', color: '#1F4B40',
+                                            transition: 'all 0.15s', display: 'inline-flex', alignItems: 'center', gap: '6px'
+                                        }}>
+                                        <TplIcon size={14} /> {tpl.label}
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 
@@ -282,8 +294,8 @@ export default function BuilderIndex() {
                                 required
                             />
                             {newPage.slug && pages[newPage.slug] && (
-                                <div style={{ fontSize: '0.75rem', color: '#ef4444', fontWeight: 600, marginTop: '4px' }}>
-                                    ⚠️ Ce slug est déjà utilisé
+                                <div style={{ fontSize: '0.75rem', color: '#ef4444', fontWeight: 600, marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <AlertTriangle size={13} /> Ce slug est déjà utilisé
                                 </div>
                             )}
                         </div>
@@ -332,10 +344,11 @@ export default function BuilderIndex() {
                     {PAGE_TYPES.map(t => {
                         const count = allPages.filter(p => (p.seo?.pageType || 'WebPage') === t.value).length;
                         if (count === 0) return null;
+                        const TypeIcon = t.Icon;
                         return (
                             <button key={t.value} onClick={() => setFilterType(t.value)}
-                                style={{ padding: '6px 14px', borderRadius: '99px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem', background: filterType === t.value ? t.color : '#f3f4f6', color: filterType === t.value ? '#fff' : '#555' }}>
-                                {t.icon} {t.label} ({count})
+                                style={{ padding: '6px 14px', borderRadius: '99px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.8rem', background: filterType === t.value ? t.color : '#f3f4f6', color: filterType === t.value ? '#fff' : '#555', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                <TypeIcon size={12} /> {t.label} ({count})
                             </button>
                         );
                     })}
@@ -360,7 +373,7 @@ export default function BuilderIndex() {
                     ].map(p => (
                         <Link key={p.href} href={p.href} style={{ padding: '8px 16px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', textDecoration: 'none', color: '#374151', fontSize: '0.85rem', fontWeight: 600, display: 'flex', flexDirection: 'column', gap: '4px' }}>
                             <div>{p.label} ↗</div>
-                            {p.slug && <div style={{ fontSize: '0.75rem', color: '#1F4B40', fontWeight: 700 }}>👁 {analytics[p.slug] || 0} vue(s)</div>}
+                            {p.slug && <div style={{ fontSize: '0.75rem', color: '#1F4B40', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Eye size={12} /> {analytics[p.slug] || 0} vue(s)</div>}
                         </Link>
                     ))}
                 </div>
@@ -393,7 +406,7 @@ export default function BuilderIndex() {
                                     <div style={{ fontSize: '0.78rem', color: '#6b7280', marginBottom: '4px' }}>par {page.seo.author}</div>
                                 )}
                                 {isArticle && page.seo?.category && (
-                                    <div style={{ fontSize: '0.78rem', color: '#6b7280', marginBottom: '4px' }}>🏷️ {page.seo.category}</div>
+                                    <div style={{ fontSize: '0.78rem', color: '#6b7280', marginBottom: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Tag size={12} /> {page.seo.category}</div>
                                 )}
                                 <span className={styles.pageSlug}>/p/{page.slug}</span>
                                 <div className={styles.pageMeta}>
@@ -404,20 +417,20 @@ export default function BuilderIndex() {
                                         <><br />Publié le {new Date(page.seo.publishedAt).toLocaleDateString('fr-FR')}</>
                                     )}
                                     <div style={{ marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px', color: '#1F4B40', fontWeight: 600 }}>
-                                        👁 {analytics[page.slug] || 0} vue{analytics[page.slug] !== 1 ? 's' : ''}
+                                        <Eye size={12} /> {analytics[page.slug] || 0} vue{analytics[page.slug] !== 1 ? 's' : ''}
                                     </div>
                                 </div>
                                 <div className={styles.actions}>
                                     <Link href={`/admin/builder/${page.slug}`} className={styles.editLink}>Modifier</Link>
                                     <button onClick={() => handleDuplicate(page)}
-                                        style={{ padding: '6px 12px', borderRadius: '8px', background: '#f0fdf4', color: '#1F4B40', border: '1px solid #d1fae5', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}
+                                        style={{ padding: '6px 12px', borderRadius: '8px', background: '#f0fdf4', color: '#1F4B40', border: '1px solid #d1fae5', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                                         title="Dupliquer">
-                                        📋
+                                        <Copy size={13} />
                                     </button>
                                     <a href={`https://www.lesamisducbd.fr/p/${page.slug}`} target="_blank" rel="noopener noreferrer"
-                                        style={{ padding: '6px 12px', borderRadius: '8px', background: '#f3f4f6', color: '#374151', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600 }}
+                                        style={{ padding: '6px 12px', borderRadius: '8px', background: '#f3f4f6', color: '#374151', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, display: 'flex', alignItems: 'center' }}
                                         title="Voir en ligne">
-                                        🔗
+                                        <ExternalLink size={13} />
                                     </a>
                                     <button className={styles.deleteBtn} onClick={() => handleDelete(page.slug)}>Supprimer</button>
                                 </div>

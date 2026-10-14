@@ -51,6 +51,7 @@ import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 import { useState, useRef, useEffect, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { SessionProvider } from "next-auth/react";
+import { Monitor, Smartphone, Minimize2, Maximize2, Info, Copy, Trash2, Image as ImageIcon } from 'lucide-react';
 
 function IFramePreview({ children, style }) {
     const iframeRef = useRef();
@@ -191,7 +192,7 @@ const LivePreview = memo(function LivePreview({
     if (!sections.length) {
         return (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#aaa', gap: '12px' }}>
-                <span style={{ fontSize: '3rem' }}>🖼️</span>
+                <ImageIcon size={48} strokeWidth={1.5} color="#9ca3af" />
                 <p style={{ margin: 0, fontSize: '0.95rem' }}>Ajoutez des blocs pour voir la preview</p>
             </div>
         );
@@ -304,8 +305,8 @@ const LivePreview = memo(function LivePreview({
         <div style={{ height: '100%', overflowY: 'auto', background: '#e5e7eb', position: 'relative' }}>
             <div style={{ position: 'sticky', top: '12px', left: '0', right: '0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', zIndex: 50, pointerEvents: 'none' }}>
                 <div style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', padding: '6px', borderRadius: '99px', display: 'flex', gap: '6px', pointerEvents: 'auto', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', alignItems: 'center' }}>
-                    <button onClick={() => setPreviewMode('desktop')} style={{ background: previewMode === 'desktop' ? '#fff' : 'transparent', color: previewMode === 'desktop' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>💻 PC (Mac)</button>
-                    <button onClick={() => setPreviewMode('mobile')} style={{ background: previewMode === 'mobile' ? '#fff' : 'transparent', color: previewMode === 'mobile' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>📱 Mobile (iPhone)</button>
+                    <button onClick={() => setPreviewMode('desktop')} style={{ background: previewMode === 'desktop' ? '#fff' : 'transparent', color: previewMode === 'desktop' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Monitor size={14} /> PC (Mac)</button>
+                    <button onClick={() => setPreviewMode('mobile')} style={{ background: previewMode === 'mobile' ? '#fff' : 'transparent', color: previewMode === 'mobile' ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Smartphone size={14} /> Mobile (iPhone)</button>
                     
                     <div style={{ width: '1px', background: 'rgba(255,255,255,0.2)', height: '16px', margin: '0 4px' }}></div>
                     
@@ -416,12 +417,12 @@ const LivePreview = memo(function LivePreview({
                     
                     <button onClick={() => setIsFullscreen(!isFullscreen)} 
                         title={isFullscreen ? "Quitter le plein écran" : "Plein écran"}
-                        style={{ background: isFullscreen ? '#00FF94' : 'transparent', color: isFullscreen ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}>
-                        {isFullscreen ? '↙️ Quitter' : '↗️ Plein écran'}
+                        style={{ background: isFullscreen ? '#00FF94' : 'transparent', color: isFullscreen ? '#000' : '#fff', border: 'none', padding: '6px 16px', borderRadius: '99px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        {isFullscreen ? <><Minimize2 size={14} /> Quitter</> : <><Maximize2 size={14} /> Plein écran</>}
                     </button>
                 </div>
-                <div style={{ background: 'rgba(255, 255, 255, 0.9)', padding: '4px 12px', borderRadius: '99px', fontSize: '0.7rem', color: '#333', fontWeight: 600, boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
-                    ℹ️ Mobile / Tablette : jusqu'à 1024px (le menu devient un bouton ☰) — PC : à partir de 1025px
+                <div style={{ background: 'rgba(255, 255, 255, 0.9)', padding: '4px 12px', borderRadius: '99px', fontSize: '0.7rem', color: '#333', fontWeight: 600, boxShadow: '0 2px 10px rgba(0,0,0,0.1)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <Info size={13} style={{ flexShrink: 0 }} /> Mobile / Tablette : jusqu'à 1024px (le menu devient un bouton ☰) — PC : à partir de 1025px
                 </div>
             </div>
 
@@ -472,8 +473,8 @@ const LivePreview = memo(function LivePreview({
                                 <div style={{ position: 'absolute', top: -34, right: 16, background: '#1F4B40', borderRadius: '8px 8px 0 0', display: 'flex', zIndex: 100, overflow: 'hidden', boxShadow: '0 -4px 12px rgba(0,0,0,0.1)' }}>
                                     <button onClick={(e) => { e.stopPropagation(); onMove(i, -1); }} disabled={i === 0} style={{ padding: '6px 10px', background: 'none', border: 'none', color: i === 0 ? '#555' : '#fff', cursor: i === 0 ? 'default' : 'pointer' }} title="Monter">▲</button>
                                     <button onClick={(e) => { e.stopPropagation(); onMove(i, 1); }} disabled={i === sections.length - 1} style={{ padding: '6px 10px', background: 'none', border: 'none', color: i === sections.length - 1 ? '#555' : '#fff', cursor: i === sections.length - 1 ? 'default' : 'pointer' }} title="Descendre">▼</button>
-                                    <button onClick={(e) => { e.stopPropagation(); onDuplicate(i); }} style={{ padding: '6px 10px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }} title="Dupliquer">📋</button>
-                                    <button onClick={(e) => { e.stopPropagation(); onDelete(i); }} style={{ padding: '6px 10px', background: 'none', border: 'none', color: '#ff4d4f', cursor: 'pointer' }} title="Supprimer">🗑</button>
+                                    <button onClick={(e) => { e.stopPropagation(); onDuplicate(i); }} style={{ padding: '6px 10px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center' }} title="Dupliquer"><Copy size={13} /></button>
+                                    <button onClick={(e) => { e.stopPropagation(); onDelete(i); }} style={{ padding: '6px 10px', background: 'none', border: 'none', color: '#ff4d4f', cursor: 'pointer', display: 'flex', alignItems: 'center' }} title="Supprimer"><Trash2 size={13} /></button>
                                 </div>
                             )}
 

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import LivePreview from '../../builder/LivePreview';
+import { Globe, CheckCircle2, Heading, LayoutTemplate, Phone, Folder } from 'lucide-react';
 
 const DEFAULTS = {
     contact: {
@@ -27,9 +28,9 @@ const DEFAULTS = {
 };
 
 const SECTIONS_META = [
-    { id: 'header', label: 'En-tête (Header)', icon: '🔝' },
-    { id: 'footer', label: 'Pied de page (Footer)', icon: '🔻' },
-    { id: 'contact', label: 'Contact', icon: '📞' }
+    { id: 'header', label: 'En-tête (Header)', icon: Heading },
+    { id: 'footer', label: 'Pied de page (Footer)', icon: LayoutTemplate },
+    { id: 'contact', label: 'Contact', icon: Phone }
 ];
 
 const inputStyle = {
@@ -152,7 +153,9 @@ export default function GlobalContentPage() {
                             display: 'flex', alignItems: 'center', gap: '6px',
                         }}>← Retour</Link>
                         <div>
-                            <h1 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>🌍 Éléments Globaux</h1>
+                            <h1 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', margin: 0, display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                <Globe size={18} color="#1F4B40" /> Éléments Globaux
+                            </h1>
                             <code style={{ fontSize: '0.72rem', color: '#94a3b8' }}>/global</code>
                         </div>
                     </div>
@@ -160,8 +163,10 @@ export default function GlobalContentPage() {
                         <span style={{
                             padding: '6px 12px', borderRadius: '8px',
                             background: '#f0fdf4', color: '#166534', fontWeight: 700, fontSize: '0.8rem',
-                            border: '1px solid #16653430',
-                        }}>✅ Actif partout</span>
+                            border: '1px solid #16653430', display: 'inline-flex', alignItems: 'center', gap: '5px'
+                        }}>
+                            <CheckCircle2 size={13} /> Actif partout
+                        </span>
 
                         <button onClick={save} disabled={saving} style={{
                             padding: '8px 20px', borderRadius: '10px', border: 'none',
@@ -201,28 +206,31 @@ export default function GlobalContentPage() {
                                 </div>
 
                                 <div style={{ flex: 1, overflowY: 'auto', padding: '8px' }}>
-                                    {SECTIONS_META.map((meta) => (
-                                        <div
-                                            key={meta.id}
-                                            onClick={() => setActiveSection(meta.id)}
-                                            style={{
-                                                display: 'flex', alignItems: 'center', gap: '10px',
-                                                padding: '12px', borderRadius: '10px', marginBottom: '4px',
-                                                cursor: 'pointer', transition: 'all 0.15s',
-                                                background: '#f8fafc', border: '1px solid #f1f5f9',
-                                            }}
-                                            onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
-                                            onMouseLeave={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#f1f5f9'; }}
-                                        >
-                                            <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>{meta.icon}</span>
-                                            <div style={{ flex: 1, minWidth: 0 }}>
-                                                <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#1e293b' }}>
-                                                    {meta.label}
+                                    {SECTIONS_META.map((meta) => {
+                                        const MetaIcon = meta.icon;
+                                        return (
+                                            <div
+                                                key={meta.id}
+                                                onClick={() => setActiveSection(meta.id)}
+                                                style={{
+                                                    display: 'flex', alignItems: 'center', gap: '10px',
+                                                    padding: '12px', borderRadius: '10px', marginBottom: '4px',
+                                                    cursor: 'pointer', transition: 'all 0.15s',
+                                                    background: '#f8fafc', border: '1px solid #f1f5f9',
+                                                }}
+                                                onMouseEnter={e => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.borderColor = '#e2e8f0'; }}
+                                                onMouseLeave={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#f1f5f9'; }}
+                                            >
+                                                <MetaIcon size={18} color="#1F4B40" style={{ flexShrink: 0 }} />
+                                                <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#1e293b' }}>
+                                                        {meta.label}
+                                                    </div>
                                                 </div>
+                                                <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>→</span>
                                             </div>
-                                            <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>→</span>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
                             </div>
                         ) : (
@@ -237,7 +245,7 @@ export default function GlobalContentPage() {
                                         background: '#fff', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, color: '#64748b',
                                     }}>← Liste</button>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
-                                        <span style={{ fontSize: '1.1rem' }}>{currentMeta?.icon}</span>
+                                        {currentMeta?.icon && <currentMeta.icon size={18} color="#1F4B40" />}
                                         <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#0f172a' }}>{currentMeta?.label}</div>
                                     </div>
                                 </div>
@@ -275,7 +283,9 @@ export default function GlobalContentPage() {
 
                                             {/* ── MENU DÉROULANT "AUTRES" ── */}
                                             <div style={{ marginTop: '32px' }}>
-                                                <h3 style={{ fontSize: '0.9rem', color: '#1F4B40', marginBottom: '8px' }}>📂 Menu déroulant « Autres »</h3>
+                                                <h3 style={{ fontSize: '0.9rem', color: '#1F4B40', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <Folder size={16} /> Menu déroulant « Autres »
+                                                </h3>
                                                 <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginBottom: '16px', lineHeight: 1.5 }}>
                                                     Sélectionnez les pages du Page Builder à afficher dans le menu déroulant. Seules les pages publiées sont listées.
                                                 </p>

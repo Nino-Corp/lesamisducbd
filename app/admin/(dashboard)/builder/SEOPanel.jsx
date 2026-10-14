@@ -16,6 +16,7 @@
 
 import { useState } from 'react';
 import { ImageUploader } from './builderEditors';
+import { Search, Share2, FileText, Settings, AlertTriangle, Zap, CheckCircle2, Info, Clock, Check } from 'lucide-react';
 
 // --- SERP Preview ---
 function SerpPreview({ title, description, slug }) {
@@ -31,8 +32,8 @@ function SerpPreview({ title, description, slug }) {
 
     return (
         <div style={{ background: '#fff', borderRadius: '12px', padding: '20px', border: '1px solid #e5e7eb', marginBottom: '20px' }}>
-            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#6b7280', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                📊 Aperçu dans Google
+            <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#6b7280', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Search size={14} /> Aperçu dans Google
             </p>
 
             {/* Desktop preview */}
@@ -56,10 +57,10 @@ function SerpPreview({ title, description, slug }) {
 
             {/* Warnings */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '12px' }}>
-                {titleTooLong && <div style={{ fontSize: '0.72rem', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '4px' }}>⚠️ Titre trop long — sera tronqué dans Google</div>}
-                {titleTooShort && <div style={{ fontSize: '0.72rem', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px' }}>⚡ Titre trop court — vise 30-60 caractères</div>}
-                {descTooLong && <div style={{ fontSize: '0.72rem', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '4px' }}>⚠️ Description trop longue — sera tronquée</div>}
-                {!titleTooLong && !titleTooShort && displayTitle.length > 0 && <div style={{ fontSize: '0.72rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}>✓ Titre dans la plage idéale</div>}
+                {titleTooLong && <div style={{ fontSize: '0.72rem', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertTriangle size={13} color="#ef4444" /> Titre trop long — sera tronqué dans Google</div>}
+                {titleTooShort && <div style={{ fontSize: '0.72rem', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px' }}><Zap size={13} color="#f59e0b" /> Titre trop court — vise 30-60 caractères</div>}
+                {descTooLong && <div style={{ fontSize: '0.72rem', color: '#ef4444', display: 'flex', alignItems: 'center', gap: '4px' }}><AlertTriangle size={13} color="#ef4444" /> Description trop longue — sera tronquée</div>}
+                {!titleTooLong && !titleTooShort && displayTitle.length > 0 && <div style={{ fontSize: '0.72rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '4px' }}><CheckCircle2 size={13} color="#10b981" /> Titre dans la plage idéale</div>}
             </div>
         </div>
     );
@@ -94,7 +95,7 @@ function SeoScore({ seo, sections = [] }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {checks.map((c, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.78rem', color: c.ok ? '#374151' : '#9ca3af' }}>
-                        <span>{c.ok ? '✅' : '⬜'}</span>
+                        <span>{c.ok ? <CheckCircle2 size={14} color="#10b981" style={{ display: 'inline-block', verticalAlign: -2 }} /> : <div style={{ width: 12, height: 12, border: '1.5px solid #d1d5db', borderRadius: '3px', display: 'inline-block', verticalAlign: -1 }} />}</span>
                         <span style={{ textDecoration: c.ok ? 'none' : 'line-through' }}>{c.label}</span>
                     </div>
                 ))}
@@ -140,10 +141,10 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
     const isArticle = seo.pageType === 'Article' || seo.pageType === 'BlogPosting';
 
     const tabs = [
-        { id: 'serp', label: '🔍 Google' },
-        { id: 'og', label: '📱 Réseaux' },
-        ...(isArticle ? [{ id: 'article', label: '📝 Article' }] : []),
-        { id: 'advanced', label: '⚙️ Avancé' },
+        { id: 'serp', label: 'Google', Icon: Search },
+        { id: 'og', label: 'Réseaux', Icon: Share2 },
+        ...(isArticle ? [{ id: 'article', label: 'Article', Icon: FileText }] : []),
+        { id: 'advanced', label: 'Avancé', Icon: Settings },
     ];
 
     return (
@@ -167,12 +168,16 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
 
                     {/* Tabs */}
                     <div style={{ display: 'flex', gap: '4px' }}>
-                        {tabs.map(t => (
-                            <button key={t.id} onClick={() => setActiveTab(t.id)}
-                                style={{ padding: '8px 16px', borderRadius: '8px 8px 0 0', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.82rem', background: activeTab === t.id ? '#fff' : 'transparent', color: activeTab === t.id ? '#1F4B40' : '#6b7280', borderBottom: activeTab === t.id ? '2px solid #1F4B40' : '2px solid transparent', transition: 'all 0.15s' }}>
-                                {t.label}
-                            </button>
-                        ))}
+                        {tabs.map(t => {
+                            const TabIcon = t.Icon;
+                            return (
+                                <button key={t.id} onClick={() => setActiveTab(t.id)}
+                                    style={{ padding: '8px 16px', borderRadius: '8px 8px 0 0', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '0.82rem', background: activeTab === t.id ? '#fff' : 'transparent', color: activeTab === t.id ? '#1F4B40' : '#6b7280', borderBottom: activeTab === t.id ? '2px solid #1F4B40' : '2px solid transparent', transition: 'all 0.15s', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                    <TabIcon size={14} />
+                                    {t.label}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
@@ -207,7 +212,9 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
                                         placeholder="mon-article"
                                     />
                                 </div>
-                                <span style={{ fontSize: '0.72rem', color: '#f59e0b', marginTop: '4px', display: 'block' }}>⚠️ Modifier l'URL peut casser des liens existants</span>
+                                <span style={{ fontSize: '0.72rem', color: '#f59e0b', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <AlertTriangle size={13} /> Modifier l'URL peut casser des liens existants
+                                </span>
                             </Field>
 
                             <Field label="Meta Title">
@@ -229,8 +236,9 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
                     {/* ── TAB: OPEN GRAPH / RÉSEAUX SOCIAUX ── */}
                     {activeTab === 'og' && (
                         <>
-                            <div style={{ background: '#f0f9ff', borderRadius: '12px', padding: '16px', marginBottom: '20px', fontSize: '0.82rem', color: '#0369a1' }}>
-                                ℹ️ Ces infos s'affichent quand quelqu'un partage la page sur Facebook, WhatsApp, LinkedIn ou Twitter/X.
+                            <div style={{ background: '#f0f9ff', borderRadius: '12px', padding: '16px', marginBottom: '20px', fontSize: '0.82rem', color: '#0369a1', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <Info size={15} style={{ flexShrink: 0 }} />
+                                <span>Ces infos s'affichent quand quelqu'un partage la page sur Facebook, WhatsApp, LinkedIn ou Twitter/X.</span>
                             </div>
 
                             <Field label="Image Open Graph" hint="Recommandé : 1200×630px, format JPG/PNG, moins de 1 MB">
@@ -262,8 +270,9 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
                     {/* ── TAB: ARTICLE ── */}
                     {activeTab === 'article' && isArticle && (
                         <>
-                            <div style={{ background: '#f0fdf4', borderRadius: '12px', padding: '16px', marginBottom: '16px', fontSize: '0.82rem', color: '#166534' }}>
-                                📝 Ces champs enrichissent le schema JSON-LD <strong>BlogPosting / Article</strong> injecté automatiquement dans la page.
+                            <div style={{ background: '#f0fdf4', borderRadius: '12px', padding: '16px', marginBottom: '16px', fontSize: '0.82rem', color: '#166534', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <FileText size={15} style={{ flexShrink: 0 }} />
+                                <span>Ces champs enrichissent le schema JSON-LD <strong>BlogPosting / Article</strong> injecté automatiquement dans la page.</span>
                             </div>
 
                             <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '14px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
@@ -315,10 +324,11 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
                             <div style={{ background: '#f9fafb', borderRadius: '12px', padding: '16px', border: '1px solid #e5e7eb', marginBottom: '20px' }}>
                                 <p style={{ fontSize: '0.75rem', fontWeight: 700, color: '#6b7280', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut de publication</p>
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '12px' }}>
-                                    {[['draft','📝 Brouillon','#6b7280'], ['published','✅ Publié','#166534'], ['scheduled','🕐 Planifié','#d97706']].map(([val, lbl, clr]) => (
+                                    {[['draft','Brouillon', FileText, '#6b7280'], ['published','Publié', CheckCircle2, '#166534'], ['scheduled','Planifié', Clock, '#d97706']].map(([val, lbl, Icon, clr]) => (
                                         <button key={val} type="button"
                                             onClick={() => updatePage({ status: val })}
-                                            style={{ padding: '10px', borderRadius: '10px', border: `2px solid ${(page.status || 'draft') === val ? clr : '#e5e7eb'}`, background: (page.status || 'draft') === val ? clr + '15' : '#fff', cursor: 'pointer', fontWeight: 700, fontSize: '0.8rem', color: (page.status || 'draft') === val ? clr : '#6b7280', transition: 'all 0.15s' }}>
+                                            style={{ padding: '10px', borderRadius: '10px', border: `2px solid ${(page.status || 'draft') === val ? clr : '#e5e7eb'}`, background: (page.status || 'draft') === val ? clr + '15' : '#fff', cursor: 'pointer', fontWeight: 700, fontSize: '0.8rem', color: (page.status || 'draft') === val ? clr : '#6b7280', transition: 'all 0.15s', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                                            <Icon size={13} />
                                             {lbl}
                                         </button>
                                     ))}
@@ -415,8 +425,8 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
                 {/* Footer */}
                 <div style={{ padding: '16px 24px', borderTop: '1px solid #e5e7eb', display: 'flex', gap: '12px' }}>
                     <button onClick={onClose}
-                        style={{ flex: 1, padding: '12px', background: '#1F4B40', color: '#00FF94', border: 'none', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem' }}>
-                        ✓ Valider et fermer
+                        style={{ flex: 1, padding: '12px', background: '#1F4B40', color: '#00FF94', border: 'none', borderRadius: '10px', fontWeight: 700, cursor: 'pointer', fontSize: '0.95rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                        <Check size={16} /> Valider et fermer
                     </button>
                 </div>
             </div>
