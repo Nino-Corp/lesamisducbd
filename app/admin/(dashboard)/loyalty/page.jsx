@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import styles from './LoyaltySettings.module.css';
 import { Save, Plus, Trash2, Loader2, Sparkles, Droplet, Star, Leaf, Award, Palette, Layers, CreditCard, ChevronDown, Check, Lightbulb } from 'lucide-react';
 import rewardsStyles from '../../../account/Tabs/RewardsTab.module.css';
-
-
+import LoyaltyTierIcon from '@/components/Loyalty/LoyaltyTierIcon';
+import LoyaltyIconModal from '@/components/Admin/LoyaltyIconModal';
 
 export default function LoyaltySettings() {
     const [settings, setSettings] = useState(null);
@@ -13,6 +13,7 @@ export default function LoyaltySettings() {
     const [isSaving, setIsSaving] = useState(false);
     const [activePreviewTier, setActivePreviewTier] = useState(0);
     const [isGroupDropdownOpen, setIsGroupDropdownOpen] = useState(false);
+    const [modalTierIndex, setModalTierIndex] = useState(null);
     const renderUserName = (name) => {
         const parts = name.split(' ');
         if (parts.length > 1) {
@@ -78,7 +79,7 @@ export default function LoyaltySettings() {
             ...settings,
             tiers: [
                 ...settings.tiers,
-                { id: Date.now().toString(), name: "Nouveau Palier", minSpent: 0, icon: "IconStar" }
+                { id: Date.now().toString(), name: "Nouveau Palier", minSpent: 0, icon: "lucide:Star" }
             ]
         });
     };
@@ -173,7 +174,7 @@ export default function LoyaltySettings() {
     }
 
     const previewTier = settings.tiers[activePreviewTier] || settings.tiers[0];
-    const IconComponent = previewTier?.icon ? <img src={previewTier.icon} alt={previewTier?.name} style={{ width: '24px', height: '24px', objectFit: 'contain' }} /> : null;
+    const IconComponent = previewTier?.icon ? <LoyaltyTierIcon icon={previewTier.icon} alt={previewTier?.name} size={32} /> : null;
 
     let nextTierName = "Max";
     let euroToNext = 0;
@@ -252,24 +253,32 @@ export default function LoyaltySettings() {
                                         />
                                     </div>
                                     <div className={styles.formGroup}>
-                                        <label>Icône (max 200Ko)</label>
-                                        <div className={styles.iconUploadWrapper}>
-                                            <input 
-                                                type="file" 
-                                                id={`iconUpload-${index}`}
-                                                className={styles.hiddenFileInput}
-                                                accept="image/*"
-                                                onChange={(e) => handleFileUpload(e, index)}
-                                            />
-                                            <label htmlFor={`iconUpload-${index}`} className={styles.uploadButton}>
-                                                {tier.isUploading ? <Loader2 className={styles.spinner} size={18} /> : 
-                                                    (tier.icon?.startsWith('http') || tier.icon?.startsWith('/') ? 
-                                                        <img src={tier.icon} alt="Icon" className={styles.uploadedIcon} /> : 
-                                                        <div className={styles.uploadPlaceholder}>+</div>
-                                                    )
-                                                }
-                                            </label>
-                                        </div>
+                                        <label>Icône (Image ou Lucide)</label>
+                                        <button 
+                                            type="button"
+                                            className={`${styles.iconPickerButton} ${tier.icon ? styles.iconPickerButtonFilled : ''}`}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setModalTierIndex(index);
+                                            }}
+                                            title="Choisir une icône ou déposer une image"
+                                        >
+                                            {tier.icon ? (
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', maxWidth: '100%', overflow: 'hidden' }}>
+                                                    <LoyaltyTierIcon icon={tier.icon} size={20} />
+                                                    <span className={styles.iconPickerLabel}>
+                                                        {tier.icon.startsWith('http') || tier.icon.startsWith('/') || tier.icon.startsWith('data:') 
+                                                            ? 'Image' 
+                                                            : tier.icon.replace('lucide:', '').replace('Icon', '')}
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b' }}>
+                                                    <Plus size={16} />
+                                                    <span>Choisir</span>
+                                                </div>
+                                            )}
+                                        </button>
                                     </div>
                                     <button 
                                         className={styles.removeBtn} 
@@ -494,6 +503,18 @@ export default function LoyaltySettings() {
                 </div>
 
             </div>
+
+            {modalTierIndex !== null && settings.tiers[modalTierIndex] && (
+                <LoyaltyIconModal
+                    isOpen={true}
+                    tierName={settings.tiers[modalTierIndex].name}
+                    currentIcon={settings.tiers[modalTierIndex].icon || ''}
+                    onClose={() => setModalTierIndex(null)}
+                    onSelectIcon={(iconValue) => {
+                        updateTier(modalTierIndex, 'icon', iconValue);
+                    }}
+                />
+            )}
         </div>
     );
 }

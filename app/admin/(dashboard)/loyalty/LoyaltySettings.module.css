@@ -203,6 +203,48 @@
     display: none;
 }
 
+.iconPickerButton {
+    width: 100%;
+    height: 46px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.88rem;
+    color: #1F4B40;
+}
+
+.iconPickerButton:hover {
+    background: #f8fafc;
+    border-color: #1F4B40;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.iconPickerButtonFilled {
+    border-style: solid;
+    border-color: #e2e8f0;
+    background: #f8fafc;
+}
+
+.iconPickerButtonFilled:hover {
+    border-color: #1F4B40;
+    background: #f0fdf4;
+}
+
+.iconPickerLabel {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .uploadButton {
     width: 100%;
     height: 46px;

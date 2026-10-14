@@ -3,6 +3,7 @@ import { Gift, Coins, Copy, Check, Users, ArrowRight, Loader2 } from 'lucide-rea
 import { useSession } from 'next-auth/react';
 import { Sparkles, Droplet, Star, Leaf, Award } from 'lucide-react';
 import styles from './RewardsTab.module.css';
+import LoyaltyTierIcon from '@/components/Loyalty/LoyaltyTierIcon';
 
 
 
@@ -160,7 +161,7 @@ export default function RewardsTab() {
 
         tierName = currentTier.name;
         
-        Icon = currentTier.icon ? () => <img src={currentTier.icon} alt={currentTier.name} style={{ width: '24px', height: '24px', objectFit: 'contain' }} /> : null;
+        Icon = currentTier.icon ? () => <LoyaltyTierIcon icon={currentTier.icon} alt={currentTier.name} size={32} /> : null;
 
         if (prevTierInSorted) {
             nextTier = prevTierInSorted.name;
