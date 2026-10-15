@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
 import { safeKvGet, safeKvSet, invalidateKvCache } from '@/lib/kvCache';
-import { kv } from '@vercel/kv';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,8 +38,8 @@ async function collectBackupData(username) {
         productsPageConfig
     ] = await Promise.all([
         safeKvGet('vitrine_config', {}),
-        kv.get('hidden_products').catch(() => []),
-        kv.get('product_order').catch(() => []),
+        safeKvGet('hidden_products', []),
+        safeKvGet('product_order', []),
         safeKvGet('product_categories', null),
         safeKvGet('product_overrides', {}),
         safeKvGet('category_overrides', {}),
@@ -194,8 +193,8 @@ export async function POST(request) {
         if (selected.vitrine && data.vitrine) {
             const v = data.vitrine;
             if (v.config) await safeKvSet('vitrine_config', v.config);
-            if (Array.isArray(v.hiddenProducts)) await kv.set('hidden_products', v.hiddenProducts).catch(() => {});
-            if (Array.isArray(v.productOrder)) await kv.set('product_order', v.productOrder).catch(() => {});
+            if (Array.isArray(v.hiddenProducts)) await safeKvSet('hidden_products', v.hiddenProducts);
+            if (Array.isArray(v.productOrder)) await safeKvSet('product_order', v.productOrder);
             if (v.productCategories) await safeKvSet('product_categories', v.productCategories);
             if (v.productOverrides) await safeKvSet('product_overrides', v.productOverrides);
             if (v.categoryOverrides) await safeKvSet('category_overrides', v.categoryOverrides);
