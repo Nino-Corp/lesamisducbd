@@ -170,44 +170,590 @@
     width: 100%;
 }
 
-/* Mobile Nav Overlay (Portaled) */
+/* ==========================================================================
+   Mobile Nav Sidebar Drawer (Modern Sliding Panel)
+   ========================================================================== */
 .mobileNavOverlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
-    background: #1F4B40;
-    /* Dark Green bg matches header */
+    z-index: 2000;
+    display: flex;
+    visibility: hidden;
+    pointer-events: none;
+    transition: visibility 0.35s ease;
+}
+
+.mobileNavOpen {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Dark Glass Backdrop (Click to dismiss) */
+.mobileNavBackdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(4, 18, 14, 0.68);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+.mobileNavOpen .mobileNavBackdrop {
+    opacity: 1;
+}
+
+/* Sliding Sidebar Drawer */
+.mobileSidebar {
+    position: relative;
+    width: 86vw;
+    max-width: 370px;
+    height: 100dvh;
+    max-height: 100vh;
+    background: linear-gradient(180deg, #153a30 0%, #0d251f 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 18px 0 50px rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-105%);
+    transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
+    overflow: hidden;
+}
+
+.mobileNavOpen .mobileSidebar {
+    transform: translateX(0);
+}
+
+/* 1. Sidebar Header */
+.sidebarHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(13, 37, 31, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    flex-shrink: 0;
+}
+
+.sidebarLogoLink {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.sidebarLogoImage {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.sidebarLogoText {
+    font-size: 1.05rem;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+}
+
+.sidebarCloseBtn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999;
-    /* Below Header (1000) so Header stays visible */
-    padding-top: 80px;
-    /* Offset for header */
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.mobileNavOverlay ul {
+.sidebarCloseBtn:hover,
+.sidebarCloseBtn:active {
+    background: rgba(0, 255, 194, 0.18);
+    color: #00FFC2;
+    border-color: rgba(0, 255, 194, 0.4);
+    transform: scale(1.06);
+}
+
+/* Scrollable Container */
+.mobileSidebarContent {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 18px 18px 28px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 40px;
+    gap: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
-.mobileNavOverlay a {
-    font-size: 2rem;
+.mobileSidebarContent::-webkit-scrollbar {
+    width: 4px;
+}
+
+.mobileSidebarContent::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+/* 2. User & Loyalty Account Card */
+.sidebarAccountCard {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(0, 255, 194, 0.22);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.accountCardTop {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.accountAvatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1F4B40, #2E6B5D);
+    border: 1px solid rgba(0, 255, 194, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00FFC2;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.onlineDot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00FFC2;
+    border: 2px solid #14352b;
+    box-shadow: 0 0 6px #00FFC2;
+}
+
+.accountDetails {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.accountGreeting {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+}
+
+.accountName {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 190px;
+}
+
+.sidebarLoyaltyBadge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: rgba(0, 255, 194, 0.1);
+    border: 1px solid rgba(0, 255, 194, 0.25);
+    padding: 8px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #00FFC2;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.sidebarLoyaltyBadge:hover {
+    background: rgba(0, 255, 194, 0.18);
+    border-color: rgba(0, 255, 194, 0.45);
+}
+
+.sidebarLoyaltyIcon {
+    color: #00FFC2;
+    flex-shrink: 0;
+}
+
+.sidebarLoyaltyArrow {
+    opacity: 0.7;
+    transition: transform 0.2s ease;
+}
+
+.sidebarLoyaltyBadge:hover .sidebarLoyaltyArrow {
+    transform: translateX(2px);
+    opacity: 1;
+}
+
+.accountActionLink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    transition: color 0.2s ease;
+}
+
+.accountActionLink:hover {
+    color: #00FFC2;
+}
+
+/* Guest Card (Logged out) */
+.sidebarGuestCard {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.guestCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.guestSparkle {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+}
+
+.guestTitle {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.guestSubtitle {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.35;
+}
+
+.sidebarLoginBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #00FFC2 0%, #00cca0 100%);
+    color: #0a241e;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 255, 194, 0.25);
+    font-family: inherit;
+}
+
+.sidebarLoginBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 255, 194, 0.35);
+}
+
+.sidebarLoginBtn:active {
+    transform: translateY(1px);
+}
+
+/* 3. Search Quick Action */
+.sidebarSearchBtn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 14px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.86rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: inherit;
+}
+
+.sidebarSearchBtn:hover {
+    background: rgba(0, 0, 0, 0.38);
+    border-color: rgba(0, 255, 194, 0.35);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* 4. Navigation Menu */
+.sidebarNavGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebarSectionTitle {
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s;
+    letter-spacing: 0.09em;
+    color: rgba(255, 255, 255, 0.4);
+    padding-left: 6px;
 }
 
-.mobileNavOverlay a:hover {
-    color: #49B197;
+.sidebarNavList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sidebarNavItem {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebarNavLink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 0.94rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+}
+
+.sidebarNavLink:hover {
+    background: rgba(0, 255, 194, 0.08);
+    border-color: rgba(0, 255, 194, 0.15);
+    color: #00FFC2;
+    transform: translateX(3px);
+}
+
+.sidebarNavOpen {
+    background: rgba(0, 255, 194, 0.06);
+    border-color: rgba(0, 255, 194, 0.2);
+    color: #00FFC2;
+}
+
+.sidebarNavLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebarNavIcon {
+    color: #00FFC2;
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebarNavLabel {
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sidebarArrow {
+    color: rgba(255, 255, 255, 0.35);
+    transition: all 0.2s ease;
+}
+
+.sidebarNavLink:hover .sidebarArrow {
+    color: #00FFC2;
+    transform: translateX(2px);
+}
+
+/* Submenu Accordion */
+.sidebarSubmenu {
+    list-style: none;
+    margin: 4px 0 6px 20px;
+    padding: 4px 0 4px 14px;
+    border-left: 2px solid rgba(0, 255, 194, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    animation: slideDownSubmenu 0.25s ease forwards;
+}
+
+@keyframes slideDownSubmenu {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sidebarSublink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.72);
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.sidebarSublink:hover {
+    color: #00FFC2;
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(2px);
+}
+
+.sublinkArrow {
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
+}
+
+.sidebarSublink:hover .sublinkArrow {
+    opacity: 1;
+    color: #00FFC2;
+}
+
+/* 5. Cart Direct Link */
+.sidebarCartRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebarCartRow:hover {
+    background: rgba(0, 255, 194, 0.08);
+    border-color: rgba(0, 255, 194, 0.25);
+    color: #00FFC2;
+}
+
+.sidebarCartBadge {
+    background: #FFD700;
+    color: #0c231d;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 99px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.sidebarCartEmpty {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 500;
+}
+
+/* 6. Reassurance Guarantee Pills */
+.sidebarReassurance {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.reassuranceItem {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.65);
+    font-weight: 500;
+}
+
+.reassuranceIconCheck {
+    color: #00FFC2;
+    flex-shrink: 0;
+}
+
+.reassuranceIconSparkle {
+    color: #FFD700;
+    flex-shrink: 0;
+}
+
+/* 7. Logout Button */
+.sidebarLogoutBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 10px;
+    color: #fca5a5;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.sidebarLogoutBtn:hover {
+    background: rgba(239, 68, 68, 0.16);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.4);
 }
 
 @media (max-width: 1024px) {
@@ -521,63 +1067,3 @@
     color: #00FFC2;
 }
 
-/* ── Dropdown Menu (Mobile) ── */
-.mobileDropdownWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.mobileDropdownTrigger {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 2rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: inherit;
-    transition: color 0.3s;
-}
-
-.mobileDropdownTrigger:hover {
-    color: #49B197;
-}
-
-.mobileDropdownList {
-    list-style: none;
-    padding: 12px 0 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    animation: fadeInDown 0.3s ease forwards;
-}
-
-.mobileDropdownList a {
-    font-size: 1.2rem;
-    font-weight: 500;
-    text-transform: none;
-    color: rgba(255, 255, 255, 0.75);
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.mobileDropdownList a:hover {
-    color: #00FFC2;
-}
-
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
