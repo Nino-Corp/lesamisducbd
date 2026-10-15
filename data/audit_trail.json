@@ -1,0 +1,38 @@
+[
+  {
+    "id": "baf38453-0af1-45db-870b-f188b6afdee9",
+    "timestamp": "2026-10-15T01:05:23.609Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "espace-pro-cbd",
+    "details": "Page: \"Espace Pro\" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "9cfea86d-9657-454d-8c9b-aadccb50cdb5",
+    "timestamp": "2026-10-15T00:57:52.394Z",
+    "username": "admin",
+    "action": "Révocation d'accès",
+    "target": "test",
+    "details": "Compte administrateur supprimé définitivement",
+    "ip": "::1"
+  },
+  {
+    "id": "38e70fb7-fe86-41ee-957c-8c4f51488bc8",
+    "timestamp": "2026-10-15T00:57:45.305Z",
+    "username": "admin",
+    "action": "Révocation des sessions",
+    "target": "Sécurité du compte",
+    "details": "Toutes les autres sessions actives ont été déconnectées à distance",
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "ae8fb542-3d08-4d0d-bf7d-ca22cefca1f5",
+    "timestamp": "2026-10-15T00:56:34.797Z",
+    "username": "admin",
+    "action": "Création de compte",
+    "target": "test",
+    "details": "Rôle : Éditeur",
+    "ip": "::1"
+  }
+]
