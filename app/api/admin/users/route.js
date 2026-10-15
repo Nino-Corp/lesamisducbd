@@ -35,6 +35,10 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
         }
 
+        if (password.length < 8) {
+            return NextResponse.json({ error: 'Le mot de passe doit comporter au moins 8 caractères' }, { status: 400 });
+        }
+
         const users = await kv.get('admin_users') || [];
         
         if (users.find(u => u.username.toLowerCase() === username.toLowerCase())) {
@@ -57,6 +61,53 @@ export async function POST(request) {
         return NextResponse.json(safeUser);
     } catch (error) {
         return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    }
+}
+
+export async function PATCH(request) {
+    const session = await getSession();
+    if (!session || session.role !== 'superadmin') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    try {
+        const { username, newPassword } = await request.json();
+
+        if (!username || !newPassword) {
+            return NextResponse.json({ error: 'Identifiant et nouveau mot de passe requis' }, { status: 400 });
+        }
+
+        if (newPassword.length < 8) {
+            return NextResponse.json({ error: 'Le mot de passe doit contenir au moins 8 caractères' }, { status: 400 });
+        }
+
+        const users = await kv.get('admin_users') || [];
+        const userIndex = users.findIndex(u => u.username && u.username.toLowerCase() === username.toLowerCase());
+
+        const hash = crypto.createHash('sha256').update(newPassword).digest('hex');
+
+        if (userIndex === -1) {
+            if (username.toLowerCase() === 'admin') {
+                users.unshift({
+                    username: 'admin',
+                    passwordHash: hash,
+                    role: 'superadmin',
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                });
+            } else {
+                return NextResponse.json({ error: 'Utilisateur introuvable' }, { status: 404 });
+            }
+        } else {
+            users[userIndex].passwordHash = hash;
+            users[userIndex].updatedAt = new Date().toISOString();
+        }
+
+        await kv.set('admin_users', users);
+        return NextResponse.json({ success: true, message: 'Mot de passe mis à jour avec succès' });
+    } catch (error) {
+        console.error('Password update error:', error);
+        return NextResponse.json({ error: 'Erreur lors de la mise à jour du mot de passe' }, { status: 500 });
     }
 }
 
