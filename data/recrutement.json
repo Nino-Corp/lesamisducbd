@@ -1,0 +1,51 @@
+{
+  "sections": [
+    {
+      "id": "hero",
+      "type": "ContentHero",
+      "props": {
+        "title": "Intégrer l'équipe ?",
+        "imageSrc": "/images/recrutement/handshake.webp"
+      },
+      "isVisible": true
+    },
+    {
+      "id": "content",
+      "type": "RecrutementText",
+      "props": {
+        "title": "Rejoindre l'équipe\nLes Amis du CBD",
+        "text": "Les Amis du CBD, c'est avant tout une aventure humaine.\nUne équipe qui avance ensemble, avec des valeurs simples : transparence, exigence et proximité.\nNous ne recrutons pas en permanence, mais nous sommes toujours curieux de découvrir de nouveaux profils. Que vous veniez du terrain, du commerce, de la communication ou d'un tout autre horizon, les candidatures spontanées sont les bienvenues.\nSi vous partagez notre vision d'un CBD accessible, responsable et bien fait, n'hésitez pas à nous écrire.\nParfois, les meilleures collaborations commencent sans offre précise."
+      },
+      "isVisible": true
+    },
+    {
+      "id": "jobs",
+      "type": "RecrutementJobs",
+      "props": {
+        "title": "Offres en cours",
+        "jobs": [
+          {
+            "title": "Commercial Terrain – Secteur CBD (H/F)",
+            "location": "Paris / Lille / Bordeaux / Toulouse / Nantes",
+            "type": "Free-lance ou CDD 6 mois",
+            "description": "<p><strong>Tu&nbsp;aimes&nbsp;le&nbsp;contact,&nbsp;les&nbsp;challenges&nbsp;et&nbsp;tu&nbsp;veux&nbsp;gagner&nbsp;de&nbsp;l&#39;argent&nbsp;à&nbsp;la&nbsp;hauteur&nbsp;de&nbsp;tes&nbsp;performances&nbsp;?</strong></p><p>Rejoins&nbsp;une&nbsp;entreprise&nbsp;dynamique&nbsp;en&nbsp;pleine&nbsp;croissance&nbsp;dans&nbsp;le&nbsp;secteur&nbsp;du&nbsp;CBD&nbsp;!</p><p>Nous&nbsp;recherchons&nbsp;un(e)&nbsp;<strong>commercial(e)&nbsp;terrain&nbsp;motivé(e)</strong>&nbsp;pour&nbsp;développer&nbsp;notre&nbsp;réseau&nbsp;de&nbsp;clients.</p><h2>Tes&nbsp;missions</h2><ul><li>Prospecter&nbsp;et&nbsp;développer&nbsp;un&nbsp;portefeuille&nbsp;de&nbsp;clients&nbsp;sur&nbsp;ton&nbsp;secteur</li><li>Présenter&nbsp;et&nbsp;vendre&nbsp;notre&nbsp;gamme&nbsp;de&nbsp;produits&nbsp;CBD</li><li>Fidéliser&nbsp;les&nbsp;clients&nbsp;existants&nbsp;et&nbsp;développer&nbsp;leur&nbsp;chiffre&nbsp;d&#39;affaires</li><li>Négocier&nbsp;les&nbsp;commandes&nbsp;et&nbsp;suivre&nbsp;les&nbsp;relations&nbsp;commerciales</li><li>Assurer&nbsp;une&nbsp;présence&nbsp;terrain&nbsp;régulière&nbsp;et&nbsp;représenter&nbsp;l&#39;image&nbsp;de&nbsp;la&nbsp;marque</li></ul><h2>Ce&nbsp;que&nbsp;nous&nbsp;t&#39;offrons</h2><ul><li><strong>Rémunération&nbsp;très&nbsp;attractive</strong>&nbsp;:&nbsp;fixe&nbsp;+&nbsp;commissions&nbsp;motivantes</li><li><strong>Commissions&nbsp;déplafonnées</strong>&nbsp;:&nbsp;plus&nbsp;tu&nbsp;vends,&nbsp;plus&nbsp;tu&nbsp;gagnes</li><li><strong>Primes&nbsp;sur&nbsp;objectifs</strong></li><li>Possibilité&nbsp;d&#39;évolution&nbsp;rapide&nbsp;dans&nbsp;une&nbsp;entreprise&nbsp;en&nbsp;plein&nbsp;développement</li><li>Produits&nbsp;compétitifs&nbsp;et&nbsp;marché&nbsp;en&nbsp;forte&nbsp;croissance</li></ul><h2>Profil&nbsp;recherché</h2><ul><li>Tu&nbsp;es&nbsp;à&nbsp;l&#39;aise&nbsp;avec&nbsp;la&nbsp;prospection&nbsp;et&nbsp;la&nbsp;négociation</li><li>Tu&nbsp;es&nbsp;autonome,&nbsp;motivé(e)&nbsp;et&nbsp;orienté(e)&nbsp;résultats</li><li>Tu&nbsp;aimes&nbsp;être&nbsp;sur&nbsp;le&nbsp;terrain&nbsp;et&nbsp;rencontrer&nbsp;des&nbsp;clients</li><li>Une&nbsp;expérience&nbsp;en&nbsp;vente,&nbsp;CBD,&nbsp;vape,&nbsp;tabac&nbsp;ou&nbsp;produits&nbsp;bien-être&nbsp;est&nbsp;un&nbsp;plus&nbsp;(mais&nbsp;pas&nbsp;obligatoire)</li></ul><h2>Pourquoi&nbsp;nous&nbsp;rejoindre&nbsp;?</h2><ul><li>Un&nbsp;marché&nbsp;en&nbsp;pleine&nbsp;expansion</li><li>Une&nbsp;équipe&nbsp;jeune&nbsp;et&nbsp;dynamique</li><li>Des&nbsp;revenus&nbsp;directement&nbsp;liés&nbsp;à&nbsp;ta&nbsp;performance</li><li>La&nbsp;possibilité&nbsp;de&nbsp;construire&nbsp;un&nbsp;vrai&nbsp;réseau&nbsp;commercial</li></ul><h2>Intéressé(e)&nbsp;?</h2><p style=\"text-align: justify;\"><strong>Envoie-nous&nbsp;ton&nbsp;CV</strong>&nbsp;et&nbsp;rejoins&nbsp;une&nbsp;aventure&nbsp;commerciale&nbsp;où&nbsp;ton&nbsp;énergie&nbsp;et&nbsp;tes&nbsp;ventes&nbsp;font&nbsp;la&nbsp;différence.</p>"
+          }
+        ]
+      },
+      "isVisible": true
+    },
+    {
+      "id": "contact",
+      "type": "RecrutementContact",
+      "props": {
+        "title": "Envie d'en\nsavoir plus ?",
+        "text": "Un CV, une lettre de motivation ou simplement l'envie d'échanger ?\nContactez-nous, on vous répond avec plaisir."
+      },
+      "isVisible": true
+    }
+  ],
+  "meta": {
+    "title": "",
+    "description": ""
+  }
+}

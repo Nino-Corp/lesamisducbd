@@ -1,0 +1,57 @@
+{
+  "tiers": [
+    {
+      "id": "1791192575132",
+      "name": "La Graine",
+      "minSpent": 0,
+      "icon": "lucide:Sprout"
+    },
+    {
+      "id": "1791192601696",
+      "name": "La Racine",
+      "minSpent": 100,
+      "icon": "lucide:Leaf"
+    },
+    {
+      "id": "1791192618731",
+      "name": "Le Bourgeon",
+      "minSpent": 300,
+      "icon": "lucide:Flower"
+    },
+    {
+      "id": "1791192927550",
+      "name": "La Tige",
+      "minSpent": 800,
+      "icon": "lucide:Flower2"
+    },
+    {
+      "id": "1791192931510",
+      "name": "La Fleur",
+      "minSpent": 1500,
+      "icon": "IconStar"
+    },
+    {
+      "id": "1791192932230",
+      "name": "Le Trichome",
+      "minSpent": 2500,
+      "icon": "IconStar"
+    },
+    {
+      "id": "1791192933583",
+      "name": "La Récolte",
+      "minSpent": 5000,
+      "icon": "IconStar"
+    }
+  ],
+  "cardStyle": {
+    "logoText": "Les Amis du CBD Club",
+    "primaryColor": "#10b981",
+    "cardBackground1": "#112924",
+    "cardBackground2": "#1F4B40",
+    "textColor": "#ffffff"
+  },
+  "enabledGroups": [
+    3
+  ],
+  "ratio": 10
+}

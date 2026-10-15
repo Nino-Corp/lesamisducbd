@@ -5,7 +5,9 @@ import styles from './Users.module.css';
 import { 
     Key, ShieldCheck, Lock, Eye, EyeOff, Sparkles, 
     Check, X, UserPlus, Trash2, Users, AlertCircle, 
-    Calendar, CheckCircle2 
+    Calendar, CheckCircle2, Download, UploadCloud, Database, 
+    Archive, FileJson, RefreshCw, AlertTriangle, Layers,
+    ShoppingBag, Award, FileText, MapPin, RotateCcw
 } from 'lucide-react';
 
 /* ── Password Security Evaluator ── */
@@ -142,13 +144,154 @@ export default function AdminUsers() {
     const [modalError, setModalError] = useState('');
     const [copiedNotify, setCopiedNotify] = useState(false);
 
+    // ── Backup & Continuity State ──
+    const [backupStats, setBackupStats] = useState(null);
+    const [loadingBackupStats, setLoadingBackupStats] = useState(true);
+    const [downloadingBackup, setDownloadingBackup] = useState(false);
+    const [backupError, setBackupError] = useState('');
+
+    // Restore state
+    const [uploadedFile, setUploadedFile] = useState(null);
+    const [parsedBackup, setParsedBackup] = useState(null);
+    const [fileParseError, setFileParseError] = useState('');
+    const [isDragging, setIsDragging] = useState(false);
+    const [selectedModules, setSelectedModules] = useState({
+        builder: true,
+        vitrine: true,
+        loyalty: true,
+        content: true,
+        partners: true
+    });
+    const [restoring, setRestoring] = useState(false);
+    const [showConfirmRestore, setShowConfirmRestore] = useState(false);
+
     useEffect(() => {
         fetchUsers();
+        fetchBackupStats();
     }, []);
 
     const showSuccess = (msg) => {
         setSuccessMessage(msg);
         setTimeout(() => setSuccessMessage(''), 4000);
+    };
+
+    const fetchBackupStats = async () => {
+        try {
+            setLoadingBackupStats(true);
+            const res = await fetch('/api/admin/backup?preview=true');
+            if (res.ok) {
+                const data = await res.json();
+                if (data.meta?.summary) {
+                    setBackupStats(data.meta.summary);
+                }
+            }
+        } catch (e) {
+            console.error('Failed to load backup stats:', e);
+        } finally {
+            setLoadingBackupStats(false);
+        }
+    };
+
+    const handleDownloadBackup = async () => {
+        setDownloadingBackup(true);
+        setBackupError('');
+        try {
+            const res = await fetch('/api/admin/backup');
+            if (!res.ok) {
+                throw new Error('Erreur lors de la récupération de la sauvegarde');
+            }
+            const data = await res.json();
+            const dateStr = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 16);
+            const filename = `backup-lesamisducbd-${dateStr}.json`;
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showSuccess('Sauvegarde complète du site téléchargée avec succès (.json) !');
+        } catch (err) {
+            setBackupError(err.message || 'Impossible de télécharger la sauvegarde.');
+        } finally {
+            setDownloadingBackup(false);
+        }
+    };
+
+    const handleProcessFile = (file) => {
+        setFileParseError('');
+        if (!file) return;
+
+        if (!file.name.endsWith('.json')) {
+            setFileParseError('Veuillez sélectionner un fichier JSON valide (.json).');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const json = JSON.parse(e.target.result);
+                if (!json || typeof json !== 'object' || !json.data) {
+                    throw new Error("Ce fichier ne semble pas être une archive de sauvegarde valide Les Amis du CBD (clé 'data' introuvable).");
+                }
+
+                setUploadedFile({
+                    name: file.name,
+                    size: (file.size / 1024).toFixed(1) + ' Ko'
+                });
+                setParsedBackup(json);
+                
+                // Auto-configure selected modules based on content found
+                setSelectedModules({
+                    builder: Boolean(json.data.builder?.pages && Object.keys(json.data.builder.pages).length > 0),
+                    vitrine: Boolean(json.data.vitrine && (json.data.vitrine.config || json.data.vitrine.productOrder)),
+                    loyalty: Boolean(json.data.loyalty?.settings),
+                    content: Boolean(json.data.content && Object.keys(json.data.content).length > 0),
+                    partners: Boolean(Array.isArray(json.data.partners) && json.data.partners.length > 0)
+                });
+            } catch (err) {
+                setFileParseError(err.message || 'Fichier JSON invalide ou illisible.');
+                setUploadedFile(null);
+                setParsedBackup(null);
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    const handleExecuteRestore = async () => {
+        if (!parsedBackup) return;
+        setRestoring(true);
+        setBackupError('');
+        setShowConfirmRestore(false);
+
+        try {
+            const res = await fetch('/api/admin/backup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    backupData: parsedBackup,
+                    modules: selectedModules
+                })
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.error || 'Erreur lors de la restauration');
+            }
+
+            showSuccess(`Restauration réussie ! (${data.details?.join(', ') || 'Tous les modules sélectionnés'})`);
+            setUploadedFile(null);
+            setParsedBackup(null);
+            fetchBackupStats();
+        } catch (err) {
+            setBackupError(err.message);
+        } finally {
+            setRestoring(false);
+        }
     };
 
     const fetchUsers = async () => {
@@ -485,6 +628,307 @@ export default function AdminUsers() {
                 </div>
             </div>
 
+            {/* ── Section Sauvegardes & Plan de Continuité ── */}
+            <div className={styles.backupSection}>
+                <div className={styles.backupHeader}>
+                    <h2 className={styles.backupSectionTitle}>
+                        <Database size={24} color="#1F4B40" />
+                        Sauvegardes & Plan de Continuité (Backups)
+                    </h2>
+                    <p className={styles.backupSectionSubtitle}>
+                        Téléchargez une archive JSON complète en 1 clic contenant tout le contenu du site (pages du builder, réglages vitrine, fidélité), ou restaurez une sauvegarde précédente en cas de fausse manipulation d'un éditeur.
+                    </p>
+                </div>
+
+                <div className={styles.backupGrid}>
+                    {/* Card 1: 1-Click Export / Download */}
+                    <div className={styles.card}>
+                        <div className={styles.cardHeader}>
+                            <h3 className={styles.cardTitle}>
+                                <Download size={18} color="#1F4B40" />
+                                Sauvegarde & Export en 1 clic
+                            </h3>
+                            <span className={styles.backupBadgeRecommended}>Recommandé régulier</span>
+                        </div>
+
+                        <div className={styles.cardBody} style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+                            <div>
+                                <p style={{ margin: '0 0 1.25rem 0', fontSize: '0.88rem', color: '#475569', lineHeight: 1.5 }}>
+                                    Générez instantanément un fichier <code>.json</code> complet et autonome comprenant l'intégralité du site. Vous pouvez le stocker localement en toute sécurité ou le transférer.
+                                </p>
+
+                                <div className={styles.backupStatsGrid}>
+                                    <div className={styles.statTile}>
+                                        <div className={styles.statTileIcon}>
+                                            <Layers size={16} />
+                                        </div>
+                                        <div className={styles.statTileInfo}>
+                                            <span className={styles.statTileValue}>
+                                                {loadingBackupStats ? '...' : (backupStats?.builderPagesCount ?? 0)}
+                                            </span>
+                                            <span className={styles.statTileLabel}>Pages du Builder</span>
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.statTile}>
+                                        <div className={styles.statTileIcon}>
+                                            <ShoppingBag size={16} />
+                                        </div>
+                                        <div className={styles.statTileInfo}>
+                                            <span className={styles.statTileValue}>
+                                                {loadingBackupStats ? '...' : (backupStats?.hasVitrineConfig ? 'Actif' : 'Défaut')}
+                                            </span>
+                                            <span className={styles.statTileLabel}>Vitrine & Produits</span>
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.statTile}>
+                                        <div className={styles.statTileIcon}>
+                                            <Award size={16} />
+                                        </div>
+                                        <div className={styles.statTileInfo}>
+                                            <span className={styles.statTileValue}>
+                                                {loadingBackupStats ? '...' : (backupStats?.hasLoyaltySettings ? 'Configuré' : 'Défaut')}
+                                            </span>
+                                            <span className={styles.statTileLabel}>Fidélité VIP</span>
+                                        </div>
+                                    </div>
+
+                                    <div className={styles.statTile}>
+                                        <div className={styles.statTileIcon}>
+                                            <FileText size={16} />
+                                        </div>
+                                        <div className={styles.statTileInfo}>
+                                            <span className={styles.statTileValue}>
+                                                {loadingBackupStats ? '...' : (backupStats?.contentPagesCount ?? 0)}
+                                            </span>
+                                            <span className={styles.statTileLabel}>Pages CMS & Légal</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <button
+                                    type="button"
+                                    onClick={handleDownloadBackup}
+                                    disabled={downloadingBackup}
+                                    className={styles.btnDownloadBackup}
+                                >
+                                    {downloadingBackup ? (
+                                        <>
+                                            <RefreshCw size={18} className="spinAnimation" />
+                                            <span>Génération de l'archive en cours...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Download size={18} />
+                                            <span>Télécharger la sauvegarde complète (.json)</span>
+                                        </>
+                                    )}
+                                </button>
+
+                                <div className={styles.backupInfoNote}>
+                                    <Check size={14} color="#059669" />
+                                    <span>Export sécurisé, non-bloquant et direct sans coupure du site.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Card 2: Restore / Rollback */}
+                    <div className={styles.card}>
+                        <div className={styles.cardHeader}>
+                            <h3 className={styles.cardTitle}>
+                                <RotateCcw size={18} color="#1F4B40" />
+                                Restaurer depuis une sauvegarde
+                            </h3>
+                            <span className={styles.backupBadgeSafety}>Plan de secours</span>
+                        </div>
+
+                        <div className={styles.cardBody} style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+                            <div>
+                                {!uploadedFile ? (
+                                    <div>
+                                        <div
+                                            className={`${styles.dropzone} ${isDragging ? styles.dropzoneDragOver : ''}`}
+                                            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                                            onDragLeave={() => setIsDragging(false)}
+                                            onDrop={(e) => {
+                                                e.preventDefault();
+                                                setIsDragging(false);
+                                                if (e.dataTransfer.files?.[0]) {
+                                                    handleProcessFile(e.dataTransfer.files[0]);
+                                                }
+                                            }}
+                                            onClick={() => document.getElementById('backupFileInput')?.click()}
+                                        >
+                                            <input
+                                                id="backupFileInput"
+                                                type="file"
+                                                accept=".json,application/json"
+                                                style={{ display: 'none' }}
+                                                onChange={(e) => {
+                                                    if (e.target.files?.[0]) {
+                                                        handleProcessFile(e.target.files[0]);
+                                                    }
+                                                }}
+                                            />
+                                            <div className={styles.dropzoneIconWrapper}>
+                                                <UploadCloud size={24} />
+                                            </div>
+                                            <p className={styles.dropzoneText}>
+                                                Glissez-déposez un fichier de sauvegarde <code>.json</code>
+                                            </p>
+                                            <p className={styles.dropzoneSubtext}>
+                                                Ou cliquez pour parcourir vos fichiers
+                                            </p>
+                                        </div>
+
+                                        {fileParseError && (
+                                            <div className={styles.alertError} style={{ marginTop: '0.85rem', marginBottom: 0 }}>
+                                                <AlertCircle size={15} />
+                                                <span>{fileParseError}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div>
+                                        {/* File loaded banner */}
+                                        <div className={styles.fileLoadedCard}>
+                                            <div className={styles.fileLoadedInfo}>
+                                                <div className={styles.fileLoadedIcon}>
+                                                    <FileJson size={20} />
+                                                </div>
+                                                <div>
+                                                    <p className={styles.fileLoadedName}>{uploadedFile.name}</p>
+                                                    <p className={styles.fileLoadedMeta}>
+                                                        Taille : {uploadedFile.size} • Export du {parsedBackup?.meta?.generatedAt ? new Date(parsedBackup.meta.generatedAt).toLocaleString('fr-FR') : 'Date inconnue'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setUploadedFile(null);
+                                                    setParsedBackup(null);
+                                                    setFileParseError('');
+                                                }}
+                                                className={styles.btnRemoveFile}
+                                                title="Retirer ce fichier"
+                                            >
+                                                <X size={18} />
+                                            </button>
+                                        </div>
+
+                                        {/* Selectable Modules to Restore */}
+                                        <div className={styles.modulesSection}>
+                                            <span className={styles.modulesSectionLabel}>Contenus à restaurer :</span>
+                                            <div className={styles.moduleCheckboxList}>
+                                                <label className={styles.moduleCheckboxItem}>
+                                                    <div className={styles.moduleCheckboxLabel}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedModules.builder}
+                                                            onChange={(e) => setSelectedModules({ ...selectedModules, builder: e.target.checked })}
+                                                            disabled={!parsedBackup?.data?.builder?.pages}
+                                                        />
+                                                        <span>Page Builder</span>
+                                                    </div>
+                                                    <span className={styles.moduleBadgeCount}>
+                                                        {parsedBackup?.data?.builder?.pages ? `${Object.keys(parsedBackup.data.builder.pages).length} pages` : '0'}
+                                                    </span>
+                                                </label>
+
+                                                <label className={styles.moduleCheckboxItem}>
+                                                    <div className={styles.moduleCheckboxLabel}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedModules.vitrine}
+                                                            onChange={(e) => setSelectedModules({ ...selectedModules, vitrine: e.target.checked })}
+                                                        />
+                                                        <span>Vitrine & Produits</span>
+                                                    </div>
+                                                    <span className={styles.moduleBadgeCount}>
+                                                        {parsedBackup?.data?.vitrine ? 'Inclus' : '0'}
+                                                    </span>
+                                                </label>
+
+                                                <label className={styles.moduleCheckboxItem}>
+                                                    <div className={styles.moduleCheckboxLabel}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedModules.loyalty}
+                                                            onChange={(e) => setSelectedModules({ ...selectedModules, loyalty: e.target.checked })}
+                                                            disabled={!parsedBackup?.data?.loyalty?.settings}
+                                                        />
+                                                        <span>Fidélité VIP</span>
+                                                    </div>
+                                                    <span className={styles.moduleBadgeCount}>
+                                                        {parsedBackup?.data?.loyalty?.settings ? 'Inclus' : '0'}
+                                                    </span>
+                                                </label>
+
+                                                <label className={styles.moduleCheckboxItem}>
+                                                    <div className={styles.moduleCheckboxLabel}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedModules.content}
+                                                            onChange={(e) => setSelectedModules({ ...selectedModules, content: e.target.checked })}
+                                                            disabled={!parsedBackup?.data?.content}
+                                                        />
+                                                        <span>Pages CMS (Accueil, Légal...)</span>
+                                                    </div>
+                                                    <span className={styles.moduleBadgeCount}>
+                                                        {parsedBackup?.data?.content ? `${Object.keys(parsedBackup.data.content).length} pages` : '0'}
+                                                    </span>
+                                                </label>
+
+                                                <label className={styles.moduleCheckboxItem}>
+                                                    <div className={styles.moduleCheckboxLabel}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedModules.partners}
+                                                            onChange={(e) => setSelectedModules({ ...selectedModules, partners: e.target.checked })}
+                                                            disabled={!Array.isArray(parsedBackup?.data?.partners) || parsedBackup.data.partners.length === 0}
+                                                        />
+                                                        <span>Partenaires / Buralistes</span>
+                                                    </div>
+                                                    <span className={styles.moduleBadgeCount}>
+                                                        {Array.isArray(parsedBackup?.data?.partners) ? `${parsedBackup.data.partners.length} adresses` : '0'}
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className={styles.warningAlertBox}>
+                                            <AlertTriangle size={18} color="#d97706" style={{ flexShrink: 0, marginTop: 2 }} />
+                                            <span>
+                                                Les modifications actuelles pour les modules sélectionnés seront remplacées par celles du fichier.
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div>
+                                {uploadedFile && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmRestore(true)}
+                                        disabled={restoring || !Object.values(selectedModules).some(Boolean)}
+                                        className={styles.btnRestore}
+                                    >
+                                        <RotateCcw size={16} />
+                                        <span>Restaurer les données sélectionnées</span>
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* ── Modal: Change / Reset Password ── */}
             {editUser && (
                 <div className={styles.modalOverlay} onClick={() => setEditUser(null)}>
@@ -610,6 +1054,57 @@ export default function AdminUsers() {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* ── Modal: Confirmation Restauration ── */}
+            {showConfirmRestore && (
+                <div className={styles.modalOverlay} onClick={() => setShowConfirmRestore(false)}>
+                    <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h3 className={styles.modalTitle} style={{ color: '#b45309' }}>
+                                <AlertTriangle size={20} color="#b45309" />
+                                Confirmer la restauration
+                            </h3>
+                            <button 
+                                onClick={() => setShowConfirmRestore(false)} 
+                                className={styles.closeBtn}
+                                title="Fermer"
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
+
+                        <div className={styles.modalBody}>
+                            <p style={{ margin: 0, color: '#334155', fontSize: '0.92rem', lineHeight: 1.5 }}>
+                                Êtes-vous sûr de vouloir restaurer les éléments cochés à partir du fichier <strong>{uploadedFile?.name}</strong> ?
+                            </p>
+
+                            <div style={{ padding: '12px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '8px', color: '#991b1b', fontSize: '0.85rem', lineHeight: 1.4 }}>
+                                <strong>⚠️ Attention :</strong> Les contenus actuellement en ligne pour les modules sélectionnés seront immédiatement écrasés et remplacés par ceux de cette sauvegarde.
+                            </div>
+                        </div>
+
+                        <div className={styles.modalFooter}>
+                            <button 
+                                type="button" 
+                                onClick={() => setShowConfirmRestore(false)}
+                                className={styles.btnCancel}
+                            >
+                                Annuler
+                            </button>
+                            <button 
+                                type="button" 
+                                onClick={handleExecuteRestore}
+                                disabled={restoring}
+                                className={styles.btnPrimary}
+                                style={{ background: '#b45309', padding: '0.75rem 1.4rem' }}
+                            >
+                                <RotateCcw size={15} />
+                                {restoring ? 'Restauration en cours...' : 'Oui, appliquer la restauration'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

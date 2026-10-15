@@ -1,0 +1,196 @@
+{
+  "sections": [
+    {
+      "id": "hero",
+      "type": "TransparenceHeader",
+      "props": {
+        "title": "Transparence",
+        "subtitle": "La qualité sans compromis."
+      },
+      "isVisible": true
+    },
+    {
+      "id": "quote",
+      "type": "TransparenceQuote",
+      "props": {
+        "image": "/images/nelson.png",
+        "text": "Nous, Les Amis du CBD sommes de vrais passionnés du cannabis !\nOr nous étions extrêmement déçus de voir le marché français inondé par des produits de qualité médiocre, vendus bien souvent à des prix délirants !\nNous nous sommes donc mis au travail, et nous avons été surpris de voir ce qui était possible.",
+        "author": "Nelson - Les Amis du CBD"
+      },
+      "isVisible": true
+    },
+    {
+      "id": "certificats",
+      "type": "TransparenceCertificates",
+      "props": {
+        "title": "Certificats d'analyses :",
+        "items": [
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1782992606/lesamisducbd/partners/i3esvrk5eyfdv4gehgkw.pdf",
+            "alt": "Nouvelle Analyse",
+            "label": "PLS - 211"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1782992721/lesamisducbd/partners/ycrrx7kjidqjhtacnrxb.pdf",
+            "alt": "Nouvelle Analyse",
+            "label": "CHS (EDCH-CHA30)"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1773686737/lesamisducbd/uploads/nqwijrkcqhj938fc6ooz.jpg",
+            "alt": "Nouvelle Analyse",
+            "label": "CAGH B02T4FELACA"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1773686743/lesamisducbd/uploads/enha0ea8xiugoc0lftx5.jpg",
+            "alt": "Nouvelle Analyse",
+            "label": "114GH B02T4CARA114"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1773686746/lesamisducbd/uploads/xgre9ws14bpf3oszlvem.jpg",
+            "alt": "Nouvelle Analyse",
+            "label": "B02T4TIBCCK"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1773686750/lesamisducbd/uploads/mzkksfcqj8rtlvwly0hl.jpg",
+            "alt": "Nouvelle Analyse",
+            "label": "B02A4MARAWM"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1773686754/lesamisducbd/uploads/rwqzx9n4m5rosz9xyonm.jpg",
+            "alt": "Nouvelle Analyse",
+            "label": "LMGH B02T4CARALM"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1773686760/lesamisducbd/uploads/aqsat3fk4qwdojildbwn.jpg",
+            "alt": "Nouvelle Analyse",
+            "label": "F154D347601"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1773686764/lesamisducbd/uploads/jcocgc1bobyzqjg0kojg.jpg",
+            "alt": "Nouvelle Analyse",
+            "label": "F1545D348801"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1773686769/lesamisducbd/uploads/ukkikqsnqwnvur3k2i5u.jpg",
+            "alt": "Nouvelle Analyse",
+            "label": "B02A4 KOMARW"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1773686776/lesamisducbd/uploads/xiimkky3eepd5qnmkrof.jpg",
+            "alt": "Nouvelle Analyse",
+            "label": "SKUNK #1 : 1074101452250"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1782992818/lesamisducbd/partners/bo2wdujpktd5n4xl1aac.pdf",
+            "alt": "Nouvelle Analyse",
+            "label": "O/F1/X/C/686"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1782992556/lesamisducbd/partners/hfgt8jyiwk0nihh6tcvw.pdf",
+            "alt": "Nouvelle Analyse",
+            "label": "PLS - 211"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1782992448/lesamisducbd/partners/kb0xvsfose1kwxztz4mj.pdf",
+            "alt": "Nouvelle Analyse",
+            "label": "SLR (EDCH-XFI30)"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1777024479/lesamisducbd/uploads/awlo5k7dfcxdgbimsx3r.pdf",
+            "alt": "Nouvelle Analyse",
+            "label": "Charas 260220623"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1782992950/lesamisducbd/partners/xksalx2khxr0hlgwi9lg.pdf",
+            "alt": "Nouvelle Analyse",
+            "label": "Super Skunk 260109606"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1783525742/lesamisducbd/partners/w06zmed72r0lckaee43m.jpg",
+            "alt": "Certificat",
+            "label": "Sativa Petites Fleurs : 1174100347693"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1783525814/lesamisducbd/partners/wgb7tl6nio08ymifeiae.jpg",
+            "alt": "Certificat",
+            "label": "Amnésia Haze 4-2434-09001/01"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1783525869/lesamisducbd/partners/gygj3txwgluvum7ft16b.jpg",
+            "alt": "Certificat",
+            "label": "Gorilla : B29894202200001"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1783526863/lesamisducbd/partners/rlojwfwa1nejtswydfc9.jpg",
+            "alt": "Certificat",
+            "label": "L.A California L:F1545D320014"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1783527004/lesamisducbd/partners/op9pusdhwwldn8qjzm9z.jpg",
+            "alt": "Certificat",
+            "label": "N.Y Diesel H-24-096/0277"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1783527013/lesamisducbd/partners/uhd0te02zeykvgncrhth.jpg",
+            "alt": "Certificat",
+            "label": "Amsterdam Red Cherry L:B29066202200002"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1783527020/lesamisducbd/partners/sfqdzefmcwqerljrb08p.jpg",
+            "alt": "Certificat",
+            "label": "Thai Mango L:F1545D341732"
+          },
+          {
+            "src": "https://res.cloudinary.com/dasqyp35f/image/upload/v1788365865/lesamisducbd/partners/cotzyakpijh25wdstxd9.png",
+            "alt": "Certificat",
+            "label": "LEMON HAZE : B334406202100001"
+          },
+          {
+            "src": "",
+            "alt": "Certificat",
+            "label": "Nouveau certificat"
+          }
+        ]
+      },
+      "isVisible": true
+    },
+    {
+      "id": "section1",
+      "type": "TransparenceFeature",
+      "props": {
+        "title": "Meilleure qualité",
+        "icon": "star",
+        "col1": {
+          "title": "Culture 100 % naturelle",
+          "text": "Nos plantes sont cultivées en serre sur sol vivant :\n- Ni engrais chimiques, ni pesticides ou insecticides.\n- Sous la lumière naturelle du soleil.\n- Boostées seulement avec des engrais organiques type compost et guano de chauve-souris."
+        },
+        "col2": {
+          "title": "< 0,3% de THC, sans lavage !",
+          "text": "Point essentiel pour la qualité finale, nos fleurs ont naturellement moins de 0,3% de THC.\nElles n'ont donc pas besoin de \"lavage\" avec des produits chimiques afin de baisser le taux de THC.\nAinsi, nous préservons la couleur, les arômes et les parfums originaux."
+        }
+      },
+      "isVisible": true
+    },
+    {
+      "id": "section2",
+      "type": "TransparenceFeature",
+      "props": {
+        "title": "Moins cher",
+        "icon": "badgeEuro",
+        "col1": {
+          "title": "Le naturel, c'est gratuit !",
+          "text": "Comme nos fleurs sont cultivées naturellement, nous économisons :\n- Pas d'engrais ou d'autres produits chimiques coûteux.\n- Pas de matériel hi-tech (ni système hydroponique, ni éclairage artificiel).\n- Pas de facture d'électricité.\n- Pas de \"lavage\" chimique pour baisser le taux de THC.\n- Donc pas besoin de parfumer artificiellement les plantes par la suite."
+        },
+        "col2": {
+          "title": "Simplicité :",
+          "text": "Nous comptons sur la quantité et nous pratiquons des marges raisonnables.\nAvec Les Amis du CBD, vous n'avez pas 200 références.\nSeulement 4 variétés au top, disponibles en 4 ou 10 grammes !\nAinsi :\n- La gestion de vos stocks est plus facile.\n- Vos commandes sont rapides à faire,\n- Vous proposez un prix imbattable que cela soit vis-à-vis de vos concurrents locaux, comme de la concurrence en ligne !"
+        }
+      },
+      "isVisible": true
+    }
+  ],
+  "meta": {
+    "title": "",
+    "description": ""
+  }
+}

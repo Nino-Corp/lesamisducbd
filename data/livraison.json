@@ -1,0 +1,30 @@
+{
+  "sections": [
+    {
+      "id": "hero",
+      "type": "ContentHero",
+      "props": {
+        "title": "Notre processus  de livraison",
+        "subtitle": "Simple, rapide et discret."
+      },
+      "isVisible": true
+    },
+    {
+      "id": "deliverysteps",
+      "type": "DeliverySteps",
+      "props": {}
+    },
+    {
+      "id": "content",
+      "type": "RichText",
+      "props": {
+        "content": "<h2 style=\"text-align: center;\">Expédition&nbsp;de&nbsp;votre&nbsp;colis</h2><p>Pour&nbsp;les&nbsp;commandes&nbsp;passées&nbsp;avant&nbsp;12h,&nbsp;le&nbsp;colis&nbsp;est&nbsp;expédié&nbsp;le&nbsp;jour&nbsp;même.&nbsp;Cependant,&nbsp;notez&nbsp;que&nbsp;les&nbsp;délais&nbsp;de&nbsp;préparation&nbsp;peuvent&nbsp;être&nbsp;allongés&nbsp;lors&nbsp;de&nbsp;fortes&nbsp;affluences&nbsp;de&nbsp;commande&nbsp;ou&nbsp;de&nbsp;situation&nbsp;exceptionnelle.</p><p>Quel&nbsp;que&nbsp;soit&nbsp;le&nbsp;mode&nbsp;de&nbsp;livraison&nbsp;choisi,&nbsp;nous&nbsp;vous&nbsp;envoyons&nbsp;un&nbsp;lien&nbsp;pour&nbsp;suivre&nbsp;votre&nbsp;colis&nbsp;en&nbsp;ligne.</p><p>L&#39;envoi&nbsp;est&nbsp;<strong>très&nbsp;discret</strong>,&nbsp;le&nbsp;sachet&nbsp;est&nbsp;opaque&nbsp;et&nbsp;le&nbsp;colis&nbsp;n&#39;a&nbsp;pas&nbsp;d&#39;information&nbsp;permettant&nbsp;de&nbsp;savoir&nbsp;ce&nbsp;qu&#39;il&nbsp;y&nbsp;a&nbsp;dedans.</p>"
+      },
+      "isVisible": true
+    }
+  ],
+  "meta": {
+    "title": "",
+    "description": ""
+  }
+}

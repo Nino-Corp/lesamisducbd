@@ -1,0 +1,32 @@
+{
+  "carousel": [
+    {
+      "id": 1,
+      "title": "L'Essentiel du CBD",
+      "subtitle": "Découvrez notre sélection rigoureuse, pensée pour votre bien-être au quotidien.",
+      "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1790943190/lesamisducbd/uploads/xvmvsniumd3lb4uwqnbu.png",
+      "buttonText": "Notre histoire",
+      "buttonLink": "/essentiel"
+    },
+    {
+      "id": 2,
+      "title": "La Qualité Premium",
+      "subtitle": "Des fleurs et résines exceptionnelles, cultivées avec passion pour des arômes uniques.",
+      "image": "/images/carousel_nature_cbd.png",
+      "buttonText": "Voir nos fleurs",
+      "buttonLink": "/produits?cat=fleur"
+    },
+    {
+      "id": 3,
+      "title": "Bien-être & Sérénité",
+      "subtitle": "Des conseils experts pour intégrer nos produits à votre routine détente.",
+      "image": "/images/carousel_wellness_cbd.png",
+      "buttonText": "Nos conseils",
+      "buttonLink": "/usages"
+    }
+  ],
+  "premiumBadge": {
+    "enabled": true,
+    "text": "Qualité Premium"
+  }
+}

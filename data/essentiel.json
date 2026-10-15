@@ -1,0 +1,118 @@
+{
+  "sections": [
+    {
+      "id": "hero",
+      "type": "ContentHero",
+      "props": {
+        "imageSrc": "/images/about/team.webp",
+        "imagePosition": "center 35%",
+        "imageAlt": "L'équipe Les Amis du CBD",
+        "title": "L'Essentiel",
+        "overlayOpacity": 50,
+        "subtitle": ""
+      },
+      "isVisible": true
+    },
+    {
+      "id": "intro",
+      "type": "EssentielIntro",
+      "props": {
+        "items": [
+          "Nous sommes une bande d'amis d'enfance, passionnés par le CBD et convaincus qu'il doit être simple, accessible et de qualité.",
+          "Chez Les Amis du CBD, aucune étiquette compliquée, ni de noms artificiels, nous on utilise un vocabulaire du quotidien.",
+          "Notre aventure, c'est avant tout une histoire d'amis, de partage et de sincérité, avec nos partenaires et nos clients."
+        ]
+      },
+      "isVisible": true
+    },
+    {
+      "id": "legal",
+      "type": "EssentielCarousel",
+      "props": {
+        "title": "CBD : transparence,<br />légalité et ce qu'il faut<br />vraiment savoir.",
+        "intro": "Le CBD est partout. Mais entre informations approximatives, promesses exagérées et discours flous, il devient difficile de s'y retrouver. Cette page a un seul objectif : vous donner des informations claires, vérifiées et conformes à la réglementation française, pour consommer le CBD sans confusion.",
+        "items": [
+          {
+            "title": "Le CBD est-il légal en France ?",
+            "description": "Oui, le CBD est légal en France, à condition de respecter un cadre réglementaire strict.\nPour être autorisé à la vente et à la consommation, un produit à base de CBD doit impérativement :\n• contenir un taux de THC inférieur ou égal à 0,3 %\n• être issu de variétés de Cannabis sativa L. autorisées",
+            "image": "/images/about/legal.webp"
+          },
+          {
+            "title": "Pourquoi les analyses en laboratoire sont essentielles ?",
+            "description": "Les analyses de laboratoire ne sont pas un argument marketing.\nElles sont une garantie.\nChaque analyse permet de vérifier le taux réel de THC et la conformité légale du produit.",
+            "image": "/images/about/analysis.webp"
+          },
+          {
+            "title": "CBD et THC : deux molécules, deux effets très différents :",
+            "description": "Le CBD n'est pas psychotrope et est autorisé à la vente.\nLe THC est psychotrope et strictement réglementé.",
+            "image": "/images/about/molecules.webp"
+          }
+        ]
+      },
+      "isVisible": true
+    },
+    {
+      "id": "culture",
+      "type": "EssentielCarousel",
+      "props": {
+        "title": "Culture naturelle : ce que cela change<br />vraiment.",
+        "intro": "La manière dont est planté et cultivé influence directement sa qualité finale. Une culture naturelle permet :",
+        "items": [
+          {
+            "title": "Culture naturelle : ce que cela change vraiment :",
+            "description": "Une culture naturelle permet de préserver les arômes d'origine et d'éviter les résidus chimiques.",
+            "image": "/images/about/culture_1.webp"
+          },
+          {
+            "title": "Le \"lavage\" du CBD : une pratique méconnue.",
+            "description": "Cette pratique peut altérer les arômes, modifier la couleur et appauvrir le profil naturel de la fleur.",
+            "image": "/images/about/culture_2.webp"
+          },
+          {
+            "title": "CBD pas cher : ce que cela veut vraiment dire.",
+            "description": "Une production simple, naturelle et maîtrisée permet de proposer un CBD accessible, sans sacrifier la qualité.",
+            "image": "/images/about/culture_3.webp"
+          }
+        ]
+      },
+      "isVisible": true
+    },
+    {
+      "id": "essential",
+      "type": "EssentielPoints",
+      "props": {
+        "items": [
+          "Le CBD est légal en France sous conditions strictes.",
+          "Le CBD ne doit jamais être confondu avec des produits stupéfiants.",
+          "La culture influence directement la qualité.",
+          "La transparence est le meilleur indicateur de confiance."
+        ]
+      },
+      "isVisible": true
+    },
+    {
+      "id": "quote",
+      "type": "Quote",
+      "props": {
+        "text": "\"Comprendre avant d'acheter.<br/>Explorer nos articles pédagogiques.<br/>Découvrir nos produits en toute confiance.\"",
+        "author": "Nelson — Les Amis du CBD"
+      },
+      "isVisible": true
+    },
+    {
+      "id": "joinus",
+      "type": "JoinUs",
+      "props": {
+        "title": "Nous rejoindre",
+        "buttonLabel": "Venez par ici",
+        "buttonLink": "/recrutement",
+        "text": "<p>Tu&nbsp;penses&nbsp;avoir&nbsp;le&nbsp;profil&nbsp;pour&nbsp;rejoindre&nbsp;l&#39;équipe&nbsp;?&nbsp;On&nbsp;attend&nbsp;ta&nbsp;candidature&nbsp;!</p>",
+        "isVisible": true
+      }
+    }
+  ],
+  "meta": {
+    "title": "",
+    "description": ""
+  }
+}
