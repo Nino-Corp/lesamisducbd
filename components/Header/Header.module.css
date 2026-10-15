@@ -42,15 +42,18 @@
 
 @media (max-width: 1024px) {
     .header {
-        padding: 5px;
+        top: 10px;
+        padding: 0;
         width: 100%;
-        /* Ensure full width wrapper */
         left: 0;
+        display: flex;
+        justify-content: center;
     }
 
     .container {
-        /* Allow container to fill the available space minus padding */
         width: 100%;
+        max-width: var(--container-width);
+        padding: 0 16px;
     }
 
     .mobileToggle {
@@ -123,12 +126,6 @@
     /* Remove shadow from wrapper */
 }
 
-.container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-}
 
 /* ... Header Styles ... */
 

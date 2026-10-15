@@ -21,6 +21,12 @@
   --container-width: clamp(320px, 96%, 1800px);
 }
 
+@media (max-width: 1024px) {
+  :root {
+    --container-width: calc(100% - 20px);
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
