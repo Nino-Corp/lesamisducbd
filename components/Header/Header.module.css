@@ -57,11 +57,12 @@
     }
 
     .mobileToggle {
-        display: block;
-        padding: 5px;
-        /* Ensure click area */
-        margin-right: 10px;
-        /* Space from logo if needed */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px;
+        margin-right: 0;
+        z-index: 2;
     }
 
     .nav {
@@ -604,12 +605,6 @@
     .userName {
         display: none;
     }
-    .logo {
-        flex: none;
-    }
-    .actions {
-        flex: none;
-    }
 }
 
 .loggedInBtn {
@@ -658,11 +653,75 @@
     font-style: italic;
 }
 
+.logo a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+
 .logoImage {
     height: 40px;
     width: auto;
     object-fit: contain;
     display: block;
+    transition: height 0.3s ease;
+}
+
+.header.scrolled .logoImage {
+    height: 34px;
+}
+
+@media (max-width: 1024px) {
+    .logo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        z-index: 1;
+        pointer-events: auto;
+        max-width: calc(100% - 150px);
+    }
+
+    .logoImage {
+        height: 32px;
+        max-width: 100%;
+        width: auto;
+        object-fit: contain;
+    }
+
+    .header.scrolled .logoImage {
+        height: 28px;
+    }
+
+    .actions {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-left: auto;
+        z-index: 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        max-width: calc(100% - 130px);
+    }
+
+    .logoImage {
+        height: 28px;
+    }
+
+    .actions {
+        gap: 10px;
+    }
 }
 
 /* Cart Badge & Button */
