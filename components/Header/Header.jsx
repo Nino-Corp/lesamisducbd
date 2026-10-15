@@ -342,74 +342,8 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
                             </button>
                         </div>
 
-                        {/* Scrollable Content */}
-                        <div className={styles.mobileSidebarContent}>
-                            {/* 2. Account / Welcome Card */}
-                            {isAuthenticated ? (
-                                <div className={styles.sidebarAccountCard}>
-                                    <div className={styles.accountCardTop}>
-                                        <div className={styles.accountAvatar}>
-                                            <User size={18} />
-                                            <span className={styles.onlineDot} />
-                                        </div>
-                                        <div className={styles.accountDetails}>
-                                            <span className={styles.accountGreeting}>Bonjour,</span>
-                                            <span className={styles.accountName}>
-                                                {user?.name || user?.email?.split('@')[0]}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {loyaltyData && (
-                                        <Link 
-                                            href="/account?tab=rewards" 
-                                            className={styles.sidebarLoyaltyBadge}
-                                            onClick={() => setIsMenuOpen(false)}
-                                        >
-                                            <Gift size={15} className={styles.sidebarLoyaltyIcon} />
-                                            <span>
-                                                <strong>{loyaltyData.points_available ?? 0} pts VIP</strong>
-                                                {loyaltyData.value_available ? ` • ${loyaltyData.value_available.toFixed(2)}€` : ''}
-                                            </span>
-                                            <ArrowRight size={13} className={styles.sidebarLoyaltyArrow} />
-                                        </Link>
-                                    )}
-
-                                    <Link 
-                                        href="/account" 
-                                        className={styles.accountActionLink}
-                                        onClick={() => setIsMenuOpen(false)}
-                                    >
-                                        <span>Mon Espace Client</span>
-                                        <ArrowRight size={14} />
-                                    </Link>
-                                </div>
-                            ) : (
-                                <div className={styles.sidebarGuestCard}>
-                                    <div className={styles.guestCardHeader}>
-                                        <div className={styles.guestSparkleIcon}>
-                                            <Sparkles size={18} color="#00FFC2" />
-                                        </div>
-                                        <div>
-                                            <div className={styles.guestTitle}>Bienvenue !</div>
-                                            <div className={styles.guestSubtitle}>Rejoignez le club fidélité & gérez vos commandes</div>
-                                        </div>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        className={styles.sidebarLoginBtn}
-                                        onClick={() => {
-                                            setIsMenuOpen(false);
-                                            setIsLoginOpen(true);
-                                        }}
-                                    >
-                                        <User size={16} />
-                                        <span>Connexion / Inscription</span>
-                                    </button>
-                                </div>
-                            )}
-
-                            {/* 3. Search Quick Action */}
+                        {/* 2. Minimalist Search Bar */}
+                        <div className={styles.sidebarSearchWrapper}>
                             <button
                                 type="button"
                                 className={styles.sidebarSearchBtn}
@@ -418,126 +352,178 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
                                     setIsSearchOpen(true);
                                 }}
                             >
-                                <Search size={16} />
-                                <span>Rechercher un produit...</span>
+                                <Search size={15} />
+                                <span>Rechercher...</span>
                             </button>
+                        </div>
 
-                            {/* 4. Navigation Menu List with Category Icons */}
-                            <div className={styles.sidebarNavGroup}>
-                                <div className={styles.sidebarSectionTitle}>Explorer le catalogue</div>
-                                <ul className={styles.sidebarNavList}>
-                                    {menuItems && menuItems.map((item, index) => {
-                                        const hasChildren = item.children && item.children.length > 0;
-                                        const isOpen = mobileDropdown === index;
-                                        return (
-                                            <li key={index} className={styles.sidebarNavItem}>
-                                                {hasChildren ? (
-                                                    <>
-                                                        <button
-                                                            type="button"
-                                                            className={`${styles.sidebarNavLink} ${isOpen ? styles.sidebarNavOpen : ''}`}
-                                                            onClick={() => setMobileDropdown(isOpen ? null : index)}
-                                                        >
-                                                            <span className={styles.sidebarNavLeft}>
-                                                                <span className={styles.sidebarNavIcon}>
-                                                                    {getItemIcon(item)}
-                                                                </span>
-                                                                <span className={styles.sidebarNavLabel}>{item.label}</span>
-                                                            </span>
-                                                            <ChevronDown 
-                                                                size={18} 
-                                                                className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`} 
-                                                            />
-                                                        </button>
-                                                        {isOpen && (
-                                                            <ul className={styles.sidebarSubmenu}>
-                                                                {item.children.map((child, ci) => (
-                                                                    <li key={ci}>
-                                                                        <Link
-                                                                            href={child.href}
-                                                                            className={styles.sidebarSublink}
-                                                                            onClick={() => {
-                                                                                setIsMenuOpen(false);
-                                                                                setMobileDropdown(null);
-                                                                            }}
-                                                                        >
-                                                                            <span>{child.label}</span>
-                                                                            <ArrowRight size={13} className={styles.sublinkArrow} />
-                                                                        </Link>
-                                                                    </li>
-                                                                ))}
-                                                            </ul>
-                                                        )}
-                                                    </>
-                                                ) : (
-                                                    <Link
-                                                        href={item.href}
-                                                        className={styles.sidebarNavLink}
-                                                        onClick={() => setIsMenuOpen(false)}
+                        {/* 3. Account & Loyalty Strip */}
+                        <div className={styles.sidebarAccountBar}>
+                            {isAuthenticated ? (
+                                <>
+                                    <Link 
+                                        href="/account" 
+                                        className={styles.sidebarAccountName}
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        <User size={15} />
+                                        <span>Bonjour, <strong>{user?.name?.split(' ')[0] || user?.email?.split('@')[0]}</strong></span>
+                                    </Link>
+                                    {loyaltyData && (
+                                        <Link 
+                                            href="/account?tab=rewards" 
+                                            className={styles.sidebarLoyaltyChip}
+                                            onClick={() => setIsMenuOpen(false)}
+                                            title="Mes récompenses fidélité"
+                                        >
+                                            <Gift size={13} />
+                                            <span>
+                                                {loyaltyData.points_available ?? 0} pts VIP
+                                                {loyaltyData.value_available ? ` • ${loyaltyData.value_available.toFixed(2)}€` : ''}
+                                            </span>
+                                        </Link>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <button
+                                        type="button"
+                                        className={styles.sidebarGuestBtn}
+                                        onClick={() => {
+                                            setIsMenuOpen(false);
+                                            setIsLoginOpen(true);
+                                        }}
+                                    >
+                                        <User size={15} />
+                                        <span>Connexion / Inscription</span>
+                                    </button>
+                                    <span className={styles.sidebarGuestHint}>Club fidélité & remises</span>
+                                </>
+                            )}
+                        </div>
+
+                        {/* 4. Main Navigation (Clean, bold editorial links) */}
+                        <nav className={styles.sidebarNav}>
+                            <ul className={styles.sidebarNavList}>
+                                {menuItems && menuItems.map((item, index) => {
+                                    const hasChildren = item.children && item.children.length > 0;
+                                    const isOpen = mobileDropdown === index;
+                                    return (
+                                        <li key={index} className={styles.sidebarNavItem}>
+                                            {hasChildren ? (
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        className={`${styles.sidebarNavLink} ${isOpen ? styles.sidebarNavOpen : ''}`}
+                                                        onClick={() => setMobileDropdown(isOpen ? null : index)}
                                                     >
-                                                        <span className={styles.sidebarNavLeft}>
-                                                            <span className={styles.sidebarNavIcon}>
-                                                                {getItemIcon(item)}
-                                                            </span>
-                                                            <span className={styles.sidebarNavLabel}>{item.label}</span>
-                                                        </span>
-                                                        <ArrowRight size={15} className={styles.sidebarArrow} />
-                                                    </Link>
-                                                )}
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </div>
+                                                        <span>{item.label}</span>
+                                                        <ChevronDown 
+                                                            size={16} 
+                                                            className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`} 
+                                                        />
+                                                    </button>
+                                                    {isOpen && (
+                                                        <ul className={styles.sidebarSubmenu}>
+                                                            {item.children.map((child, ci) => (
+                                                                <li key={ci}>
+                                                                    <Link
+                                                                        href={child.href}
+                                                                        className={styles.sidebarSublink}
+                                                                        onClick={() => {
+                                                                            setIsMenuOpen(false);
+                                                                            setMobileDropdown(null);
+                                                                        }}
+                                                                    >
+                                                                        {child.label}
+                                                                    </Link>
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <Link
+                                                    href={item.href}
+                                                    className={styles.sidebarNavLink}
+                                                    onClick={() => setIsMenuOpen(false)}
+                                                >
+                                                    <span>{item.label}</span>
+                                                </Link>
+                                            )}
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </nav>
 
-                            {/* 5. Cart Direct Link */}
-                            <button
-                                type="button"
-                                className={styles.sidebarCartRow}
-                                onClick={() => {
-                                    setIsMenuOpen(false);
-                                    setIsCartOpen(true);
-                                }}
-                            >
-                                <span className={styles.sidebarNavLeft}>
-                                    <span className={styles.sidebarNavIcon}>
-                                        <ShoppingBag size={18} />
-                                    </span>
-                                    <span className={styles.sidebarNavLabel}>Mon Panier</span>
-                                </span>
-                                {mounted && cartCount > 0 ? (
-                                    <span className={styles.sidebarCartBadge}>{cartCount} article{cartCount > 1 ? 's' : ''}</span>
-                                ) : (
-                                    <span className={styles.sidebarCartEmpty}>0 article</span>
-                                )}
-                            </button>
-
-                            {/* 6. Reassurance Guarantee Section */}
-                            <div className={styles.sidebarReassurance}>
-                                <div className={styles.reassuranceItem}>
-                                    <ShieldCheck size={16} className={styles.reassuranceIconCheck} />
-                                    <span>Produits 100% bio & légaux (&lt; 0.3% THC)</span>
-                                </div>
-                                <div className={styles.reassuranceItem}>
-                                    <Sparkles size={16} className={styles.reassuranceIconSparkle} />
-                                    <span>Livraison discrète express 24/48h</span>
-                                </div>
-                            </div>
-
-                            {/* 7. Logout Button (if logged in) */}
-                            {isAuthenticated && (
+                        {/* 5. Bottom Utility Footer */}
+                        <div className={styles.sidebarFooter}>
+                            <div className={styles.sidebarUtilityLinks}>
                                 <button
                                     type="button"
-                                    className={styles.sidebarLogoutBtn}
+                                    className={styles.sidebarUtilityBtn}
                                     onClick={() => {
                                         setIsMenuOpen(false);
-                                        signOut();
+                                        setIsCartOpen(true);
                                     }}
                                 >
-                                    <LogOut size={16} />
-                                    <span>Se déconnecter</span>
+                                    <ShoppingBag size={17} />
+                                    <span>Mon Panier</span>
+                                    {mounted && cartCount > 0 ? (
+                                        <span className={styles.sidebarCartBadge}>{cartCount}</span>
+                                    ) : (
+                                        <span className={styles.sidebarCartEmpty}>0 article</span>
+                                    )}
                                 </button>
-                            )}
+
+                                {isAuthenticated ? (
+                                    <div className={styles.sidebarUserSection}>
+                                        <Link
+                                            href="/account"
+                                            className={styles.sidebarUtilityBtn}
+                                            onClick={() => setIsMenuOpen(false)}
+                                        >
+                                            <User size={17} />
+                                            <span>Mon Espace Client</span>
+                                        </Link>
+                                        <button
+                                            type="button"
+                                            className={styles.sidebarLogoutSimple}
+                                            onClick={() => {
+                                                setIsMenuOpen(false);
+                                                signOut();
+                                            }}
+                                        >
+                                            Déconnexion
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        className={styles.sidebarUtilityBtn}
+                                        onClick={() => {
+                                            setIsMenuOpen(false);
+                                            setIsLoginOpen(true);
+                                        }}
+                                    >
+                                        <User size={17} />
+                                        <span>Mon Compte</span>
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* Reassurance Micro-Copy */}
+                            <div className={styles.sidebarReassuranceMinimal}>
+                                <div className={styles.reassuranceRow}>
+                                    <ShieldCheck size={13} className={styles.reassuranceIcon} />
+                                    <span>100% bio & légal (&lt; 0.3% THC)</span>
+                                </div>
+                                <div className={styles.reassuranceRow}>
+                                    <Sparkles size={13} className={styles.reassuranceIcon} />
+                                    <span>Livraison express discrète 24/48h</span>
+                                </div>
+                            </div>
                         </div>
                     </aside>
                 </div>,
