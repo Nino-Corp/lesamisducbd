@@ -651,10 +651,10 @@ export default function AdminUsers() {
                             <span className={styles.backupBadgeRecommended}>Recommandé régulier</span>
                         </div>
 
-                        <div className={styles.cardBody} style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+                        <div className={styles.cardBody}>
                             <div>
                                 <p style={{ margin: '0 0 1.25rem 0', fontSize: '0.88rem', color: '#475569', lineHeight: 1.5 }}>
-                                    Générez instantanément un fichier <code>.json</code> complet et autonome comprenant l'intégralité du site. Vous pouvez le stocker localement en toute sécurité ou le transférer.
+                                    Générez instantanément un fichier <span className={styles.jsonBadge}>.json</span> complet et autonome comprenant l'intégralité du site. Vous pouvez le stocker localement en toute sécurité ou le transférer.
                                 </p>
 
                                 <div className={styles.backupStatsGrid}>
@@ -746,7 +746,7 @@ export default function AdminUsers() {
                             <span className={styles.backupBadgeSafety}>Plan de secours</span>
                         </div>
 
-                        <div className={styles.cardBody} style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+                        <div className={styles.cardBody}>
                             <div>
                                 {!uploadedFile ? (
                                     <div>
@@ -778,7 +778,7 @@ export default function AdminUsers() {
                                                 <UploadCloud size={24} />
                                             </div>
                                             <p className={styles.dropzoneText}>
-                                                Glissez-déposez un fichier de sauvegarde <code>.json</code>
+                                                Glissez-déposez un fichier de sauvegarde <span className={styles.jsonBadge}>.json</span>
                                             </p>
                                             <p className={styles.dropzoneSubtext}>
                                                 Ou cliquez pour parcourir vos fichiers
