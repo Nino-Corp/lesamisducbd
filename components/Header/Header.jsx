@@ -3,7 +3,21 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import styles from './Header.module.css';
-import { User, ShoppingBag, Menu, X, Search, ChevronDown, Gift } from 'lucide-react';
+import { 
+    User, 
+    ShoppingBag, 
+    Menu, 
+    X, 
+    Search, 
+    ChevronDown, 
+    Gift,
+    Sparkles,
+    Compass,
+    Briefcase,
+    ArrowRight,
+    ShieldCheck,
+    LogOut
+} from 'lucide-react';
 import { SessionContext, signOut } from 'next-auth/react';
 import LoginModal from '../LoginModal/LoginModal';
 import SearchOverlay from '../SearchBar/SearchOverlay';
@@ -17,6 +31,16 @@ function useSafeSession() {
     }
     return context;
 }
+
+const getItemIcon = (item) => {
+    const label = (item?.label || '').toLowerCase();
+    const href = (item?.href || '').toLowerCase();
+    if (label.includes('produit') || href.includes('produit')) return <ShoppingBag size={18} />;
+    if (label.includes('essentiel') || href.includes('essentiel')) return <Sparkles size={18} />;
+    if (label.includes('usage') || href.includes('usage') || label.includes('cbd')) return <Compass size={18} />;
+    if (label.includes('pro') || href.includes('pro')) return <Briefcase size={18} />;
+    return <Sparkles size={18} />;
+};
 
 const AnimatedNumber = ({ value }) => {
     const [displayValue, setDisplayValue] = useState(0);
@@ -318,8 +342,74 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
                             </button>
                         </div>
 
-                        {/* 2. Minimalist Search */}
-                        <div className={styles.sidebarSearchWrapper}>
+                        {/* Scrollable Content */}
+                        <div className={styles.mobileSidebarContent}>
+                            {/* 2. Account / Welcome Card */}
+                            {isAuthenticated ? (
+                                <div className={styles.sidebarAccountCard}>
+                                    <div className={styles.accountCardTop}>
+                                        <div className={styles.accountAvatar}>
+                                            <User size={18} />
+                                            <span className={styles.onlineDot} />
+                                        </div>
+                                        <div className={styles.accountDetails}>
+                                            <span className={styles.accountGreeting}>Bonjour,</span>
+                                            <span className={styles.accountName}>
+                                                {user?.name || user?.email?.split('@')[0]}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {loyaltyData && (
+                                        <Link 
+                                            href="/account?tab=rewards" 
+                                            className={styles.sidebarLoyaltyBadge}
+                                            onClick={() => setIsMenuOpen(false)}
+                                        >
+                                            <Gift size={15} className={styles.sidebarLoyaltyIcon} />
+                                            <span>
+                                                <strong>{loyaltyData.points_available ?? 0} pts VIP</strong>
+                                                {loyaltyData.value_available ? ` • ${loyaltyData.value_available.toFixed(2)}€` : ''}
+                                            </span>
+                                            <ArrowRight size={13} className={styles.sidebarLoyaltyArrow} />
+                                        </Link>
+                                    )}
+
+                                    <Link 
+                                        href="/account" 
+                                        className={styles.accountActionLink}
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        <span>Mon Espace Client</span>
+                                        <ArrowRight size={14} />
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div className={styles.sidebarGuestCard}>
+                                    <div className={styles.guestCardHeader}>
+                                        <div className={styles.guestSparkleIcon}>
+                                            <Sparkles size={18} color="#00FFC2" />
+                                        </div>
+                                        <div>
+                                            <div className={styles.guestTitle}>Bienvenue !</div>
+                                            <div className={styles.guestSubtitle}>Rejoignez le club fidélité & gérez vos commandes</div>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className={styles.sidebarLoginBtn}
+                                        onClick={() => {
+                                            setIsMenuOpen(false);
+                                            setIsLoginOpen(true);
+                                        }}
+                                    >
+                                        <User size={16} />
+                                        <span>Connexion / Inscription</span>
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* 3. Search Quick Action */}
                             <button
                                 type="button"
                                 className={styles.sidebarSearchBtn}
@@ -328,124 +418,126 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
                                     setIsSearchOpen(true);
                                 }}
                             >
-                                <Search size={15} />
-                                <span>Rechercher...</span>
+                                <Search size={16} />
+                                <span>Rechercher un produit...</span>
                             </button>
-                        </div>
 
-                        {/* 3. Main Navigation (Clean, bold editorial links) */}
-                        <nav className={styles.sidebarNav}>
-                            <ul className={styles.sidebarNavList}>
-                                {menuItems && menuItems.map((item, index) => {
-                                    const hasChildren = item.children && item.children.length > 0;
-                                    const isOpen = mobileDropdown === index;
-                                    return (
-                                        <li key={index} className={styles.sidebarNavItem}>
-                                            {hasChildren ? (
-                                                <>
-                                                    <button
-                                                        type="button"
-                                                        className={`${styles.sidebarNavLink} ${isOpen ? styles.sidebarNavOpen : ''}`}
-                                                        onClick={() => setMobileDropdown(isOpen ? null : index)}
+                            {/* 4. Navigation Menu List with Category Icons */}
+                            <div className={styles.sidebarNavGroup}>
+                                <div className={styles.sidebarSectionTitle}>Explorer le catalogue</div>
+                                <ul className={styles.sidebarNavList}>
+                                    {menuItems && menuItems.map((item, index) => {
+                                        const hasChildren = item.children && item.children.length > 0;
+                                        const isOpen = mobileDropdown === index;
+                                        return (
+                                            <li key={index} className={styles.sidebarNavItem}>
+                                                {hasChildren ? (
+                                                    <>
+                                                        <button
+                                                            type="button"
+                                                            className={`${styles.sidebarNavLink} ${isOpen ? styles.sidebarNavOpen : ''}`}
+                                                            onClick={() => setMobileDropdown(isOpen ? null : index)}
+                                                        >
+                                                            <span className={styles.sidebarNavLeft}>
+                                                                <span className={styles.sidebarNavIcon}>
+                                                                    {getItemIcon(item)}
+                                                                </span>
+                                                                <span className={styles.sidebarNavLabel}>{item.label}</span>
+                                                            </span>
+                                                            <ChevronDown 
+                                                                size={18} 
+                                                                className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`} 
+                                                            />
+                                                        </button>
+                                                        {isOpen && (
+                                                            <ul className={styles.sidebarSubmenu}>
+                                                                {item.children.map((child, ci) => (
+                                                                    <li key={ci}>
+                                                                        <Link
+                                                                            href={child.href}
+                                                                            className={styles.sidebarSublink}
+                                                                            onClick={() => {
+                                                                                setIsMenuOpen(false);
+                                                                                setMobileDropdown(null);
+                                                                            }}
+                                                                        >
+                                                                            <span>{child.label}</span>
+                                                                            <ArrowRight size={13} className={styles.sublinkArrow} />
+                                                                        </Link>
+                                                                    </li>
+                                                                ))}
+                                                            </ul>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <Link
+                                                        href={item.href}
+                                                        className={styles.sidebarNavLink}
+                                                        onClick={() => setIsMenuOpen(false)}
                                                     >
-                                                        <span>{item.label}</span>
-                                                        <ChevronDown 
-                                                            size={16} 
-                                                            className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`} 
-                                                        />
-                                                    </button>
-                                                    {isOpen && (
-                                                        <ul className={styles.sidebarSubmenu}>
-                                                            {item.children.map((child, ci) => (
-                                                                <li key={ci}>
-                                                                    <Link
-                                                                        href={child.href}
-                                                                        className={styles.sidebarSublink}
-                                                                        onClick={() => {
-                                                                            setIsMenuOpen(false);
-                                                                            setMobileDropdown(null);
-                                                                        }}
-                                                                    >
-                                                                        {child.label}
-                                                                    </Link>
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <Link
-                                                    href={item.href}
-                                                    className={styles.sidebarNavLink}
-                                                    onClick={() => setIsMenuOpen(false)}
-                                                >
-                                                    <span>{item.label}</span>
-                                                </Link>
-                                            )}
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </nav>
+                                                        <span className={styles.sidebarNavLeft}>
+                                                            <span className={styles.sidebarNavIcon}>
+                                                                {getItemIcon(item)}
+                                                            </span>
+                                                            <span className={styles.sidebarNavLabel}>{item.label}</span>
+                                                        </span>
+                                                        <ArrowRight size={15} className={styles.sidebarArrow} />
+                                                    </Link>
+                                                )}
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
 
-                        {/* 4. Bottom Utility Links */}
-                        <div className={styles.sidebarFooter}>
-                            <div className={styles.sidebarUtilityLinks}>
+                            {/* 5. Cart Direct Link */}
+                            <button
+                                type="button"
+                                className={styles.sidebarCartRow}
+                                onClick={() => {
+                                    setIsMenuOpen(false);
+                                    setIsCartOpen(true);
+                                }}
+                            >
+                                <span className={styles.sidebarNavLeft}>
+                                    <span className={styles.sidebarNavIcon}>
+                                        <ShoppingBag size={18} />
+                                    </span>
+                                    <span className={styles.sidebarNavLabel}>Mon Panier</span>
+                                </span>
+                                {mounted && cartCount > 0 ? (
+                                    <span className={styles.sidebarCartBadge}>{cartCount} article{cartCount > 1 ? 's' : ''}</span>
+                                ) : (
+                                    <span className={styles.sidebarCartEmpty}>0 article</span>
+                                )}
+                            </button>
+
+                            {/* 6. Reassurance Guarantee Section */}
+                            <div className={styles.sidebarReassurance}>
+                                <div className={styles.reassuranceItem}>
+                                    <ShieldCheck size={16} className={styles.reassuranceIconCheck} />
+                                    <span>Produits 100% bio & légaux (&lt; 0.3% THC)</span>
+                                </div>
+                                <div className={styles.reassuranceItem}>
+                                    <Sparkles size={16} className={styles.reassuranceIconSparkle} />
+                                    <span>Livraison discrète express 24/48h</span>
+                                </div>
+                            </div>
+
+                            {/* 7. Logout Button (if logged in) */}
+                            {isAuthenticated && (
                                 <button
                                     type="button"
-                                    className={styles.sidebarUtilityBtn}
+                                    className={styles.sidebarLogoutBtn}
                                     onClick={() => {
                                         setIsMenuOpen(false);
-                                        setIsCartOpen(true);
+                                        signOut();
                                     }}
                                 >
-                                    <ShoppingBag size={17} />
-                                    <span>Panier</span>
-                                    {mounted && cartCount > 0 && (
-                                        <span className={styles.sidebarCartBadge}>{cartCount}</span>
-                                    )}
+                                    <LogOut size={16} />
+                                    <span>Se déconnecter</span>
                                 </button>
-
-                                {isAuthenticated ? (
-                                    <div className={styles.sidebarUserSection}>
-                                        <Link
-                                            href="/account"
-                                            className={styles.sidebarUtilityBtn}
-                                            onClick={() => setIsMenuOpen(false)}
-                                        >
-                                            <User size={17} />
-                                            <span>
-                                                {user?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'Mon Compte'}
-                                                {loyaltyData?.points_available > 0 && (
-                                                    <span className={styles.sidebarPoints}> • {loyaltyData.points_available} pts</span>
-                                                )}
-                                            </span>
-                                        </Link>
-                                        <button
-                                            type="button"
-                                            className={styles.sidebarLogoutSimple}
-                                            onClick={() => {
-                                                setIsMenuOpen(false);
-                                                signOut();
-                                            }}
-                                        >
-                                            Déconnexion
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <button
-                                        type="button"
-                                        className={styles.sidebarUtilityBtn}
-                                        onClick={() => {
-                                            setIsMenuOpen(false);
-                                            setIsLoginOpen(true);
-                                        }}
-                                    >
-                                        <User size={17} />
-                                        <span>Connexion</span>
-                                    </button>
-                                )}
-                            </div>
+                            )}
                         </div>
                     </aside>
                 </div>,

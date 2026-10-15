@@ -171,7 +171,7 @@
 }
 
 /* ==========================================================================
-   Mobile Nav Sidebar Drawer (Refined & Human Editorial Design)
+   Mobile Nav Sidebar Drawer (Full Rich Information & Modern Aesthetics)
    ========================================================================== */
 .mobileNavOverlay {
     position: fixed;
@@ -182,7 +182,7 @@
     display: flex;
     visibility: hidden;
     pointer-events: none;
-    transition: visibility 0.3s ease;
+    transition: visibility 0.35s ease;
 }
 
 .mobileNavOpen {
@@ -190,17 +190,17 @@
     pointer-events: auto;
 }
 
-/* Discreet Backdrop Blur */
+/* Dark Glass Backdrop (Click to dismiss) */
 .mobileNavBackdrop {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    background: rgba(12, 32, 27, 0.6);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    background: rgba(6, 20, 16, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
 }
 
@@ -208,20 +208,20 @@
     opacity: 1;
 }
 
-/* Sliding Drawer Panel */
+/* Sliding Sidebar Drawer */
 .mobileSidebar {
     position: relative;
-    width: 82vw;
-    max-width: 340px;
+    width: 86vw;
+    max-width: 360px;
     height: 100dvh;
     max-height: 100vh;
-    background: #1F4B40; /* Authentic brand green */
+    background: #1F4B40;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.4);
+    box-shadow: 16px 0 45px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
     transform: translateX(-105%);
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 2;
     overflow: hidden;
 }
@@ -230,12 +230,16 @@
     transform: translateX(0);
 }
 
-/* 1. Header */
+/* 1. Sidebar Header */
 .sidebarHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 24px 16px;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(18, 46, 39, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     flex-shrink: 0;
 }
 
@@ -246,57 +250,265 @@
 }
 
 .sidebarLogoImage {
-    height: 34px;
+    height: 36px;
     width: auto;
     object-fit: contain;
     display: block;
 }
 
 .sidebarLogoText {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 800;
     font-style: italic;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     color: #ffffff;
 }
 
 .sidebarCloseBtn {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.7);
     width: 36px;
     height: 36px;
     border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebarCloseBtn:hover,
 .sidebarCloseBtn:active {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 255, 194, 0.18);
+    color: #00FFC2;
+    border-color: rgba(0, 255, 194, 0.4);
+    transform: scale(1.06);
 }
 
-/* 2. Minimalist Search Bar */
-.sidebarSearchWrapper {
-    padding: 0 24px 16px;
+/* Scrollable Container */
+.mobileSidebarContent {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 18px 18px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.mobileSidebarContent::-webkit-scrollbar {
+    width: 4px;
+}
+
+.mobileSidebarContent::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+/* 2. User & Loyalty Account Card */
+.sidebarAccountCard {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 194, 0.22);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.accountCardTop {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.accountAvatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(0, 255, 194, 0.12);
+    border: 1px solid rgba(0, 255, 194, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00FFC2;
+    position: relative;
     flex-shrink: 0;
 }
 
+.onlineDot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #00FFC2;
+    border: 2px solid #1F4B40;
+}
+
+.accountDetails {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.accountGreeting {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+}
+
+.accountName {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 190px;
+}
+
+.sidebarLoyaltyBadge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: rgba(0, 255, 194, 0.1);
+    border: 1px solid rgba(0, 255, 194, 0.25);
+    padding: 8px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #00FFC2;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.sidebarLoyaltyBadge:hover {
+    background: rgba(0, 255, 194, 0.18);
+    border-color: rgba(0, 255, 194, 0.45);
+}
+
+.sidebarLoyaltyIcon {
+    color: #00FFC2;
+    flex-shrink: 0;
+}
+
+.sidebarLoyaltyArrow {
+    opacity: 0.7;
+    transition: transform 0.2s ease;
+}
+
+.sidebarLoyaltyBadge:hover .sidebarLoyaltyArrow {
+    transform: translateX(2px);
+    opacity: 1;
+}
+
+.accountActionLink {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    transition: color 0.2s ease;
+}
+
+.accountActionLink:hover {
+    color: #00FFC2;
+}
+
+/* Guest Card (Logged out) */
+.sidebarGuestCard {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.guestCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.guestSparkleIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(0, 255, 194, 0.1);
+    border: 1px solid rgba(0, 255, 194, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.guestTitle {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.guestSubtitle {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.35;
+}
+
+.sidebarLoginBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 16px;
+    background: #00FFC2;
+    color: #0c2b23;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 255, 194, 0.25);
+    font-family: inherit;
+}
+
+.sidebarLoginBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 255, 194, 0.35);
+}
+
+.sidebarLoginBtn:active {
+    transform: translateY(1px);
+}
+
+/* 3. Search Quick Action */
 .sidebarSearchBtn {
     display: flex;
     align-items: center;
     gap: 10px;
     width: 100%;
-    padding: 9px 14px;
-    background: rgba(0, 0, 0, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 99px;
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.84rem;
+    padding: 11px 14px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.86rem;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: left;
@@ -304,17 +516,25 @@
 }
 
 .sidebarSearchBtn:hover {
-    background: rgba(0, 0, 0, 0.28);
-    border-color: rgba(255, 255, 255, 0.25);
-    color: rgba(255, 255, 255, 0.85);
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 255, 194, 0.35);
+    color: rgba(255, 255, 255, 0.9);
 }
 
-/* 3. Main Navigation (Confident, editorial typography) */
-.sidebarNav {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 8px 24px 20px;
+/* 4. Navigation Menu */
+.sidebarNavGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebarSectionTitle {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: rgba(255, 255, 255, 0.45);
+    padding-left: 6px;
 }
 
 .sidebarNavList {
@@ -323,10 +543,12 @@
     padding: 0;
     display: flex;
     flex-direction: column;
+    gap: 4px;
 }
 
 .sidebarNavItem {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebarNavLink {
@@ -334,49 +556,80 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 16px 0;
-    color: #ffffff;
+    padding: 11px 14px;
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
-    font-size: 1.15rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: none;
-    border: none;
+    font-size: 0.94rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    background: transparent;
+    border: 1px solid transparent;
     cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: inherit;
-    text-align: left;
-    transition: color 0.2s ease, opacity 0.2s ease;
-    opacity: 0.9;
 }
 
-.sidebarNavLink:hover,
-.sidebarNavLink:active {
-    opacity: 1;
+.sidebarNavLink:hover {
+    background: rgba(0, 255, 194, 0.08);
+    border-color: rgba(0, 255, 194, 0.15);
     color: #00FFC2;
+    transform: translateX(3px);
 }
 
 .sidebarNavOpen {
+    background: rgba(0, 255, 194, 0.06);
+    border-color: rgba(0, 255, 194, 0.2);
     color: #00FFC2;
-    opacity: 1;
+}
+
+.sidebarNavLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebarNavIcon {
+    color: #00FFC2;
+    opacity: 0.85;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebarNavLabel {
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sidebarArrow {
+    color: rgba(255, 255, 255, 0.35);
+    transition: all 0.2s ease;
+}
+
+.sidebarNavLink:hover .sidebarArrow {
+    color: #00FFC2;
+    transform: translateX(2px);
 }
 
 /* Submenu Accordion */
 .sidebarSubmenu {
     list-style: none;
-    margin: 0 0 14px 10px;
-    padding: 4px 0 4px 16px;
-    border-left: 1.5px solid rgba(0, 255, 194, 0.35);
+    margin: 4px 0 6px 20px;
+    padding: 4px 0 4px 14px;
+    border-left: 2px solid rgba(0, 255, 194, 0.25);
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    animation: fadeInSub 0.2s ease forwards;
+    gap: 2px;
+    animation: slideDownSubmenu 0.25s ease forwards;
 }
 
-@keyframes fadeInSub {
+@keyframes slideDownSubmenu {
     from {
         opacity: 0;
-        transform: translateY(-4px);
+        transform: translateY(-6px);
     }
     to {
         opacity: 1;
@@ -385,96 +638,128 @@
 }
 
 .sidebarSublink {
-    display: block;
-    padding: 6px 0;
-    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
-    font-size: 0.92rem;
+    font-size: 0.86rem;
     font-weight: 500;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .sidebarSublink:hover {
     color: #00FFC2;
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(2px);
 }
 
-/* 4. Bottom Utility Links */
-.sidebarFooter {
-    padding: 16px 24px 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(16, 40, 34, 0.5);
-    flex-shrink: 0;
+.sublinkArrow {
+    opacity: 0.4;
+    transition: opacity 0.2s ease;
 }
 
-.sidebarUtilityLinks {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.sidebarSublink:hover .sublinkArrow {
+    opacity: 1;
+    color: #00FFC2;
 }
 
-.sidebarUtilityBtn {
+/* 5. Cart Direct Link */
+.sidebarCartRow {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
     width: 100%;
-    background: none;
-    border: none;
-    padding: 4px 0;
-    color: rgba(255, 255, 255, 0.85);
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: inherit;
     font-size: 0.92rem;
     font-weight: 600;
     cursor: pointer;
-    text-decoration: none;
-    font-family: inherit;
-    transition: color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
-.sidebarUtilityBtn:hover {
+.sidebarCartRow:hover {
+    background: rgba(0, 255, 194, 0.08);
+    border-color: rgba(0, 255, 194, 0.25);
     color: #00FFC2;
 }
 
 .sidebarCartBadge {
     background: #FFD700;
     color: #1F4B40;
-    font-size: 0.65rem;
+    font-size: 0.72rem;
     font-weight: 800;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 5px;
+    padding: 2px 8px;
     border-radius: 99px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.sidebarPoints {
-    font-size: 0.8rem;
-    color: #00FFC2;
-    font-weight: 700;
-    opacity: 0.9;
+.sidebarCartEmpty {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 500;
 }
 
-.sidebarUserSection {
+/* 6. Reassurance Guarantee Pills */
+.sidebarReassurance {
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.reassuranceItem {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 9px;
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+
+.reassuranceIconCheck {
+    color: #00FFC2;
+    flex-shrink: 0;
+}
+
+.reassuranceIconSparkle {
+    color: #FFD700;
+    flex-shrink: 0;
+}
+
+/* 7. Logout Button */
+.sidebarLogoutBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     width: 100%;
-}
-
-.sidebarLogoutSimple {
-    background: none;
-    border: none;
-    color: rgba(255, 255, 255, 0.45);
-    font-size: 0.78rem;
-    cursor: pointer;
-    font-family: inherit;
-    transition: color 0.2s ease;
-    padding: 0;
-}
-
-.sidebarLogoutSimple:hover {
+    padding: 10px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 10px;
     color: #fca5a5;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.sidebarLogoutBtn:hover {
+    background: rgba(239, 68, 68, 0.16);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.4);
 }
 
 @media (max-width: 1024px) {
