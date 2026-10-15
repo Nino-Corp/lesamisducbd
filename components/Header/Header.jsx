@@ -1,14 +1,22 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import styles from './Header.module.css';
 import { User, ShoppingBag, Menu, X, Search, ChevronDown, Gift } from 'lucide-react';
-import { useSession, signOut } from 'next-auth/react';
+import { SessionContext, signOut } from 'next-auth/react';
 import LoginModal from '../LoginModal/LoginModal';
 import SearchOverlay from '../SearchBar/SearchOverlay';
 
 import { useCart } from '@/context/CartContext';
+
+function useSafeSession() {
+    const context = useContext(SessionContext);
+    if (!context) {
+        return { data: null, status: 'unauthenticated' };
+    }
+    return context;
+}
 
 const AnimatedNumber = ({ value }) => {
     const [displayValue, setDisplayValue] = useState(0);
@@ -52,7 +60,7 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
     const [openDropdown, setOpenDropdown] = useState(null);
     const [mobileDropdown, setMobileDropdown] = useState(null);
     const dropdownTimeoutRef = useRef(null);
-    const { data: session, status } = useSession();
+    const { data: session, status } = useSafeSession();
     const isAuthenticated = status === 'authenticated';
     const user = session?.user;
     
@@ -60,8 +68,9 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
     const [loyaltyData, setLoyaltyData] = useState(null);
 
     // Cart Context
-
-    const { setIsCartOpen, cartCount } = useCart();
+    const cartContext = useCart() || {};
+    const setIsCartOpen = cartContext.setIsCartOpen || (() => {});
+    const cartCount = cartContext.cartCount || 0;
 
     useEffect(() => {
         setMounted(true);
