@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import styles from './Header.module.css';
-import { User, ShoppingBag, Menu, X, Search, ChevronDown } from 'lucide-react';
+import { User, ShoppingBag, Menu, X, Search, ChevronDown, Gift } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import LoginModal from '../LoginModal/LoginModal';
 import SearchOverlay from '../SearchBar/SearchOverlay';
