@@ -7,7 +7,9 @@ import {
     Check, X, UserPlus, Trash2, Users, AlertCircle, 
     Calendar, CheckCircle2, Download, UploadCloud, Database, 
     Archive, FileJson, RefreshCw, AlertTriangle, Layers,
-    ShoppingBag, Award, FileText, MapPin, RotateCcw
+    ShoppingBag, Award, FileText, MapPin, RotateCcw,
+    Monitor, Smartphone, Tablet, Laptop, Activity, History,
+    ShieldAlert, LogOut, XCircle
 } from 'lucide-react';
 
 /* ── Password Security Evaluator ── */
@@ -144,6 +146,16 @@ export default function AdminUsers() {
     const [modalError, setModalError] = useState('');
     const [copiedNotify, setCopiedNotify] = useState(false);
 
+    // ── Tabs State ──
+    const [activeTab, setActiveTab] = useState('users'); // 'users' | 'audit' | 'backups'
+
+    // ── Audit & Surveillance State ──
+    const [authLogs, setAuthLogs] = useState([]);
+    const [activeSessions, setActiveSessions] = useState([]);
+    const [auditTrail, setAuditTrail] = useState([]);
+    const [loadingAudit, setLoadingAudit] = useState(true);
+    const [revokingSessions, setRevokingSessions] = useState(false);
+
     // ── Backup & Continuity State ──
     const [backupStats, setBackupStats] = useState(null);
     const [loadingBackupStats, setLoadingBackupStats] = useState(true);
@@ -168,11 +180,49 @@ export default function AdminUsers() {
     useEffect(() => {
         fetchUsers();
         fetchBackupStats();
+        fetchAuditLogs();
     }, []);
 
     const showSuccess = (msg) => {
         setSuccessMessage(msg);
         setTimeout(() => setSuccessMessage(''), 4000);
+    };
+
+    const fetchAuditLogs = async () => {
+        try {
+            setLoadingAudit(true);
+            const res = await fetch('/api/admin/audit');
+            if (res.ok) {
+                const data = await res.json();
+                setAuthLogs(data.authLogs || []);
+                setActiveSessions(data.activeSessions || []);
+                setAuditTrail(data.auditTrail || []);
+            }
+        } catch (e) {
+            console.error('Failed to load audit logs:', e);
+        } finally {
+            setLoadingAudit(false);
+        }
+    };
+
+    const handleRevokeOtherSessions = async () => {
+        if (!confirm('Voulez-vous vraiment déconnecter immédiatement tous les autres appareils connectés à ce compte ?')) return;
+        setRevokingSessions(true);
+        try {
+            const res = await fetch('/api/admin/audit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'revoke-others' })
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Erreur lors de la révocation');
+            showSuccess(data.message || 'Toutes les autres sessions ont été révoquées.');
+            fetchAuditLogs();
+        } catch (err) {
+            alert(err.message);
+        } finally {
+            setRevokingSessions(false);
+        }
     };
 
     const fetchBackupStats = async () => {
@@ -472,282 +522,516 @@ export default function AdminUsers() {
                 </div>
             )}
 
-            {/* Main Content Grid */}
-            <div className={styles.grid}>
-                {/* Left: Accounts List */}
-                <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                        <h2 className={styles.cardTitle}>
-                            <Users size={18} color="#1F4B40" />
-                            Comptes Administrateurs
-                        </h2>
-                        <span className={styles.badgeCount}>{users.length} compte{users.length > 1 ? 's' : ''}</span>
-                    </div>
+            {/* ── Tabs Navigation ── */}
+            <div className={styles.tabsContainer}>
+                <button
+                    type="button"
+                    className={`${styles.tabButton} ${activeTab === 'users' ? styles.tabButtonActive : ''}`}
+                    onClick={() => setActiveTab('users')}
+                >
+                    <Users size={16} />
+                    <span>Comptes & Droits d'Accès</span>
+                    <span className={styles.tabBadge}>{users.length}</span>
+                </button>
 
-                    <div className={styles.userList}>
-                        {users.map(user => {
-                            const isSystemAdmin = user.username.toLowerCase() === 'admin';
-                            const initial = user.username.charAt(0).toUpperCase();
+                <button
+                    type="button"
+                    className={`${styles.tabButton} ${activeTab === 'audit' ? styles.tabButtonActive : ''}`}
+                    onClick={() => setActiveTab('audit')}
+                >
+                    <Activity size={16} />
+                    <span>Surveillance & Journal d'Audit</span>
+                    <span className={styles.tabBadge}>
+                        {activeSessions.length} session{activeSessions.length > 1 ? 's' : ''}
+                    </span>
+                </button>
 
-                            return (
-                                <div key={user.username} className={styles.userRow}>
-                                    <div className={styles.userInfo}>
-                                        <div className={styles.avatar}>{initial}</div>
-                                        <div>
-                                            <div className={styles.username}>
-                                                {user.username}
-                                                <span className={user.role === 'superadmin' ? styles.roleSuperadmin : styles.roleEditor}>
-                                                    {user.role === 'superadmin' ? 'Super Admin' : 'Éditeur'}
-                                                </span>
-                                            </div>
-                                            <div className={styles.meta}>
-                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                                    <Calendar size={12} />
-                                                    Créé le {user.createdAt ? (user.createdAt === 'Système' ? 'Système' : new Date(user.createdAt).toLocaleDateString('fr-FR')) : 'Inconnu'}
-                                                </span>
-                                                {user.updatedAt && (
-                                                    <span style={{ color: '#059669', fontWeight: 600 }}>
-                                                        • Modifié le {new Date(user.updatedAt).toLocaleDateString('fr-FR')}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className={styles.userActions}>
-                                        <button 
-                                            onClick={() => handleOpenEditPassword(user)}
-                                            className={styles.btnKey}
-                                            title="Modifier le mot de passe"
-                                        >
-                                            <Key size={14} />
-                                            <span>Modifier mot de passe</span>
-                                        </button>
-
-                                        <button 
-                                            onClick={() => handleDelete(user.username)}
-                                            disabled={isSystemAdmin}
-                                            className={styles.btnRevoke}
-                                            title={isSystemAdmin ? "Le super-administrateur principal ne peut pas être révoqué" : "Révoquer l'accès"}
-                                        >
-                                            <Trash2 size={13} />
-                                            <span>Révoquer</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            );
-                        })}
-
-                        {users.length === 0 && (
-                            <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#94a3b8' }}>
-                                Aucun utilisateur trouvé.
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Right: Create Account Form */}
-                <div className={styles.card}>
-                    <div className={styles.cardHeader}>
-                        <h2 className={styles.cardTitle}>
-                            <UserPlus size={18} color="#1F4B40" />
-                            Créer un accès
-                        </h2>
-                    </div>
-
-                    <form onSubmit={handleAddUser} className={styles.formBody}>
-                        <div className={styles.formGroup}>
-                            <label className={styles.formLabel}>Identifiant</label>
-                            <input 
-                                type="text" 
-                                value={newUsername}
-                                onChange={e => setNewUsername(e.target.value)}
-                                placeholder="ex: sophie_marketing"
-                                required
-                                className={styles.input}
-                                style={{ paddingRight: '0.85rem' }}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <div className={styles.formLabel}>
-                                <span>Mot de passe</span>
-                                <button 
-                                    type="button" 
-                                    onClick={handleGenerateForNew}
-                                    className={styles.generateBtn}
-                                >
-                                    <Sparkles size={12} />
-                                    Générer robuste
-                                </button>
-                            </div>
-                            <div className={styles.inputWrapper}>
-                                <input 
-                                    type={showNewPassword ? "text" : "password"} 
-                                    value={newPassword}
-                                    onChange={e => setNewPassword(e.target.value)}
-                                    placeholder="8 caractères min."
-                                    required
-                                    className={styles.input}
-                                />
-                                <button 
-                                    type="button"
-                                    onClick={() => setShowNewPassword(!showNewPassword)}
-                                    className={styles.toggleEyeBtn}
-                                    title={showNewPassword ? "Masquer" : "Afficher"}
-                                >
-                                    {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                                </button>
-                            </div>
-                            
-                            <PasswordStrengthMeter password={newPassword} />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label className={styles.formLabel}>Rôle & Permissions</label>
-                            <select 
-                                value={newRole}
-                                onChange={e => setNewRole(e.target.value)}
-                                className={styles.select}
-                            >
-                                <option value="editor">Éditeur (Gestion du site & contenu)</option>
-                                <option value="superadmin">Super Admin (Accès total)</option>
-                            </select>
-                        </div>
-
-                        <button 
-                            type="submit"
-                            disabled={adding || newPassword.length < 8}
-                            className={styles.btnPrimary}
-                            style={{ marginTop: '0.5rem' }}
-                        >
-                            <UserPlus size={16} />
-                            {adding ? 'Création en cours...' : 'Créer le compte'}
-                        </button>
-                    </form>
-                </div>
+                <button
+                    type="button"
+                    className={`${styles.tabButton} ${activeTab === 'backups' ? styles.tabButtonActive : ''}`}
+                    onClick={() => setActiveTab('backups')}
+                >
+                    <Database size={16} />
+                    <span>Sauvegardes & Continuité</span>
+                    <span className={styles.tabBadge}>1 clic</span>
+                </button>
             </div>
 
-            {/* ── Section Sauvegardes & Plan de Continuité ── */}
-            <div className={styles.backupSection}>
-                <div className={styles.backupHeader}>
-                    <h2 className={styles.backupSectionTitle}>
-                        <Database size={24} color="#1F4B40" />
-                        Sauvegardes & Plan de Continuité (Backups)
-                    </h2>
-                    <p className={styles.backupSectionSubtitle}>
-                        Téléchargez une archive JSON complète en 1 clic contenant tout le contenu du site (pages du builder, réglages vitrine, fidélité), ou restaurez une sauvegarde précédente en cas de fausse manipulation d'un éditeur.
-                    </p>
-                </div>
-
-                <div className={styles.backupGrid}>
-                    {/* Card 1: 1-Click Export / Download */}
+            {/* ── TAB 1: Comptes & Droits d'Accès ── */}
+            {activeTab === 'users' && (
+                <div className={styles.grid}>
+                    {/* Left: Accounts List */}
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
-                            <h3 className={styles.cardTitle}>
-                                <Download size={18} color="#1F4B40" />
-                                Sauvegarde & Export en 1 clic
-                            </h3>
-                            <span className={styles.backupBadgeRecommended}>Recommandé régulier</span>
+                            <h2 className={styles.cardTitle}>
+                                <Users size={18} color="#1F4B40" />
+                                Comptes Administrateurs
+                            </h2>
+                            <span className={styles.badgeCount}>{users.length} compte{users.length > 1 ? 's' : ''}</span>
                         </div>
 
-                        <div className={styles.cardBody}>
-                            <div>
-                                <p style={{ margin: '0 0 1.25rem 0', fontSize: '0.88rem', color: '#475569', lineHeight: 1.5 }}>
-                                    Générez instantanément un fichier <span className={styles.jsonBadge}>.json</span> complet et autonome comprenant l'intégralité du site. Vous pouvez le stocker localement en toute sécurité ou le transférer.
-                                </p>
+                        <div className={styles.userList}>
+                            {users.map(user => {
+                                const isSystemAdmin = user.username.toLowerCase() === 'admin';
+                                const initial = user.username.charAt(0).toUpperCase();
 
-                                <div className={styles.backupStatsGrid}>
-                                    <div className={styles.statTile}>
-                                        <div className={styles.statTileIcon}>
-                                            <Layers size={16} />
+                                return (
+                                    <div key={user.username} className={styles.userRow}>
+                                        <div className={styles.userInfo}>
+                                            <div className={styles.avatar}>{initial}</div>
+                                            <div>
+                                                <div className={styles.username}>
+                                                    {user.username}
+                                                    <span className={user.role === 'superadmin' ? styles.roleSuperadmin : styles.roleEditor}>
+                                                        {user.role === 'superadmin' ? 'Super Admin' : 'Éditeur'}
+                                                    </span>
+                                                </div>
+                                                <div className={styles.meta}>
+                                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                        <Calendar size={12} />
+                                                        Créé le {user.createdAt ? (user.createdAt === 'Système' ? 'Système' : new Date(user.createdAt).toLocaleDateString('fr-FR')) : 'Inconnu'}
+                                                    </span>
+                                                    {user.updatedAt && (
+                                                        <span style={{ color: '#059669', fontWeight: 600 }}>
+                                                            • Modifié le {new Date(user.updatedAt).toLocaleDateString('fr-FR')}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className={styles.statTileInfo}>
-                                            <span className={styles.statTileValue}>
-                                                {loadingBackupStats ? '...' : (backupStats?.builderPagesCount ?? 0)}
-                                            </span>
-                                            <span className={styles.statTileLabel}>Pages du Builder</span>
+
+                                        <div className={styles.userActions}>
+                                            <button 
+                                                onClick={() => handleOpenEditPassword(user)}
+                                                className={styles.btnKey}
+                                                title="Modifier le mot de passe"
+                                            >
+                                                <Key size={14} />
+                                                <span>Modifier mot de passe</span>
+                                            </button>
+
+                                            <button 
+                                                onClick={() => handleDelete(user.username)}
+                                                disabled={isSystemAdmin}
+                                                className={styles.btnRevoke}
+                                                title={isSystemAdmin ? "Le super-administrateur principal ne peut pas être révoqué" : "Révoquer l'accès"}
+                                            >
+                                                <Trash2 size={13} />
+                                                <span>Révoquer</span>
+                                            </button>
                                         </div>
                                     </div>
+                                );
+                            })}
 
-                                    <div className={styles.statTile}>
-                                        <div className={styles.statTileIcon}>
-                                            <ShoppingBag size={16} />
-                                        </div>
-                                        <div className={styles.statTileInfo}>
-                                            <span className={styles.statTileValue}>
-                                                {loadingBackupStats ? '...' : (backupStats?.hasVitrineConfig ? 'Actif' : 'Défaut')}
-                                            </span>
-                                            <span className={styles.statTileLabel}>Vitrine & Produits</span>
-                                        </div>
-                                    </div>
-
-                                    <div className={styles.statTile}>
-                                        <div className={styles.statTileIcon}>
-                                            <Award size={16} />
-                                        </div>
-                                        <div className={styles.statTileInfo}>
-                                            <span className={styles.statTileValue}>
-                                                {loadingBackupStats ? '...' : (backupStats?.hasLoyaltySettings ? 'Configuré' : 'Défaut')}
-                                            </span>
-                                            <span className={styles.statTileLabel}>Fidélité VIP</span>
-                                        </div>
-                                    </div>
-
-                                    <div className={styles.statTile}>
-                                        <div className={styles.statTileIcon}>
-                                            <FileText size={16} />
-                                        </div>
-                                        <div className={styles.statTileInfo}>
-                                            <span className={styles.statTileValue}>
-                                                {loadingBackupStats ? '...' : (backupStats?.contentPagesCount ?? 0)}
-                                            </span>
-                                            <span className={styles.statTileLabel}>Pages CMS & Légal</span>
-                                        </div>
-                                    </div>
+                            {users.length === 0 && (
+                                <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#94a3b8' }}>
+                                    Aucun utilisateur trouvé.
                                 </div>
-                            </div>
-
-                            <div>
-                                <button
-                                    type="button"
-                                    onClick={handleDownloadBackup}
-                                    disabled={downloadingBackup}
-                                    className={styles.btnDownloadBackup}
-                                >
-                                    {downloadingBackup ? (
-                                        <>
-                                            <RefreshCw size={18} className="spinAnimation" />
-                                            <span>Génération de l'archive en cours...</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Download size={18} />
-                                            <span>Télécharger la sauvegarde complète (.json)</span>
-                                        </>
-                                    )}
-                                </button>
-
-                                <div className={styles.backupInfoNote}>
-                                    <Check size={14} color="#059669" />
-                                    <span>Export sécurisé, non-bloquant et direct sans coupure du site.</span>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
 
-                    {/* Card 2: Restore / Rollback */}
+                    {/* Right: Create Account Form */}
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
-                            <h3 className={styles.cardTitle}>
-                                <RotateCcw size={18} color="#1F4B40" />
-                                Restaurer depuis une sauvegarde
-                            </h3>
-                            <span className={styles.backupBadgeSafety}>Plan de secours</span>
+                            <h2 className={styles.cardTitle}>
+                                <UserPlus size={18} color="#1F4B40" />
+                                Créer un accès
+                            </h2>
                         </div>
 
-                        <div className={styles.cardBody}>
-                            <div>
+                        <form onSubmit={handleAddUser} className={styles.formBody}>
+                            <div className={styles.formGroup}>
+                                <label className={styles.formLabel}>Identifiant</label>
+                                <input 
+                                    type="text" 
+                                    value={newUsername}
+                                    onChange={e => setNewUsername(e.target.value)}
+                                    placeholder="ex: sophie_marketing"
+                                    required
+                                    className={styles.input}
+                                    style={{ paddingRight: '0.85rem' }}
+                                />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <div className={styles.formLabel}>
+                                    <span>Mot de passe</span>
+                                    <button 
+                                        type="button" 
+                                        onClick={handleGenerateForNew}
+                                        className={styles.generateBtn}
+                                    >
+                                        <Sparkles size={12} />
+                                        Générer robuste
+                                    </button>
+                                </div>
+                                <div className={styles.inputWrapper}>
+                                    <input 
+                                        type={showNewPassword ? "text" : "password"} 
+                                        value={newPassword}
+                                        onChange={e => setNewPassword(e.target.value)}
+                                        placeholder="8 caractères min."
+                                        required
+                                        className={styles.input}
+                                    />
+                                    <button 
+                                        type="button"
+                                        onClick={() => setShowNewPassword(!showNewPassword)}
+                                        className={styles.toggleEyeBtn}
+                                        title={showNewPassword ? "Masquer" : "Afficher"}
+                                    >
+                                        {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                    </button>
+                                </div>
+                                
+                                <PasswordStrengthMeter password={newPassword} />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.formLabel}>Rôle & Permissions</label>
+                                <select 
+                                    value={newRole}
+                                    onChange={e => setNewRole(e.target.value)}
+                                    className={styles.select}
+                                >
+                                    <option value="editor">Éditeur (Gestion du site & contenu)</option>
+                                    <option value="superadmin">Super Admin (Accès total)</option>
+                                </select>
+                            </div>
+
+                            <button 
+                                type="submit"
+                                disabled={adding || newPassword.length < 8}
+                                className={styles.btnPrimary}
+                                style={{ marginTop: '0.5rem' }}
+                            >
+                                <UserPlus size={16} />
+                                {adding ? 'Création en cours...' : 'Créer le compte'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* ── TAB 2: Surveillance & Journal d'Audit ── */}
+            {activeTab === 'audit' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                    {/* 1. Active Sessions */}
+                    <div className={styles.card}>
+                        <div className={styles.cardHeader}>
+                            <h2 className={styles.cardTitle}>
+                                <Monitor size={18} color="#1F4B40" />
+                                Sessions Actives & Appareils Connectés
+                            </h2>
+                            {activeSessions.length > 1 && (
+                                <button
+                                    type="button"
+                                    onClick={handleRevokeOtherSessions}
+                                    disabled={revokingSessions}
+                                    className={styles.btnRevokeOtherSessions}
+                                    title="Déconnecter toutes les autres sessions ouvertes sur d'autres appareils"
+                                >
+                                    <LogOut size={14} />
+                                    {revokingSessions ? 'Déconnexion en cours...' : 'Déconnecter les autres sessions'}
+                                </button>
+                            )}
+                        </div>
+
+                        <div className={styles.sessionsList}>
+                            {activeSessions.map((s, idx) => {
+                                const isMobile = s.device === 'Mobile';
+                                const isTablet = s.device === 'Tablette';
+                                const DeviceIcon = isMobile ? Smartphone : (isTablet ? Tablet : Laptop);
+
+                                return (
+                                    <div key={s.sessionId || idx} className={styles.sessionRow}>
+                                        <div className={styles.sessionInfo}>
+                                            <div className={styles.sessionDeviceIcon}>
+                                                <DeviceIcon size={20} />
+                                            </div>
+                                            <div>
+                                                <div className={styles.sessionTitleRow}>
+                                                    <span>{s.browser} sur {s.os} ({s.device})</span>
+                                                    {s.isCurrent && (
+                                                        <span className={styles.sessionCurrentBadge}>
+                                                            <Check size={11} strokeWidth={3} /> Cette session (actuelle)
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className={styles.sessionMeta}>
+                                                    <span>Compte : <strong>{s.username}</strong></span>
+                                                    <span>•</span>
+                                                    <span>IP : <code>{s.ip}</code></span>
+                                                    <span>•</span>
+                                                    <span>Connecté le {s.createdAt ? new Date(s.createdAt).toLocaleString('fr-FR') : 'Récemment'}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
+                            {activeSessions.length === 0 && (
+                                <div className={styles.emptyAuditBox}>
+                                    Aucune session active enregistrée pour le moment.
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* 2. Login History */}
+                    <div className={styles.card}>
+                        <div className={styles.cardHeader}>
+                            <h2 className={styles.cardTitle}>
+                                <History size={18} color="#1F4B40" />
+                                Historique des Connexions (50 dernières)
+                            </h2>
+                            <span className={styles.badgeCount}>{authLogs.length} tentative{authLogs.length > 1 ? 's' : ''}</span>
+                        </div>
+
+                        <div className={styles.tableContainer}>
+                            <table className={styles.securityTable}>
+                                <thead>
+                                    <tr>
+                                        <th>Statut</th>
+                                        <th>Date & Heure</th>
+                                        <th>Identifiant</th>
+                                        <th>Navigateur & OS</th>
+                                        <th>Adresse IP</th>
+                                        <th>Motif / Résultat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {authLogs.map((log) => (
+                                        <tr key={log.id}>
+                                            <td>
+                                                {log.success ? (
+                                                    <span className={styles.statusBadgeSuccess}>
+                                                        <CheckCircle2 size={13} /> Succès
+                                                    </span>
+                                                ) : (
+                                                    <span className={styles.statusBadgeDanger}>
+                                                        <XCircle size={13} /> Échec
+                                                    </span>
+                                                )}
+                                            </td>
+                                            <td style={{ whiteSpace: 'nowrap', fontWeight: 500 }}>
+                                                {new Date(log.timestamp).toLocaleString('fr-FR')}
+                                            </td>
+                                            <td style={{ fontWeight: 700, color: '#0f172a' }}>
+                                                {log.username}
+                                            </td>
+                                            <td style={{ color: '#475569' }}>
+                                                {log.browser} ({log.os})
+                                            </td>
+                                            <td>
+                                                <code style={{ fontSize: '0.82rem', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>
+                                                    {log.ip}
+                                                </code>
+                                            </td>
+                                            <td style={{ color: log.success ? '#059669' : '#dc2626', fontSize: '0.82rem', fontWeight: 500 }}>
+                                                {log.reason || (log.success ? 'Connexion réussie' : 'Mot de passe erroné')}
+                                            </td>
+                                        </tr>
+                                    ))}
+
+                                    {authLogs.length === 0 && (
+                                        <tr>
+                                            <td colSpan={6} className={styles.emptyAuditBox}>
+                                                Aucun historique de connexion enregistré pour l'instant.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* 3. Sensitive Modifications Audit Trail */}
+                    <div className={styles.card}>
+                        <div className={styles.cardHeader}>
+                            <h2 className={styles.cardTitle}>
+                                <ShieldAlert size={18} color="#1F4B40" />
+                                Journal des Modifications Sensibles (Audit Trail)
+                            </h2>
+                            <span className={styles.badgeCount}>{auditTrail.length} action{auditTrail.length > 1 ? 's' : ''}</span>
+                        </div>
+
+                        <div className={styles.tableContainer}>
+                            <table className={styles.securityTable}>
+                                <thead>
+                                    <tr>
+                                        <th>Date & Heure</th>
+                                        <th>Auteur</th>
+                                        <th>Action</th>
+                                        <th>Cible</th>
+                                        <th>Détails</th>
+                                        <th>Adresse IP</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {auditTrail.map((action) => (
+                                        <tr key={action.id}>
+                                            <td style={{ whiteSpace: 'nowrap', fontWeight: 500 }}>
+                                                {new Date(action.timestamp).toLocaleString('fr-FR')}
+                                            </td>
+                                            <td style={{ fontWeight: 700, color: '#0f172a' }}>
+                                                {action.username}
+                                            </td>
+                                            <td>
+                                                <span className={styles.actionBadge}>{action.action}</span>
+                                            </td>
+                                            <td style={{ fontWeight: 600, color: '#1e293b' }}>
+                                                {action.target}
+                                            </td>
+                                            <td style={{ color: '#475569', fontSize: '0.82rem', maxWidth: '320px' }}>
+                                                {action.details}
+                                            </td>
+                                            <td>
+                                                <code style={{ fontSize: '0.82rem', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>
+                                                    {action.ip}
+                                                </code>
+                                            </td>
+                                        </tr>
+                                    ))}
+
+                                    {auditTrail.length === 0 && (
+                                        <tr>
+                                            <td colSpan={6} className={styles.emptyAuditBox}>
+                                                Aucune modification sensible enregistrée pour le moment.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* ── TAB 3: Sauvegardes & Plan de Continuité ── */}
+            {activeTab === 'backups' && (
+                <div className={styles.backupSection} style={{ marginTop: 0, paddingTop: 0, borderTop: 'none' }}>
+                    <div className={styles.backupHeader}>
+                        <h2 className={styles.backupSectionTitle}>
+                            <Database size={24} color="#1F4B40" />
+                            Sauvegardes & Plan de Continuité (Backups)
+                        </h2>
+                        <p className={styles.backupSectionSubtitle}>
+                            Téléchargez une archive JSON complète en 1 clic contenant tout le contenu du site (pages du builder, réglages vitrine, fidélité), ou restaurez une sauvegarde précédente en cas de fausse manipulation d'un éditeur.
+                        </p>
+                    </div>
+
+                    <div className={styles.backupGrid}>
+                        {/* Card 1: 1-Click Export / Download */}
+                        <div className={styles.card}>
+                            <div className={styles.cardHeader}>
+                                <h3 className={styles.cardTitle}>
+                                    <Download size={18} color="#1F4B40" />
+                                    Sauvegarde & Export en 1 clic
+                                </h3>
+                                <span className={styles.backupBadgeRecommended}>Recommandé régulier</span>
+                            </div>
+
+                            <div className={styles.cardBody}>
+                                <div>
+                                    <p style={{ margin: '0 0 1.25rem 0', fontSize: '0.88rem', color: '#475569', lineHeight: 1.5 }}>
+                                        Générez instantanément un fichier <span className={styles.jsonBadge}>.json</span> complet et autonome comprenant l'intégralité du site. Vous pouvez le stocker localement en toute sécurité ou le transférer.
+                                    </p>
+
+                                    <div className={styles.backupStatsGrid}>
+                                        <div className={styles.statTile}>
+                                            <div className={styles.statTileIcon}>
+                                                <Layers size={16} />
+                                            </div>
+                                            <div className={styles.statTileInfo}>
+                                                <span className={styles.statTileValue}>
+                                                    {loadingBackupStats ? '...' : (backupStats?.builderPagesCount ?? 0)}
+                                                </span>
+                                                <span className={styles.statTileLabel}>Pages du Builder</span>
+                                            </div>
+                                        </div>
+
+                                        <div className={styles.statTile}>
+                                            <div className={styles.statTileIcon}>
+                                                <ShoppingBag size={16} />
+                                            </div>
+                                            <div className={styles.statTileInfo}>
+                                                <span className={styles.statTileValue}>
+                                                    {loadingBackupStats ? '...' : (backupStats?.hasVitrineConfig ? 'Actif' : 'Défaut')}
+                                                </span>
+                                                <span className={styles.statTileLabel}>Vitrine & Produits</span>
+                                            </div>
+                                        </div>
+
+                                        <div className={styles.statTile}>
+                                            <div className={styles.statTileIcon}>
+                                                <Award size={16} />
+                                            </div>
+                                            <div className={styles.statTileInfo}>
+                                                <span className={styles.statTileValue}>
+                                                    {loadingBackupStats ? '...' : (backupStats?.hasLoyaltySettings ? 'Configuré' : 'Défaut')}
+                                                </span>
+                                                <span className={styles.statTileLabel}>Fidélité VIP</span>
+                                            </div>
+                                        </div>
+
+                                        <div className={styles.statTile}>
+                                            <div className={styles.statTileIcon}>
+                                                <FileText size={16} />
+                                            </div>
+                                            <div className={styles.statTileInfo}>
+                                                <span className={styles.statTileValue}>
+                                                    {loadingBackupStats ? '...' : (backupStats?.contentPagesCount ?? 0)}
+                                                </span>
+                                                <span className={styles.statTileLabel}>Pages CMS & Légal</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <button
+                                        type="button"
+                                        onClick={handleDownloadBackup}
+                                        disabled={downloadingBackup}
+                                        className={styles.btnDownloadBackup}
+                                    >
+                                        {downloadingBackup ? (
+                                            <>
+                                                <RefreshCw size={18} className="spinAnimation" />
+                                                <span>Génération de l'archive en cours...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Download size={18} />
+                                                <span>Télécharger la sauvegarde complète (.json)</span>
+                                            </>
+                                        )}
+                                    </button>
+
+                                    <div className={styles.backupInfoNote}>
+                                        <Check size={14} color="#059669" />
+                                        <span>Export sécurisé, non-bloquant et direct sans coupure du site.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Card 2: Restore / Rollback */}
+                        <div className={styles.card}>
+                            <div className={styles.cardHeader}>
+                                <h3 className={styles.cardTitle}>
+                                    <RotateCcw size={18} color="#1F4B40" />
+                                    Restaurer depuis une sauvegarde
+                                </h3>
+                                <span className={styles.backupBadgeSafety}>Plan de secours</span>
+                            </div>
+
+                            <div className={styles.cardBody}>
+                                <div>
                                 {!uploadedFile ? (
                                     <div>
                                         <div
@@ -928,6 +1212,7 @@ export default function AdminUsers() {
                     </div>
                 </div>
             </div>
+            )}
 
             {/* ── Modal: Change / Reset Password ── */}
             {editUser && (

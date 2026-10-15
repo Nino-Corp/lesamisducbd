@@ -2,6 +2,7 @@ import { getSession } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
 import crypto from 'crypto';
+import { recordAdminAction, getClientIp } from '@/lib/auditLog';
 
 export async function GET() {
     const session = await getSession();
@@ -57,6 +58,14 @@ export async function POST(request) {
         users.push(newUser);
         await kv.set('admin_users', users);
 
+        recordAdminAction({
+            username: session.username,
+            action: 'Création de compte',
+            target: username,
+            details: `Rôle : ${role === 'superadmin' ? 'Super Admin' : 'Éditeur'}`,
+            ip: getClientIp(request)
+        }).catch(() => {});
+
         const { passwordHash, ...safeUser } = newUser;
         return NextResponse.json(safeUser);
     } catch (error) {
@@ -104,6 +113,15 @@ export async function PATCH(request) {
         }
 
         await kv.set('admin_users', users);
+
+        recordAdminAction({
+            username: session.username,
+            action: 'Modification de mot de passe',
+            target: username,
+            details: 'Mot de passe administrateur mis à jour',
+            ip: getClientIp(request)
+        }).catch(() => {});
+
         return NextResponse.json({ success: true, message: 'Mot de passe mis à jour avec succès' });
     } catch (error) {
         console.error('Password update error:', error);
@@ -141,6 +159,15 @@ export async function DELETE(request) {
         }
 
         await kv.set('admin_users', filteredUsers);
+
+        recordAdminAction({
+            username: session.username,
+            action: "Révocation d'accès",
+            target: username,
+            details: 'Compte administrateur supprimé définitivement',
+            ip: getClientIp(request)
+        }).catch(() => {});
+
         return NextResponse.json({ success: true });
     } catch (error) {
         return NextResponse.json({ error: 'Server error' }, { status: 500 });

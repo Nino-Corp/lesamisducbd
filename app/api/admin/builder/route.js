@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { safeKvGet, safeKvSet } from '@/lib/kvCache';
+import { getSession } from '@/lib/auth';
+import { recordAdminAction, getClientIp } from '@/lib/auditLog';
 
 export const dynamic = 'force-dynamic';
 
@@ -200,6 +202,16 @@ export async function POST(request) {
 
         // Return without history to keep response small
         const { history: _h, ...pageWithoutHistory } = pages[slug];
+        getSession().then(session => {
+            recordAdminAction({
+                username: session?.username || 'admin',
+                action: resolvedStatus === 'published' ? 'Publication Page Builder' : 'Mise à jour Page Builder',
+                target: slug,
+                details: `Page: "${title}" (${resolvedStatus})`,
+                ip: getClientIp(request)
+            }).catch(() => {});
+        }).catch(() => {});
+
         return NextResponse.json({ success: true, page: pageWithoutHistory });
     } catch (error) {
         console.error('Builder API POST error:', error);
@@ -273,6 +285,16 @@ export async function DELETE(request) {
         } catch (cleanupError) {
             console.error('Error removing global links on page deletion:', cleanupError);
         }
+
+        getSession().then(session => {
+            recordAdminAction({
+                username: session?.username || 'admin',
+                action: 'Suppression Page Builder',
+                target: slug,
+                details: 'Page supprimée du Builder',
+                ip: getClientIp(request)
+            }).catch(() => {});
+        }).catch(() => {});
 
         return NextResponse.json({ success: true });
     } catch (error) {

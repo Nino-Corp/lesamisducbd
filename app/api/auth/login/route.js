@@ -1,14 +1,15 @@
-
 import { signToken } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 import { kv } from '@vercel/kv';
 import crypto from 'crypto';
+import { recordAuthEvent, recordActiveSession, getClientIp } from '@/lib/auditLog';
 
 // Simple in-memory rate limiter
 const rateLimit = new Map();
 
 export async function POST(request) {
-    const ip = request.headers.get('x-forwarded-for') || 'unknown';
+    const ip = getClientIp(request);
+    const userAgent = request.headers.get('user-agent') || '';
     const now = Date.now();
     const windowMs = 15 * 60 * 1000; // 15 minutes
     const maxAttempts = 5;
@@ -22,6 +23,7 @@ export async function POST(request) {
     }
 
     if (record.count >= maxAttempts) {
+        await recordAuthEvent({ username: 'inconnu', success: false, ip, userAgent, reason: 'Blocage sécurité (trop de tentatives)' });
         return NextResponse.json({ success: false, message: 'Trop de tentatives. Réessayez plus tard.' }, { status: 429 });
     }
 
@@ -50,7 +52,8 @@ export async function POST(request) {
                     // Mot de passe valide en base
                     rateLimit.delete(ip);
 
-                    const token = await signToken({ role: user.role || 'superadmin', username: user.username });
+                    const sessionId = crypto.randomUUID();
+                    const token = await signToken({ role: user.role || 'superadmin', username: user.username, sessionId });
                     const response = NextResponse.json({ success: true, role: user.role || 'superadmin' });
 
                     response.cookies.set('admin_token', token, {
@@ -61,12 +64,16 @@ export async function POST(request) {
                         maxAge: 60 * 60 * 2 // 2 hours
                     });
 
+                    // Log success and active session in background
+                    recordAuthEvent({ username: user.username, success: true, ip, userAgent }).catch(() => {});
+                    recordActiveSession({ sessionId, username: user.username, ip, userAgent }).catch(() => {});
+
                     return response;
                 } else {
-                    // Utilisateur trouvé mais mot de passe invalide : rejet immédiat.
-                    // L'ancien mot de passe en dur dans Vercel n'est PLUS accepté.
+                    // Utilisateur trouvé mais mot de passe invalide
                     record.count += 1;
                     rateLimit.set(ip, record);
+                    await recordAuthEvent({ username, success: false, ip, userAgent, reason: 'Mot de passe incorrect' });
                     return NextResponse.json({ success: false, message: 'Identifiant ou mot de passe incorrect' }, { status: 401 });
                 }
             }
@@ -77,13 +84,13 @@ export async function POST(request) {
     }
 
     // 2. Master Emergency Fallback Check (ENV credentials)
-    // Actif UNIQUEMENT si la base de données est en panne ou si le compte admin n'existe pas encore en base
     const adminExistsInDb = dbUsers && dbUsers.some(u => u?.username?.toLowerCase() === 'admin');
     if (!kvAvailable || (!adminExistsInDb && username.toLowerCase() === 'admin')) {
         const envAdminPassword = process.env.ADMIN_PASSWORD || 'admin123';
         if (username.toLowerCase() === 'admin' && password === envAdminPassword) {
             rateLimit.delete(ip);
-            const token = await signToken({ role: 'superadmin', username: 'admin' });
+            const sessionId = crypto.randomUUID();
+            const token = await signToken({ role: 'superadmin', username: 'admin', sessionId });
             const response = NextResponse.json({ success: true, role: 'superadmin' });
             response.cookies.set('admin_token', token, {
                 httpOnly: true,
@@ -92,6 +99,10 @@ export async function POST(request) {
                 path: '/',
                 maxAge: 60 * 60 * 2 // 2 hours
             });
+
+            recordAuthEvent({ username: 'admin', success: true, ip, userAgent, reason: 'Connexion de secours (ENV)' }).catch(() => {});
+            recordActiveSession({ sessionId, username: 'admin', ip, userAgent }).catch(() => {});
+
             return response;
         }
     }
@@ -99,6 +110,7 @@ export async function POST(request) {
     // Increment attempts on failure
     record.count += 1;
     rateLimit.set(ip, record);
+    await recordAuthEvent({ username, success: false, ip, userAgent, reason: 'Identifiant inexistant ou incorrect' });
 
     return NextResponse.json({ success: false, message: 'Identifiant ou mot de passe incorrect' }, { status: 401 });
 }

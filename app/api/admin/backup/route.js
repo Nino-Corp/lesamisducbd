@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
 import { safeKvGet, safeKvSet, invalidateKvCache } from '@/lib/kvCache';
+import { recordAdminAction, getClientIp } from '@/lib/auditLog';
 
 export const dynamic = 'force-dynamic';
 
@@ -230,6 +231,14 @@ export async function POST(request) {
 
         // Invalidate in-memory cache so updates are immediate
         invalidateKvCache();
+
+        recordAdminAction({
+            username: session.username,
+            action: 'Restauration de sauvegarde',
+            target: 'Site entier',
+            details: restoredDetails.join(', ') || 'Restauration appliquée',
+            ip: getClientIp(request)
+        }).catch(() => {});
 
         return NextResponse.json({
             success: true,
