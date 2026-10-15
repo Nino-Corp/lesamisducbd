@@ -15,7 +15,7 @@ export default async function DashboardLayout({ children }) {
                 <div className={styles.logo}>
                     <Link href="/admin" className={styles.logoLink} title="Tableau de bord">
                         <img 
-                            src="/images/logo.webp" 
+                            src="/images/logo-admin.webp" 
                             alt="Les Amis du CBD" 
                             className={styles.logoImage} 
                         />
