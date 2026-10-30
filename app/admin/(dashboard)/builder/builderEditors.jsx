@@ -2281,7 +2281,7 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                 <Field label="Placeholder de la barre de recherche">
                     <input
                         style={inputStyle}
-                        value={props.searchPlaceholder || ''}
+                        value={props.searchPlaceholder ?? 'Rechercher un article...'}
                         onChange={e => onChange({ searchPlaceholder: e.target.value })}
                         placeholder="Rechercher un article..."
                     />

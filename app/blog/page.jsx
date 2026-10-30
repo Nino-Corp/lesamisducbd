@@ -24,7 +24,13 @@ async function getArticles() {
     try {
         const pages = await safeKvGet('builder_pages', {}) || {};
         return Object.values(pages)
-            .filter(p => ARTICLE_TYPES.includes(p.seo?.pageType) && (!p.status || p.status === 'published'))
+            .filter(p => {
+                if (!ARTICLE_TYPES.includes(p.seo?.pageType)) return false;
+                if (p.status === 'draft') return false;
+                // Programmé : visible une fois la date de publication passée
+                if (p.status === 'scheduled' && p.scheduledAt && new Date(p.scheduledAt) > new Date()) return false;
+                return true;
+            })
             .sort((a, b) => {
                 const dateA = a.seo?.publishedAt || a.updatedAt;
                 const dateB = b.seo?.publishedAt || b.updatedAt;

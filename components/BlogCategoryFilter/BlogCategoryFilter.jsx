@@ -191,10 +191,10 @@ const DEFAULT_ARTICLES = [
 export default function BlogCategoryFilter({
     filters = DEFAULT_FILTERS,
     articles: customArticles = DEFAULT_ARTICLES,
-    sourceMode = 'manual', // 'auto' | 'manual'
+    sourceMode = 'auto', // 'auto' | 'manual' (aligné sur l'éditeur et la config du builder)
     autoCategory = '', // optional filter by category in API
     defaultFilter = 'all',
-    searchPlaceholder = 'Rechercher un article...',
+    searchPlaceholder: customPlaceholder,
     showSearch = true,
     showSort = true,
     showCountBadges = false,
@@ -205,6 +205,8 @@ export default function BlogCategoryFilter({
     const [sortBy, setSortBy] = useState('recent');
     const [fetchedArticles, setFetchedArticles] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [fetchDone, setFetchDone] = useState(false);
+    const searchPlaceholder = customPlaceholder?.trim() || 'Rechercher un article...';
     const tabRefs = useRef([]);
 
     // Auto-fetch real published articles when in auto mode
@@ -215,20 +217,25 @@ export default function BlogCategoryFilter({
         async function loadArticles() {
             setLoading(true);
             try {
-                const url = autoCategory
-                    ? `/api/articles?category=${encodeURIComponent(autoCategory)}&preview=true`
-                    : '/api/articles?preview=true';
-                const res = await fetch(url);
+                // Les brouillons ne sont visibles que dans l'admin (prévisualisation du builder)
+                const isAdmin = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+                const params = new URLSearchParams();
+                if (autoCategory) params.set('category', autoCategory);
+                if (isAdmin) params.set('preview', 'true');
+                const res = await fetch(`/api/articles?${params.toString()}`, { cache: 'no-store' });
                 if (res.ok) {
                     const data = await res.json();
-                    if (!isCancelled && data.articles && data.articles.length > 0) {
+                    if (!isCancelled && Array.isArray(data.articles)) {
                         setFetchedArticles(data.articles);
                     }
                 }
             } catch (err) {
                 console.warn('[BlogCategoryFilter] Failed to fetch auto articles, using fallback.', err);
             } finally {
-                if (!isCancelled) setLoading(false);
+                if (!isCancelled) {
+                    setLoading(false);
+                    setFetchDone(true);
+                }
             }
         }
 
@@ -241,11 +248,13 @@ export default function BlogCategoryFilter({
         if (sourceMode === 'manual') {
             return customArticles && customArticles.length > 0 ? customArticles : DEFAULT_ARTICLES;
         }
-        if (fetchedArticles.length > 0) {
+        // Mode auto : on affiche les vrais articles ; les cartes de démo ne servent
+        // qu'avant la fin du chargement ou si l'API est injoignable.
+        if (fetchedArticles.length > 0 || fetchDone) {
             return fetchedArticles;
         }
-        return customArticles && customArticles.length > 0 ? customArticles : DEFAULT_ARTICLES;
-    }, [sourceMode, fetchedArticles, customArticles]);
+        return customArticles && customArticles.length > 0 ? customArticles : [];
+    }, [sourceMode, fetchedArticles, fetchDone, customArticles]);
 
     // Sync from URL search params on mount
     useEffect(() => {

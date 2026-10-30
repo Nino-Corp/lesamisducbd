@@ -199,6 +199,16 @@ const LivePreview = memo(function LivePreview({
     }
 
     const [previewMode, setPreviewMode] = useState('desktop');
+    // Taille de la fenêtre : l'échelle de la preview doit suivre le redimensionnement
+    const [viewport, setViewport] = useState(() => ({
+        w: typeof window !== 'undefined' ? window.innerWidth : 1500,
+        h: typeof window !== 'undefined' ? window.innerHeight : 1000
+    }));
+    useEffect(() => {
+        const onResize = () => setViewport({ w: window.innerWidth, h: window.innerHeight });
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
     const [desktopSize, setDesktopSize] = useState({ width: 1280, height: 800, label: 'MacBook Air' });
     const [mobileSize, setMobileSize] = useState({ width: 390, height: 844, label: 'iPhone 14' });
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -262,12 +272,12 @@ const LivePreview = memo(function LivePreview({
     let scaledHeight = 0;
 
     if (previewMode === 'desktop') {
-        const containerWidth = typeof window !== 'undefined' ? window.innerWidth - 500 : 1000;
-        const containerHeight = typeof window !== 'undefined' ? window.innerHeight - 320 : 800;
+        const containerWidth = viewport.w - 500;
+        const containerHeight = viewport.h - 320;
         const scaleX = (containerWidth - 60) / (desktopSize.width + 24);
         const scaleY = (containerHeight - 60) / (desktopSize.height + 36);
         
-        scale = Math.min(1, scaleX, scaleY);
+        scale = Math.max(0.2, Math.min(1, scaleX, scaleY));
         scaledWidth = (desktopSize.width + 24) * scale;
         scaledHeight = (desktopSize.height + 36) * scale;
         
@@ -282,9 +292,11 @@ const LivePreview = memo(function LivePreview({
             overflow: 'hidden'
         };
     } else if (previewMode === 'mobile') {
-        const containerHeight = typeof window !== 'undefined' ? window.innerHeight - 320 : 800;
+        const containerWidth = viewport.w - 500;
+        const containerHeight = viewport.h - 320;
+        const scaleX = (containerWidth - 40) / (mobileSize.width + 28);
         const scaleY = (containerHeight - 40) / (mobileSize.height + 28);
-        scale = Math.min(0.9, scaleY);
+        scale = Math.max(0.2, Math.min(0.9, scaleX, scaleY));
         
         scaledWidth = (mobileSize.width + 28) * scale;
         scaledHeight = (mobileSize.height + 28) * scale;

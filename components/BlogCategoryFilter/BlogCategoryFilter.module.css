@@ -3,7 +3,7 @@
 ===================================================== */
 
 .container {
-    width: 100%;
+    width: var(--container-width, 100%);
     max-width: 1440px;
     margin: 32px auto 60px;
     font-family: inherit;
@@ -28,6 +28,7 @@
     gap: 8px;
     flex-wrap: wrap;
     max-width: 100%;
+    min-width: 0;
 }
 
 .filterBtn {
@@ -213,6 +214,7 @@
 
 .headerTextSide {
     flex: 1;
+    min-width: 0;
 }
 
 .h2Title {
@@ -469,7 +471,8 @@
 .cardMeta {
     display: flex;
     align-items: center;
-    gap: 14px;
+    flex-wrap: wrap;
+    gap: 6px 14px;
     margin-top: auto;
     padding-top: 10px;
     border-top: 1px solid rgba(18, 63, 50, 0.06);
@@ -568,11 +571,41 @@
 /* =====================================================
    RESPONSIVE
 ===================================================== */
+@media (max-width: 1200px) {
+    .cols4 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 1024px) {
+    .container {
+        margin: 24px auto 48px;
+    }
+
     .filterBar {
         flex-direction: column;
         align-items: stretch;
-        gap: 12px;
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    /* Onglets : une seule ligne défilante plutôt que 3 lignes empilées */
+    .buttonGroup {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        padding: 4px 2px 8px;
+        margin: -4px -2px -4px;
+    }
+
+    .buttonGroup::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filterBtn {
+        flex-shrink: 0;
     }
 
     .searchBox {
@@ -582,24 +615,28 @@
 
     .headerRow {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
         gap: 14px;
+        margin-bottom: 20px;
     }
 
     .sortSide {
         width: 100%;
-        justify-content: flex-end;
-    }
-}
-
-@media (max-width: 768px) {
-    .container {
-        margin: 20px auto 40px;
+        justify-content: flex-start;
     }
 
     .cols4,
     .cols3 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 16px auto 40px;
+    }
+
+    .grid {
         gap: 14px;
     }
 
@@ -614,36 +651,50 @@
         height: 18px;
     }
 
+    /* 16px minimum : évite le zoom automatique d'iOS au focus */
+    .searchInput {
+        font-size: 16px;
+    }
+
     .h2Title {
         font-size: 22px;
     }
+
+    .introText {
+        font-size: 14px;
+    }
+
+    .cardBody {
+        padding: 14px 14px 12px;
+    }
+
+    .cardTitle {
+        font-size: 15px;
+    }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 560px) {
     .cols4,
     .cols3,
     .cols2 {
         grid-template-columns: 1fr;
     }
 
-    .buttonGroup {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        scrollbar-width: none;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 4px;
+    .cardImageWrapper {
+        aspect-ratio: 16 / 10;
     }
 
-    .filterBtn {
-        flex-shrink: 0;
-    }
-
-    .sortSide {
-        justify-content: space-between;
+    .sortControls {
+        width: 100%;
     }
 
     .sortSelect {
         flex: 1;
+        min-width: 0;
+    }
+
+    .emptyState {
+        padding: 36px 16px;
     }
 }
 
