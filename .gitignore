@@ -47,3 +47,6 @@ next-env.d.ts
 
 allinone_rewards
 api.php
+.claudeignore
+CLAUDE.md
+.claude
