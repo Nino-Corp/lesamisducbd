@@ -19,12 +19,17 @@ export default function Breadcrumb({ items = [] }) {
                             itemScope
                             itemType="https://schema.org/ListItem"
                         >
-                            {!isLast ? (
+                            {!isLast && item.href ? (
                                 <>
                                     <Link href={item.href} className={styles.link} itemProp="item">
                                         {isFirst && <Home size={14} className={styles.homeIcon} />}
                                         <span itemProp="name">{item.label}</span>
                                     </Link>
+                                    <ChevronRight size={14} className={styles.sep} aria-hidden="true" />
+                                </>
+                            ) : !isLast ? (
+                                <>
+                                    <span className={styles.current} itemProp="name">{item.label}</span>
                                     <ChevronRight size={14} className={styles.sep} aria-hidden="true" />
                                 </>
                             ) : (

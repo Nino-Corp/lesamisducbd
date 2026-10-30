@@ -16,7 +16,9 @@ import {
 } from 'lucide-react';
 
 export default function PageEditor() {
-    const { slug } = useParams();
+    const params = useParams();
+    // Catch-all : les slugs hiérarchiques arrivent sous forme de segments
+    const slug = (Array.isArray(params.slug) ? params.slug : [params.slug]).map(decodeURIComponent).join('/');
     const router = useRouter();
     const [page, setPage] = useState(null);
     const [loading, setLoading] = useState(true);

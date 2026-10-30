@@ -119,6 +119,20 @@
     border-color: rgba(220, 38, 38, 0.4);
 }
 
+/* Desktop intermédiaire : sidebar plus fine, marges réduites */
+@media (min-width: 769px) and (max-width: 1280px) {
+    .sidebar {
+        width: 240px;
+        padding: 1.5rem;
+    }
+
+    .main {
+        margin-left: 240px;
+        padding: 1.5rem;
+        min-width: 0;
+    }
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .container {

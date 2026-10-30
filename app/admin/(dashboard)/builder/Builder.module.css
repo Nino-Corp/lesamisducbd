@@ -4,12 +4,14 @@
 
 /* ── Page wrapper ─────────────────────────────── */
 .container {
-    padding: 32px;
-    max-width: 1400px;
+    padding: clamp(16px, 2vw, 32px);
+    width: 100%;
+    max-width: 1800px;
     margin: 0 auto;
-    min-height: 100vh;
+    min-height: calc(100vh - 6rem);
     background: #f4f6f4;
     border-radius: 25px;
+    box-sizing: border-box;
 }
 
 /* ── Top header bar ───────────────────────────── */
@@ -596,8 +598,64 @@
 /* ── Page list (index page) ───────────────────── */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
     gap: 20px;
+}
+
+/* ── Barre de recherche / tri ─────────────────── */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.toolbarSearch {
+    flex: 1 1 260px;
+    min-width: 0;
+}
+
+.toolbarSort {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.toolbarSort select {
+    max-width: 100%;
+}
+
+/* ── Raccourcis « pages de base » ─────────────── */
+.legacyGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 10px;
+}
+
+.legacyLink {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding: 8px 16px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #374151;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.legacyLink:hover {
+    border-color: #1F4B40;
 }
 
 .pageCard {
@@ -628,11 +686,12 @@
 
 .actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
 }
 
 .editLink {
-    flex: 1;
+    flex: 1 1 90px;
     text-align: center;
     padding: 9px;
     border-radius: 8px;
@@ -767,4 +826,54 @@
 .uploaderError {
     font-size: 0.78rem;
     color: #e05555;
+}
+.pageCardDraggable {
+    cursor: grab;
+}
+
+.pageCardDraggable:active {
+    cursor: grabbing;
+}
+
+.pageCard {
+    min-width: 0;
+}
+
+.pageSlug {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+}
+
+/* ── Desktop intermédiaire (portable / fenêtre réduite) ── */
+@media (max-width: 1280px) {
+    .editorLayout {
+        grid-template-columns: 320px minmax(0, 1fr);
+        gap: 16px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .header {
+        margin-bottom: 20px;
+    }
+
+    .editorLayout {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+    .sectionList {
+        position: static;
+    }
+}
+
+/* Carte en cours de glissement : légèrement inclinée et estompée */
+.pageCardDragging {
+    opacity: 0.45;
+    transform: rotate(-2deg) scale(0.97);
+    transition: transform 0.15s, opacity 0.15s;
 }

@@ -1,5 +1,50 @@
 [
   {
+    "id": "dbd6ca76-8821-4409-be05-c723258619fd",
+    "type": "ImageCardsGrid",
+    "props": {
+      "columns": 4,
+      "backgroundColor": "#e3fff8",
+      "cards": [
+        {
+          "heroImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1789995521/lesamisducbd/partners/hdywvrsuf9zrw5v1yaya.png",
+          "icon": "none",
+          "title": "Les incontournables qui font l’unanimité !",
+          "description": "<p>Des&nbsp;fleurs&nbsp;greenhouse&nbsp;gourmandes,&nbsp;accessibles&nbsp;et&nbsp;parfaites&nbsp;pour&nbsp;toucher&nbsp;un&nbsp;large&nbsp;public.</p>",
+          "linkText": "All Star",
+          "linkUrl": "#"
+        },
+        {
+          "heroImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1789995358/lesamisducbd/partners/j0ncdpbvgccqffhgglp2.png",
+          "icon": "none",
+          "title": "Pour ceux qui aiment explorer de nouveaux horizons !",
+          "description": "<p>Des&nbsp;variétés&nbsp;indoor&nbsp;aux&nbsp;profils&nbsp;aromatiques&nbsp;travaillés,&nbsp;pour&nbsp;les&nbsp;amateurs&nbsp;et&nbsp;les&nbsp;connaisseurs.</p>",
+          "linkText": "Weed Explorer",
+          "linkUrl": ""
+        },
+        {
+          "heroImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1789995457/lesamisducbd/partners/h2vb2bogriuwjhmhp4lu.png",
+          "icon": "none",
+          "title": "Petit format, grandes possibilités !",
+          "description": "<p>Un&nbsp;excellent&nbsp;rapport&nbsp;qualité/prix&nbsp;pour&nbsp;proposer&nbsp;une&nbsp;alternative&nbsp;accessible&nbsp;à&nbsp;vos&nbsp;clients.</p>",
+          "linkText": "Petites Fleurs",
+          "linkUrl": ""
+        },
+        {
+          "heroImage": "https://res.cloudinary.com/dasqyp35f/image/upload/v1789995980/lesamisducbd/partners/vfqdykwousg48r7qhnyz.png",
+          "icon": "none",
+          "title": "Pour varier les plaisirs !",
+          "description": "<p>Une&nbsp;sélection&nbsp;de&nbsp;résines&nbsp;aux&nbsp;textures&nbsp;et&nbsp;aux&nbsp;arômes&nbsp;variés,&nbsp;pour&nbsp;compléter&nbsp;votre&nbsp;gamme&nbsp;et&nbsp;répondre&nbsp;à&nbsp;toutes&nbsp;les&nbsp;envies.</p>",
+          "linkText": "Résines ",
+          "linkUrl": ""
+        }
+      ],
+      "isVisible": true
+    },
+    "savedName": "ImageCardsGrid",
+    "savedAt": "2026-10-25T12:51:34.585Z"
+  },
+  {
     "id": "440cd25c-c32a-4897-91c6-72779d037465",
     "type": "CodeEmbed",
     "props": {

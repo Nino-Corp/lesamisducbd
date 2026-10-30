@@ -1,11 +1,14 @@
 'use client';
 
+import { normalizePageSlug } from '@/lib/utils/stringUtils';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import styles from './Builder.module.css';
+import treeStyles from './FolderTree.module.css';
+import FolderTree, { MovePageDialog, ALL, ROOT } from './FolderTree';
 import { 
     FileText, PenLine, Newspaper, Tag, Landmark, Target, 
-    HelpCircle, Eye, AlertTriangle, Copy, ExternalLink 
+    HelpCircle, Eye, AlertTriangle, Copy, ExternalLink, FolderInput 
 } from 'lucide-react';
 
 const PAGE_TYPES = [
@@ -95,6 +98,11 @@ export default function BuilderIndex() {
     const [loading, setLoading] = useState(true);
     const [isCreating, setIsCreating] = useState(false);
     const [filterType, setFilterType] = useState('all');
+    const [filterFolder, setFilterFolder] = useState(ALL);
+    const [extraFolders, setExtraFolders] = useState([]); // dossiers créés mais encore vides
+    const [movingPage, setMovingPage] = useState(null);
+    const [draggingSlug, setDraggingSlug] = useState(null);
+    const [notice, setNotice] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('updated_desc');
     const [newPage, setNewPage] = useState({ title: '', slug: '', seo: { pageType: 'WebPage' } });
@@ -176,6 +184,48 @@ export default function BuilderIndex() {
         }
     };
 
+    // Dossiers = tous les préfixes de slug (guides, guides/sommeil...) avec leur nombre de pages
+    const folders = useMemo(() => {
+        const counts = {};
+        Object.keys(pages).forEach(slug => {
+            const parts = slug.split('/').slice(0, -1);
+            parts.forEach((_, i) => {
+                const f = parts.slice(0, i + 1).join('/');
+                counts[f] = (counts[f] || 0) + 1;
+            });
+        });
+        extraFolders.forEach(f => {
+            const parts = f.split('/');
+            parts.forEach((_, i) => { const p = parts.slice(0, i + 1).join('/'); counts[p] = counts[p] || 0; });
+        });
+        return Object.entries(counts).sort(([a], [b]) => a.localeCompare(b));
+    }, [pages, extraFolders]);
+
+    const movePage = async (page, folder) => {
+        const newSlug = [folder, page.slug.split('/').pop()].filter(Boolean).join('/');
+        setMovingPage(null);
+        if (newSlug === page.slug) return;
+        try {
+            const res = await fetch('/api/admin/builder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'move', slug: page.slug, newSlug })
+            });
+            if (res.status === 409) { alert('Une page existe déjà à cette adresse dans ce dossier.'); return; }
+            if (!res.ok) { alert('Le déplacement a échoué.'); return; }
+            setNotice(`« ${page.title} » est maintenant dans ${folder ? `${folder}/` : 'aucun dossier'}. L'ancienne adresse redirige vers la nouvelle (301).`);
+            setTimeout(() => setNotice(''), 8000);
+            await fetchPages();
+        } catch (error) {
+            console.error('Error moving page:', error);
+        }
+    };
+
+    const handleDropPage = (slug, folder) => {
+        const page = pages[slug];
+        if (page) movePage(page, folder);
+    };
+
     const pageList = useMemo(() => {
         let all = Object.values(pages);
         
@@ -184,6 +234,13 @@ export default function BuilderIndex() {
             all = all.filter(p => (p.seo?.pageType || 'WebPage') === filterType);
         }
         
+        // 1b. Filter by folder (préfixe de slug)
+        if (filterFolder === ROOT) {
+            all = all.filter(p => !p.slug?.includes('/'));
+        } else if (filterFolder !== ALL) {
+            all = all.filter(p => p.slug?.startsWith(`${filterFolder}/`));
+        }
+
         // 2. Filter by search query
         if (searchQuery.trim() !== '') {
             const query = searchQuery.toLowerCase();
@@ -195,11 +252,12 @@ export default function BuilderIndex() {
             if (sortBy === 'updated_desc') return new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0);
             if (sortBy === 'title_asc') return (a.title || '').localeCompare(b.title || '');
             if (sortBy === 'seo_desc') return seoScore(b) - seoScore(a);
+            if (sortBy === 'slug_asc') return (a.slug || '').localeCompare(b.slug || '');
             return 0;
         });
 
         return all;
-    }, [pages, filterType, searchQuery, sortBy]);
+    }, [pages, filterType, filterFolder, searchQuery, sortBy]);
 
     if (loading) return <div className={styles.container}>Chargement...</div>;
 
@@ -283,9 +341,9 @@ export default function BuilderIndex() {
                         <div style={{ flex: 1, minWidth: '150px' }}>
                             <input
                                 type="text"
-                                placeholder="slug"
+                                placeholder="dossier/slug"
                                 value={newPage.slug}
-                                onChange={(e) => setNewPage({ ...newPage, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') })}
+                                onChange={(e) => setNewPage({ ...newPage, slug: normalizePageSlug(e.target.value) })}
                                 style={{ 
                                     width: '100%', padding: '10px 14px', borderRadius: '8px', fontFamily: 'monospace',
                                     border: `1px solid ${newPage.slug && pages[newPage.slug] ? '#ef4444' : '#ddd'}`,
@@ -307,10 +365,24 @@ export default function BuilderIndex() {
                 </div>
             )}
 
+            <div className={treeStyles.workspace}>
+            <FolderTree
+                folders={folders}
+                total={allPages.length}
+                rootCount={allPages.filter(p => !p.slug.includes('/')).length}
+                selected={filterFolder}
+                onSelect={setFilterFolder}
+                dragging={!!draggingSlug}
+                onDropPage={(slug, folder) => { setDraggingSlug(null); handleDropPage(slug, folder); }}
+                onCreateFolder={(path) => { setExtraFolders(f => [...f, path]); setFilterFolder(path); }}
+            />
+            <div className={treeStyles.main}>
+            {notice && <div className={treeStyles.notice} role="status">{notice}</div>}
+
             {/* Search and Sort Toolbar */}
             {allPages.length > 0 && (
-                <div style={{ display: 'flex', gap: '16px', marginBottom: '20px', flexWrap: 'wrap', alignItems: 'center', background: '#fff', padding: '16px', borderRadius: '12px', border: '1px solid #e5e7eb' }}>
-                    <div style={{ flex: 1, minWidth: '250px' }}>
+                <div className={styles.toolbar}>
+                    <div className={styles.toolbarSearch}>
                         <input 
                             type="text" 
                             placeholder="Rechercher par titre ou slug..." 
@@ -319,8 +391,8 @@ export default function BuilderIndex() {
                             style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '0.9rem' }}
                         />
                     </div>
-                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                        <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#444' }}>Trier par :</label>
+                    <div className={styles.toolbarSort}>
+                        <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#444', whiteSpace: 'nowrap' }}>Trier par :</label>
                         <select 
                             value={sortBy} 
                             onChange={(e) => setSortBy(e.target.value)}
@@ -329,6 +401,7 @@ export default function BuilderIndex() {
                             <option value="updated_desc">Mise à jour (récent en premier)</option>
                             <option value="title_asc">Titre (A-Z)</option>
                             <option value="seo_desc">Score SEO (décroissant)</option>
+                            <option value="slug_asc">URL / dossier (A-Z)</option>
                         </select>
                     </div>
                 </div>
@@ -358,7 +431,7 @@ export default function BuilderIndex() {
             {/* Grid */}
             <div style={{ marginBottom: '24px' }}>
                 <h2 style={{ fontSize: '1rem', color: '#1F4B40', marginBottom: '12px' }}>Pages de base (Ancien éditeur)</h2>
-                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <div className={styles.legacyGrid}>
                     {[
                         { href: '/admin/content/accueil', label: "Page d'Accueil", slug: 'accueil' },
                         { href: '/admin/content/essentiel', label: "L'Essentiel", slug: 'essentiel' },
@@ -371,7 +444,7 @@ export default function BuilderIndex() {
                         { href: '/admin/content/legal/livraison', label: "Livraison", slug: 'legal/livraison' },
                         { href: '/admin/content/legal/privacy', label: "Confidentialité", slug: 'legal/privacy' }
                     ].map(p => (
-                        <Link key={p.href} href={p.href} style={{ padding: '8px 16px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', textDecoration: 'none', color: '#374151', fontSize: '0.85rem', fontWeight: 600, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <Link key={p.href} href={p.href} className={styles.legacyLink}>
                             <div>{p.label} ↗</div>
                             {p.slug && <div style={{ fontSize: '0.75rem', color: '#1F4B40', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Eye size={12} /> {analytics[p.slug] || 0} vue(s)</div>}
                         </Link>
@@ -390,7 +463,9 @@ export default function BuilderIndex() {
                         const pageType = page.seo?.pageType || 'WebPage';
                         const isArticle = pageType === 'BlogPosting' || pageType === 'Article';
                         return (
-                            <div key={page.slug} className={styles.pageCard}>
+                            <div key={page.slug} className={`${styles.pageCard} ${styles.pageCardDraggable} ${draggingSlug === page.slug ? styles.pageCardDragging : ''}`} draggable
+                                onDragStart={(e) => { e.dataTransfer.setData('text/plain', page.slug); e.dataTransfer.effectAllowed = 'move'; setDraggingSlug(page.slug); }}
+                                onDragEnd={() => setDraggingSlug(null)}>
                                 <div style={{ display: 'flex', gap: '6px', marginBottom: '10px', flexWrap: 'wrap' }}>
                                     <TypeBadge pageType={pageType} />
                                     <SeoScorePill score={score} />
@@ -408,6 +483,9 @@ export default function BuilderIndex() {
                                 {isArticle && page.seo?.category && (
                                     <div style={{ fontSize: '0.78rem', color: '#6b7280', marginBottom: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Tag size={12} /> {page.seo.category}</div>
                                 )}
+                                {page.slug.includes('/') && (
+                                    <div style={{ fontSize: '0.78rem', color: '#6b7280', marginBottom: '4px' }}>📁 {page.slug.split('/').slice(0, -1).join(' › ')}</div>
+                                )}
                                 <span className={styles.pageSlug}>/p/{page.slug}</span>
                                 <div className={styles.pageMeta}>
                                     {page.sections?.length || 0} section{page.sections?.length !== 1 ? 's' : ''}
@@ -422,6 +500,11 @@ export default function BuilderIndex() {
                                 </div>
                                 <div className={styles.actions}>
                                     <Link href={`/admin/builder/${page.slug}`} className={styles.editLink}>Modifier</Link>
+                                    <button onClick={() => setMovingPage(page)}
+                                        style={{ padding: '6px 12px', borderRadius: '8px', background: '#f0fdf4', color: '#1F4B40', border: '1px solid #d1fae5', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                                        title="Déplacer dans un dossier">
+                                        <FolderInput size={13} />
+                                    </button>
                                     <button onClick={() => handleDuplicate(page)}
                                         style={{ padding: '6px 12px', borderRadius: '8px', background: '#f0fdf4', color: '#1F4B40', border: '1px solid #d1fae5', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                                         title="Dupliquer">
@@ -439,6 +522,11 @@ export default function BuilderIndex() {
                     })
                 )}
             </div>
+            </div>
+            </div>
+            {movingPage && (
+                <MovePageDialog page={movingPage} folders={folders} onMove={movePage} onClose={() => setMovingPage(null)} />
+            )}
         </div>
     );
 }

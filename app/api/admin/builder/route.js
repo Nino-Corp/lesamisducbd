@@ -1,3 +1,5 @@
+import { normalizePageSlug } from '@/lib/utils/stringUtils';
+import { recordPageRedirect } from '@/lib/pageRedirects';
 import { NextResponse } from 'next/server';
 import { safeKvGet, safeKvSet } from '@/lib/kvCache';
 import { getSession } from '@/lib/auth';
@@ -58,7 +60,9 @@ export async function GET(request) {
 export async function POST(request) {
     try {
         const body = await request.json();
-        const { slug, title, sections, seo, status, scheduledAt } = body;
+        const { title, sections, seo, status, scheduledAt } = body;
+        // Slugs hiérarchiques autorisés (dossiers séparés par "/")
+        const slug = normalizePageSlug(body.slug, { final: true });
         // Support for slug rename: body may contain originalSlug
         const originalSlug = body.originalSlug || slug;
         // Duplication action
@@ -73,6 +77,48 @@ export async function POST(request) {
             blocks.unshift(block);
             await safeKvSet(BLOCKS_KEY, blocks);
             return NextResponse.json({ success: true, blocks });
+        }
+
+        // ── MOVE ACTION : déplacer une page vers un autre dossier (slug) en un clic ──
+        if (action === 'move') {
+            const from = normalizePageSlug(body.slug, { final: true });
+            const to = normalizePageSlug(body.newSlug, { final: true });
+            if (!from || !to) return NextResponse.json({ error: 'Slug invalide' }, { status: 400 });
+            if (from === to) return NextResponse.json({ success: true, slug: to });
+            const allPages = await safeKvGet(PAGES_KEY, {});
+            if (!allPages[from]) return NextResponse.json({ error: 'Page introuvable' }, { status: 404 });
+            if (allPages[to]) return NextResponse.json({ error: 'Une page existe déjà à cette adresse' }, { status: 409 });
+
+            allPages[to] = { ...allPages[from], slug: to, updatedAt: new Date().toISOString() };
+            delete allPages[from];
+            await safeKvSet(PAGES_KEY, allPages);
+
+            try {
+                const history = await safeKvGet(`builder_history:${from}`, null);
+                if (history) await safeKvSet(`builder_history:${to}`, history);
+            } catch (e) { /* non-blocking */ }
+            try {
+                const globalContent = await safeKvGet('global_content', {});
+                if (globalContent && globalContent.footerLinks) {
+                    globalContent.footerLinks = globalContent.footerLinks.map(link =>
+                        link.href === `/p/${from}` ? { ...link, href: `/p/${to}` } : link
+                    );
+                    await safeKvSet('global_content', globalContent);
+                }
+            } catch (e) { /* non-blocking */ }
+            await recordPageRedirect(from, to);
+
+            getSession().then(session => {
+                recordAdminAction({
+                    username: session?.username || 'admin',
+                    action: 'Déplacement Page Builder',
+                    target: to,
+                    details: `/p/${from} → /p/${to}`,
+                    ip: getClientIp(request)
+                }).catch(() => {});
+            }).catch(() => {});
+
+            return NextResponse.json({ success: true, slug: to });
         }
 
         if (!slug || !title) {
@@ -110,6 +156,7 @@ export async function POST(request) {
         // ── Handle slug rename: delete old key ──
         if (originalSlug !== slug && pages[originalSlug]) {
             delete pages[originalSlug];
+            recordPageRedirect(originalSlug, slug).catch(() => {});
             try {
                 const globalContent = await safeKvGet('global_content', {});
                 if (globalContent && globalContent.footerLinks) {

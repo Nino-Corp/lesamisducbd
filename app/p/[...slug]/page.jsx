@@ -1,5 +1,6 @@
 import { safeKvGet } from '@/lib/kvCache';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
+import { getPageRedirect } from '@/lib/pageRedirects';
 import PageBuilder from '@/components/PageBuilder';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
@@ -139,6 +140,9 @@ export default async function DynamicPage(props) {
     ]);
 
     if (!page) {
+        // Page déplacée dans un autre dossier : redirection permanente pour garder le référencement
+        const movedTo = await getPageRedirect(pageSlug);
+        if (movedTo) permanentRedirect(`/p/${movedTo}`);
         notFound();
     }
 
@@ -246,8 +250,20 @@ export default async function DynamicPage(props) {
                 { label: page.title, href: `/p/${pageSlug}` },
             ];
         } else {
+            // Dossiers du slug (guides/sommeil/page) → étapes intermédiaires du fil d'Ariane.
+            // Un dossier n'est lié que si une page existe à ce chemin.
+            const folderParts = pageSlug.split('/').slice(0, -1);
+            const folderItems = folderParts.map((part, i) => {
+                const path = folderParts.slice(0, i + 1).join('/');
+                const folderPage = allPages?.[path];
+                return {
+                    label: folderPage?.title || part.replace(/-/g, ' ').replace(/^./, c => c.toUpperCase()),
+                    href: folderPage ? `/p/${path}` : undefined,
+                };
+            });
             breadcrumbItems = [
                 { label: 'Accueil', href: '/' },
+                ...folderItems,
                 { label: page.title, href: `/p/${pageSlug}` },
             ];
         }
@@ -261,7 +277,7 @@ export default async function DynamicPage(props) {
             '@type': 'ListItem',
             position: i + 1,
             name: item.label,
-            item: item.href.startsWith('http') ? item.href : `https://www.lesamisducbd.fr${item.href}`,
+            ...(item.href ? { item: item.href.startsWith('http') ? item.href : `https://www.lesamisducbd.fr${item.href}` } : {}),
         }))
     } : null;
 

@@ -14,6 +14,7 @@
  * - noindex toggle
  */
 
+import { normalizePageSlug } from '@/lib/utils/stringUtils';
 import { useState } from 'react';
 import { ImageUploader } from './builderEditors';
 import { Search, Share2, FileText, Settings, AlertTriangle, Zap, CheckCircle2, Info, Clock, Check } from 'lucide-react';
@@ -208,8 +209,8 @@ export default function SEOPanel({ page, sections = [], onUpdate, onClose }) {
                                     <input
                                         style={inputStyle}
                                         value={page.slug || ''}
-                                        onChange={e => updatePage({ slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-') })}
-                                        placeholder="mon-article"
+                                        onChange={e => updatePage({ slug: normalizePageSlug(e.target.value) })}
+                                        placeholder="dossier/mon-article"
                                     />
                                 </div>
                                 <span style={{ fontSize: '0.72rem', color: '#f59e0b', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
