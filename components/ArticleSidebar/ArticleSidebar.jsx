@@ -54,8 +54,6 @@ export default function ArticleSidebar({ categories = [], relatedArticles = [], 
         }
     }, [activeId, toc]);
 
-    const suggestedArticles = (relatedArticles || []).slice(0, 2);
-
     return (
         <aside className={styles.sidebar}>
             {toc.length > 0 && (
@@ -87,48 +85,54 @@ export default function ArticleSidebar({ categories = [], relatedArticles = [], 
                 </div>
             )}
 
-            {suggestedArticles.length > 0 ? (
-                <div className={styles.widget}>
-                    <h3 className={styles.widgetTitle}>La suite, c'est par ici !</h3>
-                    <div className={styles.relatedList}>
-                        {suggestedArticles.map((article, i) => (
-                            <Link 
-                                key={article.slug || i} 
-                                href={article.slug && article.slug !== '#' ? `/p/${article.slug}` : (article.slug === '#' ? '#' : '/blog')} 
-                                className={styles.relatedCard}
-                            >
-                                {article.image ? (
-                                    <div className={styles.relatedImgWrapper}>
-                                        <img src={article.image} alt={article.title} className={styles.relatedImg} />
-                                    </div>
-                                ) : (
-                                    <div className={styles.relatedImgPlaceholder}>
-                                        <Sprout size={22} color="#1F4B40" />
-                                    </div>
-                                )}
-                                <div className={styles.relatedContent}>
-                                    {article.category && (
-                                        <span className={styles.relatedCat}>{article.category}</span>
-                                    )}
-                                    <h4 className={styles.relatedTitle}>{article.title}</h4>
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
+            <RelatedArticlesWidget relatedArticles={relatedArticles} />
+        </aside>
+    );
+}
 
-                    <Link href="/blog" className={styles.discoverBtn}>
-                        <span>Encore plus à découvrir</span>
-                        <span className={styles.discoverArrow}>→</span>
-                    </Link>
-                </div>
-            ) : (
-                <div className={styles.widget}>
-                    <Link href="/blog" className={styles.discoverBtn}>
-                        <span>Encore plus à découvrir</span>
-                        <span className={styles.discoverArrow}>→</span>
-                    </Link>
+/**
+ * Bloc de maillage interne « La suite, c'est par ici ! ».
+ * Toujours affiché (titre + bouton vers /blog), même si aucun article n'est suggéré.
+ * Exporté pour être réutilisé dans la version mobile (sidebar masquée < 1024px).
+ */
+export function RelatedArticlesWidget({ relatedArticles = [] }) {
+    const suggestedArticles = (relatedArticles || []).slice(0, 2);
+
+    return (
+        <div className={styles.widget}>
+            <h3 className={styles.widgetTitle}>La suite, c'est par ici !</h3>
+            {suggestedArticles.length > 0 && (
+                <div className={styles.relatedList}>
+                    {suggestedArticles.map((article, i) => (
+                        <Link
+                            key={`${article.slug || 'article'}-${i}`}
+                            href={article.slug && article.slug !== '#' ? `/p/${article.slug}` : (article.slug === '#' ? '#' : '/blog')}
+                            className={styles.relatedCard}
+                        >
+                            {article.image ? (
+                                <div className={styles.relatedImgWrapper}>
+                                    <img src={article.image} alt={article.title} className={styles.relatedImg} />
+                                </div>
+                            ) : (
+                                <div className={styles.relatedImgPlaceholder}>
+                                    <Sprout size={22} color="#1F4B40" />
+                                </div>
+                            )}
+                            <div className={styles.relatedContent}>
+                                {article.category && (
+                                    <span className={styles.relatedCat}>{article.category}</span>
+                                )}
+                                <h4 className={styles.relatedTitle}>{article.title}</h4>
+                            </div>
+                        </Link>
+                    ))}
                 </div>
             )}
-        </aside>
+
+            <Link href="/blog" className={styles.discoverBtn}>
+                <span>Encore plus à découvrir</span>
+                <span className={styles.discoverArrow}>→</span>
+            </Link>
+        </div>
     );
 }

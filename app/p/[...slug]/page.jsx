@@ -5,7 +5,7 @@ import PageBuilder from '@/components/PageBuilder';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
-import ArticleSidebar from '@/components/ArticleSidebar/ArticleSidebar';
+import ArticleSidebar, { RelatedArticlesWidget } from '@/components/ArticleSidebar/ArticleSidebar';
 
 export const revalidate = 60; // Cache for 1 minute
 
@@ -285,26 +285,34 @@ export default async function DynamicPage(props) {
     let categories = [];
     let relatedArticles = [];
     if (isArticle && allPages) {
-        const publishedPages = Object.values(allPages).filter(p => !p.status || p.status === 'published');
-        
+        // Le slug de référence est la clé de l'objet (p.slug peut être absent)
+        const now = new Date();
+        const publishedPages = Object.entries(allPages)
+            .map(([key, p]) => ({ ...p, slug: p.slug || key }))
+            .filter(p => {
+                const status = p.status || 'published';
+                if (status === 'published') return true;
+                return status === 'scheduled' && p.scheduledAt && new Date(p.scheduledAt) <= now;
+            });
+
         // Catégories réelles des pages publiées
         categories = [...new Set(publishedPages.map(p => p.seo?.category).filter(Boolean))].sort();
 
         // Articles similaires réels (uniquement les vrais articles, jamais les hubs/landing)
         const currentCategory = page.seo?.category;
-        const otherArticles = publishedPages.filter(p => 
-            ['Article', 'BlogPosting'].includes(p.seo?.pageType) && 
-            !p.sections?.some(s => s.type === 'BlogCategoryFilter') &&
-            p.slug !== pageSlug
-        );
+        const articleDate = (p) => new Date(p.seo?.publishedAt || p.updatedAt || 0).getTime() || 0;
+        const otherArticles = publishedPages
+            .filter(p =>
+                ['Article', 'BlogPosting'].includes(p.seo?.pageType) &&
+                !p.sections?.some(s => s.type === 'BlogCategoryFilter') &&
+                p.slug !== pageSlug
+            )
+            .sort((a, b) => articleDate(b) - articleDate(a));
 
-        if (currentCategory) {
-            const sameCat = otherArticles.filter(p => p.seo?.category === currentCategory);
-            const diffCat = otherArticles.filter(p => p.seo?.category !== currentCategory);
-            relatedArticles = [...sameCat, ...diffCat].slice(0, 2);
-        } else {
-            relatedArticles = otherArticles.slice(0, 2);
-        }
+        // Même catégorie d'abord, puis fallback sur les articles les plus récents
+        const sameCat = currentCategory ? otherArticles.filter(p => p.seo?.category === currentCategory) : [];
+        const others = otherArticles.filter(p => !sameCat.includes(p));
+        relatedArticles = [...sameCat, ...others].slice(0, 2);
 
         relatedArticles = relatedArticles.map(p => ({
             title: p.title,
@@ -396,8 +404,12 @@ export default async function DynamicPage(props) {
                                 }
                             ]} />
                         )}
+                        {/* Version mobile/tablette du bloc de maillage (sidebar masquée < 1024px) */}
+                        <div className="article-related-mobile">
+                            <RelatedArticlesWidget relatedArticles={relatedArticles} />
+                        </div>
                     </div>
-                    
+
                     {/* Sommaire et articles suggérés à droite */}
                     <div style={{ width: '310px', flexShrink: 0, display: 'none', position: 'sticky', top: '120px' }} className="article-sidebar-container">
                         <ArticleSidebar categories={categories} relatedArticles={relatedArticles} />
@@ -407,7 +419,9 @@ export default async function DynamicPage(props) {
                 <style dangerouslySetInnerHTML={{ __html: `
                     @media (min-width: 1024px) {
                         .article-sidebar-container { display: block !important; }
+                        .article-related-mobile { display: none !important; }
                     }
+                    .article-related-mobile { margin-top: 48px; }
                     @media (max-width: 768px) {
                         .article-layout {
                             padding: 0 16px !important;

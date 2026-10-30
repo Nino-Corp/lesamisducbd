@@ -5,7 +5,7 @@ import WysiwygEditor from './WysiwygEditor';
 import { 
     FolderOpen, Film, Code, AlertTriangle, Lightbulb, 
     Lock, Clock, Tag, Image as ImageIcon, PenLine, 
-    Target, FileText, Sliders, Settings, RefreshCw, Loader2 
+    Target, FileText, Sliders, Settings, RefreshCw, Loader2, ChevronDown 
 } from 'lucide-react';
 
 function Field({ label, hint, children }) {
@@ -1764,11 +1764,70 @@ export function LatestArticlesBlockEditor({ props, onChange }) {
     </>;
 }
 
+/* Section pliable numérotée (accordéon) pour les éditeurs en flux vertical */
+function EditorSection({ number, title, icon, summary, open, onToggle, children }) {
+    return (
+        <div style={{ border: '1px solid #e2e8f0', borderRadius: '12px', background: '#ffffff', marginBottom: '12px', overflow: 'hidden', width: '100%', boxSizing: 'border-box' }}>
+            <button
+                type="button"
+                onClick={onToggle}
+                aria-expanded={open}
+                style={{
+                    width: '100%', boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 14px',
+                    background: open ? '#E3FFF8' : '#f8fafc', border: 'none', cursor: 'pointer', textAlign: 'left',
+                    borderBottom: open ? '1px solid #cfeee5' : 'none'
+                }}
+            >
+                <span style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#1F4B40', color: '#fff', fontSize: '0.75rem', fontWeight: 800, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    {number}
+                </span>
+                <span style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 800, fontSize: '0.82rem', color: '#1F4B40', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        {icon} {title}
+                    </span>
+                    {!open && summary && (
+                        <span style={{ display: 'block', fontSize: '0.74rem', color: '#64748b', marginTop: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{summary}</span>
+                    )}
+                </span>
+                <ChevronDown size={16} color="#1F4B40" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s ease', flexShrink: 0 }} />
+            </button>
+            {open && <div style={{ padding: '14px', boxSizing: 'border-box', minWidth: 0 }}>{children}</div>}
+        </div>
+    );
+}
+
+/* Interrupteur Oui/Non */
+function ToggleRow({ label, hint, checked, onChange }) {
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', padding: '8px 0' }}>
+            <span style={{ minWidth: 0 }}>
+                <span style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, color: '#1F4B40' }}>{label}</span>
+                {hint && <span style={{ display: 'block', fontSize: '0.74rem', color: '#94a3b8' }}>{hint}</span>}
+            </span>
+            <button
+                type="button"
+                role="switch"
+                aria-checked={checked}
+                aria-label={label}
+                onClick={() => onChange(!checked)}
+                style={{
+                    width: '44px', height: '24px', borderRadius: '999px', border: 'none', cursor: 'pointer', position: 'relative',
+                    background: checked ? '#079D79' : '#cbd5e1', transition: 'background 0.15s ease', flexShrink: 0
+                }}
+            >
+                <span style={{ position: 'absolute', top: '3px', left: checked ? '23px' : '3px', width: '18px', height: '18px', borderRadius: '50%', background: '#fff', transition: 'left 0.15s ease', boxShadow: '0 1px 2px rgba(0,0,0,0.25)' }} />
+            </button>
+        </div>
+    );
+}
+
 export function BlogCategoryFilterEditor({ props, onChange }) {
     const filters = props.filters || [];
     const articles = props.articles || [];
     const [activeTab, setActiveTab] = useState(filters[0]?.id || 'all');
-    const [subSection, setSubSection] = useState('filters');
+    const [openSections, setOpenSections] = useState({ layout: true, filters: true, header: false, articles: false });
+
+    const toggleSection = (key) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
 
     const currentFilterIndex = filters.findIndex(f => f.id === activeTab);
     const currentFilter = currentFilterIndex !== -1 ? filters[currentFilterIndex] : filters[0];
@@ -1833,282 +1892,327 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
         onChange({ articles: nextArticles });
     };
 
-    return <>
-        {/* Navigation intuitive des 3 sections */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', marginBottom: '18px', background: '#e2e8f0', padding: '4px', borderRadius: '12px' }}>
-            <button
-                type="button"
-                onClick={() => setSubSection('filters')}
-                style={{
-                    padding: '8px 4px',
-                    borderRadius: '8px',
-                    border: 'none',
-                    fontWeight: 700,
-                    fontSize: '0.78rem',
-                    cursor: 'pointer',
-                    background: subSection === 'filters' ? '#1F4B40' : 'transparent',
-                    color: subSection === 'filters' ? '#fff' : '#475569',
-                    whiteSpace: 'nowrap'
-                }}
-            >
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Target size={13} /> Onglets</span>
-            </button>
-            <button
-                type="button"
-                onClick={() => setSubSection('articles')}
-                style={{
-                    padding: '8px 4px',
-                    borderRadius: '8px',
-                    border: 'none',
-                    fontWeight: 700,
-                    fontSize: '0.78rem',
-                    cursor: 'pointer',
-                    background: subSection === 'articles' ? '#1F4B40' : 'transparent',
-                    color: subSection === 'articles' ? '#fff' : '#475569',
-                    whiteSpace: 'nowrap'
-                }}
-            >
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><FileText size={13} /> Articles</span>
-            </button>
-            <button
-                type="button"
-                onClick={() => setSubSection('settings')}
-                style={{
-                    padding: '8px 4px',
-                    borderRadius: '8px',
-                    border: 'none',
-                    fontWeight: 700,
-                    fontSize: '0.78rem',
-                    cursor: 'pointer',
-                    background: subSection === 'settings' ? '#1F4B40' : 'transparent',
-                    color: subSection === 'settings' ? '#fff' : '#475569',
-                    whiteSpace: 'nowrap'
-                }}
-            >
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sliders size={13} /> Style</span>
-            </button>
+    const isAuto = (props.sourceMode || 'auto') === 'auto';
+    const columns = [2, 3, 4].includes(props.columns) ? props.columns : 4;
+    const showSearch = props.showSearch !== false;
+    const showSort = props.showSort !== false;
+    const showCountBadges = props.showCountBadges !== false;
+
+    const sourceButtonStyle = (active) => ({
+        padding: '10px 8px',
+        minWidth: 0,
+        boxSizing: 'border-box',
+        textAlign: 'center',
+        borderRadius: '8px',
+        border: active ? '2px solid #1F4B40' : '1px solid #cbd5e1',
+        background: active ? '#1F4B40' : '#ffffff',
+        color: active ? '#ffffff' : '#334155',
+        fontWeight: 700,
+        fontSize: '0.82rem',
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '4px'
+    });
+
+    const subTitleStyle = { display: 'block', fontWeight: 700, fontSize: '0.78rem', color: '#1F4B40', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' };
+
+    // Titre H2 découpé (rétro-compatibilité avec l'ancien champ h2Title en HTML)
+    let prefixValue = currentFilter?.h2Prefix !== undefined ? currentFilter.h2Prefix : '';
+    let highlightValue = currentFilter?.h2Highlight !== undefined ? currentFilter.h2Highlight : '';
+    if (currentFilter && !prefixValue && !highlightValue && currentFilter.h2Title) {
+        const match = currentFilter.h2Title.match(/<span[^>]*class=["']highlight["'][^>]*>([\s\S]*?)<\/span>/i);
+        if (match) {
+            prefixValue = currentFilter.h2Title.substring(0, match.index).replace(/<[^>]*>/g, '').trim();
+            highlightValue = match[1].replace(/<[^>]*>/g, '').trim();
+        } else {
+            prefixValue = currentFilter.h2Title.replace(/<[^>]*>/g, '').trim();
+        }
+    }
+
+    // Sélecteur d'onglet actif, réutilisé dans les sections 2 et 3
+    const tabPills = (withAdd) => (
+        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '14px', alignItems: 'center' }}>
+            {filters.map(f => (
+                <button
+                    key={f.id}
+                    type="button"
+                    onClick={() => setActiveTab(f.id)}
+                    style={{
+                        padding: '6px 13px',
+                        borderRadius: '999px',
+                        border: currentFilter?.id === f.id ? '2px solid #079D79' : '1px solid #cbd5e1',
+                        background: currentFilter?.id === f.id ? '#079D79' : '#ffffff',
+                        color: currentFilter?.id === f.id ? '#ffffff' : '#123F32',
+                        fontWeight: 700,
+                        fontSize: '0.8rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
+                    }}
+                >
+                    {f.label}
+                </button>
+            ))}
+            {withAdd && (
+                <button
+                    type="button"
+                    onClick={addFilter}
+                    style={{ padding: '6px 13px', borderRadius: '999px', border: '1px dashed #079D79', background: '#E3FFF8', color: '#079D79', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer' }}
+                >
+                    + Ajouter
+                </button>
+            )}
         </div>
+    );
 
-        {/* SECTION 1: ONGLETS, TITRES H2 & INTROS */}
-        {subSection === 'filters' && (
-            <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                    <label style={{ fontWeight: 700, fontSize: '0.8rem', color: '#1F4B40', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                        Sélectionner l'onglet à configurer
-                    </label>
-                    <button
-                        type="button"
-                        onClick={addFilter}
-                        style={{
-                            padding: '4px 10px',
-                            background: '#079D79',
-                            color: '#fff',
-                            border: 'none',
-                            borderRadius: '6px',
-                            fontSize: '0.75rem',
-                            fontWeight: 700,
-                            cursor: 'pointer'
-                        }}
-                    >
-                        + Ajouter un onglet
-                    </button>
+    return <>
+        {/* SECTION 1 : DISPOSITION & GRILLE */}
+        <EditorSection
+            number={1}
+            title="Disposition & grille"
+            icon={<Sliders size={14} />}
+            open={openSections.layout}
+            onToggle={() => toggleSection('layout')}
+            summary={`${isAuto ? 'Automatique' : 'Manuel'} · ${columns} colonnes`}
+        >
+            <span style={subTitleStyle}>Source des articles</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '8px' }}>
+                <button type="button" onClick={() => onChange({ sourceMode: 'auto' })} style={sourceButtonStyle(isAuto)}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><RefreshCw size={13} /> Automatique</span>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 800, padding: '2px 8px', borderRadius: '999px', background: isAuto ? '#00FF94' : '#E3FFF8', color: '#1F4B40' }}>
+                        ★ Recommandé
+                    </span>
+                </button>
+                <button type="button" onClick={() => onChange({ sourceMode: 'manual' })} style={sourceButtonStyle(!isAuto)}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><PenLine size={13} /> Manuel</span>
+                    <span style={{ fontSize: '0.68rem', fontWeight: 500, opacity: 0.8 }}>Cartes fixes, saisie à la main</span>
+                </button>
+            </div>
+
+            {isAuto ? (
+                <div style={{ marginTop: '10px', padding: '10px 12px', background: '#E3FFF8', borderRadius: '8px', border: '1px solid #079D79', fontSize: '0.78rem', color: '#123F32', lineHeight: 1.45 }}>
+                    <strong style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                        <Lightbulb size={14} color="#f59e0b" /> Comment ça marche ?
+                    </strong>
+                    Les articles sont synchronisés automatiquement depuis vos pages publiées ayant le type « Article ».
+                    Pour qu'un article apparaisse dans un onglet, indiquez la correspondance de l'onglet dans son panneau <strong>SEO &gt; Catégorie</strong> (voir section 2).
                 </div>
+            ) : (
+                <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '8px', lineHeight: 1.35 }}>
+                    Mode Manuel : seules les cartes saisies dans la section « Articles manuels » s'affichent.
+                </div>
+            )}
 
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
-                    {filters.map(f => (
+            <span style={{ ...subTitleStyle, marginTop: '18px' }}>Nombre de colonnes (Desktop)</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '8px' }}>
+                {[2, 3, 4].map(n => {
+                    const active = columns === n;
+                    return (
                         <button
-                            key={f.id}
+                            key={n}
                             type="button"
-                            onClick={() => setActiveTab(f.id)}
+                            onClick={() => onChange({ columns: n })}
+                            aria-pressed={active}
                             style={{
-                                padding: '6px 13px',
-                                borderRadius: '999px',
-                                border: activeTab === f.id ? '2px solid #079D79' : '1px solid #cbd5e1',
-                                background: activeTab === f.id ? '#079D79' : '#ffffff',
-                                color: activeTab === f.id ? '#ffffff' : '#123F32',
-                                fontWeight: 700,
-                                fontSize: '0.8rem',
-                                cursor: 'pointer',
-                                transition: 'all 0.15s ease'
+                                padding: '10px 6px', borderRadius: '10px', cursor: 'pointer',
+                                border: active ? '2px solid #1F4B40' : '1px solid #cbd5e1',
+                                background: active ? '#E3FFF8' : '#ffffff',
+                                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px'
                             }}
                         >
-                            {f.label}
+                            <span style={{ display: 'grid', gridTemplateColumns: `repeat(${n}, 1fr)`, gap: '3px', width: '100%', height: '34px' }}>
+                                {Array.from({ length: n }).map((_, i) => (
+                                    <span key={i} style={{ background: active ? '#079D79' : '#cbd5e1', borderRadius: '3px' }} />
+                                ))}
+                            </span>
+                            <span style={{ fontSize: '0.76rem', fontWeight: 700, color: active ? '#1F4B40' : '#475569' }}>{n} colonnes</span>
                         </button>
-                    ))}
+                    );
+                })}
+            </div>
+
+            <span style={{ ...subTitleStyle, marginTop: '18px' }}>Outils de la grille</span>
+            <div style={{ borderTop: '1px solid #f1f5f9' }}>
+                <ToggleRow label="Barre de recherche" checked={showSearch} onChange={v => onChange({ showSearch: v })} />
+                {showSearch && (
+                    <div style={{ paddingBottom: '8px' }}>
+                        <input
+                            style={inputStyle}
+                            value={props.searchPlaceholder ?? 'Rechercher un article...'}
+                            onChange={e => onChange({ searchPlaceholder: e.target.value })}
+                            placeholder="Rechercher un article..."
+                            aria-label="Placeholder de la barre de recherche"
+                        />
+                    </div>
+                )}
+                <div style={{ borderTop: '1px solid #f1f5f9' }}>
+                    <ToggleRow label="Menu de tri" checked={showSort} onChange={v => onChange({ showSort: v })} />
                 </div>
+                <div style={{ borderTop: '1px solid #f1f5f9' }}>
+                    <ToggleRow label="Badges compteurs" hint="Nombre d'articles sur les onglets (ex : Recettes 2)" checked={showCountBadges} onChange={v => onChange({ showCountBadges: v })} />
+                </div>
+            </div>
+        </EditorSection>
 
-                {currentFilter && (() => {
-                    let prefixValue = currentFilter.h2Prefix !== undefined ? currentFilter.h2Prefix : '';
-                    let highlightValue = currentFilter.h2Highlight !== undefined ? currentFilter.h2Highlight : '';
+        {/* SECTION 2 : ONGLETS DE FILTRAGE */}
+        <EditorSection
+            number={2}
+            title="Onglets de filtrage"
+            icon={<Target size={14} />}
+            open={openSections.filters}
+            onToggle={() => toggleSection('filters')}
+            summary={`${filters.length} onglet${filters.length > 1 ? 's' : ''}`}
+        >
+            {tabPills(true)}
 
-                    if (!prefixValue && !highlightValue && currentFilter.h2Title) {
-                        const match = currentFilter.h2Title.match(/<span[^>]*class=["']highlight["'][^>]*>([\s\S]*?)<\/span>/i);
-                        if (match) {
-                            prefixValue = currentFilter.h2Title.substring(0, match.index).replace(/<[^>]*>/g, '').trim();
-                            highlightValue = match[1].replace(/<[^>]*>/g, '').trim();
-                        } else {
-                            prefixValue = currentFilter.h2Title.replace(/<[^>]*>/g, '').trim();
-                        }
-                    }
+            {currentFilter && (
+                <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px' }}>
+                        <span style={{ fontWeight: 800, fontSize: '0.88rem', color: '#123F32', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <Settings size={15} /> Onglet : « {currentFilter.label} »
+                        </span>
+                        {filters.length > 1 && (
+                            <button
+                                type="button"
+                                onClick={removeCurrentFilter}
+                                style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer' }}
+                            >
+                                ✕ Supprimer
+                            </button>
+                        )}
+                    </div>
 
-                    return (
-                        <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px' }}>
-                                <span style={{ fontWeight: 800, fontSize: '0.9rem', color: '#123F32', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                    <Settings size={15} /> Configuration : « {currentFilter.label} »
-                                </span>
-                                {filters.length > 1 && (
-                                    <button
-                                        type="button"
-                                        onClick={removeCurrentFilter}
-                                        style={{ background: 'none', border: 'none', color: '#ef4444', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer' }}
-                                    >
-                                        ✕ Supprimer
-                                    </button>
-                                )}
-                            </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: '10px' }}>
+                        <Field label="Libellé du bouton">
+                            <input
+                                style={inputStyle}
+                                value={currentFilter.label || ''}
+                                onChange={e => updateFilterField('label', e.target.value)}
+                                placeholder="Ex: Nos recettes"
+                            />
+                        </Field>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: '10px' }}>
-                                <Field label="Libellé du bouton">
-                                    <input
-                                        style={inputStyle}
-                                        value={currentFilter.label || ''}
-                                        onChange={e => updateFilterField('label', e.target.value)}
-                                        placeholder="Ex: Nos recettes"
-                                    />
-                                </Field>
+                        <Field label="Icône">
+                            <select
+                                style={selectStyle}
+                                value={currentFilter.icon || 'all'}
+                                onChange={e => updateFilterField('icon', e.target.value)}
+                            >
+                                <option value="all">Grille (Tous)</option>
+                                <option value="chef">Recettes</option>
+                                <option value="lightbulb">Conseils</option>
+                                <option value="flower">Fleurs</option>
+                                <option value="book">Guides</option>
+                                <option value="oil">Huile</option>
+                                <option value="heart">Cœur</option>
+                                <option value="star">Étoile</option>
+                                <option value="shield">Bouclier</option>
+                            </select>
+                        </Field>
+                    </div>
 
-                                <Field label="Icône">
-                                    <select
-                                        style={selectStyle}
-                                        value={currentFilter.icon || 'all'}
-                                        onChange={e => updateFilterField('icon', e.target.value)}
-                                    >
-                                        <option value="all">Grille (Tous)</option>
-                                        <option value="chef">Recettes</option>
-                                        <option value="lightbulb">Conseils</option>
-                                        <option value="flower">Fleurs</option>
-                                        <option value="book">Guides</option>
-                                        <option value="oil">Huile</option>
-                                        <option value="heart">Cœur</option>
-                                        <option value="star">Étoile</option>
-                                        <option value="shield">Bouclier</option>
-                                    </select>
-                                </Field>
-                            </div>
+                    <Field
+                        label="Correspondance Catégorie SEO"
+                        hint={currentFilter.id === 'all'
+                            ? "Onglet « Tous » : il affiche tous les articles, aucune catégorie SEO à renseigner."
+                            : `Valeur à saisir dans SEO > Catégorie de chaque article pour qu'il apparaisse sous cet onglet${isAuto ? '' : ' (utilisée aussi pour rattacher les cartes manuelles)'}.`}
+                    >
+                        <input
+                            style={inputStyle}
+                            value={currentFilter.id || ''}
+                            disabled={currentFilter.id === 'all'}
+                            onChange={e => {
+                                const nextId = e.target.value.toLowerCase().trim();
+                                updateFilterField('id', nextId);
+                                setActiveTab(nextId);
+                            }}
+                            placeholder="ex: recettes, astuces, fleurs..."
+                        />
+                    </Field>
 
-                            <Field label="Identifiant / Tag d'association" hint="Articles portant ce tag (sauf 'all' qui affiche tout).">
+                    <Field label="Onglet affiché par défaut au chargement">
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                            <input
+                                type="checkbox"
+                                checked={(props.defaultFilter || 'all') === currentFilter.id}
+                                onChange={e => onChange({ defaultFilter: e.target.checked ? currentFilter.id : 'all' })}
+                            />
+                            Cet onglet est sélectionné par défaut
+                        </label>
+                    </Field>
+                </div>
+            )}
+        </EditorSection>
+
+        {/* SECTION 3 : EN-TÊTE DYNAMIQUE */}
+        <EditorSection
+            number={3}
+            title="En-tête dynamique"
+            icon={<Tag size={14} />}
+            open={openSections.header}
+            onToggle={() => toggleSection('header')}
+            summary="Titre H2 et introduction par onglet"
+        >
+            {tabPills(false)}
+
+            {currentFilter && (
+                <>
+                    <div style={{ padding: '12px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.8rem', color: '#123F32', marginBottom: '8px' }}>
+                            Titre H2 affiché sur « {currentFilter.label} »
+                        </span>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <Field label="1. Préfixe (texte normal)">
                                 <input
                                     style={inputStyle}
-                                    value={currentFilter.id || ''}
-                                    onChange={e => updateFilterField('id', e.target.value.toLowerCase().trim())}
-                                    placeholder="ex: recettes, astuces, fleurs..."
+                                    value={prefixValue}
+                                    onChange={e => updateFilterField('h2Prefix', e.target.value)}
+                                    placeholder="Ex: À vos tabliers,"
                                 />
                             </Field>
 
-                            {/* Titre H2 découpé intuitivement */}
-                            <div style={{ marginTop: '12px', padding: '12px', background: '#ffffff', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.8rem', color: '#123F32', marginBottom: '8px' }}>
-                                    <Tag size={14} /> TITRE H2 DYNAMIQUE (AFFICHÉ SUR CET ONGLET)
-                                </span>
-
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                    <Field label="1. Début du titre (texte normal)">
-                                        <input
-                                            style={inputStyle}
-                                            value={prefixValue}
-                                            onChange={e => updateFilterField('h2Prefix', e.target.value)}
-                                            placeholder="Ex: À vos tabliers,"
-                                        />
-                                    </Field>
-
-                                    <Field label="2. Fin du titre (souligné vert animé)">
-                                        <input
-                                            style={inputStyle}
-                                            value={highlightValue}
-                                            onChange={e => updateFilterField('h2Highlight', e.target.value)}
-                                            placeholder="Ex: on passe en cuisine !"
-                                        />
-                                    </Field>
-                                </div>
-
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.73rem', color: '#64748b', marginTop: '6px' }}>
-                                    <Lightbulb size={13} color="#f59e0b" /> Le texte du champ 2 bénéficiera automatiquement du soulignement vert tracé au feutre.
-                                </span>
-                            </div>
-
-                            <Field label="Texte d'introduction sous le H2">
-                                <textarea
-                                    style={{ ...textareaStyle, minHeight: '75px' }}
-                                    value={currentFilter.introText || ''}
-                                    onChange={e => updateFilterField('introText', e.target.value)}
-                                    placeholder="Ex: Du salé, du sucré, des classiques revisités..."
+                            <Field label="2. Mot surligné (souligné vert animé)">
+                                <input
+                                    style={inputStyle}
+                                    value={highlightValue}
+                                    onChange={e => updateFilterField('h2Highlight', e.target.value)}
+                                    placeholder="Ex: on passe en cuisine !"
                                 />
                             </Field>
                         </div>
-                    );
-                })()}
-            </div>
-        )}
 
-        {/* SECTION 2: ARTICLES & SOURCE AUTOMATIQUE */}
-        {subSection === 'articles' && (
-            <div>
-                {/* Choix de la source des articles */}
-                <div style={{ padding: '12px 14px', background: '#f1f5f9', borderRadius: '10px', border: '1px solid #cbd5e1', marginBottom: '16px' }}>
-                    <label style={{ display: 'block', fontWeight: 700, fontSize: '0.8rem', color: '#1F4B40', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                        Source des articles
-                    </label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                        <button
-                            type="button"
-                            onClick={() => onChange({ sourceMode: 'auto' })}
-                            style={{
-                                padding: '9px 10px',
-                                borderRadius: '8px',
-                                border: (props.sourceMode || 'auto') === 'auto' ? '2px solid #1F4B40' : '1px solid #cbd5e1',
-                                background: (props.sourceMode || 'auto') === 'auto' ? '#1F4B40' : '#ffffff',
-                                color: (props.sourceMode || 'auto') === 'auto' ? '#ffffff' : '#334155',
-                                fontWeight: 700,
-                                fontSize: '0.82rem',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '6px'
-                            }}
-                        >
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><RefreshCw size={13} /> Automatique (Blog)</span>
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => onChange({ sourceMode: 'manual' })}
-                            style={{
-                                padding: '9px 10px',
-                                borderRadius: '8px',
-                                border: props.sourceMode === 'manual' ? '2px solid #1F4B40' : '1px solid #cbd5e1',
-                                background: props.sourceMode === 'manual' ? '#1F4B40' : '#ffffff',
-                                color: props.sourceMode === 'manual' ? '#ffffff' : '#334155',
-                                fontWeight: 700,
-                                fontSize: '0.82rem',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '6px'
-                            }}
-                        >
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><PenLine size={13} /> Manuel (Cartes fixes)</span>
-                        </button>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.73rem', color: '#64748b' }}>
+                            <Lightbulb size={13} color="#f59e0b" /> Le champ 2 bénéficie automatiquement du soulignement vert tracé au feutre.
+                        </span>
                     </div>
 
-                    <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '8px', lineHeight: 1.35 }}>
-                        {(props.sourceMode || 'auto') === 'auto'
-                            ? 'Mode Automatique : Les articles publiés dans le blog sont chargés automatiquement avec leurs vraies données. Les cartes ci-dessous servent de complément / démonstration.'
-                            : 'Mode Manuel : Seules les cartes personnalisées ci-dessous s\'affichent.'}
+                    <div style={{ marginTop: '14px' }}>
+                        <Field label="Phrase d'introduction sous le H2">
+                            <textarea
+                                style={{ ...textareaStyle, minHeight: '75px' }}
+                                value={currentFilter.introText || ''}
+                                onChange={e => updateFilterField('introText', e.target.value)}
+                                placeholder="Ex: Du salé, du sucré, des classiques revisités..."
+                            />
+                        </Field>
                     </div>
-                </div>
+                </>
+            )}
+        </EditorSection>
 
+        {/* SECTION 4 : ARTICLES MANUELS (mode Manuel uniquement) */}
+        {!isAuto && (
+            <EditorSection
+                number={4}
+                title="Articles manuels"
+                icon={<FileText size={14} />}
+                open={openSections.articles}
+                onToggle={() => toggleSection('articles')}
+                summary={`${articles.length} carte${articles.length > 1 ? 's' : ''}`}
+            >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                     <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#1F4B40' }}>
                         Cartes d'articles ({articles.length})
@@ -2156,7 +2260,7 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                                 />
                             </Field>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '10px' }}>
                                 <Field label="Catégorie / Filtre associé">
                                     <select
                                         style={selectStyle}
@@ -2194,7 +2298,7 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                                 />
                             </Field>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '10px' }}>
                                 <Field label="Temps de lecture">
                                     <input
                                         style={inputStyle}
@@ -2224,80 +2328,7 @@ export function BlogCategoryFilterEditor({ props, onChange }) {
                         </div>
                     ))}
                 </div>
-            </div>
-        )}
-
-        {/* SECTION 3: OPTIONS & STYLE */}
-        {subSection === 'settings' && (
-            <div style={{ padding: '14px', background: '#f8fafc', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-                <Field label="Nombre de colonnes (Desktop)">
-                    <select
-                        style={selectStyle}
-                        value={props.columns || 4}
-                        onChange={e => onChange({ columns: parseInt(e.target.value, 10) || 4 })}
-                    >
-                        <option value={4}>4 colonnes (Standard élégant)</option>
-                        <option value={3}>3 colonnes (Cartes plus larges)</option>
-                        <option value={2}>2 colonnes</option>
-                    </select>
-                </Field>
-
-                <Field label="Filtre affiché par défaut au chargement">
-                    <select
-                        style={selectStyle}
-                        value={props.defaultFilter || 'all'}
-                        onChange={e => onChange({ defaultFilter: e.target.value })}
-                    >
-                        {filters.map(f => (
-                            <option key={f.id} value={f.id}>{f.label} ({f.id})</option>
-                        ))}
-                    </select>
-                </Field>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <Field label="Barre de recherche">
-                        <select
-                            style={selectStyle}
-                            value={props.showSearch !== false ? 'true' : 'false'}
-                            onChange={e => onChange({ showSearch: e.target.value === 'true' })}
-                        >
-                            <option value="true">Afficher</option>
-                            <option value="false">Masquer</option>
-                        </select>
-                    </Field>
-
-                    <Field label="Menu de tri">
-                        <select
-                            style={selectStyle}
-                            value={props.showSort !== false ? 'true' : 'false'}
-                            onChange={e => onChange({ showSort: e.target.value === 'true' })}
-                        >
-                            <option value="true">Afficher</option>
-                            <option value="false">Masquer</option>
-                        </select>
-                    </Field>
-                </div>
-
-                <Field label="Placeholder de la barre de recherche">
-                    <input
-                        style={inputStyle}
-                        value={props.searchPlaceholder ?? 'Rechercher un article...'}
-                        onChange={e => onChange({ searchPlaceholder: e.target.value })}
-                        placeholder="Rechercher un article..."
-                    />
-                </Field>
-
-                <Field label="Badges de compteur d'articles sur les onglets">
-                    <select
-                        style={selectStyle}
-                        value={props.showCountBadges !== false ? 'true' : 'false'}
-                        onChange={e => onChange({ showCountBadges: e.target.value === 'true' })}
-                    >
-                        <option value="true">Afficher (ex: Recettes 2)</option>
-                        <option value="false">Masquer</option>
-                    </select>
-                </Field>
-            </div>
+            </EditorSection>
         )}
     </>;
 }

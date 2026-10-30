@@ -3130,6 +3130,118 @@
         "props": {
           "code": "\n<style>\n/* SOURCES — VERSION DISCRÈTE */\n.adc-mini-sources {\n  margin: 28px 0 16px;\n  padding: 13px 17px;\n  background: #F8F8F3;\n  border: 1px solid #E7E9E2;\n  border-radius: 10px;\n  font-family: inherit;\n}\n\n.adc-mini-sources-title {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  margin: 0 0 6px;\n  color: #123F32;\n  font-size: 13px;\n  font-weight: 700;\n  line-height: 1.4;\n}\n\n.adc-mini-sources p {\n  margin: 0 !important;\n  color: #63776D !important;\n  font-size: 12px !important;\n  line-height: 1.7 !important;\n}\n\n.adc-mini-sources a {\n  color: #496B59;\n  text-decoration: underline;\n  text-decoration-color: #B8C9BE;\n  text-underline-offset: 3px;\n  transition: color .2s ease;\n}\n\n.adc-mini-sources a:hover {\n  color: #087D45;\n}\n\n.adc-mini-sources a:focus-visible {\n  outline: 2px solid #087D45;\n  outline-offset: 3px;\n}\n\n@media (max-width: 640px) {\n  .adc-mini-sources {\n    padding: 12px 14px;\n  }\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .adc-mini-sources a {\n    transition: none;\n  }\n}\n</style>\n\n<aside class=\"adc-mini-sources\"\n       aria-label=\"Sources et références\">\n\n  <div class=\"adc-mini-sources-title\">\n    <span aria-hidden=\"true\">📖</span>\n    Sources &amp; références\n  </div>\n\n  <p>\n    Pour approfondir :\n    <a href=\"https://food.ec.europa.eu/food-safety/novel-food/consultation-process-novel-food-status_en\"\n       target=\"_blank\"\n       rel=\"noopener noreferrer\">Commission européenne — Statut alimentaire du CBD</a>\n    ·\n    <a href=\"https://www.efsa.europa.eu/fr/news/provisional-safe-level-cannabidiol-novel-food\"\n       target=\"_blank\"\n       rel=\"noopener noreferrer\">EFSA (2026) — Sécurité du CBD alimentaire</a>\n    ·\n    <a href=\"https://food.ec.europa.eu/food-safety/novel-food/authorisations/summary-applications-and-notifications_en\"\n       target=\"_blank\"\n       rel=\"noopener noreferrer\">Commission européenne — Demandes d'autorisation</a>\n  </p>\n\n</aside>\n"
         }
+      },
+      {
+        "id": "blogcategoryfilter-1793370237672",
+        "type": "BlogCategoryFilter",
+        "props": {
+          "defaultFilter": "all",
+          "sourceMode": "auto",
+          "columns": 4,
+          "showSearch": true,
+          "showSort": true,
+          "showCountBadges": true,
+          "searchPlaceholder": "Rechercher un article...",
+          "filters": [
+            {
+              "id": "all",
+              "label": "Tout voir",
+              "icon": "all",
+              "h2Prefix": "Tous nos articles",
+              "h2Highlight": "Cuisine & CBD",
+              "introText": "Plats salés, desserts, boissons... faites le plein d'inspiration avec nos recettes gourmandes au CBD."
+            },
+            {
+              "id": "recettes",
+              "label": "Nos recettes",
+              "icon": "chef",
+              "h2Prefix": "À vos tabliers,",
+              "h2Highlight": "on passe en cuisine !",
+              "introText": "Du salé, du sucré, des classiques revisités et quelques expériences maison pour inviter le CBD dans vos assiettes et dans vos verres."
+            },
+            {
+              "id": "astuces",
+              "label": "Trucs & astuces",
+              "icon": "lightbulb",
+              "h2Prefix": "Nos trucs & astuces,",
+              "h2Highlight": "les secrets des chefs",
+              "introText": "Dosage, décarboxylation, matières grasses : les techniques indispensables pour cuisiner le CBD sans fausse note."
+            },
+            {
+              "id": "fleurs",
+              "label": "Fleurs & saveurs",
+              "icon": "flower",
+              "h2Prefix": "Fleurs & saveurs,",
+              "h2Highlight": "l’art des terpènes",
+              "introText": "Associer les arômes, choisir les bonnes variétés et sublimer les profils gustatifs de vos préparations."
+            },
+            {
+              "id": "debuter",
+              "label": "Bien débuter",
+              "icon": "book",
+              "h2Prefix": "Bien débuter,",
+              "h2Highlight": "votre première recette",
+              "introText": "Guides pas-à-pas, précautions de base et conseils faciles pour se lancer en toute sérénité."
+            }
+          ],
+          "articles": [
+            {
+              "id": "art-1",
+              "title": "Pâtes crémeuses au CBD et parmesan",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Une recette simple et savoureuse pour un dîner tout en douceur !",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791291468/lesamisducbd/partners/uv7fitxw2ycmqe6dfhib.png",
+              "readTime": "8 min",
+              "date": "12/08/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-2",
+              "title": "Comment faire une huile infusée au CBD ?",
+              "badge": "CONSEIL",
+              "filterId": "astuces",
+              "excerpt": "Découvrez notre méthode simple et efficace pour des huiles parfaitement aromatisées.",
+              "image": "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=800&q=80",
+              "readTime": "7 min",
+              "date": "15/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-3",
+              "title": "Brownies au CBD : le duo parfait ?",
+              "badge": "RECETTE",
+              "filterId": "recettes",
+              "excerpt": "Un grand classique gourmand à partager (ou pas !).",
+              "image": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=800&q=80",
+              "readTime": "6 min",
+              "date": "28/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-4",
+              "title": "Quelle fleur de CBD choisir pour cuisiner ?",
+              "badge": "CONSEIL",
+              "filterId": "fleurs",
+              "excerpt": "Nos variétés coups de cœur selon vos recettes.",
+              "image": "https://res.cloudinary.com/dasqyp35f/image/upload/v1791460034/lesamisducbd/partners/vcl8mmcwrw77ttrjliyp.png",
+              "readTime": "6 min",
+              "date": "01/07/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            },
+            {
+              "id": "art-5",
+              "title": "Bien débuter avec le CBD en cuisine : guide débutant",
+              "badge": "DÉBUTER",
+              "filterId": "debuter",
+              "excerpt": "Température, décarboxylation et dosage : tout ce qu’il faut savoir pour commencer sans stress.",
+              "image": "/images/usages/cuisine.webp",
+              "readTime": "5 min",
+              "date": "20/06/2024",
+              "href": "/p/cuisiner-avec-du-cbd-conseils-idees-et-recettes"
+            }
+          ]
+        }
       }
     ],
     "seo": {
@@ -3142,7 +3254,7 @@
     "status": "draft",
     "scheduledAt": null,
     "createdAt": "2026-10-15T10:36:50.593Z",
-    "updatedAt": "2026-10-28T12:12:21.033Z"
+    "updatedAt": "2026-10-30T14:25:34.746Z"
   },
   "comment-conserver-fleurs-cbd": {
     "slug": "comment-conserver-fleurs-cbd",
