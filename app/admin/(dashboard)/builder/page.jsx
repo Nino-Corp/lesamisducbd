@@ -120,7 +120,12 @@ export default function BuilderIndex() {
             ]);
             const data = await pagesRes.json();
             const analyticsData = await analyticsRes.json();
-            setPages(data);
+            // La clé fait foi : certaines anciennes pages n'ont pas de champ `slug` (ce qui bloquait le tri/déplacement)
+            const normalized = {};
+            Object.entries(data || {}).forEach(([key, p]) => {
+                normalized[key] = { ...p, slug: key, title: p?.title || key };
+            });
+            setPages(normalized);
             setAnalytics(analyticsData);
         } catch (error) {
             console.error('Error fetching pages:', error);
@@ -218,6 +223,41 @@ export default function BuilderIndex() {
             await fetchPages();
         } catch (error) {
             console.error('Error moving page:', error);
+        }
+    };
+
+    const deleteFolder = async (path, deletePages) => {
+        try {
+            const res = await fetch('/api/admin/builder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete_folder', folder: path, deletePages })
+            });
+            if (!res.ok) { alert('La suppression du dossier a échoué.'); return; }
+            const parent = path.split('/').slice(0, -1).join('/');
+            setExtraFolders(f => f.filter(x => x !== path && !x.startsWith(`${path}/`)));
+            if (filterFolder === path || filterFolder.startsWith(`${path}/`)) setFilterFolder(parent || ALL);
+            setNotice(`Dossier « ${path} » supprimé.`);
+            setTimeout(() => setNotice(''), 6000);
+            await fetchPages();
+        } catch (error) {
+            console.error('Error deleting folder:', error);
+        }
+    };
+
+    const handleDeleteFolder = (path) => {
+        const count = Object.keys(pages).filter(s => s.startsWith(`${path}/`)).length;
+        if (count === 0) {
+            if (confirm(`Supprimer le dossier vide « ${path} » ?`)) deleteFolder(path, false);
+            return;
+        }
+        const parent = path.split('/').slice(0, -1).join('/');
+        const dest = parent ? `« ${parent} »` : '« Sans dossier »';
+        if (!confirm(`Le dossier « ${path} » contient ${count} page(s).\n\nOK = supprimer le dossier et déplacer ses pages vers ${dest} (leurs anciennes adresses redirigent).\nAnnuler = ne rien faire.`)) return;
+        if (confirm(`Dernière question : supprimer AUSSI les ${count} page(s) définitivement ?\n\nOK = supprimer les pages\nAnnuler = les conserver (déplacées vers ${dest})`)) {
+            deleteFolder(path, true);
+        } else {
+            deleteFolder(path, false);
         }
     };
 
@@ -374,6 +414,7 @@ export default function BuilderIndex() {
                 onSelect={setFilterFolder}
                 dragging={!!draggingSlug}
                 onDropPage={(slug, folder) => { setDraggingSlug(null); handleDropPage(slug, folder); }}
+                onDeleteFolder={handleDeleteFolder}
                 onCreateFolder={(path) => { setExtraFolders(f => [...f, path]); setFilterFolder(path); }}
             />
             <div className={treeStyles.main}>

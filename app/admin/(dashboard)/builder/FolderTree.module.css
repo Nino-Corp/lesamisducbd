@@ -342,3 +342,33 @@
     .folderReady, .dropLabel, .folderLanded, .plusOne { animation: none; }
     .folderDrop { transform: none; }
 }
+
+.folderRow {
+    position: relative;
+}
+
+.deleteFolder {
+    position: absolute;
+    right: 38px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 8px;
+    background: #fee2e2;
+    color: #b91c1c;
+    cursor: pointer;
+}
+
+.folderRow:hover .deleteFolder,
+.deleteFolder:focus-visible {
+    display: inline-flex;
+}
+
+@media (hover: none) {
+    .deleteFolder { display: inline-flex; }
+}

@@ -81,11 +81,12 @@ export async function POST(request) {
 
         // ── MOVE ACTION : déplacer une page vers un autre dossier (slug) en un clic ──
         if (action === 'move') {
-            const from = normalizePageSlug(body.slug, { final: true });
+            const allPages = await safeKvGet(PAGES_KEY, {});
+            // Clé brute d'abord : certaines anciennes pages ont une clé non normalisée (majuscules, "_"…)
+            const from = (typeof body.slug === 'string' && allPages[body.slug]) ? body.slug : normalizePageSlug(body.slug, { final: true });
             const to = normalizePageSlug(body.newSlug, { final: true });
             if (!from || !to) return NextResponse.json({ error: 'Slug invalide' }, { status: 400 });
             if (from === to) return NextResponse.json({ success: true, slug: to });
-            const allPages = await safeKvGet(PAGES_KEY, {});
             if (!allPages[from]) return NextResponse.json({ error: 'Page introuvable' }, { status: 404 });
             if (allPages[to]) return NextResponse.json({ error: 'Une page existe déjà à cette adresse' }, { status: 409 });
 
@@ -119,6 +120,72 @@ export async function POST(request) {
             }).catch(() => {});
 
             return NextResponse.json({ success: true, slug: to });
+        }
+
+        // ── DELETE FOLDER ACTION : supprime un dossier (et ses sous-dossiers) ──
+        // deletePages=false → les pages remontent dans le dossier parent (redirection 301 conservée)
+        // deletePages=true  → les pages du dossier sont supprimées avec lui
+        if (action === 'delete_folder') {
+            const folder = normalizePageSlug(body.folder, { final: true });
+            if (!folder) return NextResponse.json({ error: 'Dossier invalide' }, { status: 400 });
+            const parent = folder.split('/').slice(0, -1).join('/');
+            const allPages = await safeKvGet(PAGES_KEY, {});
+            const affected = Object.keys(allPages).filter(s => s.startsWith(`${folder}/`));
+            const moved = [];
+
+            for (const from of affected) {
+                if (body.deletePages) {
+                    delete allPages[from];
+                    continue;
+                }
+                const last = from.split('/').pop();
+                let to = [parent, last].filter(Boolean).join('/');
+                let n = 2;
+                while (allPages[to]) { to = [parent, `${last}-${n++}`].filter(Boolean).join('/'); }
+                allPages[to] = { ...allPages[from], slug: to, updatedAt: new Date().toISOString() };
+                delete allPages[from];
+                moved.push([from, to]);
+            }
+            await safeKvSet(PAGES_KEY, allPages);
+
+            for (const [from, to] of moved) {
+                try { await recordPageRedirect(from, to); } catch (e) { /* non-blocking */ }
+                try {
+                    const history = await safeKvGet(`builder_history:${from}`, null);
+                    if (history) await safeKvSet(`builder_history:${to}`, history);
+                } catch (e) { /* non-blocking */ }
+            }
+
+            // Nettoyage des liens globaux (footer/header) pointant vers les pages concernées
+            try {
+                const globalContent = await safeKvGet('global_content', null);
+                if (globalContent && affected.length) {
+                    const remap = Object.fromEntries(moved.map(([f, t]) => [`/p/${f}`, `/p/${t}`]));
+                    const gone = new Set(body.deletePages ? affected.map(s => `/p/${s}`) : []);
+                    const fix = (links = []) => links
+                        .filter(l => !gone.has(l.href))
+                        .map(l => ({
+                            ...l,
+                            href: remap[l.href] || l.href,
+                            ...(Array.isArray(l.children) ? { children: fix(l.children) } : {})
+                        }));
+                    if (globalContent.footerLinks) globalContent.footerLinks = fix(globalContent.footerLinks);
+                    if (globalContent.headerLinks) globalContent.headerLinks = fix(globalContent.headerLinks);
+                    await safeKvSet('global_content', globalContent);
+                }
+            } catch (e) { /* non-blocking */ }
+
+            getSession().then(session => {
+                recordAdminAction({
+                    username: session?.username || 'admin',
+                    action: 'Suppression dossier Page Builder',
+                    target: folder,
+                    details: body.deletePages ? `${affected.length} page(s) supprimée(s)` : `${moved.length} page(s) déplacée(s) vers /${parent}`,
+                    ip: getClientIp(request)
+                }).catch(() => {});
+            }).catch(() => {});
+
+            return NextResponse.json({ success: true, moved: moved.length, deleted: body.deletePages ? affected.length : 0 });
         }
 
         if (!slug || !title) {

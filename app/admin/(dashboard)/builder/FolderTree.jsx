@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Folder, FolderOpen, FolderPlus, Inbox, Layers } from 'lucide-react';
+import { Folder, FolderOpen, FolderPlus, Inbox, Layers, Trash2 } from 'lucide-react';
 import { normalizePageSlug } from '@/lib/utils/stringUtils';
 import styles from './FolderTree.module.css';
 
@@ -18,7 +18,7 @@ export function folderSlug(name = '') {
  * Arbre des dossiers. Chaque dossier est aussi une zone de dépôt :
  * glisser une carte de page dessus la déplace dans ce dossier.
  */
-export default function FolderTree({ folders, total, rootCount, selected, dragging, onSelect, onDropPage, onCreateFolder }) {
+export default function FolderTree({ folders, total, rootCount, selected, dragging, onSelect, onDropPage, onCreateFolder, onDeleteFolder }) {
     const [dropTarget, setDropTarget] = useState(null);
     const [landed, setLanded] = useState(null); // dossier qui vient de recevoir une page
     const [creating, setCreating] = useState(false);
@@ -50,12 +50,12 @@ export default function FolderTree({ folders, total, rootCount, selected, draggi
         setCreating(false);
     };
 
-    const item = (key, label, count, Icon, depth = 0, droppable = true) => {
+    const item = (key, label, count, Icon, depth = 0, droppable = true, deletable = false) => {
         const active = selected === key;
         const over = dropTarget === key;
         const cls = `${styles.folder} ${active ? styles.folderActive : ''} ${droppable && dragging ? styles.folderReady : ''} ${over ? styles.folderDrop : ''} ${landed === key ? styles.folderLanded : ''}`;
         return (
-            <li key={key}>
+            <li key={key} className={styles.folderRow}>
                 <button type="button" className={cls} style={{ paddingLeft: 10 + depth * 16 }}
                     onClick={() => onSelect(key)} {...(droppable ? dropProps(key) : {})}>
                     <Icon size={16} />
@@ -63,6 +63,12 @@ export default function FolderTree({ folders, total, rootCount, selected, draggi
                     {over ? <span className={styles.dropLabel}>Déposer ici</span> : <span className={styles.count}>{count}</span>}
                     {landed === key && <span className={styles.plusOne} aria-hidden="true">+1</span>}
                 </button>
+                {deletable && onDeleteFolder && (
+                    <button type="button" className={styles.deleteFolder} title="Supprimer ce dossier"
+                        aria-label={`Supprimer le dossier ${label}`} onClick={() => onDeleteFolder(key)}>
+                        <Trash2 size={14} />
+                    </button>
+                )}
             </li>
         );
     };
@@ -75,7 +81,7 @@ export default function FolderTree({ folders, total, rootCount, selected, draggi
                 {item(ROOT, 'Sans dossier', rootCount, Inbox)}
                 {folders.map(([path, count]) => {
                     const depth = path.split('/').length - 1;
-                    return item(path, path.split('/').pop(), count, selected === path ? FolderOpen : Folder, depth + 1);
+                    return item(path, path.split('/').pop(), count, selected === path ? FolderOpen : Folder, depth + 1, true, true);
                 })}
             </ul>
 
