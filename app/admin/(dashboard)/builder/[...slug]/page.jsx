@@ -1,5 +1,6 @@
 'use client';
 
+import { SITE_URL } from '@/app/shared-metadata';
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -394,7 +395,7 @@ export default function PageEditor() {
                             title="Sauvegarder et voir l'aperçu">
                             <Eye size={14} /> Aperçu
                         </button>
-                        <a href={`https://www.lesamisducbd.fr/p/${page.slug}`} target="_blank" rel="noopener noreferrer"
+                        <a href={`${SITE_URL}/p/${page.slug}`} target="_blank" rel="noopener noreferrer"
                             style={{ padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937', textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                             <ExternalLink size={14} /> Voir
                         </a>

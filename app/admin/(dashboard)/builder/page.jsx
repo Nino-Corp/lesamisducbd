@@ -1,5 +1,6 @@
 'use client';
 
+import { SITE_URL } from '@/app/shared-metadata';
 import { normalizePageSlug } from '@/lib/utils/stringUtils';
 import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
@@ -551,7 +552,7 @@ export default function BuilderIndex() {
                                         title="Dupliquer">
                                         <Copy size={13} />
                                     </button>
-                                    <a href={`https://www.lesamisducbd.fr/p/${page.slug}`} target="_blank" rel="noopener noreferrer"
+                                    <a href={`${SITE_URL}/p/${page.slug}`} target="_blank" rel="noopener noreferrer"
                                         style={{ padding: '6px 12px', borderRadius: '8px', background: '#f3f4f6', color: '#374151', textDecoration: 'none', fontSize: '0.82rem', fontWeight: 600, display: 'flex', alignItems: 'center' }}
                                         title="Voir en ligne">
                                         <ExternalLink size={13} />

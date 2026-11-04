@@ -20,7 +20,6 @@ export default async function sitemap() {
         { url: `${SITE_URL}/essentiel`, priority: 0.8, changeFrequency: 'monthly' },
         { url: `${SITE_URL}/usages`, priority: 0.8, changeFrequency: 'monthly' },
         { url: `${SITE_URL}/professionnel`, priority: 0.7, changeFrequency: 'monthly' },
-        { url: `${SITE_URL}/qui-sommes-nous`, priority: 0.6, changeFrequency: 'monthly' },
         { url: `${SITE_URL}/transparence`, priority: 0.6, changeFrequency: 'monthly' },
         { url: `${SITE_URL}/recrutement`, priority: 0.5, changeFrequency: 'monthly' },
     ].map(r => ({ ...r, lastModified: new Date() }));

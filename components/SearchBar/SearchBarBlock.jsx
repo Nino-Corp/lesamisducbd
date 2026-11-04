@@ -21,7 +21,9 @@ const FALLBACK_PAGES = [
     { id: 'p8', title: "Recrutement", slug: "/recrutement", desc: "Rejoindre l'équipe Les Amis du CBD, offres d'emploi.", keywords: "recrutement, emploi, job, travailler, candidature, cv, offre, nous rejoindre", type: "page" },
 ];
 
-export default function SearchBarBlock({ placeholder = "Rechercher un produit ou une information… (ex: Gorilla, livraison, grossiste…)", title = "" }) {
+const DEFAULT_HINT = "Tapez le nom d'un produit, une catégorie ou une information (ex: livraison, qualité, grossiste)…";
+
+export default function SearchBarBlock({ placeholder = "Rechercher un produit ou une information… (ex: Gorilla, livraison, grossiste…)", title = "", hint = DEFAULT_HINT }) {
     const [query, setQuery] = useState('');
     const [productResults, setProductResults] = useState([]);
     const [pageResults, setPageResults] = useState([]);
@@ -138,10 +140,8 @@ export default function SearchBarBlock({ placeholder = "Rechercher un produit ou
                     {loading && <Loader2 size={18} className={styles.spinner} />}
                 </div>
 
-                {!query && !loading && (
-                    <p className={styles.hint}>
-                        Tapez le nom d'un produit, une catégorie ou une information (ex: livraison, qualité, grossiste)…
-                    </p>
+                {!query && !loading && hint && hint.trim() && (
+                    <p className={styles.hint}>{hint}</p>
                 )}
 
                 {productResults.length > 0 && (

@@ -1645,6 +1645,9 @@ export function SearchBarBlockEditor({ props, onChange }) {
         <Field label="Texte indicatif (placeholder)">
             <input style={inputStyle} value={props.placeholder || ''} onChange={e => onChange({ placeholder: e.target.value })} placeholder="Rechercher un produit..." />
         </Field>
+        <Field label="Phrase d'aide sous la barre" hint="Laissez vide pour ne rien afficher. Si le champ n'a jamais été modifié, la phrase par défaut s'affiche.">
+            <input style={inputStyle} value={props.hint ?? "Tapez le nom d'un produit, une catégorie ou une information (ex: livraison, qualité, grossiste)…"} onChange={e => onChange({ hint: e.target.value })} placeholder="(vide = aucune phrase)" />
+        </Field>
     </>;
 }
 

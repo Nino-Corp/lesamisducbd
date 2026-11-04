@@ -10,6 +10,7 @@ import { EDITORS } from '../../builder/builderEditors';
 import SEOPanel from '../../builder/SEOPanel';
 import BlockIcon from '../../builder/BlockIcon';
 import { Wind, CheckCircle2, Settings, Eye, EyeOff, ExternalLink, Trash2, Copy } from 'lucide-react';
+import { SITE_URL } from '@/app/shared-metadata';
 
 /* ── Section type metadata ────────────────────────── */
 const LEGACY_META = {
@@ -297,7 +298,7 @@ export default function UsagesContentPage() {
                             <Eye size={14} /> Aperçu
                         </a>
 
-                        <a href="https://www.lesamisducbd.fr/usages" target="_blank" rel="noopener noreferrer" style={{
+                        <a href={`${SITE_URL}/usages`} target="_blank" rel="noopener noreferrer" style={{
                             padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937',
                             textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem',
                             display: 'inline-flex', alignItems: 'center', gap: '6px'

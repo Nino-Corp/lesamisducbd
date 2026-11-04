@@ -10,6 +10,7 @@ import { EDITORS } from '../../builder/builderEditors';
 import SEOPanel from '../../builder/SEOPanel';
 import BlockIcon from '../../builder/BlockIcon';
 import { Sparkles, CheckCircle2, Settings, Eye, EyeOff, ExternalLink, Trash2, Copy, Info } from 'lucide-react';
+import { SITE_URL } from '@/app/shared-metadata';
 
 /* ── Section type metadata for legacy blocks ────── */
 const LEGACY_META = {
@@ -388,7 +389,7 @@ export default function EssentielContentPage() {
                         </a>
 
                         {/* View live */}
-                        <a href="https://www.lesamisducbd.fr/essentiel" target="_blank" rel="noopener noreferrer" style={{
+                        <a href={`${SITE_URL}/essentiel`} target="_blank" rel="noopener noreferrer" style={{
                             padding: '8px 16px', borderRadius: '8px', background: '#f3f4f6', color: '#1F2937',
                             textDecoration: 'none', fontWeight: 600, fontSize: '0.85rem',
                             display: 'inline-flex', alignItems: 'center', gap: '6px'

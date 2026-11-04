@@ -61,7 +61,7 @@ export async function POST(req) {
 
                     const baseUrl = process.env.NODE_ENV === 'development'
                         ? 'http://localhost:3000'
-                        : (process.env.NEXT_PUBLIC_SITE_URL || 'https://lesamisducbd.fr');
+                        : (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.lesamisducbd.fr');
 
                     const resetUrl = `${baseUrl}/connexion?reset=${token}`;
 

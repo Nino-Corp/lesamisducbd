@@ -8,6 +8,7 @@ import { safeKvGet } from '@/lib/kvCache';
 
 export const metadata = {
     title: 'Professionnels - Les Amis du CBD',
+    alternates: { canonical: '/professionnel' },
     description: 'Devenez partenaire Les Amis du CBD et trouvez nos points de vente sur notre carte interactive.',
 };
 

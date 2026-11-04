@@ -6,6 +6,7 @@ import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 import ArticleSidebar, { RelatedArticlesWidget } from '@/components/ArticleSidebar/ArticleSidebar';
+import { SITE_URL } from '@/app/shared-metadata';
 
 export const revalidate = 60; // Cache for 1 minute
 
@@ -75,10 +76,10 @@ export async function generateMetadata({ params }) {
 // Build JSON-LD schema based on page type
 function buildJsonLd(page, pageSlug) {
     const seo = page.seo || {};
-    const url = `https://www.lesamisducbd.fr/p/${pageSlug}`;
+    const url = `${SITE_URL}/p/${pageSlug}`;
     const title = seo.metaTitle || page.title;
     const description = seo.metaDescription || seo.excerpt || '';
-    const image = seo.ogImage || seo.featuredImage || 'https://www.lesamisducbd.fr/images/og-image.jpg';
+    const image = seo.ogImage || seo.featuredImage || `${SITE_URL}/images/og-image.jpg`;
 
     const base = {
         '@context': 'https://schema.org',
@@ -89,8 +90,8 @@ function buildJsonLd(page, pageSlug) {
         publisher: {
             '@type': 'Organization',
             name: 'Les Amis du CBD',
-            url: 'https://www.lesamisducbd.fr',
-            logo: { '@type': 'ImageObject', url: 'https://www.lesamisducbd.fr/images/logo.webp' }
+            url: SITE_URL,
+            logo: { '@type': 'ImageObject', url: `${SITE_URL}/images/logo.webp` }
         }
     };
 
