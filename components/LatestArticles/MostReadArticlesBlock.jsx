@@ -1,5 +1,6 @@
 import RelatedArticles from '@/components/RelatedArticles/RelatedArticles';
 import { kv } from '@vercel/kv';
+import styles from './ArticlesPlaceholder.module.css';
 
 export default async function MostReadArticlesBlock({ 
     title = "Les plus lus du moment", 
@@ -29,9 +30,9 @@ export default async function MostReadArticlesBlock({
         if (articles.length === 0) {
             if (process.env.NODE_ENV !== 'production') {
                 return (
-                    <div style={{ padding: '40px', textAlign: 'center', background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: '12px', color: '#64748b', margin: '20px auto', maxWidth: '800px' }}>
-                        <p style={{ margin: '0 0 8px', fontWeight: 600 }}>Bloc "Les plus lus" (Invisible en production)</p>
-                        <p style={{ margin: 0, fontSize: '0.9rem' }}>
+                    <div className={styles.box}>
+                        <p className={styles.heading}>Bloc "Les plus lus" (Invisible en production)</p>
+                        <p className={styles.text}>
                             {category 
                                 ? `Aucun article publié trouvé pour la catégorie "${category}".` 
                                 : "Aucun article publié n'a été trouvé sur le blog."}
@@ -76,9 +77,9 @@ export default async function MostReadArticlesBlock({
         console.error("MostReadArticlesBlock error:", e);
         if (process.env.NODE_ENV !== 'production') {
             return (
-                <div style={{ padding: '40px', textAlign: 'center', background: '#fef2f2', border: '1px dashed #f87171', borderRadius: '12px', color: '#dc2626', margin: '20px auto', maxWidth: '800px' }}>
-                    <p style={{ margin: '0 0 8px', fontWeight: 600 }}>Erreur de chargement des articles</p>
-                    <p style={{ margin: 0, fontSize: '0.9rem' }}>Vérifiez les connexions à la base de données.</p>
+                <div className={`${styles.box} ${styles.error}`}>
+                    <p className={styles.heading}>Erreur de chargement des articles</p>
+                    <p className={styles.text}>Vérifiez les connexions à la base de données.</p>
                 </div>
             );
         }

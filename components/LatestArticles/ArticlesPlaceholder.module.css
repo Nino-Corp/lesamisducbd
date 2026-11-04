@@ -1,0 +1,44 @@
+/* Placeholders dev (aucun article / erreur) des blocs d'articles */
+.box {
+    padding: 40px;
+    text-align: center;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    color: #64748b;
+    margin: 20px auto;
+    max-width: 800px;
+    box-sizing: border-box;
+}
+
+.error {
+    background: #fef2f2;
+    border-color: #f87171;
+    color: #dc2626;
+}
+
+.heading {
+    margin: 0 0 8px;
+    font-weight: 600;
+}
+
+.text {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 1024px) {
+    .box {
+        padding: 24px 16px;
+        margin: 16px 10px;
+        max-width: none;
+    }
+
+    .heading {
+        font-size: 0.95rem;
+    }
+
+    .text {
+        font-size: 0.82rem;
+    }
+}
