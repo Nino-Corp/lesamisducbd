@@ -8,12 +8,14 @@ import { useCart } from '@/context/CartContext';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import styles from './ProductDetails.module.css';
+import breadcrumbStyles from '@/components/Breadcrumb/Breadcrumb.module.css';
 import { ArrowLeft, Star, Truck, ShieldCheck, Heart, Sparkles } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
 import { SITE_URL } from '@/app/shared-metadata';
 import ProductSchema from '@/components/JsonLd/ProductSchema';
 import { trackCTA } from '@/utils/analytics';
+import { getBaseName, isVisibleForGroup, shouldShowTabs } from '@/lib/utils/productVariations';
 import { motion } from 'framer-motion';
 import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 
@@ -49,12 +51,15 @@ const FOOTER_PROPS = {
     copyright: "©2024 - Les Amis du CBD"
 };
 
-export default function ProductDetailsClient({ product, relatedProducts, globalContent }) {
+export default function ProductDetailsClient({ product, relatedProducts, globalContent, groupVisibility = {} }) {
     const { addItem } = useCart();
     const [quantity, setQuantity] = useState(1);
 
     const { data: session } = useSession();
     const groupId = session?.user?.id_default_group || 3;
+    // Variations (4g / 10g / Cartouche) filtrées selon le groupe client
+    const visibleVariations = (product.variations || []).filter(v => isVisibleForGroup(v, groupId, groupVisibility));
+    product = { ...product, variations: shouldShowTabs(visibleVariations) ? visibleVariations : null };
     const hasVariations = product.variations && product.variations.length > 0;
     const hasVariants = product.variants && product.variants.length > 0;
 
@@ -160,21 +165,11 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
     ];
 
     return (
-        <main className={styles.main}>
+        <main className={`${styles.main} hasBreadcrumb`}>
             <ProductSchema product={product} productUrl={productUrl} />
             <Header {...HEADER_PROPS} menuItems={globalContent?.headerLinks || HEADER_PROPS.menuItems} bannerVisible={globalContent?.visibility?.headerBanner !== false} />
 
-            <div style={{
-                position: 'absolute',
-                top: '90px', 
-                left: 0,
-                right: 0,
-                width: '100%',
-                maxWidth: 'var(--container-width)',
-                margin: '0 auto',
-                padding: '0',
-                zIndex: 50,
-            }}>
+            <div className={breadcrumbStyles.global}>
                 <Breadcrumb items={breadcrumbItems} />
             </div>
 
@@ -215,7 +210,7 @@ export default function ProductDetailsClient({ product, relatedProducts, globalC
                     >
                         <div className={styles.headerInfo}>
                             {activeProduct.tag && <span className={styles.tag}>{activeProduct.tag}</span>}
-                            <h1 className={styles.title}>{activeProduct.name}</h1>
+                            <h1 className={styles.title}>{hasVariations ? getBaseName(activeProduct.name) : activeProduct.name}</h1>
                         </div>
 
                         {(hasVariations || hasVariants) && (

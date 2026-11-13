@@ -7,6 +7,7 @@ import { ArrowRight } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
 import { trackCTA } from '@/utils/analytics';
+import { toTitleCase } from '@/lib/utils/titleCase';
 import styles from './ProductList.module.css';
 
 export function ProductCardItem({ product, index, groupId }) {
@@ -39,17 +40,8 @@ export function ProductCardItem({ product, index, groupId }) {
         }
     }
 
-    // Smart title case: strip leading numbers and capitalize each word
-    const formatProductName = (name) => {
-        if (!name) return '';
-        const clean = name.replace(/^\d+\s*/, '');
-        return clean.split(' ').map(word => {
-            if (!word) return '';
-            // Don't capitalize small connecting words if they are not the first word, though simple titlecase might be enough
-            // Here we just do a simple title case for all words
-            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-        }).join(' ');
-    };
+    // Title case français (retire aussi un éventuel numéro en début de nom)
+    const formatProductName = (name) => toTitleCase((name || '').replace(/^\d+\s*/, ''));
 
     return (
         <div className={styles.card}>

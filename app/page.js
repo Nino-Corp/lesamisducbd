@@ -1,4 +1,5 @@
 import PageBuilder from '@/components/PageBuilder';
+import { toTitleCase } from '@/lib/utils/titleCase';
 import { safeKvGet } from '@/lib/kvCache';
 import homeData from '@/data/home.json';
 import { productService } from '@/lib/services/productService';
@@ -52,7 +53,7 @@ const baseNameFromSlug = (slug) => {
   if (s.includes('skunk')) return 'Super Skunk';
   if (s.includes('remedy')) return 'Remedy';
   // Generic fallback: strip trailing weight pattern like "-4g" or "-10g"
-  return slug.replace(/-\d+g$/, '').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  return toTitleCase(slug.replace(/-\d+g$/, '').replace(/-/g, ' '));
 };
 
 /** Finds all weight variations of a flower given any of its slugs */

@@ -123,8 +123,13 @@ const cleanHtmlStrings = (obj) => {
     return obj;
 };
 
-export default function PageBuilder({ sections }) {
+/**
+ * flushFirst : le premier bloc visible démarre au ras de l'espacement du fil d'Ariane
+ * (son padding haut interne est neutralisé, voir .firstSectionFlush dans globals.css).
+ */
+export default function PageBuilder({ sections, flushFirst = false }) {
     if (!sections) return null;
+    const firstVisibleIndex = flushFirst ? sections.findIndex(s => s.props?.isVisible !== false && componentMap[s.type]) : -1;
 
     return (
         <>
@@ -154,6 +159,7 @@ export default function PageBuilder({ sections }) {
                 let classNames = '';
                 if (hideMobile) classNames += ' hide-mobile';
                 if (hideDesktop) classNames += ' hide-desktop';
+                if (index === firstVisibleIndex) classNames += ' firstSectionFlush';
 
                 const content = NO_ANIMATE.has(section.type) ? (
                     <Component {...componentProps} />

@@ -11,7 +11,7 @@
 
 .backLinkWrapper {
     position: absolute;
-    top: 145px; /* Centered precisely between breadcrumb (bottom ~126px) and floating panel (top 200px) */
+    top: var(--content-top); /* Même départ de contenu que toutes les pages (sous le fil d'Ariane) */
     left: 0;
     right: 0;
     width: 100%;

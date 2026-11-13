@@ -19,11 +19,18 @@
   --background-gradient: linear-gradient(145deg, #1f4b40 0%, #49b197 100%);
 
   --container-width: clamp(320px, 96%, 1800px);
+  /* Fil d'Ariane : bas du header (80px) + 16px, hauteur 40px, puis 16px avant le contenu */
+  --header-bottom: 80px;
+  --breadcrumb-gap: 16px;
+  --breadcrumb-height: 40px;
+  --breadcrumb-top: calc(var(--header-bottom) + var(--breadcrumb-gap));
+  --content-top: calc(var(--breadcrumb-top) + var(--breadcrumb-height) + var(--breadcrumb-gap));
 }
 
 @media (max-width: 1024px) {
   :root {
     --container-width: calc(100% - 20px);
+    --header-bottom: 70px;
   }
 }
 
@@ -73,6 +80,32 @@ main {
   padding-top: 100px;
   /* Space for fixed header */
 }
+
+/* Pages avec fil d'Ariane : le contenu démarre toujours à --content-top (valeur unique pour tout le site) */
+body:has(#global-breadcrumb) main,
+main.hasBreadcrumb {
+  padding-top: var(--content-top);
+}
+
+/* Pages du page builder : fil d'Ariane dans le flux, le contenu suit à --breadcrumb-gap */
+main.hasBreadcrumbFlow {
+  padding-top: var(--breadcrumb-top);
+}
+
+/* Premier bloc d'une page du builder : pas de padding haut interne, l'écart sous le fil d'Ariane reste --breadcrumb-gap */
+.firstSectionFlush > [class*="revealItem"] > :first-child,
+.firstSectionFlush > :not([class*="revealItem"]):first-child {
+  padding-top: 0 !important;
+}
+
+/* Marges haut du bloc racine et de son premier enfant : même règle par défaut quel que soit le bloc */
+.firstSectionFlush > [class*="revealItem"] > :first-child,
+.firstSectionFlush > [class*="revealItem"] > :first-child > :first-child,
+.firstSectionFlush > :not([class*="revealItem"]):first-child,
+.firstSectionFlush > :not([class*="revealItem"]):first-child > :first-child {
+  margin-top: 0 !important;
+}
+
 
 /* Utilities */
 .container {

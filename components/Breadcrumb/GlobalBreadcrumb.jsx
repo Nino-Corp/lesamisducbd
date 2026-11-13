@@ -1,6 +1,7 @@
 'use client';
 import { usePathname } from 'next/navigation';
 import Breadcrumb from './Breadcrumb';
+import styles from './Breadcrumb.module.css';
 
 const routeNames = {
     'produits': 'Produits',
@@ -51,17 +52,7 @@ export default function GlobalBreadcrumb() {
     });
 
     return (
-        <div id="global-breadcrumb" style={{
-            position: 'absolute',
-            top: '90px', 
-            left: 0,
-            right: 0,
-            width: '100%',
-            maxWidth: 'var(--container-width)',
-            margin: '0 auto',
-            padding: '0', // Align with the very edge of the header's green pill
-            zIndex: 50,
-        }}>
+        <div id="global-breadcrumb" className={styles.global}>
             <Breadcrumb items={items} />
         </div>
     );

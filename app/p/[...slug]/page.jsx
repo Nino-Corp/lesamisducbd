@@ -349,7 +349,7 @@ export default async function DynamicPage(props) {
                 display: 'flex',
                 justifyContent: 'center',
                 zIndex: 50,
-                marginBottom: '20px',
+                marginBottom: 'var(--breadcrumb-gap)',
             }}
         >
             <div 
@@ -364,10 +364,7 @@ export default async function DynamicPage(props) {
                 <Breadcrumb items={breadcrumbItems} />
             </div>
             <style dangerouslySetInnerHTML={{ __html: `
-                .breadcrumb-wrapper { padding: 0 24px; box-sizing: border-box; }
-                @media (max-width: 1024px) {
-                    .breadcrumb-wrapper { padding: 0 16px; }
-                }
+                .breadcrumb-wrapper { padding: 0; box-sizing: border-box; }
             `}} />
         </div>
     ) : null;
@@ -391,7 +388,7 @@ export default async function DynamicPage(props) {
                 }} className="article-layout">
                     {/* Contenu principal élargi */}
                     <div className="article-content" style={{ width: '100%', maxWidth: '1000px', flex: 1, minWidth: 0 }}>
-                        <PageBuilder sections={contentSections} />
+                        <PageBuilder sections={contentSections} flushFirst={!!breadcrumbNode} />
                         {!contentSections.some(s => s.type === 'LatestArticlesBlock' || s.type === 'RelatedArticles') && (
                             <PageBuilder sections={[
                                 {
@@ -452,14 +449,14 @@ export default async function DynamicPage(props) {
             <>
                 {headerSection && <PageBuilder sections={[headerSection]} />}
                 {breadcrumbNode}
-                <PageBuilder sections={contentSections} />
+                <PageBuilder sections={contentSections} flushFirst={!!breadcrumbNode} />
                 {footerSection && <PageBuilder sections={[footerSection]} />}
             </>
         );
     }
 
     return (
-        <main>
+        <main className={breadcrumbNode ? 'hasBreadcrumbFlow' : undefined}>
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             {breadcrumbJsonLd && (
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />

@@ -492,7 +492,7 @@ export default function Header({ logoText, logoImage, menuItems, bannerVisible }
                                             className={styles.sidebarLogoutSimple}
                                             onClick={() => {
                                                 setIsMenuOpen(false);
-                                                signOut();
+                                                signOut({ redirect: false }).then(() => window.location.assign('/'));
                                             }}
                                         >
                                             Déconnexion

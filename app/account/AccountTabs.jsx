@@ -95,7 +95,7 @@ export default function AccountTabs({ userSession, initialTab = 'profile' }) {
                             }
                             localStorage.removeItem('cart'); 
                         } catch (_) {}
-                        signOut({ callbackUrl: '/' });
+                        signOut({ redirect: false }).then(() => window.location.assign('/'));
                     }}
                 >
                     <LogOut size={20} />

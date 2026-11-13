@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useToast } from '@/context/ToastContext';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
+import { toTitleCase } from '@/lib/utils/titleCase';
 import isEqual from 'lodash.isequal'; // Added import for useSession
 
 const CartContext = createContext();
@@ -191,7 +192,7 @@ export function CartProvider({ children }) {
             }
         });
         // setIsCartOpen(true); // Auto-open cart on add - REPLACED BY TOAST
-        showToast(`${quantity}x ${product.name} ajouté !`, 'success', 3000, {
+        showToast(`${quantity}x ${toTitleCase(product.name)} ajouté !`, 'success', 3000, {
             label: 'Voir',
             onClick: () => setIsCartOpen(true)
         });

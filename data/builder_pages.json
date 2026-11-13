@@ -13,7 +13,7 @@
           "imageWidth": 100,
           "imageAlign": "center",
           "fullWidth": false,
-          "marginTop": "negative-medium",
+          "marginTop": "none",
           "marginBottom": "negative-medium"
         }
       },
@@ -228,7 +228,7 @@
     "status": "draft",
     "scheduledAt": null,
     "createdAt": "2026-09-22T08:31:36.598Z",
-    "updatedAt": "2026-10-15T01:05:23.347Z"
+    "updatedAt": "2026-11-13T16:04:18.464Z"
   },
   "blog/blog": {
     "slug": "blog/blog",
@@ -246,7 +246,7 @@
           "fullWidth": false,
           "paddingBottom": "none",
           "paddingTop": "none",
-          "marginTop": "negative-large",
+          "marginTop": "none",
           "marginBottom": "negative-medium"
         }
       },
@@ -886,7 +886,7 @@
           "imageWidth": 100,
           "imageAlign": "center",
           "fullWidth": false,
-          "marginTop": "negative-large",
+          "marginTop": "none",
           "marginBottom": "negative-medium"
         }
       },
@@ -1037,7 +1037,7 @@
           "imageAlign": "center",
           "fullWidth": false,
           "isVisible": true,
-          "marginTop": "negative-large",
+          "marginTop": "none",
           "marginBottom": "negative-small"
         }
       },
@@ -1680,7 +1680,7 @@
           "imageWidth": 100,
           "imageAlign": "center",
           "fullWidth": false,
-          "marginTop": "negative-large",
+          "marginTop": "none",
           "marginBottom": "negative-medium"
         }
       },
@@ -1764,7 +1764,7 @@
           "imageWidth": 100,
           "imageAlign": "center",
           "fullWidth": false,
-          "marginTop": "negative-large",
+          "marginTop": "none",
           "marginBottom": "negative-medium"
         }
       },
@@ -1966,7 +1966,7 @@
     "status": "draft",
     "scheduledAt": null,
     "createdAt": "2026-06-04T13:31:08.164Z",
-    "updatedAt": "2026-11-02T14:36:16.260Z"
+    "updatedAt": "2026-11-13T16:03:38.742Z"
   },
   "blog/conseils-guides": {
     "slug": "blog/conseils-guides",
@@ -2286,7 +2286,7 @@
           "imageWidth": 100,
           "imageAlign": "center",
           "fullWidth": false,
-          "marginTop": "negative-large",
+          "marginTop": "none",
           "marginBottom": "negative-medium"
         }
       },
@@ -2597,7 +2597,7 @@
     "status": "draft",
     "scheduledAt": null,
     "createdAt": "2026-09-14T11:33:46.707Z",
-    "updatedAt": "2026-11-02T14:36:37.923Z"
+    "updatedAt": "2026-11-13T16:01:29.468Z"
   },
   "blog/articles/comment-conserver-fleurs-cbd": {
     "slug": "blog/articles/comment-conserver-fleurs-cbd",
@@ -3335,7 +3335,7 @@
     "status": "draft",
     "scheduledAt": null,
     "createdAt": "2026-10-25T13:37:44.326Z",
-    "updatedAt": "2026-11-02T14:38:02.577Z"
+    "updatedAt": "2026-11-13T15:53:28.459Z"
   },
   "blog/articles/comment-selectionne-t-on-nos-fleurs-de-cbd": {
     "slug": "blog/articles/comment-selectionne-t-on-nos-fleurs-de-cbd",
@@ -3534,7 +3534,7 @@
     "status": "draft",
     "scheduledAt": null,
     "createdAt": "2026-10-19T12:04:16.177Z",
-    "updatedAt": "2026-11-02T14:38:59.617Z"
+    "updatedAt": "2026-11-13T15:53:12.185Z"
   },
   "blog/articles/qu-est-ce-que-le-cbd": {
     "slug": "blog/articles/qu-est-ce-que-le-cbd",
@@ -3851,7 +3851,7 @@
     "status": "draft",
     "scheduledAt": null,
     "createdAt": "2026-10-13T09:53:48.922Z",
-    "updatedAt": "2026-11-02T14:39:02.002Z"
+    "updatedAt": "2026-11-13T15:52:58.391Z"
   },
   "les-amis-du-cbd/histoire-les-amis-du-cbd": {
     "slug": "les-amis-du-cbd/histoire-les-amis-du-cbd",
@@ -3867,7 +3867,7 @@
           "imageWidth": 100,
           "imageAlign": "center",
           "fullWidth": false,
-          "marginTop": "negative-large"
+          "marginTop": "none"
         }
       },
       {
@@ -4067,6 +4067,6 @@
     "status": "draft",
     "scheduledAt": null,
     "createdAt": "2026-06-05T08:18:35.870Z",
-    "updatedAt": "2026-11-04T18:40:27.547Z"
+    "updatedAt": "2026-11-13T15:58:21.910Z"
   }
 }

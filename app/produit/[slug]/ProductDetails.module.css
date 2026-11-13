@@ -14,7 +14,7 @@
     width: 100%;
     max-width: var(--container-width);
     margin: 0 auto;
-    padding: 55px 0 0; /* Clear the absolute breadcrumb, align with header edge */
+    padding: 0;
 }
 
 .backLink {

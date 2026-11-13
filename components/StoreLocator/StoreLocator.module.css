@@ -32,7 +32,7 @@
 
 @media (min-width: 1025px) {
     .floatingPanel {
-        top: 200px; /* Pushed down to avoid header, breadcrumb and backlink */
+        top: calc(var(--content-top) + 48px); /* Sous le fil d'Ariane et le lien de retour */
         left: max(2%, calc((100% - 1800px) / 2)); /* Aligns EXACTLY with var(--container-width) edges regardless of scrollbar */
         width: 380px;
         max-height: calc(100% - 224px);

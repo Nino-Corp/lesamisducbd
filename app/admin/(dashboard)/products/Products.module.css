@@ -625,3 +625,56 @@
 .showBtn:hover {
     background: #f0fff0;
 }
+/* ── Visibilité par client : gros éléments cliquables ── */
+.gvFilters { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+.gvFilterBtn {
+    min-height: 34px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+    border: 1.5px solid #1F4B40; background: #fff; color: #1F4B40; font-weight: 600; font-size: 0.85rem;
+}
+.gvFilterBtnActive { background: #1F4B40; color: #fff; }
+
+.gvBulkBar {
+    position: sticky; top: 8px; z-index: 5; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    padding: 10px 12px; margin-bottom: 10px; border-radius: 12px; background: #E3FFF8;
+    border: 1.5px solid #1F4B40; box-shadow: 0 4px 12px rgba(31, 75, 64, 0.12);
+}
+.gvSelectAll {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 0 12px;
+    border-radius: 10px; background: #fff; font-weight: 600; font-size: 0.9rem; cursor: pointer; user-select: none;
+}
+.gvBulkLabel { font-weight: 500; font-size: 0.85rem; }
+.gvBulkBtn {
+    min-height: 38px; padding: 0 14px; border-radius: 10px; border: 0; cursor: pointer;
+    background: #1F4B40; color: #fff; font-weight: 600; font-size: 0.85rem;
+}
+.gvBulkBtn:disabled { opacity: 0.35; cursor: not-allowed; }
+.gvBulkBtnGhost { background: #fff; color: #1F4B40; border: 1.5px solid #1F4B40; }
+
+.gvRow {
+    display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 12px;
+    border: 1.5px solid transparent; background: #fff; cursor: pointer; user-select: none;
+    transition: background 0.15s, border-color 0.15s;
+}
+.gvRow:hover { background: #F4FBF8; }
+.gvRowSelected { border-color: #1F4B40; background: #E3FFF8; }
+.gvCheck { width: 20px; height: 20px; flex-shrink: 0; accent-color: #1F4B40; cursor: pointer; }
+.gvInfo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.gvName { font-size: 0.95rem; font-weight: 600; color: #1F4B40; }
+.gvRuleLabel { font-size: 0.75rem; opacity: 0.65; }
+
+.gvSeg { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+.gvSegBtn {
+    min-height: 36px; min-width: 80px; padding: 0 12px; border-radius: 10px; cursor: pointer;
+    border: 1.5px solid #1F4B40; background: #fff; color: #1F4B40; font-weight: 600; font-size: 0.85rem;
+}
+.gvSegBtnActive { background: #1F4B40; color: #fff; }
+.gvSegBtn:focus-visible, .gvBulkBtn:focus-visible, .gvFilterBtn:focus-visible { outline: 3px solid #00FF94; outline-offset: 2px; }
+
+.gvSaveBar { position: sticky; bottom: 12px; margin-top: 16px; }
+.gvSaveBtn { width: 100%; min-height: 44px; font-size: 0.95rem; }
+
+@media (max-width: 768px) {
+    .gvRow { flex-wrap: wrap; }
+    .gvSeg { width: 100%; }
+    .gvSegBtn { flex: 1; }
+}

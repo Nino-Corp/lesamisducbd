@@ -1,5 +1,104 @@
 [
   {
+    "id": "779787b1-7ae3-48c3-8724-7117065f397b",
+    "timestamp": "2026-11-13T16:04:18.616Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "espace-pro-cbd",
+    "details": "Page: \"Espace Pro\" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "ea5425a0-ecf5-4288-9084-427f1eaca464",
+    "timestamp": "2026-11-13T16:03:39.027Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "les-amis-du-cbd/qualite-tracabilite-cbd",
+    "details": "Page: \"Nos promesses\" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "a534cf01-daed-469c-96ac-f9baddc56d8c",
+    "timestamp": "2026-11-13T16:02:47.843Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "les-amis-du-cbd/qualite-tracabilite-cbd",
+    "details": "Page: \"Nos promesses\" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "234ec17b-d124-42c2-97bf-19af1f191312",
+    "timestamp": "2026-11-13T16:01:29.729Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "les-amis-du-cbd/lexique-cbd",
+    "details": "Page: \"Lexique du cbd\" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "3ee0b874-1da6-430f-9aae-440bb6d46de6",
+    "timestamp": "2026-11-13T15:58:21.971Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "les-amis-du-cbd/histoire-les-amis-du-cbd",
+    "details": "Page: \"Notre histoire\" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "998f643a-3d38-4005-8fe5-17e7e32d7012",
+    "timestamp": "2026-11-13T15:58:19.496Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "les-amis-du-cbd/histoire-les-amis-du-cbd",
+    "details": "Page: \"Notre histoire\" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "240ec260-e69b-44d4-9d5d-751cde02c29f",
+    "timestamp": "2026-11-13T15:53:38.416Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "les-amis-du-cbd/histoire-les-amis-du-cbd",
+    "details": "Page: \"Notre histoire\" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "fd8ba787-52a8-48a1-937f-71b9a0cadd86",
+    "timestamp": "2026-11-13T15:53:28.617Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "blog/articles/road-trip-cbd",
+    "details": "Page: \"Road trip CBD \" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "cd26de42-95db-483f-9529-6dc1d52cfffb",
+    "timestamp": "2026-11-13T15:53:12.272Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "blog/articles/comment-selectionne-t-on-nos-fleurs-de-cbd",
+    "details": "Page: \"Comment sélectionne-t-on nos fleurs de CBD ?\" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "f70ca593-7fe9-4c05-b2b6-dfafd9145eb1",
+    "timestamp": "2026-11-13T15:52:58.479Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "blog/articles/qu-est-ce-que-le-cbd",
+    "details": "Page: \"Qu'est-ce que le CBD ?\" (draft)",
+    "ip": "::1"
+  },
+  {
+    "id": "1761274b-f98d-4a0f-94a4-0610e5d29541",
+    "timestamp": "2026-11-13T15:52:42.582Z",
+    "username": "admin",
+    "action": "Mise à jour Page Builder",
+    "target": "les-amis-du-cbd/histoire-les-amis-du-cbd",
+    "details": "Page: \"Notre histoire\" (draft)",
+    "ip": "::1"
+  },
+  {
     "id": "55feacfc-373c-4b0b-aa39-ccbbd913b0ec",
     "timestamp": "2026-11-04T18:40:27.777Z",
     "username": "admin",
@@ -794,105 +893,6 @@
   {
     "id": "7acd23e6-8a6e-403c-a065-75634e309390",
     "timestamp": "2026-10-28T12:03:49.920Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "3e15e006-b421-4b30-9516-9af81794c509",
-    "timestamp": "2026-10-28T12:03:37.103Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "d41bf4be-8c19-431d-b93e-af56589e3345",
-    "timestamp": "2026-10-28T12:03:28.239Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "85c90870-2d5b-4060-97f5-a2d3ef7d78bc",
-    "timestamp": "2026-10-28T12:03:22.054Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "e7e872ca-dcbc-4209-8175-55f98739c4d9",
-    "timestamp": "2026-10-28T12:03:18.122Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "28809209-0192-4361-8acf-38d879989874",
-    "timestamp": "2026-10-28T12:03:11.380Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "c121416f-2b60-4566-9aa7-2ae30fe7683d",
-    "timestamp": "2026-10-28T12:03:08.368Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "494bf6de-5cd6-454c-926e-40778773e576",
-    "timestamp": "2026-10-28T12:02:12.759Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "ba3322f8-d91d-484c-b500-51847f5ea973",
-    "timestamp": "2026-10-28T12:01:07.294Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "3b0792a2-eaa8-459c-a7b0-e32945f12f06",
-    "timestamp": "2026-10-28T12:01:05.146Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "38a2cb85-2b6a-4f36-adb5-fe351eeb1ea9",
-    "timestamp": "2026-10-28T12:00:46.918Z",
-    "username": "marionhelly",
-    "action": "Mise à jour Page Builder",
-    "target": "road-trip-cbd",
-    "details": "Page: \"Road trip CBD \" (draft)",
-    "ip": "31.35.173.66"
-  },
-  {
-    "id": "558dbd63-104b-46da-ae43-20c12f0e6382",
-    "timestamp": "2026-10-28T12:00:41.140Z",
     "username": "marionhelly",
     "action": "Mise à jour Page Builder",
     "target": "road-trip-cbd",

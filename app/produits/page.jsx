@@ -16,7 +16,7 @@ export const metadata = {
 export const revalidate = 60; // ISR cache every minute
 
 export default async function ProductsPage() {
-    const [products, hiddenIds, globalContent, productOrder, categoryOverrides, pageConfigData, productOverrides, productCategories] = await Promise.all([
+    const [products, hiddenIds, globalContent, productOrder, categoryOverrides, pageConfigData, productOverrides, productCategories, groupVisibility] = await Promise.all([
         productService.getProducts().catch(() => []),
         safeKvGet('hidden_products', []),
         safeKvGet('global_content', null),
@@ -24,7 +24,8 @@ export default async function ProductsPage() {
         safeKvGet('category_overrides', {}),
         safeKvGet('products_page_config', null),
         safeKvGet('product_overrides', {}),
-        safeKvGet('product_categories', null)
+        safeKvGet('product_categories', null),
+        safeKvGet('product_group_visibility', {})
     ]);
 
     const pageConfig = pageConfigData || {
@@ -53,5 +54,5 @@ export default async function ProductsPage() {
     }
 
 
-    return <ProductsClient initialProducts={visibleProducts} globalContent={globalContent} categoryOverrides={categoryOverrides || {}} pageConfig={pageConfig} productOverrides={productOverrides || {}} productCategories={productCategories} />;
+    return <ProductsClient initialProducts={visibleProducts} globalContent={globalContent} categoryOverrides={categoryOverrides || {}} pageConfig={pageConfig} productOverrides={productOverrides || {}} productCategories={productCategories} groupVisibility={groupVisibility || {}} />;
 }

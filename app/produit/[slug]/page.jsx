@@ -6,6 +6,7 @@ import ProductDetailsClient from './ProductDetailsClient';
 import { notFound } from 'next/navigation';
 import { stripHtml, truncateText } from '@/lib/utils/stringUtils';
 import { SITE_URL } from '@/app/shared-metadata';
+import { getBaseName, toVariation, sortVariations, isCartouche, shouldShowTabs } from '@/lib/utils/productVariations';
 
 export async function generateMetadata({ params }) {
     const { slug } = await params;
@@ -49,12 +50,13 @@ export const revalidate = 60;
 export default async function ProductPage({ params }) {
     const { slug } = await params;
 
-    const [products, globalContent, overrides, hiddenIds, categoryOverrides] = await Promise.all([
+    const [products, globalContent, overrides, hiddenIds, categoryOverrides, groupVisibility] = await Promise.all([
         productService.getProducts().catch(() => []),
         safeKvGet('global_content', null),
         safeKvGet('product_overrides', null),
         safeKvGet('hidden_products', []),
-        safeKvGet('category_overrides', {})
+        safeKvGet('category_overrides', {}),
+        safeKvGet('product_group_visibility', {})
     ]);
 
     const hidden = Array.isArray(hiddenIds) ? hiddenIds : [];
@@ -68,7 +70,7 @@ export default async function ProductPage({ params }) {
     }
 
     // Extract base name by stripping trailing weight (e.g. "Super Skunk 4g" -> "Super Skunk")
-    const baseName = (product.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
+    const baseName = getBaseName(product.name);
 
     // Apply admin overrides (description, descriptionShort) on top of PrestaShop data
     const productWithOverrides = overrides?.[product.id]
@@ -77,27 +79,11 @@ export default async function ProductPage({ params }) {
 
     // Find all products that share this base name to form the list of weight variations
     const variations = products
-        .filter(p => {
-            const pBase = (p.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
-            return pBase.toLowerCase() === baseName.toLowerCase();
-        })
-        .map(p => {
-            const m = (p.name || '').match(/(\d+(?:[.,]\d+)?)\s*g/i);
-            const weight = m ? parseFloat(m[1].replace(',', '.')) : 0;
-            const varOverrides = overrides?.[p.id] ? overrides[p.id] : {};
-            return {
-                ...p,
-                ...varOverrides,
-                weight,
-                label: weight > 0 ? `${weight}g` : p.name
-            };
-        })
-        .sort((a, b) => {
-            if (a.weight && b.weight) return a.weight - b.weight;
-            return (a.priceTTC || 0) - (b.priceTTC || 0);
-        });
+        .filter(p => getBaseName(p.name).toLowerCase() === baseName.toLowerCase())
+        .map(p => toVariation(p, overrides?.[p.id] ? overrides[p.id] : {}))
+        .sort(sortVariations);
 
-    if (variations.length > 1) {
+    if (shouldShowTabs(variations)) {
         productWithOverrides.variations = variations;
     }
 
@@ -120,13 +106,13 @@ export default async function ProductPage({ params }) {
     let relatedProducts = products
         .filter(p => !hidden.includes(p.id))
         .filter(p => {
-            const pBase = (p.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
-            return pBase.toLowerCase() !== baseName.toLowerCase();
+            return getBaseName(p.name).toLowerCase() !== baseName.toLowerCase();
         })
+        .filter(p => !isCartouche(p))
         .filter(p => getProductCategory(p) === currentCategory);
         
     // Shuffle randomly to vary the recommendations
     relatedProducts = relatedProducts.sort(() => 0.5 - Math.random()).slice(0, 4);
 
-    return <ProductDetailsClient product={productWithOverrides} relatedProducts={relatedProducts} globalContent={globalContent} />;
+    return <ProductDetailsClient product={productWithOverrides} relatedProducts={relatedProducts} globalContent={globalContent} groupVisibility={groupVisibility || {}} />;
 }

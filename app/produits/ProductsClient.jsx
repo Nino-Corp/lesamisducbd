@@ -10,6 +10,7 @@ import Footer from '@/components/Footer/Footer';
 import styles from './Products.module.css';
 import { useSession } from 'next-auth/react';
 import { calculateGroupPrice } from '@/lib/utils/groupPricing';
+import { getBaseName, getGroupKey, toVariation, sortVariations, isVisibleForGroup, shouldShowTabs } from '@/lib/utils/productVariations';
 import { trackCTA } from '@/utils/analytics';
 import ScrollReveal from '@/components/ScrollReveal/ScrollReveal';
 import { Sparkles, Sprout, Layers, Package } from 'lucide-react';
@@ -47,7 +48,7 @@ const FOOTER_PROPS = {
     copyright: "©2024 - Les Amis du CBD"
 };
 
-export default function ProductsClient({ initialProducts, globalContent, categoryOverrides = {}, pageConfig, productOverrides = {}, productCategories }) {
+export default function ProductsClient({ initialProducts: allProducts, globalContent, categoryOverrides = {}, pageConfig, productOverrides = {}, productCategories, groupVisibility = {} }) {
     // Provide defaults if pageConfig is missing
     const config = pageConfig || {
         carousel: [
@@ -66,6 +67,8 @@ export default function ProductsClient({ initialProducts, globalContent, categor
     const { addItem } = useCart();
     const { data: session } = useSession();
     const groupId = session?.user?.id_default_group || 3;
+    // Produits masqués selon le groupe client (ex: cartouches / présentoirs réservés aux pros)
+    const initialProducts = allProducts.filter(p => isVisibleForGroup(p, groupId, groupVisibility));
 
     // State
     const [activeCategory, setActiveCategory] = useState('all');
@@ -172,34 +175,23 @@ export default function ProductsClient({ initialProducts, globalContent, categor
     const groupedProducts = (() => {
         const groups = new Map();
         filteredProducts.forEach(product => {
-            const baseName = (product.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
-            const key = baseName.toLowerCase();
-            
+            const baseName = getBaseName(product.name);
+            const key = getGroupKey(product);
+
             if (!groups.has(key)) {
-                // Find all variations for this base product from the full initialProducts list
+                // Find all variations (4g / 10g / Cartouche) for this base product
                 const variations = initialProducts
-                    .filter(p => {
-                        const pBase = (p.name || '').replace(/\s*\d+(?:[.,]\d+)?\s*g\s*$/i, '').trim();
-                        return pBase.toLowerCase() === key;
-                    })
-                    .map(p => {
-                        const m = (p.name || '').match(/(\d+(?:[.,]\d+)?)\s*g/i);
-                        const weight = m ? parseFloat(m[1].replace(',', '.')) : 0;
-                        return {
-                            ...p,
-                            weight,
-                            label: weight > 0 ? `${weight}g` : p.name
-                        };
-                    })
-                    .sort((a, b) => {
-                        if (a.weight && b.weight) return a.weight - b.weight;
-                        return (a.priceTTC || 0) - (b.priceTTC || 0);
-                    });
+                    .filter(p => getGroupKey(p) === key)
+                    .map(p => toVariation(p))
+                    .sort(sortVariations);
+
+                // Le produit "principal" affiché est le premier onglet (pas la cartouche)
+                const main = variations.find(v => !v.isCartouche) || variations[0] || product;
 
                 groups.set(key, {
-                    ...product,
+                    ...main,
                     baseName,
-                    variations: variations.length > 1 ? variations : null
+                    variations: shouldShowTabs(variations) ? variations : null
                 });
             }
         });
@@ -459,7 +451,7 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId, con
 
             <div className={styles.cardContent}>
                 <div className={styles.cardHeader}>
-                    <h3 className={styles.productName}>{activeProduct.name}</h3>
+                    <h3 className={styles.productName}>{hasVariations ? getBaseName(activeProduct.name) : activeProduct.name}</h3>
                     {(productOverrides[activeProduct.id]?.badge || (isPremium && config.premiumBadge.enabled)) && (
                         <p className={styles.productSubtitle}>
                             {productOverrides[activeProduct.id]?.badge || config.premiumBadge.text}

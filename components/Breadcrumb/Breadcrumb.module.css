@@ -1,7 +1,20 @@
+/* Positionnement global : valeurs centralisées dans app/globals.css (--breadcrumb-top) */
+.global {
+    position: absolute;
+    top: var(--breadcrumb-top);
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0;
+    z-index: 50;
+}
+
 .wrapper {
     background: transparent;
     padding: 0;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     pointer-events: auto;
     animation: slideInFromTop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }

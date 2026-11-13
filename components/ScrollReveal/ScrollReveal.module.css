@@ -6,7 +6,7 @@
     /* Smooth ease-out */
 }
 
-.isVisible {
+.revealItem.isVisible {
     opacity: 1;
     transform: none;
     filter: none;

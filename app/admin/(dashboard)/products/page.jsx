@@ -5,7 +5,9 @@ import Image from 'next/image';
 import styles from './Products.module.css';
 import WysiwygEditor from '../builder/WysiwygEditor';
 import ImageUpload from '@/components/Admin/ImageUpload';
-import { Store, Eye, EyeOff, FileText, Tag, Image as ImageIcon, Sprout, Layers, Save, Trash2, Edit3, Award, Lock } from 'lucide-react';
+import { Store, Eye, EyeOff, FileText, Tag, Image as ImageIcon, Sprout, Layers, Save, Trash2, Edit3, Award, Lock, Users } from 'lucide-react';
+import { isVisibleForGroup } from '@/lib/utils/productVariations';
+import { toTitleCase } from '@/lib/utils/titleCase';
 
 // Suppression de BADGE_OPTIONS pour saisie libre
 
@@ -71,6 +73,13 @@ export default function ProductsPage() {
         ],
         premiumBadge: { enabled: true, text: "Qualité Premium" }
     });
+    // Visibilité par groupe client : { [productId]: ["3","4"] } (règles explicites uniquement)
+    const [groupRules, setGroupRules] = useState({});
+    const [groupSearch, setGroupSearch] = useState('');
+    const [groupFilter, setGroupFilter] = useState('all');
+    const [groupSelected, setGroupSelected] = useState([]);
+    const [groupSaving, setGroupSaving] = useState(false);
+    const [groupSaved, setGroupSaved] = useState(false);
     const [configSaving, setConfigSaving] = useState(false);
     const [configSaved, setConfigSaved] = useState(false);
 
@@ -81,8 +90,10 @@ export default function ProductsPage() {
             fetch('/api/admin/product-overrides').then(r => r.json()),
             fetch('/api/admin/category-overrides').then(r => r.json()),
             fetch('/api/admin/products-page-config').then(r => r.json()),
-            fetch('/api/admin/product-categories').then(r => r.json())
-        ]).then(([products, config, overridesData, catOverridesData, pageConfigData, categoriesData]) => {
+            fetch('/api/admin/product-categories').then(r => r.json()),
+            fetch('/api/admin/group-visibility').then(r => r.json()).catch(() => ({}))
+        ]).then(([products, config, overridesData, catOverridesData, pageConfigData, categoriesData, groupRulesData]) => {
+            setGroupRules(groupRulesData && typeof groupRulesData === 'object' ? groupRulesData : {});
             const fetchedProducts = Array.isArray(products) ? products : [];
             const pOrder = Array.isArray(config?.productOrder) ? config.productOrder : [];
 
@@ -167,6 +178,25 @@ export default function ProductsPage() {
             } else alert('Erreur lors de la sauvegarde');
         } catch { alert('Erreur réseau'); }
         finally { setCatSaving(false); }
+    };
+
+    // ── Visibilité par groupe client ─────────────────────────────
+    const canSee = (product, group) => isVisibleForGroup(product, group, groupRules);
+
+    const saveGroupRules = async () => {
+        setGroupSaving(true);
+        try {
+            const res = await fetch('/api/admin/group-visibility', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(groupRules)
+            });
+            if (res.ok) {
+                setGroupSaved(true);
+                setTimeout(() => setGroupSaved(false), 3000);
+            } else alert('Erreur lors de la sauvegarde');
+        } catch { alert('Erreur réseau'); }
+        finally { setGroupSaving(false); }
     };
 
     const savePageConfig = async () => {
@@ -394,6 +424,14 @@ export default function ProductsPage() {
                     {hiddenCount > 0 && <span className={styles.hiddenBadge}>{hiddenCount} masqué{hiddenCount > 1 ? 's' : ''}</span>}
                 </button>
                 <button
+                    onClick={() => setTab('groups')}
+                    className={`${styles.tab} ${tab === 'groups' ? styles.activeTab : ''}`}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                >
+                    <Users size={16} /> Visibilité par client
+                    {Object.keys(groupRules).length > 0 && <span className={styles.hiddenBadge}>{Object.keys(groupRules).length} règle{Object.keys(groupRules).length > 1 ? 's' : ''}</span>}
+                </button>
+                <button
                     onClick={() => setTab('descriptions')}
                     className={`${styles.tab} ${tab === 'descriptions' ? styles.activeTab : ''}`}
                     style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
@@ -474,7 +512,7 @@ export default function ProductsPage() {
                                     </div>
                                     <img src={item.image} alt={item.name} className={styles.vitrineImg} />
                                     <div className={styles.vitrineInfo}>
-                                        <strong>{item.name}</strong>
+                                        <strong>{toTitleCase(item.name)}</strong>
                                         <span className={styles.catalogPrice}>{item.formattedPrice}</span>
                                         <div className={styles.badgeConfig}>
                                             <input
@@ -514,7 +552,7 @@ export default function ProductsPage() {
                                     </div>
                                     <img src={item.image} alt={item.name} className={styles.vitrineImg} />
                                     <div className={styles.vitrineInfo}>
-                                        <strong>{item.name}</strong>
+                                        <strong>{toTitleCase(item.name)}</strong>
                                         <span className={styles.catalogPrice}>{item.formattedPrice}</span>
                                         <div className={styles.badgeConfig}>
                                             <input
@@ -595,6 +633,117 @@ export default function ProductsPage() {
                     </div>
                 </div>
             )}
+
+            {/* ══════════════ TAB: VISIBILITÉ PAR CLIENT ══════════════ */}
+            {tab === 'groups' && (() => {
+                const modeOf = (p) => {
+                    const b2c = canSee(p, '3'), pro = canSee(p, '4');
+                    if (b2c && pro) return 'all';
+                    if (pro) return 'pro';
+                    if (b2c) return 'b2c';
+                    return 'none';
+                };
+                const MODES = [
+                    { id: 'all', label: 'Tout le monde', groups: ['3', '4'] },
+                    { id: 'pro', label: 'Pros uniquement', groups: ['4'] },
+                    { id: 'b2c', label: 'Particuliers uniquement', groups: ['3'] },
+                    { id: 'none', label: 'Masqué pour tous', groups: [] },
+                ];
+                const FILTERS = [
+                    { id: 'all', label: 'Tous' },
+                    { id: 'custom', label: 'Règles personnalisées' },
+                    { id: 'pro', label: 'Réservés aux Pros' },
+                    { id: 'b2c', label: 'Réservés aux Particuliers' },
+                ];
+                const rows = allProducts
+                    .filter(p => !groupSearch || normalize(`${p.name} ${p.reference || ''}`).includes(normalize(groupSearch)))
+                    .filter(p => groupFilter === 'all' ? true : groupFilter === 'custom' ? Array.isArray(groupRules[p.id]) : modeOf(p) === groupFilter);
+                const rowIds = rows.map(p => p.id);
+                const allSelected = rowIds.length > 0 && rowIds.every(id => groupSelected.includes(id));
+                const toggleSelectAll = () => setGroupSelected(allSelected ? groupSelected.filter(id => !rowIds.includes(id)) : [...new Set([...groupSelected, ...rowIds])]);
+                const toggleSelect = (id) => setGroupSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
+                const applyMode = (ids, groups) => {
+                    setGroupRules(prev => { const next = { ...prev }; ids.forEach(id => { next[id] = groups; }); return next; });
+                    setGroupSaved(false);
+                };
+                const resetMany = (ids) => {
+                    setGroupRules(prev => { const next = { ...prev }; ids.forEach(id => { delete next[id]; }); return next; });
+                    setGroupSaved(false);
+                };
+                const ruleCount = Object.keys(groupRules).length;
+
+                return (
+                <div className={styles.panel}>
+                    <div className={styles.visHeader}>
+                        <h2 className={styles.panelTitle}>
+                            Visibilité par type de client
+                            <span className={styles.counter}>{ruleCount} règle{ruleCount > 1 ? 's' : ''} personnalisée{ruleCount > 1 ? 's' : ''}</span>
+                        </h2>
+                        <p className={styles.visHint}>
+                            1. Cherchez (ex : « cartouche ») ou filtrez · 2. Cochez les produits (ou « Tout sélectionner ») · 3. Choisissez qui les voit · 4. Sauvegardez.
+                            Sans règle, les cartouches et présentoirs sont réservés aux Pros.
+                        </p>
+                    </div>
+
+                    <input className={styles.search} placeholder="Rechercher un produit (ex : cartouche, présentoir, amnésia)..." value={groupSearch} onChange={e => setGroupSearch(e.target.value)} />
+
+                    <div className={styles.gvFilters} role="group" aria-label="Filtrer les produits">
+                        {FILTERS.map(f => (
+                            <button key={f.id} onClick={() => setGroupFilter(f.id)} aria-pressed={groupFilter === f.id} className={`${styles.gvFilterBtn} ${groupFilter === f.id ? styles.gvFilterBtnActive : ''}`}>{f.label}</button>
+                        ))}
+                    </div>
+
+                    <div className={styles.gvBulkBar}>
+                        <label className={styles.gvSelectAll}>
+                            <input type="checkbox" className={styles.gvCheck} checked={allSelected} onChange={toggleSelectAll} />
+                            Tout sélectionner ({rows.length})
+                        </label>
+                        <span className={styles.gvBulkLabel}>{groupSelected.length} sélectionné{groupSelected.length > 1 ? 's' : ''} → rendre visible pour :</span>
+                        {MODES.map(m => (
+                            <button key={m.id} disabled={groupSelected.length === 0} onClick={() => applyMode(groupSelected, m.groups)} className={styles.gvBulkBtn}>{m.label}</button>
+                        ))}
+                        <button disabled={groupSelected.length === 0} onClick={() => resetMany(groupSelected)} className={`${styles.gvBulkBtn} ${styles.gvBulkBtnGhost}`}>Réinitialiser</button>
+                        <button disabled={groupSelected.length === 0} onClick={() => setGroupSelected([])} className={`${styles.gvBulkBtn} ${styles.gvBulkBtnGhost}`}>Désélectionner</button>
+                    </div>
+
+                    <div className={styles.visList}>
+                        {rows.length === 0 && <p className={styles.visHint}>Aucun produit ne correspond.</p>}
+                        {rows.map(product => {
+                            const custom = Array.isArray(groupRules[product.id]);
+                            const current = modeOf(product);
+                            const selected = groupSelected.includes(product.id);
+                            return (
+                                <div
+                                    key={product.id}
+                                    className={`${styles.gvRow} ${selected ? styles.gvRowSelected : ''}`}
+                                    onClick={() => toggleSelect(product.id)}
+                                >
+                                    <input type="checkbox" className={styles.gvCheck} checked={selected} onChange={() => toggleSelect(product.id)} onClick={e => e.stopPropagation()} aria-label={`Sélectionner ${product.name}`} />
+                                    <img src={product.image} alt="" className={styles.catalogImg} />
+                                    <div className={styles.gvInfo}>
+                                        <span className={styles.gvName}>{product.name}</span>
+                                        <span className={styles.gvRuleLabel}>{custom ? 'Règle personnalisée' : 'Règle par défaut'}</span>
+                                    </div>
+                                    <div className={styles.gvSeg} role="group" aria-label={`Qui voit ${product.name}`} onClick={e => e.stopPropagation()}>
+                                        {MODES.slice(0, 3).map(m => (
+                                            <button key={m.id} aria-pressed={current === m.id} onClick={() => applyMode([product.id], m.groups)} className={`${styles.gvSegBtn} ${current === m.id ? styles.gvSegBtnActive : ''}`}>
+                                                {m.id === 'all' ? 'Tous' : m.id === 'pro' ? 'Pros' : 'Particuliers'}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div className={styles.gvSaveBar}>
+                        <button onClick={saveGroupRules} disabled={groupSaving} className={`${styles.saveButton} ${styles.gvSaveBtn} ${groupSaved ? styles.savedButton : ''}`}>
+                            {groupSaving ? 'Enregistrement...' : groupSaved ? '✓ Sauvegardé' : <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Save size={14} /> Sauvegarder la visibilité</span>}
+                        </button>
+                    </div>
+                </div>
+                );
+            })()}
 
             {/* ══════════════ TAB: DESCRIPTIONS ══════════════ */}
             {tab === 'descriptions' && (

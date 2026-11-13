@@ -5,6 +5,7 @@ import styles from './CheckoutClient.module.css';
 import { MapPin, Package, ArrowRight, Loader2, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { toTitleCase } from '@/lib/utils/titleCase';
 
 export default function CheckoutClient({ user }) {
     const { cart, cartTotal } = useCart();
@@ -80,7 +81,7 @@ export default function CheckoutClient({ user }) {
                                     )}
                                 </div>
                                 <div className={styles.itemDetails}>
-                                    <span className={styles.itemName}>{item.name} {item.variant && `- ${item.variant.name}`}</span>
+                                    <span className={styles.itemName}>{toTitleCase(item.name)} {item.variant && `- ${item.variant.name}`}</span>
                                     <span className={styles.itemQty}>Qté: {item.quantity}</span>
                                 </div>
                                 <div className={styles.itemPrice}>

@@ -1,12 +1,22 @@
 [
   {
-    "sessionId": "892af3af-4b58-4c15-a4d6-f289bf1a9ac8",
+    "sessionId": "0c2e8757-bbb4-4b1a-8b0b-df5879897c89",
     "username": "admin",
     "ip": "::1",
     "browser": "Google Chrome",
     "os": "macOS",
     "device": "Ordinateur",
-    "createdAt": 1793816469117,
-    "lastActiveAt": 1793816469117
+    "createdAt": 1794583648693,
+    "lastActiveAt": 1794583648693
+  },
+  {
+    "sessionId": "f891a560-be0a-4d53-89bb-58b5ed9bfb4c",
+    "username": "admin",
+    "ip": "::ffff:10.79.217.123",
+    "browser": "Google Chrome",
+    "os": "macOS",
+    "device": "Ordinateur",
+    "createdAt": 1794583601166,
+    "lastActiveAt": 1794583601166
   }
 ]

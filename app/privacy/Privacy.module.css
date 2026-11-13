@@ -6,7 +6,7 @@
 .container {
     width: 100%;
     max-width: var(--container-width);
-    margin: 120px auto 100px;
+    margin: 0 auto 100px;
     padding: 0 20px;
 }
 
@@ -99,7 +99,7 @@
 /* Responsive */
 @media (max-width: 768px) {
     .container {
-        margin-top: 100px;
+        margin-top: 0;
     }
 
     .content {

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
+import { toTitleCase } from '@/lib/utils/titleCase';
 
 export const dynamic = 'force-dynamic';
 
@@ -154,7 +155,7 @@ export async function GET(request) {
                 deliveryAddress: deliveryAddress,
                 invoiceAddress: invoiceAddress,
                 products: order.associations?.order_rows?.map(row => ({
-                    name: row.product_name,
+                    name: toTitleCase(row.product_name),
                     quantity: row.product_quantity,
                     price: parseFloat(row.unit_price_tax_incl).toFixed(2)
                 })) || []

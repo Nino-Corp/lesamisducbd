@@ -62,29 +62,6 @@ function IFramePreview({ children, style }) {
         if (doc) {
             const head = doc.head;
             
-            const copyNodes = (nodes) => {
-                nodes.forEach(el => {
-                    if (el.tagName === 'STYLE' || (el.tagName === 'LINK' && el.rel === 'stylesheet')) {
-                        const clone = el.cloneNode(true);
-                        head.appendChild(clone);
-                    }
-                });
-            };
-
-            // 1. Initial copy
-            copyNodes(document.head.querySelectorAll('style, link[rel="stylesheet"]'));
-
-            // 2. Observe future additions (for dynamic imports CSS)
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach(mutation => {
-                    if (mutation.addedNodes.length) {
-                        copyNodes(Array.from(mutation.addedNodes));
-                    }
-                });
-            });
-
-            observer.observe(document.head, { childList: true });
-
             // Add a base style to match the body
             const baseStyle = doc.createElement('style');
             baseStyle.innerHTML = `
@@ -93,12 +70,35 @@ function IFramePreview({ children, style }) {
             `;
             head.appendChild(baseStyle);
             
+            // Synchronise TOUS les styles de la page parente vers l'iframe (ajouts, retraits ET modifications HMR),
+            // sinon l'aperçu garde d'anciennes règles CSS jusqu'au rafraîchissement.
+            const cloned = [];
+            const syncStyles = () => {
+                cloned.forEach(n => n.remove());
+                cloned.length = 0;
+                document.head.querySelectorAll('style, link[rel="stylesheet"]').forEach(el => {
+                    const clone = el.cloneNode(true);
+                    head.insertBefore(clone, baseStyle); // ordre d'origine conservé, baseStyle reste en dernier
+                    cloned.push(clone);
+                });
+            };
+
+            syncStyles();
+
+            let rafId = null;
+            const observer = new MutationObserver(() => {
+                if (rafId) cancelAnimationFrame(rafId);
+                rafId = requestAnimationFrame(syncStyles);
+            });
+
+            observer.observe(document.head, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['href', 'media'] });
+
             // Copy parent body classes for next/font to work
             doc.body.className = document.body.className;
             
             setMountNode(doc.body);
 
-            return () => observer.disconnect();
+            return () => { observer.disconnect(); if (rafId) cancelAnimationFrame(rafId); };
         }
     }, []);
 
@@ -449,6 +449,7 @@ const LivePreview = memo(function LivePreview({
                     const paddingMap = { none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };
                     const marginMap = { 'negative-large': '-80px', 'negative-medium': '-40px', 'negative-small': '-20px', none: '0px', small: '20px', medium: '40px', large: '80px', xl: '120px' };
 
+                    const firstFlushIndex = hideBreadcrumb ? -1 : sections.findIndex(s => s.type !== 'Header' && s.type !== 'Footer' && s.props?.isVisible !== false);
                     const wrapperStyle = {
                         position: 'relative',
                         cursor: 'pointer',
@@ -479,6 +480,7 @@ const LivePreview = memo(function LivePreview({
                                 }
                             }}
                             onClick={() => onSelect(i)}
+                            className={i === firstFlushIndex ? 'firstSectionFlush' : undefined}
                             style={wrapperStyle}
                         >
                             {isActive && (
@@ -623,7 +625,7 @@ const LivePreview = memo(function LivePreview({
                 ];
 
                 const wrappedContent = (iframeNode) => (
-                    <div style={{ paddingTop: '100px', minHeight: '100%', boxSizing: 'border-box' }}>
+                    <div style={{ paddingTop: hideBreadcrumb ? '100px' : 'var(--breadcrumb-top)', minHeight: '100%', boxSizing: 'border-box' }}>
                         {!hasHeader && (
                             <div 
                                 onClickCapture={e => { e.preventDefault(); e.stopPropagation(); }} 
@@ -643,7 +645,7 @@ const LivePreview = memo(function LivePreview({
                                     display: 'flex',
                                     justifyContent: 'center',
                                     zIndex: 50,
-                                    marginBottom: '20px',
+                                    marginBottom: 'var(--breadcrumb-gap)',
                                 }}
                             >
                                 <div 
@@ -658,10 +660,7 @@ const LivePreview = memo(function LivePreview({
                                     <Breadcrumb items={previewBreadcrumbItems} />
                                 </div>
                                 <style dangerouslySetInnerHTML={{ __html: `
-                                    .breadcrumb-wrapper { padding: 0 24px; box-sizing: border-box; }
-                                    @media (max-width: 1024px) {
-                                        .breadcrumb-wrapper { padding: 0 16px; }
-                                    }
+                                    .breadcrumb-wrapper { padding: 0; box-sizing: border-box; }
                                 `}} />
                             </div>
                         )}

@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import useLockBodyScroll from '@/hooks/useLockBodyScroll';
+import { toTitleCase } from '@/lib/utils/titleCase';
 import LoginModal from '../LoginModal/LoginModal';
 
 export default function CartDrawer() {
@@ -169,7 +170,7 @@ export default function CartDrawer() {
                                         <div className={styles.imgWrapper}>
                                             <Image
                                                 src={item.image}
-                                                alt={item.name}
+                                                alt={toTitleCase(item.name)}
                                                 fill
                                                 style={{ objectFit: 'cover' }}
                                             />
@@ -186,7 +187,7 @@ export default function CartDrawer() {
                                             onMouseOver={(e) => e.target.style.color = '#10b981'}
                                             onMouseOut={(e) => e.target.style.color = 'inherit'}
                                         >
-                                            {item.name}
+                                            {toTitleCase(item.name)}
                                         </h3>
                                     </Link>
                                     {item.variant && <span className={styles.variant}>{item.variant.label || item.variant.name}</span>}
@@ -232,7 +233,7 @@ export default function CartDrawer() {
                                         )}
                                         <div className={styles.upsellInfo}>
                                             <Link href={`/produits/${product.slug}`} className={styles.upsellName} onClick={() => setIsCartOpen(false)}>
-                                                {product.name}
+                                                {toTitleCase(product.name)}
                                             </Link>
                                             <div className={styles.upsellPrice}>{isPro ? product.priceHT : product.priceTTC}€</div>
                                         </div>
