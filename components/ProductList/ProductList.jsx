@@ -114,7 +114,7 @@ export function ProductCardItem({ product, index, groupId }) {
                 </div>
             )}
 
-            <Link href={`/produit/${selectedVariant.slug}`} className={styles.ctaLink} onClick={() => trackCTA(`product_click_${selectedVariant.slug}`)}>
+            <Link href={`/produit/${selectedVariant.slug}`} prefetch={false} className={styles.ctaLink} onClick={() => trackCTA(`product_click_${selectedVariant.slug}`)}>
                 <button className={styles.cta}>Découvrir cette variété</button>
             </Link>
         </div>

@@ -38,7 +38,7 @@ export default function ProductCard({ product }) {
     const loyaltyPoints = ratio > 0 ? Math.floor(product.priceTTC / ratio) : 0;
 
     return (
-        <Link href={`/produit/${product.slug}`} style={{ textDecoration: 'none' }} onClick={() => trackCTA(`product_click_${product.slug}`)}>
+        <Link href={`/produit/${product.slug}`} prefetch={false} style={{ textDecoration: 'none' }} onClick={() => trackCTA(`product_click_${product.slug}`)}>
             <motion.div
                 className={styles.card}
                 whileHover={{ y: -8, scale: 1.015 }}

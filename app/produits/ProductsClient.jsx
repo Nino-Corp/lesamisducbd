@@ -431,7 +431,7 @@ function ProductCard({ product, groupId, addItem, expandedId, setExpandedId, con
 
     return (
         <div className={styles.card}>
-            <Link href={`/produit/${activeProduct.slug}`} className={styles.imageLink} onClick={() => trackCTA(`product_click_${activeProduct.slug}`)}>
+            <Link href={`/produit/${activeProduct.slug}`} prefetch={false} className={styles.imageLink} onClick={() => trackCTA(`product_click_${activeProduct.slug}`)}>
                 <div className={styles.imageWrapper}>
                     <Image
                         src={activeProduct.image || '/images/placeholder.webp'}

@@ -80,12 +80,12 @@ export default async function middleware(req) {
 }
 
 export const config = {
+    // Le middleware ne tourne que si necessaire (comptes, admin, code de parrainage) :
+    // les pages publiques passent directement par le cache CDN.
     matcher: [
-        "/",
         "/admin/:path*",
         "/account/:path*",
         "/checkout/:path*",
-        "/produit/:path*",
-        "/produits/:path*"
+        { source: "/:path*", has: [{ type: "query", key: "sponsorship" }] }
     ]
 };
