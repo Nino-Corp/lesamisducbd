@@ -1,7 +1,7 @@
 import { normalizePageSlug } from '@/lib/utils/stringUtils';
 import { recordPageRedirect } from '@/lib/pageRedirects';
 import { NextResponse } from 'next/server';
-import { safeKvGet, safeKvSet } from '@/lib/kvCache';
+import { safeKvGet, safeKvSet, purgePaths } from '@/lib/kvCache';
 import { getSession } from '@/lib/auth';
 import { recordAdminAction, getClientIp } from '@/lib/auditLog';
 
@@ -93,6 +93,7 @@ export async function POST(request) {
             allPages[to] = { ...allPages[from], slug: to, updatedAt: new Date().toISOString() };
             delete allPages[from];
             await safeKvSet(PAGES_KEY, allPages);
+            purgePaths([['/p/[...slug]', 'page'], ['/blog'], ['/sitemap.xml'], ['/', 'layout']]);
 
             try {
                 const history = await safeKvGet(`builder_history:${from}`, null);
@@ -147,6 +148,7 @@ export async function POST(request) {
                 moved.push([from, to]);
             }
             await safeKvSet(PAGES_KEY, allPages);
+            purgePaths([['/p/[...slug]', 'page'], ['/blog'], ['/sitemap.xml'], ['/', 'layout']]);
 
             for (const [from, to] of moved) {
                 try { await recordPageRedirect(from, to); } catch (e) { /* non-blocking */ }
@@ -289,6 +291,12 @@ export async function POST(request) {
 
         await safeKvSet(PAGES_KEY, pages);
 
+        // Purge ciblee : seulement si la page est (ou etait) en ligne. Un brouillon ne touche pas le site.
+        const wasLive = (existing.status || 'draft') === 'published';
+        if (resolvedStatus === 'published' || wasLive) {
+            purgePaths([[`/p/${slug}`], ['/blog'], ['/sitemap.xml']]);
+        }
+
         // ── Update global footer links (only for published pages) ──
         try {
             const globalContent = await safeKvGet('global_content', {});
@@ -301,6 +309,7 @@ export async function POST(request) {
                     footerLinks.push({ label: title, href: pageHref });
                     globalContent.footerLinks = footerLinks;
                     await safeKvSet('global_content', globalContent);
+                    purgePaths([['/', 'layout']]); // le pied de page change sur tout le site (rare)
                 }
             } else {
                 // Remove from footer if unpublished
@@ -308,6 +317,7 @@ export async function POST(request) {
                 if (filtered.length !== footerLinks.length) {
                     globalContent.footerLinks = filtered;
                     await safeKvSet('global_content', globalContent);
+                    purgePaths([['/', 'layout']]);
                 }
             }
         } catch (footerError) {
@@ -361,6 +371,7 @@ export async function DELETE(request) {
 
         delete pages[slug];
         await safeKvSet(PAGES_KEY, pages);
+        purgePaths([['/p/[...slug]', 'page'], ['/blog'], ['/sitemap.xml'], ['/', 'layout']]);
 
         // Remove from global footer links and header links
         try {
