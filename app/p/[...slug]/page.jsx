@@ -8,7 +8,7 @@ import Breadcrumb from '@/components/Breadcrumb/Breadcrumb';
 import ArticleSidebar, { RelatedArticlesWidget } from '@/components/ArticleSidebar/ArticleSidebar';
 import { SITE_URL } from '@/app/shared-metadata';
 
-export const revalidate = 60; // Cache for 1 minute
+export const revalidate = 3600;
 
 async function getPageData(slug, isPreview = false) {
     try {

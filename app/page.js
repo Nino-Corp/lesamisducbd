@@ -5,7 +5,7 @@ import homeData from '@/data/home.json';
 import { productService } from '@/lib/services/productService';
 import { SHARED_TITLE, SHARED_DESCRIPTION } from './shared-metadata';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export const metadata = {
   title: SHARED_TITLE.default,

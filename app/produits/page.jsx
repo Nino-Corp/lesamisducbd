@@ -13,7 +13,7 @@ export const metadata = {
     },
 };
 
-export const revalidate = 60; // ISR cache every minute
+export const revalidate = 3600;
 
 export default async function ProductsPage() {
     const [products, hiddenIds, globalContent, productOrder, categoryOverrides, pageConfigData, productOverrides, productCategories, groupVisibility] = await Promise.all([

@@ -7,7 +7,7 @@ export const metadata = {
     description: 'Découvrez notre engagement envers la qualité et consultez les résultats de nos analyses en laboratoire.',
 };
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export default async function TransparencePage() {
     const [globalContent, content] = await Promise.all([

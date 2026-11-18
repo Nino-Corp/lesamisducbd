@@ -45,7 +45,7 @@ export async function generateMetadata({ params }) {
 }
 
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export default async function ProductPage({ params }) {
     const { slug } = await params;

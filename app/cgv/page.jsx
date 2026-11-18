@@ -7,7 +7,7 @@ export const metadata = {
     description: 'Consultez les Conditions Générales de Vente (CGV) de la boutique Les Amis du CBD.',
 };
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export default async function CgvPage() {
     let [globalContent, content] = await Promise.all([

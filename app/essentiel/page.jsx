@@ -2,7 +2,7 @@ import { safeKvGet } from '@/lib/kvCache';
 import EssentielClient from './EssentielClient';
 import { SHARED_TITLE } from '../shared-metadata';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export const metadata = {
     title: "L'Essentiel du CBD",

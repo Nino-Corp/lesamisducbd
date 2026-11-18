@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import ProfessionnelClient from './ProfessionnelClient';
 import { SHARED_TITLE } from '@/app/shared-metadata';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export const metadata = {
     title: 'Espace Professionnel & Revendeurs',

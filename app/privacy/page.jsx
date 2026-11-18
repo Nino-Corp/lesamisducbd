@@ -7,7 +7,7 @@ export const metadata = {
     description: 'Consultez la Politique de confidentialité de la boutique Les Amis du CBD.',
 };
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export default async function PrivacyPage() {
     const [globalContent, content] = await Promise.all([

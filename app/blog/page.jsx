@@ -5,7 +5,7 @@ import Footer from '@/components/Footer/Footer';
 import styles from './blog.module.css';
 import { Newspaper } from 'lucide-react';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export const metadata = {
     title: 'Blog CBD — Guides, conseils et actualités | Les Amis du CBD',
