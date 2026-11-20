@@ -47,6 +47,7 @@
     padding: 1.5rem;
     position: relative;
     overflow: hidden;
+    min-width: 0;
 }
 
 .card::before {
@@ -67,6 +68,7 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    min-width: 0;
 }
 
 .cardHeader {
@@ -579,9 +581,12 @@
     }
 
     .actionButton {
-        font-size: 0.95rem;
-        padding: 0.75rem;
+        font-size: 0.9rem;
+        padding: 0.75rem 0.5rem;
         width: 100% !important;
+        max-width: 100%;
+        white-space: normal;
+        text-align: center;
     }
 
     .sponsorshipCard {
@@ -617,7 +622,7 @@
     }
 
     .cardsGrid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 
