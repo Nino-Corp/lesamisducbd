@@ -20,6 +20,8 @@ const ScrollReveal = ({
         const element = domRef.current;
         if (!element) return;
 
+        // Les blocs très hauts (ex. galerie d'analyses sur mobile) n'atteignent jamais
+        // 10 % de visibilité : on se base aussi sur rootMargin et on limite le seuil effectif.
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -29,12 +31,12 @@ const ScrollReveal = ({
                     setIsVisible(false);
                 }
             });
-        }, { threshold });
+        }, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
 
         observer.observe(element);
 
         return () => observer.disconnect();
-    }, [threshold, once]);
+    }, [once]);
 
     const transitionStyle = {
         transitionDuration: `${duration}ms`,
