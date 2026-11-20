@@ -68,7 +68,12 @@ export const metadata = {
   icons: {
     icon: '/icon.png',
     shortcut: '/icon.png',
-    apple: '/icon.png',
+    apple: '/icons/apple-touch-icon.png',
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'Les Amis du CBD',
+    statusBarStyle: 'default',
   },
 };
 
@@ -78,6 +83,7 @@ import AgeGate from "@/components/AgeGate/AgeGate";
 import LogoutHandler from "@/components/LogoutHandler/LogoutHandler";
 import AnalyticsTracker from "@/components/AnalyticsTracker/AnalyticsTracker";
 import GlobalBreadcrumb from "@/components/Breadcrumb/GlobalBreadcrumb";
+import PwaInstall from "@/components/PwaInstall/PwaInstall";
 
 export default function RootLayout({ children }) {
   return (
@@ -102,6 +108,7 @@ export default function RootLayout({ children }) {
               <GlobalBreadcrumb />
               {children}
               <CartDrawer />
+              <PwaInstall />
             </CartProvider>
           </AuthProvider>
         </ToastProvider>
