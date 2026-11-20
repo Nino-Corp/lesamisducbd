@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { X, Share, SquarePlus, EllipsisVertical, Download, Smartphone } from 'lucide-react';
+import { X, Share, SquarePlus, EllipsisVertical, Download, ChevronDown } from 'lucide-react';
 import styles from './PwaInstall.module.css';
 
 // Routes où l'info-bulle ne doit jamais apparaître
@@ -102,35 +102,38 @@ export default function PwaInstall() {
   return (
     <div className={styles.wrapper} role="dialog" aria-label="Installer l'application">
       <div className={styles.card}>
-        <button className={styles.close} onClick={dismiss} aria-label="Fermer">
-          <X size={18} />
-        </button>
-
         <div className={styles.header}>
-          <div className={styles.iconBox}>
-            <Smartphone size={22} />
+          <img src="/icons/icon-192.png" alt="" width={44} height={44} className={styles.appIcon} />
+          <div className={styles.headerText}>
+            <p className={styles.title}>Installer l&apos;appli</p>
+            <p className={styles.subtitle}>Accès rapide depuis votre écran d&apos;accueil</p>
           </div>
-          <div>
-            <p className={styles.title}>Installez Les Amis du CBD</p>
-            <p className={styles.subtitle}>Accès rapide depuis votre écran d&apos;accueil, comme une appli.</p>
-          </div>
+          <button className={styles.close} onClick={dismiss} aria-label="Fermer">
+            <X size={16} />
+          </button>
         </div>
 
         {platform === 'ios' && (
           <ol className={styles.steps}>
             <li>
               <span className={styles.stepIcon}><Share size={16} /></span>
-              Touchez le bouton <strong>Partager</strong> dans la barre de Safari
+              <span>Touchez <strong>Partager</strong> en bas de Safari</span>
             </li>
             <li>
               <span className={styles.stepIcon}><SquarePlus size={16} /></span>
-              Choisissez <strong>Sur l&apos;écran d&apos;accueil</strong>
+              <span>Choisissez <strong>Sur l&apos;écran d&apos;accueil</strong></span>
             </li>
             <li>
               <span className={styles.stepIcon}><Download size={16} /></span>
-              Validez avec <strong>Ajouter</strong>
+              <span>Validez avec <strong>Ajouter</strong></span>
             </li>
           </ol>
+        )}
+
+        {platform === 'ios' && (
+          <div className={styles.pointer} aria-hidden="true">
+            <ChevronDown size={22} />
+          </div>
         )}
 
         {platform !== 'ios' && (
@@ -139,11 +142,11 @@ export default function PwaInstall() {
               <ol className={styles.steps}>
                 <li>
                   <span className={styles.stepIcon}><EllipsisVertical size={16} /></span>
-                  Ouvrez le menu de votre navigateur
+                  <span>Ouvrez le menu du navigateur</span>
                 </li>
                 <li>
                   <span className={styles.stepIcon}><SquarePlus size={16} /></span>
-                  Touchez <strong>Installer l&apos;application</strong> ou <strong>Ajouter à l&apos;écran d&apos;accueil</strong>
+                  <span>Touchez <strong>Installer l&apos;application</strong></span>
                 </li>
               </ol>
             )}

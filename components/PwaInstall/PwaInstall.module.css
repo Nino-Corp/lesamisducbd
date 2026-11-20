@@ -2,37 +2,69 @@
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 16px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     z-index: 9000;
     display: flex;
     justify-content: center;
-    padding: 0 10px;
+    padding: 0 10px; /* marges latérales de 10px, comme le reste du site */
     pointer-events: none;
     animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card {
-    position: relative;
     pointer-events: auto;
+    box-sizing: border-box;
     width: 100%;
-    max-width: 400px;
+    max-width: 380px;
     background: var(--primary-dark);
     color: var(--text-white);
     border: 1px solid rgba(0, 255, 148, 0.25);
-    border-radius: 20px;
-    padding: 18px 18px 16px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+    border-radius: 24px;
+    padding: 14px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.appIcon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    object-fit: cover;
+}
+
+.headerText {
+    flex: 1;
+    min-width: 0;
+}
+
+.title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.subtitle {
+    margin: 2px 0 0;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.3;
 }
 
 .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
     border: none;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
@@ -40,47 +72,17 @@
     cursor: pointer;
 }
 
-.header {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    padding-right: 26px;
-}
-
-.iconBox {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: rgba(0, 255, 148, 0.15);
-    color: var(--accent-neon);
-}
-
-.title {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.subtitle {
-    margin: 2px 0 0;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.75);
-    line-height: 1.35;
-}
-
 .steps {
     list-style: none;
-    margin: 14px 0 0;
-    padding: 0;
+    margin: 12px 0 0;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    font-size: 0.9rem;
-    line-height: 1.35;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    font-size: 0.85rem;
+    line-height: 1.3;
 }
 
 .steps li {
@@ -94,11 +96,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(0, 255, 148, 0.15);
     color: var(--accent-neon);
+}
+
+.pointer {
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+    color: var(--accent-neon);
+    animation: bounce 1.4s infinite ease-in-out;
 }
 
 .installBtn {
@@ -107,12 +117,13 @@
     justify-content: center;
     gap: 8px;
     width: 100%;
-    margin-top: 14px;
+    margin-top: 12px;
     padding: 12px;
     border: none;
-    border-radius: 12px;
+    border-radius: 999px;
     background: var(--accent-neon);
     color: var(--primary-dark);
+    font-family: inherit;
     font-weight: 700;
     font-size: 0.95rem;
     cursor: pointer;
@@ -121,4 +132,9 @@
 @keyframes slideUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
 }
